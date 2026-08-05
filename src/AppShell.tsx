@@ -32,6 +32,8 @@ import { EmpStatus, EmpUserType, Employee, DEPARTMENTS, MOCK_EMPLOYEES, STATUS_S
 import { ProfileTab, AVAIL_CYCLE, AvailState, AVAIL_COLORS, DAYS_SHORT, HOURS_LIST, buildInitialAvail, EmployeeProfilePage, AddEmployeePage, EmployeesPage } from './pages/Employees/Profile';
 import { TicketsPage } from './pages/Tickets/index';
 import { TimeClockPage } from './pages/TimeClock/index';
+import { ReportSettingsPage } from './pages/Reports/index';
+import { CompletedReportsPage } from './pages/Reports/CompletedReports';
 import { App } from './app/App';
 
 
@@ -52,7 +54,7 @@ export function AppShell({ onSignOut }: { onSignOut: () => void }) {
       />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <TopHeader activePage={activePage} onSignOut={onSignOut} notifCount={7} />
-        {activePage === "timeclock" || activePage === "clocked-in" ? <TimeClockPage onNavigate={setActivePage} /> : activePage.startsWith("submodule-exceptions") ? <TicketsPage onNavigate={setActivePage} initialCategory={activePage.includes(":") ? activePage.split(":")[1] : undefined} /> : activePage === "dashboard" || activePage.startsWith("submodule-") ? <Dashboard onNavigate={setActivePage} initialDrawer={activePage.startsWith("submodule-") ? activePage : undefined} /> : activePage.startsWith("employees") ? <EmployeesPage /> : activePage.startsWith("sites") ? <ClientsPage /> : activePage.startsWith("checkpoints") ? <CheckpointsPage /> : activePage.startsWith("scheduling") ? <SchedulingPage /> : <PlaceholderPage page={activePage} />}
+        {activePage === "timeclock" || activePage === "clocked-in" ? <TimeClockPage onNavigate={setActivePage} /> : activePage.startsWith("submodule-exceptions") ? <TicketsPage onNavigate={setActivePage} initialCategory={activePage.includes(":") ? activePage.split(":")[1] : undefined} /> : activePage.startsWith("report-settings") ? <ReportSettingsPage onNavigate={setActivePage} initialView={activePage} /> : activePage === "reports-submissions" ? <CompletedReportsPage /> : activePage === "dashboard" || activePage.startsWith("submodule-") ? <Dashboard onNavigate={setActivePage} initialDrawer={activePage.startsWith("submodule-") ? activePage : undefined} /> : activePage.startsWith("employees") ? <EmployeesPage /> : activePage.startsWith("sites") ? <ClientsPage /> : activePage.startsWith("checkpoints") ? <CheckpointsPage /> : activePage.startsWith("scheduling") ? <SchedulingPage /> : <PlaceholderPage page={activePage} />}
       </div>
     </div>
   );
