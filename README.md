@@ -1,7 +1,7 @@
 
-  # RFI Portal
+  # ALEXIOS Portal
 
-  This is a code bundle for RFI Portal. The original project is available at https://www.figma.com/design/RQYCtLMSiZUOeSjzzf1kej/RFI-Portal.
+  This is a code bundle for ALEXIOS Portal. The original project is available at https://www.figma.com/design/RQYCtLMSiZUOeSjzzf1kej/RFI-Portal.
 
   ## Running the code
 
