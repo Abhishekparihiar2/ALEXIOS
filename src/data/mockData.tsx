@@ -228,3 +228,12 @@ export const MOCK_SWAP_REQUESTS = [
   { id: "SWP-302", guardName: "Mike Torres", shiftDate: "2026-08-06", shiftTime: "08:00 AM - 04:00 PM", position: "Gate Watch Controller", reason: "Doctor appointment", status: "Pending" }
 ];
 
+<<<<<<< HEAD
+=======
+export const MOCK_SCHED_TOURS = [
+  { id: "T-001", name: "Night Perimeter", date: "2026-08-04", startTime: "22:00", endTime: "23:00", jobId: "JOB-STC", site: "Harbor District" },
+  { id: "T-002", name: "Mall Walk", date: "2026-08-03", startTime: "10:00", endTime: "11:00", jobId: "JOB-SUP", site: "Westfield Mall" },
+  { id: "T-003", name: "Gate Check", date: "2026-08-05", startTime: "09:00", endTime: "10:00", jobId: "JOB-GTE", site: "Westfield Mall" },
+  { id: "T-004", name: "Unassigned Tour", date: "2026-08-06", startTime: "14:00", endTime: "15:00", jobId: "JOB-ARM", site: "Downtown Financial Center" },
+];
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574

@@ -32,6 +32,7 @@ import { EmpStatus, EmpUserType, Employee, DEPARTMENTS, MOCK_EMPLOYEES, STATUS_S
 import { ProfileTab, AVAIL_CYCLE, AvailState, AVAIL_COLORS, DAYS_SHORT, HOURS_LIST, buildInitialAvail, EmployeeProfilePage, AddEmployeePage, EmployeesPage } from './pages/Employees/Profile';
 import { TicketsPage } from './pages/Tickets/index';
 import { TimeClockPage } from './pages/TimeClock/index';
+<<<<<<< HEAD
 import { FormsPage } from './pages/Forms/index';
 import { TasksPage } from './pages/Tasks/index';
 import { CommunicationsPage } from './pages/Communications/index';
@@ -39,6 +40,10 @@ import { DocumentsPage } from './pages/Documents/index';
 import { TrainingPage } from './pages/Training/index';
 import { VehiclesPage } from './pages/Vehicles/index';
 import { AutomationsPage } from './pages/Automations/index';
+=======
+import { ReportSettingsPage } from './pages/Reports/index';
+import { CompletedReportsPage } from './pages/Reports/CompletedReports';
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
 import { App } from './app/App';
 
 
@@ -59,7 +64,11 @@ export function AppShell({ onSignOut }: { onSignOut: () => void }) {
       />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <TopHeader activePage={activePage} onSignOut={onSignOut} notifCount={7} />
+<<<<<<< HEAD
         {activePage === "timeclock" || activePage === "clocked-in" ? <TimeClockPage onNavigate={setActivePage} /> : activePage.startsWith("submodule-exceptions") ? <TicketsPage onNavigate={setActivePage} initialCategory={activePage.includes(":") ? activePage.split(":")[1] : undefined} /> : activePage === "dashboard" || activePage.startsWith("submodule-") ? <Dashboard onNavigate={setActivePage} initialDrawer={activePage.startsWith("submodule-") ? activePage : undefined} /> : activePage.startsWith("employees") ? <EmployeesPage /> : activePage.startsWith("sites") ? <ClientsPage /> : activePage.startsWith("checkpoints") ? <CheckpointsPage /> : activePage.startsWith("scheduling") ? <SchedulingPage /> : activePage.startsWith("forms") ? <FormsPage /> : activePage.startsWith("tasks") ? <TasksPage /> : activePage.startsWith("communications") ? <CommunicationsPage /> : activePage.startsWith("documents") ? <DocumentsPage /> : activePage.startsWith("training") ? <TrainingPage /> : activePage.startsWith("vehicles") ? <VehiclesPage /> : activePage.startsWith("automations") ? <AutomationsPage /> : <PlaceholderPage page={activePage} />}
+=======
+        {activePage === "timeclock" || activePage === "clocked-in" ? <TimeClockPage onNavigate={setActivePage} /> : activePage.startsWith("submodule-exceptions") ? <TicketsPage onNavigate={setActivePage} initialCategory={activePage.includes(":") ? activePage.split(":")[1] : undefined} /> : activePage.startsWith("report-settings") ? <ReportSettingsPage onNavigate={setActivePage} initialView={activePage} /> : activePage === "reports-submissions" ? <CompletedReportsPage /> : activePage === "dashboard" || activePage.startsWith("submodule-") ? <Dashboard onNavigate={setActivePage} initialDrawer={activePage.startsWith("submodule-") ? activePage : undefined} /> : activePage.startsWith("employees") ? <EmployeesPage /> : activePage.startsWith("sites") ? <ClientsPage /> : activePage.startsWith("checkpoints") ? <CheckpointsPage /> : activePage.startsWith("scheduling") ? <SchedulingPage /> : <PlaceholderPage page={activePage} />}
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import {
+<<<<<<< HEAD
   AlertCircle, Settings, AlertTriangle, RefreshCw, Send, Plus, Search, CheckCircle2, X
 } from "lucide-react";
 import { MOCK_SCHED_JOBS, MOCK_SCHED_SHIFTS, MOCK_SWAP_REQUESTS } from "../../data/mockData";
@@ -7,6 +8,18 @@ import { ShiftDrawer } from "./ShiftDrawer";
 
 export function SchedulingPage() {
   const [shifts, setShifts] = useState(MOCK_SCHED_SHIFTS);
+=======
+  AlertCircle, Settings, AlertTriangle, RefreshCw, Send, Plus, Search, CheckCircle2, X, Route
+} from "lucide-react";
+import { MOCK_SCHED_JOBS, MOCK_SCHED_SHIFTS, MOCK_SWAP_REQUESTS, MOCK_SCHED_TOURS } from "../../data/mockData";
+import { ShiftDrawer } from "./ShiftDrawer";
+import { ConflictsDrawer } from "./ConflictsDrawer";
+import { TourDrawer } from "./TourDrawer";
+
+export function SchedulingPage() {
+  const [shifts, setShifts] = useState(MOCK_SCHED_SHIFTS);
+  const [tours, setTours] = useState(MOCK_SCHED_TOURS);
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   const [activeView, setActiveView] = useState<"user" | "job" | "day" | "week" | "month" | "list">("user");
   const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "warning" } | null>(null);
 
@@ -21,6 +34,12 @@ export function SchedulingPage() {
   const [prefillEmp, setPrefillEmp] = useState<string | null>(null);
   const [prefillJob, setPrefillJob] = useState<string | null>(null);
 
+<<<<<<< HEAD
+=======
+  const [showTourDrawer, setShowTourDrawer] = useState(false);
+  const [editingTourId, setEditingTourId] = useState<string | null>(null);
+
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   const [showConflicts, setShowConflicts] = useState(false);
 
   const DAYS = [
@@ -43,6 +62,11 @@ export function SchedulingPage() {
     "Unassigned Draft"
   ];
 
+<<<<<<< HEAD
+=======
+  const UNIQUE_SITES = useMemo(() => Array.from(new Set(shifts.map(s => s.site))), [shifts]);
+
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   const triggerToast = (message: string, type: "success" | "info" | "warning" = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
@@ -84,6 +108,17 @@ export function SchedulingPage() {
 
   const activeConflicts = useMemo(() => shifts.filter(s => s.conflict !== null), [shifts]);
 
+<<<<<<< HEAD
+=======
+  const filteredTours = useMemo(() => {
+    return tours.filter(t => {
+      const matchJob = jobFilter === "All" || t.jobId === jobFilter;
+      const matchSite = siteFilter === "All" || t.site === siteFilter;
+      return matchJob && matchSite;
+    });
+  }, [jobFilter, siteFilter]);
+
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   const saveShift = (shiftData: any) => {
     if (editingShiftId) {
       setShifts(prev => prev.map(s => s.id === editingShiftId ? { ...s, ...shiftData } : s));
@@ -101,6 +136,112 @@ export function SchedulingPage() {
     setShowDrawer(false);
   };
 
+<<<<<<< HEAD
+=======
+  const openTourDrawer = (id: string | null = null) => {
+    setEditingTourId(id);
+    setShowTourDrawer(true);
+  };
+
+  const saveTour = (tourData: any) => {
+    if (editingTourId) {
+      setTours(prev => prev.map(t => t.id === editingTourId ? { ...t, ...tourData } : t));
+      triggerToast("Tour updated successfully.", "success");
+    } else {
+      setTours(prev => [...prev, { id: `T-${Math.floor(Math.random() * 900) + 100}`, ...tourData }]);
+      triggerToast("New Tour created.", "success");
+    }
+    setShowTourDrawer(false);
+  };
+
+  const deleteTour = (id: string) => {
+    setTours(prev => prev.filter(t => t.id !== id));
+    triggerToast("Tour deleted.", "info");
+    setShowTourDrawer(false);
+  };
+
+  const handleUnassignConflict = (id: string) => {
+    setShifts(prev => prev.map(s => {
+      if (s.id === id) {
+        return { ...s, employeeName: null, status: "Draft", conflict: null };
+      }
+      return s;
+    }));
+    triggerToast("Shift unassigned and returned to drafts.", "success");
+    if (activeConflicts.length <= 1) {
+      setShowConflicts(false);
+    }
+  };
+
+  const handleDragStart = (e: React.DragEvent, type: 'shift' | 'tour', id: string) => {
+    e.dataTransfer.setData("application/json", JSON.stringify({ type, id }));
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent, targetDate: string, targetEmp: string | null, targetJobId: string | null) => {
+    e.preventDefault();
+    try {
+      const data = JSON.parse(e.dataTransfer.getData("application/json"));
+      if (data.type === 'shift') {
+        setShifts(prev => prev.map(s => {
+          if (s.id === data.id) {
+            let updates: any = { date: targetDate };
+            if (activeView === "user") {
+              updates.employeeName = targetEmp === "Unassigned Draft" ? null : targetEmp;
+            } else if (activeView === "job") {
+              updates.jobId = targetJobId;
+            }
+            return { ...s, ...updates };
+          }
+          return s;
+        }));
+        triggerToast("Shift rescheduled.", "success");
+      } else if (data.type === 'tour') {
+        const tour = tours.find(t => t.id === data.id);
+        if (!tour) return;
+        
+        setTours(prev => prev.map(t => {
+          if (t.id === data.id) {
+            let updates: any = { date: targetDate };
+            if (activeView === "job" && targetJobId) {
+              updates.jobId = targetJobId;
+            }
+            return { ...t, ...updates };
+          }
+          return t;
+        }));
+        
+        if (activeView === "user" && targetEmp && targetEmp !== "Unassigned Draft") {
+          const newShift = {
+            id: `SHF-GEN-${Date.now()}`,
+            employeeName: targetEmp,
+            jobId: tour.jobId,
+            date: targetDate,
+            time: `${tour.startTime} - ${tour.endTime}`,
+            startTime: tour.startTime,
+            endTime: tour.endTime,
+            status: "Draft",
+            conflict: null,
+            site: tour.site,
+            notes: `Auto-generated to cover ${tour.name}`,
+            tasks: [],
+            tourAssociated: true
+          };
+          setShifts(prev => [...prev, newShift]);
+          triggerToast(`Tour moved and assigned to ${targetEmp}`, "success");
+        } else {
+          triggerToast("Tour rescheduled.", "success");
+        }
+      }
+    } catch (err) {
+      console.error("Drop failed", err);
+    }
+  };
+
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   return (
     <div className="flex-1 overflow-y-auto p-5 space-y-5 relative" style={{ scrollbarWidth: "none" }}>
       {toast && (
@@ -166,6 +307,14 @@ export function SchedulingPage() {
             <option value="All">All Jobs</option>
             {MOCK_SCHED_JOBS.map((j) => <option key={j.id} value={j.id}>{j.title}</option>)}
           </select>
+<<<<<<< HEAD
+=======
+          <select value={siteFilter} onChange={(e) => setSiteFilter(e.target.value)}
+            className="px-2 py-1.5 border border-slate-200 rounded-lg text-xs outline-none bg-white max-w-[150px] truncate">
+            <option value="All">All Sites</option>
+            {UNIQUE_SITES.map((site) => <option key={site} value={site}>{site}</option>)}
+          </select>
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
         </div>
       </div>
 
@@ -200,6 +349,7 @@ export function SchedulingPage() {
                   </td>
                   {DAYS.map((d) => {
                     const shift = filteredShifts.find(s => s.employeeName === (emp === "Unassigned Draft" ? null : emp) && s.date === d.date);
+<<<<<<< HEAD
                     return (
                       <td key={d.date} className="p-2 align-middle text-center h-[90px] group relative border-r">
                         {shift ? (
@@ -231,6 +381,94 @@ export function SchedulingPage() {
                             <Plus className="w-5 h-5" />
                           </button>
                         )}
+=======
+                    const matchedTour = shift ? filteredTours.find(t => t.date === shift.date && t.jobId === shift.jobId && t.site === shift.site) : null;
+                    const uncoveredTours = emp === "Unassigned Draft" ? filteredTours.filter(t => t.date === d.date && !filteredShifts.some(s => s.date === t.date && s.jobId === t.jobId && s.site === t.site)) : [];
+
+                    return (
+                      <td key={d.date} 
+                        className="p-2 align-top text-center group relative border-r min-w-[140px]"
+                        onDragOver={handleDragOver}
+                        onDrop={(e) => handleDrop(e, d.date, emp, null)}
+                      >
+                        <div className="flex flex-col gap-2 h-full min-h-[90px]">
+                          {shift && (
+                            <div onClick={() => openDrawer(shift.id)}
+                              draggable
+                              onDragStart={(e) => handleDragStart(e, 'shift', shift.id)}
+                              className="relative p-2.5 rounded-lg text-left text-xs cursor-grab active:cursor-grabbing shadow-xs border hover:shadow-md transition-all flex flex-col justify-between"
+                              style={{
+                                background: shift.status === "Draft" ? "#f8fafc" : "#fff",
+                                borderColor: shift.conflict ? "#ef4444" : shift.status === "Draft" ? "#cbd5e1" : "#e2e8f0",
+                                borderLeftWidth: "4.5px",
+                                borderLeftColor: shift.conflict ? "#ef4444" : MOCK_SCHED_JOBS.find(j => j.id === shift.jobId)?.color || "#16a34a"
+                              }}>
+                              
+                              {matchedTour && (
+                                <div 
+                                  className="absolute top-1.5 right-1.5 text-blue-600 bg-blue-50 p-1 rounded-md group/tooltip hover:bg-blue-100 transition-colors z-10"
+                                  onClick={(e) => { e.stopPropagation(); openTourDrawer(matchedTour.id); }}
+                                >
+                                  <Route className="w-3.5 h-3.5" />
+                                  <div className="absolute top-full right-0 mt-1.5 w-48 bg-slate-900 text-white text-[10px] rounded-lg p-2 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity shadow-xl">
+                                    <p className="font-bold mb-1 border-b border-slate-700 pb-1">{matchedTour.name}</p>
+                                    <p>{matchedTour.startTime} - {matchedTour.endTime}</p>
+                                    <p className="truncate text-slate-300 mt-0.5">{matchedTour.site}</p>
+                                    <div className="absolute bottom-full right-2 border-4 border-transparent border-b-slate-900"></div>
+                                  </div>
+                                </div>
+                              )}
+
+                              <div>
+                                <div className="flex items-start justify-between mb-1">
+                                  <span className="font-bold text-slate-800">{shift.startTime} - {shift.endTime}</span>
+                                  {shift.status === "Draft" && <span className="text-[9px] px-1 bg-slate-200 rounded font-bold uppercase mr-6">Draft</span>}
+                                </div>
+                                <p className="text-[10px] text-slate-500 font-semibold truncate leading-tight pr-6">{MOCK_SCHED_JOBS.find(j => j.id === shift.jobId)?.title}</p>
+                                <p className="text-[10px] text-slate-400 truncate mt-0.5">{shift.site}</p>
+                              </div>
+                              <div className="flex items-center justify-between mt-2">
+                                <div></div>
+                                {shift.conflict && (
+                                  <div className="text-red-600">
+                                    <AlertTriangle className="w-3.5 h-3.5" />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {uncoveredTours.map(tour => (
+                            <div key={tour.id} 
+                              draggable
+                              onClick={(e) => { e.stopPropagation(); openTourDrawer(tour.id); }}
+                              onDragStart={(e) => handleDragStart(e, 'tour', tour.id)}
+                              className="p-2.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 text-left flex flex-col justify-between hover:border-slate-400 group/tour relative cursor-grab active:cursor-grabbing">
+                              <div>
+                                <div className="flex items-center gap-1.5 text-slate-600 font-bold text-xs mb-1">
+                                  <Route className="w-3.5 h-3.5 text-blue-600" /> 
+                                  <span>{tour.startTime} - {tour.endTime}</span>
+                                </div>
+                                <p className="text-[10px] text-slate-500 font-semibold truncate">{MOCK_SCHED_JOBS.find(j => j.id === tour.jobId)?.title}</p>
+                                <p className="text-[10px] text-slate-400 truncate mt-0.5">{tour.site}</p>
+                              </div>
+                              <div className="absolute inset-0 bg-white/70 opacity-0 group-hover/tour:opacity-100 flex items-center justify-center transition-opacity rounded-lg backdrop-blur-[1px]">
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); openDrawer(null, tour.date, null, tour.jobId); }} 
+                                  className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md hover:bg-blue-700 cursor-pointer"
+                                >
+                                  <Plus className="w-5 h-5" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+
+                          <button onClick={() => openDrawer(null, d.date, emp === "Unassigned Draft" ? null : emp)}
+                            className={`w-full rounded-lg border-2 border-dashed border-transparent hover:border-slate-300 hover:bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer transition-opacity ${(shift || uncoveredTours.length > 0) ? "opacity-0 group-hover:opacity-100 h-[40px] mt-auto" : "opacity-0 group-hover:opacity-100 h-full flex-1 min-h-[60px]"}`}>
+                            <Plus className="w-5 h-5" />
+                          </button>
+                        </div>
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
                       </td>
                     );
                   })}
@@ -241,11 +479,215 @@ export function SchedulingPage() {
         )}
 
         {activeView === "list" && (
+<<<<<<< HEAD
           <div className="text-sm text-slate-500 text-center py-10">List View Coming Soon</div>
         )}
         {activeView === "job" && (
           <div className="text-sm text-slate-500 text-center py-10">Job View Coming Soon</div>
         )}
+=======
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                <th className="px-4 py-2.5">Date</th>
+                <th className="px-4 py-2.5">Time</th>
+                <th className="px-4 py-2.5">Job / Role</th>
+                <th className="px-4 py-2.5">Employee</th>
+                <th className="px-4 py-2.5">Site</th>
+                <th className="px-4 py-2.5">Status</th>
+                <th className="px-4 py-2.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filteredShifts.length > 0 ? (
+                filteredShifts.map(shift => {
+                  const job = MOCK_SCHED_JOBS.find(j => j.id === shift.jobId);
+                  const day = DAYS.find(d => d.date === shift.date);
+                  return (
+                    <tr key={shift.id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => openDrawer(shift.id)}>
+                      <td className="px-4 py-3">
+                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">{day?.shortLabel || shift.date}</p>
+                        <p className="text-[11px] text-slate-500 font-medium">{day?.dayLabel}</p>
+                      </td>
+                      <td className="px-4 py-3 text-sm font-semibold text-slate-700">
+                        {shift.startTime} - {shift.endTime}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: job?.color || "#64748b" }}></div>
+                          <span className="text-sm font-medium text-slate-700">{job?.title || "Unassigned"}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        {shift.employeeName ? (
+                          <span className="text-sm font-semibold text-slate-900">{shift.employeeName}</span>
+                        ) : (
+                          <span className="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-bold uppercase">Unassigned</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 truncate max-w-[200px]">{shift.site}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold ${shift.status === 'Published' ? 'bg-green-100 text-green-700' : 'bg-slate-200 text-slate-700'}`}>
+                            {shift.status === 'Published' ? <CheckCircle2 className="w-3 h-3" /> : null}
+                            {shift.status}
+                          </span>
+                          {shift.conflict && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-red-100 text-red-700">
+                              <AlertTriangle className="w-3 h-3" /> Conflict
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-lg transition-colors shadow-sm" onClick={(e) => { e.stopPropagation(); openDrawer(shift.id); }}>
+                          Edit Shift
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={7} className="px-4 py-10 text-center text-slate-500 text-sm">
+                    No shifts found for the selected filters.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
+        {activeView === "job" && (() => {
+          const JOBS_WITH_UNASSIGNED = [
+            { id: null, title: "Shifts without a job", color: "#64748b" },
+            ...MOCK_SCHED_JOBS
+          ];
+
+          return (
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b text-slate-500 text-xs">
+                  <th className="px-4 py-3 text-left font-bold min-w-[180px] bg-slate-50 sticky left-0 z-20 border-r">Job / Role</th>
+                  {DAYS.map((d) => (
+                    <th key={d.date} className="px-4 py-3 text-center min-w-[140px] font-bold">
+                      <span className="block text-slate-400 font-normal uppercase tracking-wider">{d.dayLabel}</span>
+                      <span className="block font-bold text-slate-800">{d.shortLabel}</span>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {JOBS_WITH_UNASSIGNED.map((job) => (
+                  <tr key={job.id || "unassigned"} className="hover:bg-slate-50/50">
+                    <td className="px-4 py-3 font-semibold text-slate-900 bg-slate-50 sticky left-0 z-10 border-r align-top">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-3 h-3 rounded" style={{ backgroundColor: job.color }}></div>
+                        <p className="text-xs font-bold text-slate-800">{job.title}</p>
+                      </div>
+                      <p className="text-[10px] font-medium text-slate-400 pl-5">
+                        {filteredShifts.filter(s => (s.jobId || null) === job.id).length} shifts total
+                      </p>
+                    </td>
+                    {DAYS.map((d) => {
+                      const dayShifts = filteredShifts.filter(s => (s.jobId || null) === job.id && s.date === d.date);
+                      const uncoveredTours = filteredTours.filter(t => (t.jobId || null) === job.id && t.date === d.date && !filteredShifts.some(s => s.date === t.date && s.jobId === t.jobId && s.site === t.site));
+
+                      return (
+                        <td key={d.date} 
+                          className="p-2 align-top text-center min-h-[90px] group relative border-r"
+                          onDragOver={handleDragOver}
+                          onDrop={(e) => handleDrop(e, d.date, null, job.id)}
+                        >
+                          <div className="flex flex-col gap-2 h-full">
+                            {dayShifts.map(shift => {
+                              const matchedTour = filteredTours.find(t => t.date === shift.date && t.jobId === shift.jobId && t.site === shift.site);
+                              return (
+                                <div key={shift.id} onClick={() => openDrawer(shift.id)}
+                                  draggable
+                                  onDragStart={(e) => handleDragStart(e, 'shift', shift.id)}
+                                  className="relative p-2 rounded-lg text-left text-xs cursor-grab active:cursor-grabbing shadow-xs border hover:shadow-md transition-all flex flex-col justify-between"
+                                  style={{
+                                    background: shift.status === "Draft" ? "#f8fafc" : job.color,
+                                    borderColor: shift.conflict ? "#ef4444" : shift.status === "Draft" ? "#cbd5e1" : "transparent",
+                                    color: shift.status === "Draft" ? "#334155" : "#ffffff"
+                                  }}>
+                                  
+                                  {matchedTour && (
+                                    <div 
+                                      className={`absolute top-1.5 right-1.5 p-1 rounded-md group/tooltip transition-colors z-10 ${shift.status === "Draft" ? "text-blue-600 bg-blue-50 hover:bg-blue-100" : "text-white bg-white/20 hover:bg-white/30"}`}
+                                      onClick={(e) => { e.stopPropagation(); openTourDrawer(matchedTour.id); }}
+                                    >
+                                      <Route className="w-3.5 h-3.5" />
+                                      <div className="absolute top-full right-0 mt-1.5 w-48 bg-slate-900 text-white text-[10px] rounded-lg p-2 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity shadow-xl text-left">
+                                        <p className="font-bold mb-1 border-b border-slate-700 pb-1">{matchedTour.name}</p>
+                                        <p>{matchedTour.startTime} - {matchedTour.endTime}</p>
+                                        <p className="truncate text-slate-300 mt-0.5">{matchedTour.site}</p>
+                                        <div className="absolute bottom-full right-2 border-4 border-transparent border-b-slate-900"></div>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  <div>
+                                    <div className="flex items-start justify-between mb-1">
+                                      <span className="font-bold">{shift.startTime} - {shift.endTime}</span>
+                                      {shift.status === "Draft" && <span className="text-[9px] px-1 bg-slate-200 text-slate-700 rounded font-bold uppercase mr-6">Draft</span>}
+                                    </div>
+                                    <p className="text-[10px] font-semibold truncate leading-tight opacity-90 pr-6">{shift.employeeName || "Unassigned"}</p>
+                                    <p className="text-[10px] truncate mt-0.5 opacity-80">{shift.site}</p>
+                                  </div>
+                                  <div className="flex items-center justify-between mt-2">
+                                    <div></div>
+                                    {shift.conflict && (
+                                      <div className="self-end mt-1 text-red-100 bg-red-600/30 px-1.5 py-0.5 rounded">
+                                        <AlertTriangle className="w-3.5 h-3.5 inline-block mr-1" />
+                                        <span className="text-[9px] font-bold">Conflict</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                            
+                            {uncoveredTours.map(tour => (
+                              <div key={tour.id} 
+                                draggable
+                                onClick={(e) => { e.stopPropagation(); openTourDrawer(tour.id); }}
+                                onDragStart={(e) => handleDragStart(e, 'tour', tour.id)}
+                                className="p-2.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 text-left flex flex-col justify-between hover:border-slate-400 group/tour relative cursor-grab active:cursor-grabbing">
+                                <div>
+                                  <div className="flex items-center gap-1.5 text-slate-600 font-bold text-xs mb-1">
+                                    <Route className="w-3.5 h-3.5 text-blue-600" /> 
+                                    <span>{tour.startTime} - {tour.endTime}</span>
+                                  </div>
+                                  <p className="text-[10px] text-slate-500 font-semibold truncate">{tour.name}</p>
+                                  <p className="text-[10px] text-slate-400 truncate mt-0.5">{tour.site}</p>
+                                </div>
+                                <div className="absolute inset-0 bg-white/70 opacity-0 group-hover/tour:opacity-100 flex items-center justify-center transition-opacity rounded-lg backdrop-blur-[1px]">
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); openDrawer(null, tour.date, null, tour.jobId); }} 
+                                    className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-md hover:bg-blue-700 cursor-pointer"
+                                  >
+                                    <Plus className="w-5 h-5" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+
+                            <button onClick={() => openDrawer(null, d.date, null, job.id)}
+                              className={`w-full rounded-lg border-2 border-dashed border-transparent hover:border-slate-300 hover:bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer transition-opacity ${(dayShifts.length > 0 || uncoveredTours.length > 0) ? "opacity-0 group-hover:opacity-100 mt-1 h-[40px] mt-auto" : "opacity-0 group-hover:opacity-100 h-full min-h-[60px]"}`}>
+                              <Plus className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          );
+        })()}
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
       </div>
 
       {showDrawer && (
@@ -261,6 +703,33 @@ export function SchedulingPage() {
           onDelete={deleteShift}
         />
       )}
+<<<<<<< HEAD
+=======
+
+      {showConflicts && (
+        <ConflictsDrawer
+          isOpen={showConflicts}
+          onClose={() => setShowConflicts(false)}
+          conflicts={activeConflicts}
+          onResolve={(id) => {
+            setShowConflicts(false);
+            openDrawer(id);
+          }}
+          onUnassign={handleUnassignConflict}
+        />
+      )}
+
+      {showTourDrawer && (
+        <TourDrawer
+          isOpen={showTourDrawer}
+          onClose={() => setShowTourDrawer(false)}
+          editingTourId={editingTourId}
+          tours={tours}
+          onSave={saveTour}
+          onDelete={deleteTour}
+        />
+      )}
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
     </div>
   );
 }

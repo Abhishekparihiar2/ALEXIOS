@@ -44,7 +44,10 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Dashboard", 
         icon: <LayoutDashboard className="w-4 h-4" />,
         children: [
+<<<<<<< HEAD
           { id: "submodule-report-settings", label: "Report Settings", icon: <Settings className="w-3.5 h-3.5" /> },
+=======
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
           { id: "submodule-vehicles", label: "Vehicle Management", icon: <Truck className="w-3.5 h-3.5" /> },
           { id: "submodule-journal", label: "Activity Journal", icon: <ClipboardList className="w-3.5 h-3.5" /> },
           { id: "submodule-exceptions", label: "Manage Tickets", icon: <AlertTriangle className="w-3.5 h-3.5" /> },
@@ -65,7 +68,19 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Field",
     items: [
       { id: "checkpoints", label: "Checkpoints & Tours", icon: <MapPin className="w-4 h-4" /> },
+<<<<<<< HEAD
       { id: "reports", label: "Reports & Incidents", icon: <FileText className="w-4 h-4" />, badge: 12 },
+=======
+      {
+        id: "reports",
+        label: "Reports & Incidents",
+        icon: <FileText className="w-4 h-4" />,
+        children: [
+          { id: "report-settings", label: "Report Settings", icon: <Settings className="w-3.5 h-3.5" /> },
+          { id: "reports-submissions", label: "Completed Reports", icon: <ClipboardList className="w-3.5 h-3.5" />, badge: 12 },
+        ]
+      },
+>>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
       { id: "forms", label: "Forms", icon: <ClipboardList className="w-4 h-4" /> },
       { id: "tasks", label: "Tasks & Dispatch", icon: <CheckSquare className="w-4 h-4" />, badge: 5 },
     ],
