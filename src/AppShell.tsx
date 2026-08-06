@@ -42,6 +42,9 @@ import { AutomationsPage } from './pages/Automations/index';
 import { ReportSettingsPage } from './pages/Reports/index';
 import { CompletedReportsPage } from './pages/Reports/CompletedReports';
 import { PayrollPage } from './pages/Payroll/index';
+import { GroupsPage } from './pages/Groups/index';
+import { HelpPage } from './pages/Help/index';
+import { HelpDeskPage } from './pages/HelpDesk/index';
 import { App } from './app/App';
 
 
@@ -62,7 +65,7 @@ export function AppShell({ onSignOut }: { onSignOut: () => void }) {
       />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <TopHeader activePage={activePage} onSignOut={onSignOut} notifCount={7} />
-        {activePage === "timeclock" || activePage === "clocked-in" ? <TimeClockPage onNavigate={setActivePage} /> : activePage.startsWith("submodule-exceptions") ? <TicketsPage onNavigate={setActivePage} initialCategory={activePage.includes(":") ? activePage.split(":")[1] : undefined} /> : activePage.startsWith("report-settings") ? <ReportSettingsPage onNavigate={setActivePage} initialView={activePage} /> : activePage.startsWith("reports-submissions") ? <CompletedReportsPage initialTab={(activePage.split(":")[1] as any) || "reports"} initialFilter={activePage.split(":")[2]} /> : activePage === "dashboard" || activePage.startsWith("submodule-") ? <Dashboard onNavigate={setActivePage} initialDrawer={activePage.startsWith("submodule-") ? activePage : undefined} /> : activePage.startsWith("employees") ? <EmployeesPage /> : activePage.startsWith("sites") ? <ClientsPage /> : activePage.startsWith("checkpoints") ? <CheckpointsPage /> : activePage.startsWith("scheduling") ? <SchedulingPage /> : <PlaceholderPage page={activePage} />}
+        {activePage === "timeclock" || activePage === "clocked-in" ? <TimeClockPage onNavigate={setActivePage} /> : activePage.startsWith("submodule-exceptions") ? <TicketsPage onNavigate={setActivePage} initialCategory={activePage.includes(":") ? activePage.split(":")[1] : undefined} /> : activePage.startsWith("report-settings") ? <ReportSettingsPage onNavigate={setActivePage} initialView={activePage} /> : activePage.startsWith("reports-submissions") ? <CompletedReportsPage initialTab={(activePage.split(":")[1] as any) || "reports"} initialFilter={activePage.split(":")[2]} /> : activePage === "dashboard" || activePage.startsWith("submodule-") ? <Dashboard onNavigate={setActivePage} initialDrawer={activePage.startsWith("submodule-") ? activePage : undefined} /> : activePage.startsWith("employees") ? <EmployeesPage /> : activePage.startsWith("sites") ? <ClientsPage /> : activePage.startsWith("checkpoints") ? <CheckpointsPage /> : activePage.startsWith("scheduling") ? <SchedulingPage /> : activePage.startsWith("payroll") ? <PayrollPage /> : activePage.startsWith("groups") ? <GroupsPage /> : activePage.startsWith("helpdesk") ? <HelpDeskPage /> : activePage.startsWith("help") ? <HelpPage /> : activePage.startsWith("forms") ? <FormsPage /> : activePage.startsWith("tasks") ? <TasksPage /> : activePage.startsWith("communications") ? <CommunicationsPage /> : activePage.startsWith("documents") ? <DocumentsPage /> : activePage.startsWith("training") ? <TrainingPage /> : activePage.startsWith("vehicles") ? <VehiclesPage /> : activePage.startsWith("automations") ? <AutomationsPage /> : <PlaceholderPage page={activePage} />}
       </div>
     </div>
   );
