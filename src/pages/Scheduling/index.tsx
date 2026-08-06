@@ -1,14 +1,5 @@
 import { useState, useMemo } from "react";
 import {
-<<<<<<< HEAD
-  AlertCircle, Settings, AlertTriangle, RefreshCw, Send, Plus, Search, CheckCircle2, X
-} from "lucide-react";
-import { MOCK_SCHED_JOBS, MOCK_SCHED_SHIFTS, MOCK_SWAP_REQUESTS } from "../../data/mockData";
-import { ShiftDrawer } from "./ShiftDrawer";
-
-export function SchedulingPage() {
-  const [shifts, setShifts] = useState(MOCK_SCHED_SHIFTS);
-=======
   AlertCircle, Settings, AlertTriangle, RefreshCw, Send, Plus, Search, CheckCircle2, X, Route
 } from "lucide-react";
 import { MOCK_SCHED_JOBS, MOCK_SCHED_SHIFTS, MOCK_SWAP_REQUESTS, MOCK_SCHED_TOURS } from "../../data/mockData";
@@ -19,7 +10,6 @@ import { TourDrawer } from "./TourDrawer";
 export function SchedulingPage() {
   const [shifts, setShifts] = useState(MOCK_SCHED_SHIFTS);
   const [tours, setTours] = useState(MOCK_SCHED_TOURS);
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   const [activeView, setActiveView] = useState<"user" | "job" | "day" | "week" | "month" | "list">("user");
   const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "warning" } | null>(null);
 
@@ -34,12 +24,9 @@ export function SchedulingPage() {
   const [prefillEmp, setPrefillEmp] = useState<string | null>(null);
   const [prefillJob, setPrefillJob] = useState<string | null>(null);
 
-<<<<<<< HEAD
-=======
   const [showTourDrawer, setShowTourDrawer] = useState(false);
   const [editingTourId, setEditingTourId] = useState<string | null>(null);
 
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   const [showConflicts, setShowConflicts] = useState(false);
 
   const DAYS = [
@@ -62,11 +49,8 @@ export function SchedulingPage() {
     "Unassigned Draft"
   ];
 
-<<<<<<< HEAD
-=======
   const UNIQUE_SITES = useMemo(() => Array.from(new Set(shifts.map(s => s.site))), [shifts]);
 
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   const triggerToast = (message: string, type: "success" | "info" | "warning" = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
@@ -108,8 +92,6 @@ export function SchedulingPage() {
 
   const activeConflicts = useMemo(() => shifts.filter(s => s.conflict !== null), [shifts]);
 
-<<<<<<< HEAD
-=======
   const filteredTours = useMemo(() => {
     return tours.filter(t => {
       const matchJob = jobFilter === "All" || t.jobId === jobFilter;
@@ -118,7 +100,6 @@ export function SchedulingPage() {
     });
   }, [jobFilter, siteFilter]);
 
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   const saveShift = (shiftData: any) => {
     if (editingShiftId) {
       setShifts(prev => prev.map(s => s.id === editingShiftId ? { ...s, ...shiftData } : s));
@@ -136,8 +117,6 @@ export function SchedulingPage() {
     setShowDrawer(false);
   };
 
-<<<<<<< HEAD
-=======
   const openTourDrawer = (id: string | null = null) => {
     setEditingTourId(id);
     setShowTourDrawer(true);
@@ -241,7 +220,6 @@ export function SchedulingPage() {
     }
   };
 
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
   return (
     <div className="flex-1 overflow-y-auto p-5 space-y-5 relative" style={{ scrollbarWidth: "none" }}>
       {toast && (
@@ -307,14 +285,11 @@ export function SchedulingPage() {
             <option value="All">All Jobs</option>
             {MOCK_SCHED_JOBS.map((j) => <option key={j.id} value={j.id}>{j.title}</option>)}
           </select>
-<<<<<<< HEAD
-=======
           <select value={siteFilter} onChange={(e) => setSiteFilter(e.target.value)}
             className="px-2 py-1.5 border border-slate-200 rounded-lg text-xs outline-none bg-white max-w-[150px] truncate">
             <option value="All">All Sites</option>
             {UNIQUE_SITES.map((site) => <option key={site} value={site}>{site}</option>)}
           </select>
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
         </div>
       </div>
 
@@ -349,39 +324,6 @@ export function SchedulingPage() {
                   </td>
                   {DAYS.map((d) => {
                     const shift = filteredShifts.find(s => s.employeeName === (emp === "Unassigned Draft" ? null : emp) && s.date === d.date);
-<<<<<<< HEAD
-                    return (
-                      <td key={d.date} className="p-2 align-middle text-center h-[90px] group relative border-r">
-                        {shift ? (
-                          <div onClick={() => openDrawer(shift.id)}
-                            className="p-2.5 rounded-lg text-left text-xs cursor-pointer shadow-xs border hover:shadow-md transition-all h-full flex flex-col justify-between"
-                            style={{
-                              background: shift.status === "Draft" ? "#f8fafc" : "#fff",
-                              borderColor: shift.conflict ? "#ef4444" : shift.status === "Draft" ? "#cbd5e1" : "#e2e8f0",
-                              borderLeftWidth: "4.5px",
-                              borderLeftColor: shift.conflict ? "#ef4444" : MOCK_SCHED_JOBS.find(j => j.id === shift.jobId)?.color || "#16a34a"
-                            }}>
-                            <div>
-                              <div className="flex items-start justify-between mb-1">
-                                <span className="font-bold text-slate-800">{shift.startTime} - {shift.endTime}</span>
-                                {shift.status === "Draft" && <span className="text-[9px] px-1 bg-slate-200 rounded font-bold uppercase">Draft</span>}
-                              </div>
-                              <p className="text-[10px] text-slate-500 font-semibold truncate leading-tight">{MOCK_SCHED_JOBS.find(j => j.id === shift.jobId)?.title}</p>
-                              <p className="text-[10px] text-slate-400 truncate mt-0.5">{shift.site}</p>
-                            </div>
-                            {shift.conflict && (
-                              <div className="self-end mt-1 text-red-600">
-                                <AlertTriangle className="w-3.5 h-3.5" />
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <button onClick={() => openDrawer(null, d.date, emp === "Unassigned Draft" ? null : emp)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity w-full h-full min-h-[60px] rounded-lg border-2 border-dashed border-transparent hover:border-slate-300 hover:bg-slate-50 flex items-center justify-center text-slate-400 cursor-pointer">
-                            <Plus className="w-5 h-5" />
-                          </button>
-                        )}
-=======
                     const matchedTour = shift ? filteredTours.find(t => t.date === shift.date && t.jobId === shift.jobId && t.site === shift.site) : null;
                     const uncoveredTours = emp === "Unassigned Draft" ? filteredTours.filter(t => t.date === d.date && !filteredShifts.some(s => s.date === t.date && s.jobId === t.jobId && s.site === t.site)) : [];
 
@@ -468,7 +410,6 @@ export function SchedulingPage() {
                             <Plus className="w-5 h-5" />
                           </button>
                         </div>
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
                       </td>
                     );
                   })}
@@ -479,13 +420,6 @@ export function SchedulingPage() {
         )}
 
         {activeView === "list" && (
-<<<<<<< HEAD
-          <div className="text-sm text-slate-500 text-center py-10">List View Coming Soon</div>
-        )}
-        {activeView === "job" && (
-          <div className="text-sm text-slate-500 text-center py-10">Job View Coming Soon</div>
-        )}
-=======
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
@@ -687,7 +621,6 @@ export function SchedulingPage() {
             </table>
           );
         })()}
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
       </div>
 
       {showDrawer && (
@@ -703,8 +636,6 @@ export function SchedulingPage() {
           onDelete={deleteShift}
         />
       )}
-<<<<<<< HEAD
-=======
 
       {showConflicts && (
         <ConflictsDrawer
@@ -729,7 +660,6 @@ export function SchedulingPage() {
           onDelete={deleteTour}
         />
       )}
->>>>>>> f4d17fc5bf4ad67282a2b87cbb9ac2da6d6b7574
     </div>
   );
 }
