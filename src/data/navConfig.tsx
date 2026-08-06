@@ -39,11 +39,12 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Security Operations",
     items: [
-      { 
-        id: "dashboard", 
-        label: "Dashboard", 
+      {
+        id: "dashboard",
+        label: "Dashboard",
         icon: <LayoutDashboard className="w-4 h-4" />,
         children: [
+
           { id: "submodule-vehicles", label: "Vehicle Management", icon: <Truck className="w-3.5 h-3.5" /> },
           { id: "submodule-journal", label: "Activity Journal", icon: <ClipboardList className="w-3.5 h-3.5" /> },
           { id: "submodule-exceptions", label: "Manage Tickets", icon: <AlertTriangle className="w-3.5 h-3.5" /> },

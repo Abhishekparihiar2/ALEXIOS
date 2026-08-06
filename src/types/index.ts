@@ -40,7 +40,7 @@ export type Page =
   | "timeclock" | "reports" | "forms" | "tasks" | "communications"
   | "security-ops" | "documents" | "training" | "vehicles" | "automations"
   | "payroll" | "settings" | "groups" | "help" | "helpdesk"
-  | "submodule-report-settings" | "submodule-vehicles" | "submodule-journal" | "submodule-exceptions";
+  | "report-settings" | "reports-submissions" | "submodule-vehicles" | "submodule-journal" | "submodule-exceptions" | string;
 
 export type AuthScreen = "login" | "force-change-password" | "forgot-password";
 

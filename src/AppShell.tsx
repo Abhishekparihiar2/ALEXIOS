@@ -32,8 +32,16 @@ import { EmpStatus, EmpUserType, Employee, DEPARTMENTS, MOCK_EMPLOYEES, STATUS_S
 import { ProfileTab, AVAIL_CYCLE, AvailState, AVAIL_COLORS, DAYS_SHORT, HOURS_LIST, buildInitialAvail, EmployeeProfilePage, AddEmployeePage, EmployeesPage } from './pages/Employees/Profile';
 import { TicketsPage } from './pages/Tickets/index';
 import { TimeClockPage } from './pages/TimeClock/index';
+import { FormsPage } from './pages/Forms/index';
+import { TasksPage } from './pages/Tasks/index';
+import { CommunicationsPage } from './pages/Communications/index';
+import { DocumentsPage } from './pages/Documents/index';
+import { TrainingPage } from './pages/Training/index';
+import { VehiclesPage } from './pages/Vehicles/index';
+import { AutomationsPage } from './pages/Automations/index';
 import { ReportSettingsPage } from './pages/Reports/index';
 import { CompletedReportsPage } from './pages/Reports/CompletedReports';
+import { PayrollPage } from './pages/Payroll/index';
 import { App } from './app/App';
 
 
