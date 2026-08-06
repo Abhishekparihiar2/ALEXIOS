@@ -99,14 +99,16 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
   const [search, setSearch] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [statusFilter, setStatusFilter] = useState("All");
+  const [approvalFilter, setApprovalFilter] = useState("All");
 
   const filtered = useMemo(() => {
     return MOCK_REPORT_FORMS.filter(f => {
       const matchesSearch = f.name.toLowerCase().includes(search.toLowerCase());
       const matchesStatus = statusFilter === "All" || f.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesApproval = approvalFilter === "All" || (approvalFilter === "Required" ? f.approvalRequired : !f.approvalRequired);
+      return matchesSearch && matchesStatus && matchesApproval;
     });
-  }, [search, statusFilter]);
+  }, [search, statusFilter, approvalFilter]);
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -130,52 +132,53 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
         ))}
       </div>
 
-      {/* ── Toolbar ── */}
-      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-100 shrink-0 flex-wrap">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm bg-slate-50 border border-slate-200 min-w-64">
-            <Search className="w-4 h-4 text-slate-400" />
-            <input 
-              value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Search reports..." className="bg-transparent outline-none flex-1"
-            />
-          </div>
-          <div className="relative z-20">
-            <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-xl border transition-colors ${showFilters || statusFilter !== "All" ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
-              <Filter className="w-4 h-4" /> Filters {statusFilter !== "All" && <span className="flex items-center justify-center w-5 h-5 ml-1 text-[10px] font-bold text-white bg-blue-600 rounded-full">1</span>}
+      {/* ── Compact Toolbar & Filters ── */}
+      <div className="p-3 border-b border-slate-100 flex flex-col gap-3 bg-white shrink-0">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 flex-1">
+            <div className="relative flex items-center flex-1 max-w-md shrink-0">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3" />
+              <input 
+                type="text" 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search reports..." 
+                className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-1 focus:ring-blue-100 transition-all"
+              />
+            </div>
+            <button 
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg border transition-colors ${showFilters || statusFilter !== "All" || approvalFilter !== "All" ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+            >
+              <Filter className="w-4 h-4" />
+              Filters
             </button>
-            {showFilters && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowFilters(false)}></div>
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-4">
-                  <div className="flex items-center justify-between mb-3 border-b border-slate-100 pb-3">
-                    <h4 className="text-sm font-bold text-slate-800">Filter Reports</h4>
-                    <button onClick={() => { setStatusFilter("All"); setShowFilters(false); }} className="text-xs font-semibold text-slate-500 hover:text-slate-800">Clear</button>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-2">Status</label>
-                    <select 
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                      className="w-full px-3 py-2.5 text-sm text-slate-700 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-blue-400 focus:bg-white transition-colors"
-                    >
-                      <option value="All">All Statuses</option>
-                      <option value="Active">Active</option>
-                      <option value="Archived">Archived</option>
-                      <option value="Pending Approval">Pending Approval</option>
-                    </select>
-                  </div>
-                  <button onClick={() => setShowFilters(false)} className="w-full mt-4 py-2 bg-blue-800 text-white text-sm font-bold rounded-lg hover:bg-blue-900 transition-colors">
-                    Apply Filters
-                  </button>
-                </div>
-              </>
-            )}
           </div>
+          <button onClick={onCreate} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-800 rounded-lg hover:bg-blue-900 transition-colors shadow-sm whitespace-nowrap">
+            <Plus className="w-4 h-4" /> Create Report
+          </button>
         </div>
-        <button onClick={onCreate} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-800 rounded-xl hover:bg-blue-900 transition-colors shadow-sm">
-          <Plus className="w-4 h-4" /> Create Report
-        </button>
+
+        {showFilters && (
+          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap">
+              <Filter className="w-3.5 h-3.5 text-slate-400" />
+              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="bg-transparent font-medium outline-none cursor-pointer">
+                <option value="All">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap">
+              <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
+              <select value={approvalFilter} onChange={e => setApprovalFilter(e.target.value)} className="bg-transparent font-medium outline-none cursor-pointer">
+                <option value="All">All Approvals</option>
+                <option value="Required">Required</option>
+                <option value="No Approval">No Approval</option>
+              </select>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── Table ── */}

@@ -60,6 +60,7 @@ export function Sidebar({
       style={{
         width: collapsed ? 64 : 240,
         flexShrink: 0,
+        background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)"
       }}
     >
       {/* Logo Header */}
@@ -77,14 +78,14 @@ export function Sidebar({
         )}
         {!collapsed && (
           <div className="overflow-hidden">
-            <p className="text-sm font-semibold leading-tight truncate" style={{ color: "#e2e8f0" }}>Alexios</p>
-            <p className="text-xs leading-tight truncate" style={{ color: "#64748b" }}>Admin Portal</p>
+            <p className="text-sm font-semibold leading-tight truncate" style={{ color: "#ffffff" }}>Alexios</p>
+            <p className="text-xs leading-tight truncate" style={{ color: "#e2e8f0" }}>Admin Portal</p>
           </div>
         )}
         <button
           onClick={onToggle}
           className={`${collapsed ? '' : 'ml-auto'} shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/10`}
-          style={{ color: collapsed ? "#e2e8f0" : "#64748b" }}
+          style={{ color: collapsed ? "#ffffff" : "#e2e8f0" }}
         >
           {collapsed ? <Menu className="w-5 h-5" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
@@ -95,11 +96,13 @@ export function Sidebar({
         {NAV_GROUPS.map((group) => (
           <div key={group.label} className="mb-1">
             {!collapsed && (
-              <p className="text-xs font-semibold uppercase tracking-wider px-2 pt-3 pb-1" style={{ color: "#94a3b8" }}>
-                {group.label}
-              </p>
+              <div className="mt-4 mb-1 px-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                  {group.label}
+                </p>
+              </div>
             )}
-            {collapsed && <div className="my-2 mx-2 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />}
+            {collapsed && <div className="my-3 mx-2 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />}
             {group.items.map((item) => {
               const isActive = activePage === item.id || (item.children && item.children.some(child => activePage === child.id));
               const isExpanded = expandedMenus.includes(item.id);
@@ -116,24 +119,28 @@ export function Sidebar({
                       }
                     }}
                     title={collapsed ? item.label : undefined}
-                    className="w-full flex items-center gap-2.5 rounded-md transition-all text-left"
+                    className="w-full flex items-center gap-2.5 rounded-xl transition-all duration-300 text-left group relative overflow-hidden"
                     style={{
-                      padding: collapsed ? "8px 10px" : "7px 10px",
-                      background: isActive && !item.children ? "#1e3a6e" : "transparent",
-                      color: isActive ? "#e2e8f0" : "#94a3b8",
+                      padding: collapsed ? "10px" : "10px 12px",
+                      background: isActive && !item.children ? "rgba(255,255,255,0.12)" : "transparent",
+                      backdropFilter: isActive && !item.children ? "blur(8px)" : "none",
+                      color: isActive ? "#ffffff" : "#e2e8f0",
                       justifyContent: collapsed ? "center" : "flex-start",
                     }}
                     onMouseEnter={(e) => {
-                      if (!(isActive && !item.children)) { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#c0c8d8"; }
+                      if (!(isActive && !item.children)) { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#ffffff"; }
                     }}
                     onMouseLeave={(e) => {
-                      if (!(isActive && !item.children)) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = isActive ? "#e2e8f0" : "#94a3b8"; }
+                      if (!(isActive && !item.children)) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = isActive ? "#ffffff" : "#e2e8f0"; }
                     }}
                   >
-                    <span className="shrink-0">{item.icon}</span>
+                    {isActive && !item.children && !collapsed && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-2/3 rounded-r-md bg-blue-400" />
+                    )}
+                    <span className="shrink-0 transition-transform duration-300 group-hover:scale-110">{item.icon}</span>
                     {!collapsed && (
                       <>
-                        <span className="text-sm truncate flex-1 font-medium">{item.label}</span>
+                        <span className="text-sm truncate flex-1 font-medium transition-transform duration-300 group-hover:translate-x-1">{item.label}</span>
                         {item.badge && (
                           <span className="text-xs font-semibold rounded-full px-1.5 py-0.5 leading-none"
                             style={{ background: "#dc2626", color: "#fff", minWidth: 18, textAlign: "center" }}>
@@ -154,29 +161,36 @@ export function Sidebar({
 
                   {/* Render Submenu */}
                   {!collapsed && item.children && isExpanded && (
-                    <div className="ml-7 mt-0.5 border-l border-slate-700/50 pl-2 space-y-0.5">
+                    <div className="ml-[22px] mt-1 relative space-y-1">
+                      {/* Vertical line for the tree structure */}
+                      <div className="absolute left-0 top-0 bottom-3 w-px bg-white/20" />
                       {item.children.map(child => {
                         const isChildActive = activePage === child.id;
                         return (
-                          <button
-                            key={child.id}
-                            onClick={() => onNavigate(child.id)}
-                            className="w-full flex items-center gap-2 rounded-md transition-all text-left"
-                            style={{
-                              padding: "6px 8px",
-                              background: isChildActive ? "rgba(255,255,255,0.08)" : "transparent",
-                              color: isChildActive ? "#e2e8f0" : "#94a3b8",
-                            }}
-                            onMouseEnter={(e) => {
-                              if (!isChildActive) { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.color = "#c0c8d8"; }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (!isChildActive) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }
-                            }}
-                          >
-                            <span className="shrink-0 opacity-70">{child.icon}</span>
-                            <span className="text-xs truncate">{child.label}</span>
-                          </button>
+                          <div key={child.id} className="relative flex items-center group">
+                            {/* Horizontal connector line */}
+                            <div className="absolute left-0 top-1/2 w-3 h-px bg-white/20" />
+                            <button
+                              onClick={() => onNavigate(child.id)}
+                              className="ml-3 w-full flex items-center gap-2 rounded-lg transition-all text-left relative overflow-hidden"
+                              style={{
+                                padding: "6px 10px",
+                                background: isChildActive ? "rgba(255,255,255,0.1)" : "transparent",
+                                color: isChildActive ? "#ffffff" : "rgba(255,255,255,0.7)",
+                              }}
+                              onMouseEnter={(e) => {
+                                if (!isChildActive) { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "#ffffff"; }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (!isChildActive) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }
+                              }}
+                            >
+                              {isChildActive && (
+                                <div className="absolute left-1.5 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-blue-300 shadow-[0_0_8px_rgba(147,197,253,0.8)]" />
+                              )}
+                              <span className="text-[12px] truncate font-medium transition-transform duration-300 group-hover:translate-x-1 pl-1.5">{child.label}</span>
+                            </button>
+                          </div>
                         );
                       })}
                     </div>
@@ -200,14 +214,14 @@ export function Sidebar({
           {!collapsed && (
             <>
               <div className="flex-1 overflow-hidden">
-                <p className="text-xs font-medium truncate" style={{ color: "#e2e8f0" }}>{MOCK_USER.name}</p>
-                <p className="text-xs truncate" style={{ color: "#64748b" }}>{MOCK_USER.role}</p>
+                <p className="text-xs font-bold truncate" style={{ color: "#ffffff" }}>{MOCK_USER.name}</p>
+                <p className="text-xs truncate" style={{ color: "#e2e8f0" }}>{MOCK_USER.role}</p>
               </div>
               <button
                 onClick={onSignOut}
                 title="Sign out"
                 className="shrink-0 w-6 h-6 rounded flex items-center justify-center transition-colors hover:bg-white/10"
-                style={{ color: "#64748b" }}
+                style={{ color: "#e2e8f0" }}
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
