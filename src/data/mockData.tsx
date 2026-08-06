@@ -123,14 +123,15 @@ export const MOCK_KPI = [
 ];
 
 export const MOCK_ACTIVITY = [
-  { id: 1, type: "clock-in", text: "Marcus Johnson clocked in", site: "Downtown Financial Center", time: "8 min ago", status: "success" },
-  { id: 2, type: "tour", text: "Tour Route Alpha completed", site: "Westfield Mall", time: "15 min ago", status: "success" },
-  { id: 3, type: "incident", text: "Incident report #IR-2847 submitted", site: "Harbor District", time: "32 min ago", status: "warning" },
-  { id: 4, type: "schedule", text: "Night Shift schedule updated", site: "Harbor District", time: "1 hr ago", status: "info" },
-  { id: 5, type: "clock-out", text: "Derek Wilson clocked out", site: "Airport Terminal C", time: "1 hr ago", status: "neutral" },
-  { id: 6, type: "time-off", text: "Time-off request from Emma Rodriguez", site: "All Sites", time: "2 hrs ago", status: "warning" },
-  { id: 7, type: "missed-scan", text: "Checkpoint scan missed at Gate 5", site: "Marina Complex", time: "2 hrs ago", status: "error" },
-  { id: 8, type: "clock-in", text: "Priya Patel clocked in", site: "City Hall Security Post", time: "3 hrs ago", status: "success" },
+  { id: 1, type: "clock-in", text: "Marcus Johnson clocked in", site: "Downtown Financial Center", time: "8 min ago", status: "success", timestamp: "2026-08-06T09:00:00" },
+  { id: 2, type: "tour", text: "Tour Route Alpha completed", site: "Westfield Mall", time: "15 min ago", status: "success", timestamp: "2026-08-06T08:45:00" },
+  { id: 3, type: "incident", text: "Incident report #IR-2847 submitted", site: "Harbor District", time: "32 min ago", status: "warning", timestamp: "2026-08-06T08:28:00" },
+  { id: 4, type: "schedule", text: "Night Shift schedule updated", site: "Harbor District", time: "1 hr ago", status: "info", timestamp: "2026-08-06T07:00:00" },
+  { id: 5, type: "clock-out", text: "Derek Wilson clocked out", site: "Airport Terminal C", time: "1 hr ago", status: "neutral", timestamp: "2026-08-06T07:00:00" },
+  { id: 6, type: "panic", text: "Panic Button Triggered by Sarah Chen", site: "Westfield Mall", time: "1.5 hrs ago", status: "error", timestamp: "2026-08-06T06:30:00" },
+  { id: 7, type: "time-off", text: "Time-off request from Emma Rodriguez", site: "All Sites", time: "2 hrs ago", status: "warning", timestamp: "2026-08-06T06:00:00" },
+  { id: 8, type: "missed-scan", text: "Checkpoint scan missed at Gate 5", site: "Marina Complex", time: "2 hrs ago", status: "error", timestamp: "2026-08-06T06:00:00" },
+  { id: 9, type: "clock-in", text: "Priya Patel clocked in", site: "City Hall Security Post", time: "3 hrs ago", status: "success", timestamp: "2026-08-06T05:00:00" },
 ];
 
 export const MOCK_TOURS = [

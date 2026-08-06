@@ -69,6 +69,10 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
   const [msgTypeFilter, setMsgTypeFilter] = useState("All");
   const [msgSearch, setMsgSearch] = useState("");
 
+  const [liveFeedEventFilter, setLiveFeedEventFilter] = useState("All");
+  const [liveFeedDateFrom, setLiveFeedDateFrom] = useState("");
+  const [liveFeedDateTo, setLiveFeedDateTo] = useState("");
+
   // Form states
   const [updateMsg, setUpdateMsg] = useState("");
   const [updateTargetType, setUpdateTargetType] = useState("User Type");
@@ -228,7 +232,9 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 onNavigate("employees:expiring-skills" as any);
               } else if (kpi.id === "time-off") {
                 onNavigate("scheduling:time-off" as any);
-              } else if (kpi.id === "reports-approve" || kpi.id === "message-board") {
+              } else if (kpi.id === "reports-approve") {
+                onNavigate("reports-submissions:reports:Pending" as any);
+              } else if (kpi.id === "message-board") {
                 onNavigate("reports:approve" as any);
               }
             }}
@@ -748,27 +754,90 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
           )}
 
           {/* 7.5. EXPLORE: LIVE FEED */}
-          {activeDrawer === "live-feed-explore" && (
-            <div className="space-y-4">
-              <div className="divide-y border rounded-xl overflow-hidden bg-slate-50">
-                {MOCK_ACTIVITY.map((item) => (
-                  <div key={item.id} className="p-4 hover:bg-slate-100 transition-colors flex items-start gap-4">
-                    <div className="mt-1">
-                      <ActivityIcon type={item.type} status={item.status} />
+          {activeDrawer === "live-feed-explore" && (() => {
+            const EVENT_OPTIONS = [
+              "All", "Reports", "Time clock", "Patrol Tours", "Panic Button Triggers", "Checkpoint scan"
+            ];
+            
+            const filteredFeed = MOCK_ACTIVITY.filter(item => {
+              if (liveFeedEventFilter !== "All") {
+                if (liveFeedEventFilter === "Reports" && !["incident", "time-off"].includes(item.type)) return false;
+                if (liveFeedEventFilter === "Time clock" && !["clock-in", "clock-out"].includes(item.type)) return false;
+                if (liveFeedEventFilter === "Patrol Tours" && item.type !== "tour") return false;
+                if (liveFeedEventFilter === "Panic Button Triggers" && item.type !== "panic") return false;
+                if (liveFeedEventFilter === "Checkpoint scan" && item.type !== "missed-scan") return false;
+              }
+              
+              if (liveFeedDateFrom && item.timestamp) {
+                const itemDate = new Date(item.timestamp).getTime();
+                const fromDate = new Date(liveFeedDateFrom).getTime();
+                if (itemDate < fromDate) return false;
+              }
+              if (liveFeedDateTo && item.timestamp) {
+                const itemDate = new Date(item.timestamp).getTime();
+                const toDate = new Date(liveFeedDateTo).getTime() + 86400000; 
+                if (itemDate >= toDate) return false;
+              }
+              return true;
+            });
+
+            return (
+              <div className="space-y-4">
+                <div className="flex flex-col md:flex-row md:items-end gap-3 p-3 bg-slate-50 border rounded-xl">
+                  <div className="flex-1">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Event Type</label>
+                    <select
+                      value={liveFeedEventFilter}
+                      onChange={(e) => setLiveFeedEventFilter(e.target.value)}
+                      className="w-full text-sm font-semibold p-2 border border-slate-200 rounded-lg bg-white outline-none focus:border-blue-500"
+                    >
+                      {EVENT_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">From Date</label>
+                      <input
+                        type="date"
+                        value={liveFeedDateFrom}
+                        onChange={(e) => setLiveFeedDateFrom(e.target.value)}
+                        className="text-sm font-semibold p-2 border border-slate-200 rounded-lg bg-white outline-none focus:border-blue-500 cursor-pointer"
+                      />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-800">{item.text}</p>
-                      <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
-                        <span className="font-medium text-blue-700">{item.site}</span>
-                        <span>·</span>
-                        <span className="text-slate-400 font-bold">{item.time}</span>
-                      </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">To Date</label>
+                      <input
+                        type="date"
+                        value={liveFeedDateTo}
+                        onChange={(e) => setLiveFeedDateTo(e.target.value)}
+                        className="text-sm font-semibold p-2 border border-slate-200 rounded-lg bg-white outline-none focus:border-blue-500 cursor-pointer"
+                      />
                     </div>
                   </div>
-                ))}
+                </div>
+
+                <div className="divide-y border rounded-xl overflow-hidden bg-white">
+                  {filteredFeed.length === 0 ? (
+                    <div className="p-8 text-center text-slate-500 font-semibold text-sm">No activity found for these filters.</div>
+                  ) : filteredFeed.map((item) => (
+                    <div key={item.id} className="p-4 hover:bg-slate-50 transition-colors flex items-start gap-4">
+                      <div className="mt-1">
+                        <ActivityIcon type={item.type} status={item.status} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-slate-800">{item.text}</p>
+                        <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
+                          <span className="font-medium text-blue-700">{item.site}</span>
+                          <span>·</span>
+                          <span className="text-slate-400 font-bold">{item.time}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
 
         </div>

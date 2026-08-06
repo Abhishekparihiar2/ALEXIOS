@@ -9,8 +9,8 @@ import {
 
 export type CompletedTab = "reports" | "tours" | "recordings" | "summaries";
 
-export function CompletedReportsPage() {
-  const [activeTab, setActiveTab] = useState<CompletedTab>("reports");
+export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab?: CompletedTab, initialFilter?: string }) {
+  const [activeTab, setActiveTab] = useState<CompletedTab>(initialTab || "reports");
   
   const [reports] = useState<SubmittedReport[]>(MOCK_SUBMITTED_REPORTS);
   const [tours] = useState<PatrolTour[]>(MOCK_PATROL_TOURS);
@@ -23,8 +23,8 @@ export function CompletedReportsPage() {
   const [selectedRecording, setSelectedRecording] = useState<Recording | null>(null);
   const [selectedSummary, setSelectedSummary] = useState<ShiftSummary | null>(null);
 
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState("All");
+  const [isFiltersOpen, setIsFiltersOpen] = useState(!!initialFilter);
+  const [statusFilter, setStatusFilter] = useState(initialFilter || "All");
   const [typeFilter, setTypeFilter] = useState("All");
 
   // Date Range Picker States
