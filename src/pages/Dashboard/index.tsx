@@ -199,11 +199,12 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
       <div className="flex items-center gap-2 overflow-x-auto py-1 px-1 rounded-xl bg-slate-100 border border-slate-200 shrink-0" style={{ scrollbarWidth: "none" }}>
         <span className="text-xs font-bold uppercase tracking-wider text-slate-400 px-3 border-r border-slate-300">Quick Modules</span>
         {[
-          { label: "Manage Tickets", icon: <AlertTriangle className="w-3.5 h-3.5" />, drawer: "submodule-exceptions" },
+          { label: "Manage Tickets", icon: <AlertTriangle className="w-3.5 h-3.5" />, page: "submodule-exceptions" },
+          { label: "Activity Journal", icon: <ClipboardList className="w-3.5 h-3.5" />, page: "submodule-journal" },
         ].map((sub) => (
           <button
             key={sub.label}
-            onClick={() => setActiveDrawer(sub.drawer)}
+            onClick={() => sub.page ? onNavigate(sub.page as any) : setActiveDrawer(sub.drawer)}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition-all cursor-pointer whitespace-nowrap"
           >
             {sub.icon}{sub.label}
@@ -240,21 +241,17 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
             }}
           >
             <div className="flex items-start justify-between mb-1.5">
-              <div className="w-7 h-7 rounded flex items-center justify-center"
-                style={{ background: kpi.bg, color: kpi.color }}>
-                {kpi.icon}
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded flex items-center justify-center shrink-0"
+                  style={{ background: kpi.bg, color: kpi.color }}>
+                  {kpi.icon}
+                </div>
+                <p className="text-2xl font-bold leading-none" style={{ color: "#0f172a" }}>{kpi.value}</p>
               </div>
-              <ExternalLink className="w-3 h-3 text-slate-300 group-hover:text-slate-600 transition-all" />
+              <ExternalLink className="w-3 h-3 text-slate-300 group-hover:text-slate-600 transition-all shrink-0 mt-1" />
             </div>
-            <p className="text-xl font-bold leading-none mb-1" style={{ color: "#0f172a" }}>{kpi.value}</p>
-            <p className="text-[11px] font-semibold truncate" style={{ color: "#374151" }}>{kpi.label}</p>
-            <p className="text-[10px] truncate mt-0.5" style={{ color: "#94a3b8" }}>{kpi.sub}</p>
-            <div className="flex items-center gap-1 mt-1.5">
-              {kpi.trendUp
-                ? <TrendingUp className="w-3 h-3 text-green-600" />
-                : <TrendingDown className="w-3 h-3 text-red-600" />}
-              <span className="text-xs font-semibold" style={{ color: kpi.trendUp ? "#16a34a" : "#dc2626" }}>{kpi.trend}</span>
-            </div>
+            <p className="text-xs font-semibold truncate mt-2" style={{ color: "#374151" }}>{kpi.label}</p>
+            <p className="text-[11px] truncate mt-0.5" style={{ color: "#94a3b8" }}>{kpi.sub}</p>
           </div>
         ))}
       </div>
@@ -369,7 +366,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
           <div className="flex items-center justify-between px-3 py-2 shrink-0" style={{ borderBottom: "1px solid #f1f5f9" }}>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-600" />
-              <h4 className="text-sm font-bold" style={{ color: "#0f172a" }}>Coverage</h4>
+              <h4 className="text-sm font-bold" style={{ color: "#0f172a" }}>Attendance Coverage</h4>
             </div>
             <button onClick={() => setActiveDrawer("clocked-in")}
               className="text-xs font-bold text-blue-700 cursor-pointer hover:underline">Details</button>
@@ -402,7 +399,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
         </div>
 
         {/* 4. FULL LENGTH: Tabbed Tasks/Tours */}
-        <div className="xl:col-span-4 rounded-xl overflow-hidden glass-card flex flex-col h-[280px]">
+        <div className="xl:col-span-4 rounded-xl overflow-hidden glass-card flex flex-col h-[400px]">
           <div className="flex items-center gap-4 px-3 pt-2 shrink-0 border-b border-slate-100 bg-slate-50/50">
             <button
               onClick={() => setRightTab("tasks")}
@@ -459,6 +456,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
           style={{ background: "linear-gradient(135deg,#0f1729,#1a2f5a)", borderBottom: "1px solid #e2e8f0" }}>
           <div>
             <h3 className="text-base font-bold text-white uppercase tracking-wider">
+              {activeDrawer === "clocked-in" && "Coverage & Attendance Details"}
               {activeDrawer === "inactive-mobile" && "Inactive Mobile tickets"}
               {activeDrawer === "expiring-skills" && "Expiring Skills & Credentials"}
               {activeDrawer === "message-board" && "Guard Message Board"}
@@ -474,6 +472,69 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
         {/* Drawer Content Area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-5" style={{ scrollbarWidth: "none" }}>
+
+          {activeDrawer === "clocked-in" && (
+            <div className="space-y-6">
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                  <h4 className="font-bold text-slate-800">Site Coverage Breakdown</h4>
+                  <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded">Overall: 81%</span>
+                </div>
+                <div className="divide-y divide-slate-100">
+                  {MOCK_ATTENDANCE.map((row) => {
+                    const pct = Math.round((row.present / row.scheduled) * 100);
+                    return (
+                      <div key={row.site} className="p-4 hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-semibold text-slate-800">{row.site}</p>
+                          <span className={`text-sm font-bold ${pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-amber-600' : 'text-red-600'}`}>
+                            {pct}%
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+                          <span>{row.present} Present / {row.scheduled} Scheduled</span>
+                          {row.absent > 0 && <span className="text-red-600 font-semibold">{row.absent} Missing</span>}
+                        </div>
+                        <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
+                          <div className={`h-full rounded-full transition-all ${pct >= 80 ? 'bg-green-600' : pct >= 60 ? 'bg-amber-500' : 'bg-red-600'}`} style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-slate-200 bg-slate-50">
+                  <h4 className="font-bold text-slate-800">Employee Roster Details</h4>
+                </div>
+                <div className="divide-y divide-slate-100">
+                  {MOCK_CLOCKED_IN_DETAILS.map((emp, i) => (
+                    <div key={i} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0">
+                          {emp.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">{emp.name}</p>
+                          <p className="text-xs text-slate-500">{emp.position} • {emp.shift}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col sm:items-end">
+                        <span className={`text-xs font-bold px-2 py-1 rounded-md ${emp.status === "Clocked In" ? "bg-green-100 text-green-700" :
+                          emp.status === "Running Late" ? "bg-red-100 text-red-700" :
+                            "bg-slate-100 text-slate-700"
+                          }`}>
+                          {emp.status}
+                        </span>
+                        {emp.time !== "—" && <span className="text-[10px] font-medium text-slate-400 mt-1">{emp.time}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
 
           {activeDrawer === "inactive-mobile" && (
@@ -726,39 +787,14 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
             </div>
           )}
 
-          {/* 7. SUBMODULE: ACTIVITY JOURNAL */}
-          {activeDrawer === "submodule-journal" && (
-            <div className="space-y-4">
-              <div className="divide-y border rounded-xl overflow-hidden bg-slate-50">
-                {MOCK_ACTIVITY_JOURNAL.map((item, idx) => (
-                  <div key={idx} className="p-4 hover:bg-slate-100 transition-colors flex items-start gap-4">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 mt-0.5"
-                      style={{
-                        background: item.type === "Terminated" ? "#fef2f2" : item.type === "Banned" ? "#fffbeb" : item.type === "Reactivated" ? "#f0fdf4" : "#eff6ff",
-                        color: item.type === "Terminated" ? "#dc2626" : item.type === "Banned" ? "#d97706" : item.type === "Reactivated" ? "#16a34a" : "#2563eb"
-                      }}>
-                      {item.type}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-800">{item.details}</p>
-                      <div className="flex items-center gap-2 mt-1 text-xs text-slate-400">
-                        <span>Admin: <strong className="text-slate-600">{item.admin}</strong></span>
-                        <span>·</span>
-                        <span>{item.timestamp}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+
 
           {/* 7.5. EXPLORE: LIVE FEED */}
           {activeDrawer === "live-feed-explore" && (() => {
             const EVENT_OPTIONS = [
               "All", "Reports", "Time clock", "Patrol Tours", "Panic Button Triggers", "Checkpoint scan"
             ];
-            
+
             const filteredFeed = MOCK_ACTIVITY.filter(item => {
               if (liveFeedEventFilter !== "All") {
                 if (liveFeedEventFilter === "Reports" && !["incident", "time-off"].includes(item.type)) return false;
@@ -767,7 +803,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 if (liveFeedEventFilter === "Panic Button Triggers" && item.type !== "panic") return false;
                 if (liveFeedEventFilter === "Checkpoint scan" && item.type !== "missed-scan") return false;
               }
-              
+
               if (liveFeedDateFrom && item.timestamp) {
                 const itemDate = new Date(item.timestamp).getTime();
                 const fromDate = new Date(liveFeedDateFrom).getTime();
@@ -775,7 +811,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               }
               if (liveFeedDateTo && item.timestamp) {
                 const itemDate = new Date(item.timestamp).getTime();
-                const toDate = new Date(liveFeedDateTo).getTime() + 86400000; 
+                const toDate = new Date(liveFeedDateTo).getTime() + 86400000;
                 if (itemDate >= toDate) return false;
               }
               return true;

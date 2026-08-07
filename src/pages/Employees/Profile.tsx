@@ -1308,14 +1308,23 @@ export interface PayRule {
   isPolicy?: boolean;
 }
 
-export function AddEmployeePage({ onBack }: { onBack: () => void }) {
+export function AddEmployeePage({ 
+  onBack, 
+  customTypes = [], setCustomTypes, 
+  customDepartments = [], setCustomDepartments 
+}: { 
+  onBack: () => void;
+  customTypes?: string[]; setCustomTypes?: (v: string[]) => void;
+  customDepartments?: string[]; setCustomDepartments?: (v: string[]) => void;
+}) {
   const [step, setStep] = useState(0);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
-  const [customTypes, setCustomTypes] = useState<string[]>([]);
   const [showCustomType, setShowCustomType] = useState(false);
   const [customTypeInput, setCustomTypeInput] = useState("");
+  const [showCustomDepartment, setShowCustomDepartment] = useState(false);
+  const [customDepartmentInput, setCustomDepartmentInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [portalToggles, setPortalToggles] = useState({
@@ -1359,6 +1368,7 @@ export function AddEmployeePage({ onBack }: { onBack: () => void }) {
   const STEPS = ["General Info", "Address", "Roles & Permissions", "Employment Info & Policies", "Other Fields"];
   const BASE_TYPES = ["Guard", "Employee", "Supervisor", "Admin", "Contractor", "Part-Time"];
   const allTypes = [...BASE_TYPES, ...customTypes];
+  const allDepartments = [...DEPARTMENTS.slice(1), ...customDepartments];
 
   const addTag = () => {
     const t = tagInput.trim();
@@ -1446,8 +1456,8 @@ export function AddEmployeePage({ onBack }: { onBack: () => void }) {
                 placeholder="New type name…"
                 className="flex-1 rounded-xl px-3.5 py-2 text-sm outline-none"
                 style={{ background: "#f8fafc", border: "1.5px solid #1e3a6e" }}
-                onKeyDown={(e) => { if (e.key === "Enter" && customTypeInput.trim()) { setCustomTypes([...customTypes, customTypeInput.trim()]); setCustomTypeInput(""); setShowCustomType(false); } }} />
-              <button onClick={() => { if (customTypeInput.trim()) { setCustomTypes([...customTypes, customTypeInput.trim()]); setCustomTypeInput(""); setShowCustomType(false); } }}
+                onKeyDown={(e) => { if (e.key === "Enter" && customTypeInput.trim() && setCustomTypes) { setCustomTypes([...customTypes, customTypeInput.trim()]); setCustomTypeInput(""); setShowCustomType(false); } }} />
+              <button onClick={() => { if (customTypeInput.trim() && setCustomTypes) { setCustomTypes([...customTypes, customTypeInput.trim()]); setCustomTypeInput(""); setShowCustomType(false); } }}
                 className="px-3 py-2 rounded-xl text-xs font-semibold" style={{ background: "#1e3a6e", color: "#fff" }}>Add</button>
               <button onClick={() => setShowCustomType(false)}
                 className="px-3 py-2 rounded-xl text-xs" style={{ background: "#f1f5f9", color: "#64748b" }}>Cancel</button>
@@ -1460,7 +1470,38 @@ export function AddEmployeePage({ onBack }: { onBack: () => void }) {
           )}
         </div>
       )}
-      {renderField("Department", true, renderSelect(DEPARTMENTS.slice(1), "Select department"))}
+      {renderField("Department", true,
+        <div className="space-y-2">
+          <div className="relative">
+            <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none cursor-pointer"
+              style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0", color: "#374151" }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = "#1e3a6e"; e.currentTarget.style.background = "#fff"; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#f8fafc"; }}>
+              <option value="">Select department…</option>
+              {allDepartments.map((d) => <option key={d}>{d}</option>)}
+            </select>
+            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#94a3b8" }} />
+          </div>
+          {showCustomDepartment ? (
+            <div className="flex gap-2">
+              <input value={customDepartmentInput} onChange={(e) => setCustomDepartmentInput(e.target.value)}
+                placeholder="New department name…"
+                className="flex-1 rounded-xl px-3.5 py-2 text-sm outline-none"
+                style={{ background: "#f8fafc", border: "1.5px solid #1e3a6e" }}
+                onKeyDown={(e) => { if (e.key === "Enter" && customDepartmentInput.trim() && setCustomDepartments) { setCustomDepartments([...customDepartments, customDepartmentInput.trim()]); setCustomDepartmentInput(""); setShowCustomDepartment(false); } }} />
+              <button onClick={() => { if (customDepartmentInput.trim() && setCustomDepartments) { setCustomDepartments([...customDepartments, customDepartmentInput.trim()]); setCustomDepartmentInput(""); setShowCustomDepartment(false); } }}
+                className="px-3 py-2 rounded-xl text-xs font-semibold" style={{ background: "#1e3a6e", color: "#fff" }}>Add</button>
+              <button onClick={() => setShowCustomDepartment(false)}
+                className="px-3 py-2 rounded-xl text-xs" style={{ background: "#f1f5f9", color: "#64748b" }}>Cancel</button>
+            </div>
+          ) : (
+            <button onClick={() => setShowCustomDepartment(true)}
+              className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: "#1e3a6e" }}>
+              <Plus className="w-3.5 h-3.5" />Create custom department
+            </button>
+          )}
+        </div>
+      )}
       {renderField("Email", true, renderInput("email@alexios.com", "email"))}
       {renderField("Username", true, renderInput("e.g. jsmith", "text", undefined, false, "@"))}
       {renderField("Phone (Main)", false, renderInput("+1 (555) 000-0000", "tel"))}
@@ -2100,6 +2141,10 @@ export function EmployeesPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  
+  const [customTypes, setCustomTypes] = useState<string[]>([]);
+  const [customDepartments, setCustomDepartments] = useState<string[]>([]);
+
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
 
@@ -2151,12 +2196,103 @@ export function EmployeesPage() {
     { id: "active", label: "All Users", count: activeCount, icon: <Users className="w-3.5 h-3.5" /> },
     { id: "admins", label: "Admins", count: adminsCount, icon: <ShieldCheck className="w-3.5 h-3.5" /> },
     { id: "archived", label: "Archived", count: archivedCount, icon: <Archive className="w-3.5 h-3.5" /> },
+    { id: "types", label: "Employee Type", count: 6 + customTypes.length, icon: <Briefcase className="w-3.5 h-3.5" /> },
+    { id: "departments", label: "Department", count: 6 + customDepartments.length, icon: <Building2 className="w-3.5 h-3.5" /> },
   ];
 
   const COLS = ["UID", "Name", "Middle Name", "Last Name", "Title", "Term. Date", "Email", "Username", "User Type", "Department", "Status", "Last Visit", "Added By"];
 
-  if (showAddForm) return <AddEmployeePage onBack={() => setShowAddForm(false)} />;
+  if (showAddForm) return <AddEmployeePage 
+    onBack={() => setShowAddForm(false)} 
+    customTypes={customTypes} setCustomTypes={setCustomTypes}
+    customDepartments={customDepartments} setCustomDepartments={setCustomDepartments}
+  />;
   if (selectedEmployee) return <EmployeeProfilePage employee={selectedEmployee} onBack={() => setSelectedEmployee(null)} />;
+
+  const renderManagementView = () => {
+    const isTypes = tab === "types";
+    const baseList = isTypes ? ["Guard", "Employee", "Supervisor", "Admin", "Contractor", "Part-Time"] : DEPARTMENTS.slice(1);
+    const customList = isTypes ? customTypes : customDepartments;
+    const setCustomList = isTypes ? setCustomTypes : setCustomDepartments;
+    
+    return (
+      <div className="flex-1 overflow-y-auto p-6" style={{ background: "#f8fafc" }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-slate-900">{isTypes ? "Employee Types" : "Departments"}</h3>
+            <p className="text-sm text-slate-500 mt-1">
+              Manage the options available in the {isTypes ? "Employee Type" : "Department"} dropdown when creating or editing an employee.
+            </p>
+          </div>
+          
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="flex items-center gap-3 p-4 bg-slate-50 border-b border-slate-200">
+               <input 
+                 id="newItemInput"
+                 placeholder={`New ${isTypes ? "employee type" : "department"} name...`}
+                 className="flex-1 rounded-xl px-4 py-2.5 text-sm border border-slate-300 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                 onKeyDown={(e) => {
+                   if (e.key === "Enter") {
+                     const val = (e.currentTarget.value || "").trim();
+                     if (val && !baseList.includes(val) && !customList.includes(val)) {
+                       setCustomList([...customList, val]);
+                       e.currentTarget.value = "";
+                     }
+                   }
+                 }}
+               />
+               <button 
+                 onClick={() => {
+                   const input = document.getElementById("newItemInput") as HTMLInputElement;
+                   const val = (input.value || "").trim();
+                   if (val && !baseList.includes(val) && !customList.includes(val)) {
+                     setCustomList([...customList, val]);
+                     input.value = "";
+                   }
+                 }}
+                 className="px-5 py-2.5 bg-[#1e3a6e] text-white text-sm font-semibold rounded-xl shadow-sm hover:bg-[#16305c] transition-colors"
+               >
+                 Add New
+               </button>
+            </div>
+            
+            <table className="w-full text-sm text-left">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold text-xs tracking-wider uppercase">
+                  <th className="px-6 py-4">Name</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...baseList.map(name => ({ name, isCustom: false })), ...customList.map(name => ({ name, isCustom: true }))].map((item, idx) => (
+                  <tr key={item.name} className={`hover:bg-slate-50 transition-colors ${idx !== baseList.length + customList.length - 1 ? 'border-b border-slate-100' : ''}`}>
+                    <td className="px-6 py-4 font-semibold text-slate-800">{item.name}</td>
+                    <td className="px-6 py-4">
+                      <span className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-md border border-green-200">Active</span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {item.isCustom ? (
+                        <button 
+                          onClick={() => setCustomList(customList.filter(c => c !== item.name))}
+                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      ) : (
+                        <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2.5 py-1 rounded-md">System Default</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="flex-1 overflow-y-auto flex flex-col" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
@@ -2244,9 +2380,11 @@ export function EmployeesPage() {
           })}
         </div>
 
-        {/* ── Toolbar ── */}
-        <div className="flex flex-wrap items-center gap-2 px-5 py-3.5" style={{ borderBottom: "1px solid #f1f5f9" }}>
-          {/* Search */}
+        {tab === "types" || tab === "departments" ? renderManagementView() : (
+          <>
+            {/* ── Toolbar ── */}
+            <div className="flex flex-wrap items-center gap-2 px-5 py-3.5" style={{ borderBottom: "1px solid #f1f5f9" }}>
+              {/* Search */}
           <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 flex-1 min-w-52 transition-all"
             style={{ background: "#f8fafc", border: "1.5px solid #e8edf4" }}>
             <Search className="w-3.5 h-3.5 shrink-0" style={{ color: "#94a3b8" }} />
@@ -2559,8 +2697,10 @@ export function EmployeesPage() {
             ))}
           </div>
         </div>
-      </div>
 
+          </>
+        )}
+      </div>
     </div>
   );
 }

@@ -6,10 +6,10 @@ import {
 
 // ─── MOCK DATA ─────────────────────────────────────────────────────────────
 const MOCK_VEHICLES = [
-    { id: "VEH-0018", license: "GA-SEC-428", make: "Ford", model: "Explorer", year: "2024", ownership: "Purchased", status: "Active" },
-    { id: "VEH-0019", license: "GA-SEC-429", make: "Ford", model: "Explorer", year: "2024", ownership: "Leased", status: "Active" },
-    { id: "VEH-0020", license: "TX-SEC-112", make: "Chevy", model: "Tahoe", year: "2022", ownership: "Purchased", status: "Inactive" },
-    { id: "VEH-0021", license: "NY-SEC-999", make: "Dodge", model: "Charger", year: "2023", ownership: "Leased", status: "Active" }
+    { id: "VEH-0018", license: "GA-SEC-428", make: "Ford", model: "Explorer", year: "2024", ownership: "Purchased", status: "Active", assignment: "Downtown Financial Center" },
+    { id: "VEH-0019", license: "GA-SEC-429", make: "Ford", model: "Explorer", year: "2024", ownership: "Leased", status: "Active", assignment: "Westfield Mall" },
+    { id: "VEH-0020", license: "TX-SEC-112", make: "Chevy", model: "Tahoe", year: "2022", ownership: "Purchased", status: "Inactive", assignment: "Unassigned" },
+    { id: "VEH-0021", license: "NY-SEC-999", make: "Dodge", model: "Charger", year: "2023", ownership: "Leased", status: "Active", assignment: "Harbor District" }
 ];
 
 const MOCK_DOCS = [
@@ -20,9 +20,9 @@ const MOCK_DOCS = [
 
 function StatusChip({ status }: { status: string }) {
     if (status === "Active") {
-        return <span className="px-2.5 py-1 text-xs font-bold rounded-md border text-green-700 bg-green-50 border-green-200 dark:bg-green-900/30 dark:border-green-800/50 dark:text-green-400">{status}</span>;
+        return <span className="px-[10px] py-[5px] text-xs font-bold rounded-[6px] text-[#16a34a] bg-[#f0fdf4]">{status}</span>;
     }
-    return <span className="px-2.5 py-1 text-xs font-bold rounded-md border text-slate-600 bg-slate-100 border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">{status}</span>;
+    return <span className="px-[10px] py-[5px] text-xs font-bold rounded-[6px] text-slate-500 bg-slate-100">{status}</span>;
 }
 
 // ─── MAIN MODULE SHELL ──────────────────────────────────────────────────────
@@ -62,113 +62,168 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
     };
 
     return (
-        <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
+        <div className="p-[22px] md:px-[28px] md:py-[24px] w-full max-w-[1600px] mx-auto h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
 
             {/* Header */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full shrink-0">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-[26px] w-full shrink-0">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Vehicles</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage company vehicle records and related documentation.</p>
+                    <h1 className="text-[32px] font-bold text-slate-900 dark:text-white tracking-tight leading-tight">Vehicles</h1>
+                    <p className="text-[15px] text-slate-500 mt-1">Manage company vehicle records, ownership, status, assignments, and documentation.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => onNavigate("create")}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
-                        style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white bg-[#1e3a8a] hover:bg-[#1e40af] transition-colors shadow-sm"
                     >
                         <Plus className="w-4 h-4" /> Create Vehicle
                     </button>
                 </div>
             </div>
 
-            {/* Configured Summary Cards (acting as quick filters) */}
-            <div className="flex w-full gap-4 mb-6 overflow-x-auto hide-scrollbar shrink-0">
+            {/* Summary Metrics */}
+            <div className="flex w-full gap-4 mb-5 overflow-x-auto hide-scrollbar shrink-0 pb-1">
                 {[
-                    { key: "All Vehicles", count: summaryCounts.all },
-                    { key: "Purchased", count: summaryCounts.purchased },
-                    { key: "Leased", count: summaryCounts.leased },
-                    { key: "Active", count: summaryCounts.active },
-                    { key: "Inactive", count: summaryCounts.inactive },
+                    { key: "All Vehicles", count: summaryCounts.all, active: ownershipFilter === "All Vehicles" && statusFilter === "All" },
+                    { key: "Purchased", count: summaryCounts.purchased, active: ownershipFilter === "Purchased" },
+                    { key: "Leased", count: summaryCounts.leased, active: ownershipFilter === "Leased" },
+                    { key: "Active", count: summaryCounts.active, active: statusFilter === "Active" },
+                    { key: "Inactive", count: summaryCounts.inactive, active: statusFilter === "Inactive" },
                 ].map((item) => (
                     <button
                         key={item.key}
-                        className="glass-panel px-5 py-4 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm shrink-0 flex flex-col items-start gap-1 min-w-[140px] hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                        onClick={() => {
+                            if (item.key === "All Vehicles") { setOwnershipFilter("All Vehicles"); setStatusFilter("All"); }
+                            else if (item.key === "Purchased" || item.key === "Leased") { setOwnershipFilter(item.key); setStatusFilter("All"); }
+                            else if (item.key === "Active" || item.key === "Inactive") { setStatusFilter(item.key); setOwnershipFilter("All Vehicles"); }
+                        }}
+                        className={`px-[18px] py-[16px] rounded-xl border flex flex-col items-start gap-1 min-w-[120px] transition-colors shadow-sm ${
+                            item.active 
+                                ? "bg-[#f4f7fc] border-[#1e3a8a]" 
+                                : "bg-white border-[#E7EAF0] hover:bg-slate-50"
+                        }`}
                     >
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-400">{item.key}</span>
-                        <span className="text-xl font-extrabold text-slate-900 dark:text-white">{item.count}</span>
+                        <span className={`text-[12px] font-bold uppercase tracking-wider ${item.active ? "text-[#1e3a8a]" : "text-slate-500"}`}>
+                            {item.key}
+                        </span>
+                        <span className={`text-[26px] font-bold leading-none ${item.active ? "text-[#1e3a8a]" : "text-slate-900"}`}>
+                            {item.count}
+                        </span>
                     </button>
                 ))}
             </div>
 
             {/* Filter Toolbar */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 shrink-0 w-full">
-                <div className="flex gap-2 items-center flex-wrap overflow-x-auto hide-scrollbar w-full md:w-auto">
-                    <div className="flex items-center bg-white/80 dark:bg-slate-800/80 rounded-xl p-1 shadow-sm border border-slate-200 dark:border-slate-700 backdrop-blur-md">
-                        <select
-                            value={ownershipFilter} onChange={(e) => setOwnershipFilter(e.target.value)}
-                            className="px-3 py-1.5 text-sm font-semibold bg-transparent border-none text-slate-700 dark:text-slate-300 outline-none cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg"
-                        >
-                            <option>All Vehicles</option>
-                            <option>Purchased</option>
-                            <option>Leased</option>
-                        </select>
-                        <div className="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
-                        <select
-                            value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-3 py-1.5 text-sm font-semibold bg-transparent border-none text-slate-700 dark:text-slate-300 outline-none cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg"
-                        >
-                            <option>All</option>
-                            <option>Active</option>
-                            <option>Inactive</option>
-                        </select>
-                    </div>
-
-                    <div className="relative">
-                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input type="text" placeholder="Search vehicles..." className="w-full md:w-64 pl-9 pr-3 py-2.5 text-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1e3a6e] transition-colors shadow-sm backdrop-blur-md" />
-                    </div>
-
-                    <button className="shrink-0 px-3 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors">Clear All</button>
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 mb-5 shrink-0 w-full">
+                <div className="flex items-center bg-white h-[42px] rounded-[10px] border border-[#DDE3EA] px-2 shadow-sm">
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-2">Status</span>
+                    <select
+                        value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
+                        className="px-2 py-1 text-sm font-semibold bg-transparent border-none text-slate-700 outline-none cursor-pointer hover:bg-slate-50 rounded-md"
+                    >
+                        <option>All Vehicles</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
                 </div>
+
+                <div className="flex items-center bg-white h-[42px] rounded-[10px] border border-[#DDE3EA] px-2 shadow-sm">
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-2">Ownership</span>
+                    <select
+                        value={ownershipFilter} onChange={(e) => setOwnershipFilter(e.target.value)}
+                        className="px-2 py-1 text-sm font-semibold bg-transparent border-none text-slate-700 outline-none cursor-pointer hover:bg-slate-50 rounded-md"
+                    >
+                        <option value="All Vehicles">All</option>
+                        <option>Purchased</option>
+                        <option>Leased</option>
+                    </select>
+                </div>
+
+                <div className="relative">
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input type="text" placeholder="Search by vehicle ID, license, make or model" className="w-full md:w-[320px] h-[42px] pl-9 pr-3 text-sm bg-white border border-[#DDE3EA] rounded-[10px] outline-none focus:border-[#1e3a8a] transition-colors shadow-sm" />
+                </div>
+
+                {(statusFilter !== "All" || ownershipFilter !== "All Vehicles") && (
+                    <button 
+                        onClick={() => { setStatusFilter("All"); setOwnershipFilter("All Vehicles"); }}
+                        className="ml-2 text-sm font-medium text-slate-500 hover:text-slate-800 hover:underline transition-colors cursor-pointer"
+                    >
+                        Clear Filters
+                    </button>
+                )}
             </div>
 
             {/* Table wrapper block */}
-            <div className="bg-white/90 dark:bg-[#1a1f2e]/90 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm flex-1 flex flex-col min-h-0 min-w-0 w-full mb-2">
+            <div className="bg-white border border-[#E4E8EE] rounded-[14px] overflow-hidden flex-1 flex flex-col min-h-0 min-w-0 w-full mb-2" style={{ boxShadow: "0 2px 8px rgba(15, 23, 42, 0.03)" }}>
                 <div className="overflow-auto flex-1 min-h-0 relative">
-                    <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300 min-w-[1024px]">
-                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide">
+                    <table className="w-full text-left text-sm text-slate-600 min-w-[1024px]">
+                        <thead className="text-xs uppercase bg-slate-50 border-b border-[#E4E8EE] text-slate-500 sticky top-0 font-semibold tracking-wide">
                             <tr>
-                                <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300" /></th>
-                                <th className="px-5 py-4">ID</th>
-                                <th className="px-5 py-4">License</th>
-                                <th className="px-5 py-4">Make / Model / Year</th>
-                                <th className="px-5 py-4">Status</th>
-                                <th className="px-5 py-4 text-center">Actions</th>
+                                <th className="px-[18px] py-4">Vehicle ID</th>
+                                <th className="px-[18px] py-4">License</th>
+                                <th className="px-[18px] py-4">Vehicle</th>
+                                <th className="px-[18px] py-4">Ownership</th>
+                                <th className="px-[18px] py-4">Status</th>
+                                <th className="px-[18px] py-4">Assignment</th>
+                                <th className="px-[18px] py-4 text-center">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
-                            {MOCK_VEHICLES.map((v, i) => (
-                                <tr key={v.id} onClick={() => onNavigate("detail", v.id)} className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors cursor-pointer group ${i % 2 === 0 ? '' : 'bg-slate-50/30 dark:bg-transparent'}`}>
-                                    <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300" /></td>
-                                    <td className="px-5 py-4 font-bold text-slate-900 dark:text-white">{v.id}</td>
-                                    <td className="px-5 py-4 font-semibold text-[#1e3a6e] dark:text-blue-400 bg-slate-50/50 dark:bg-slate-800/30 tracking-wider">
-                                        <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-md px-2 py-0.5 inline-block shadow-sm">
-                                            {v.license}
+                        <tbody className="divide-y divide-[#F1F5F9]">
+                            {MOCK_VEHICLES.length === 0 ? (
+                                <tr>
+                                    <td colSpan={7} className="px-6 py-16 text-center">
+                                        <div className="flex flex-col items-center justify-center">
+                                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                                                <Car className="w-8 h-8 text-slate-300" />
+                                            </div>
+                                            <h3 className="text-lg font-bold text-slate-900 mb-1">No vehicles found</h3>
+                                            <p className="text-sm text-slate-500 mb-6 max-w-md">Try adjusting your filters or create a new vehicle.</p>
+                                            <button
+                                                onClick={() => onNavigate("create")}
+                                                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white bg-[#1e3a8a] hover:bg-[#1e40af] transition-colors"
+                                            >
+                                                <Plus className="w-4 h-4" /> Create Vehicle
+                                            </button>
                                         </div>
                                     </td>
-                                    <td className="px-5 py-4">
-                                        <div className="font-bold text-slate-800 dark:text-slate-200">{v.make} {v.model} • {v.year}</div>
-                                        <div className="text-xs text-slate-500 mt-0.5 font-medium">{v.ownership}</div>
-                                    </td>
-                                    <td className="px-5 py-4"><StatusChip status={v.status} /></td>
-                                    <td className="px-5 py-4 text-center" onClick={e => e.stopPropagation()}>
-                                        <button className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
-                                    </td>
                                 </tr>
-                            ))}
+                            ) : (
+                                MOCK_VEHICLES.map((v) => (
+                                    <tr key={v.id} onClick={() => onNavigate("detail", v.id)} className="hover:bg-[#F8FAFD] transition-colors duration-150 ease-in-out cursor-pointer group">
+                                        <td className="px-[18px] py-[16px] font-semibold text-[#17233C]">{v.id}</td>
+                                        <td className="px-[18px] py-[16px]">
+                                            <div className="border border-[#D9E0EA] bg-[#F8FAFC] rounded-[6px] px-[9px] py-[5px] inline-block font-semibold tracking-[0.4px] text-slate-700">
+                                                {v.license}
+                                            </div>
+                                        </td>
+                                        <td className="px-[18px] py-[16px]">
+                                            <div className="font-bold text-slate-800">{v.make} {v.model}</div>
+                                            <div className="text-xs text-slate-500 mt-0.5">{v.year}</div>
+                                        </td>
+                                        <td className="px-[18px] py-[16px] text-slate-500">{v.ownership}</td>
+                                        <td className="px-[18px] py-[16px]"><StatusChip status={v.status} /></td>
+                                        <td className="px-[18px] py-[16px] font-medium text-slate-600">{v.assignment || "Unassigned"}</td>
+                                        <td className="px-[18px] py-[16px] text-center" onClick={e => e.stopPropagation()}>
+                                            <button className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination */}
+                {MOCK_VEHICLES.length > 0 && (
+                    <div className="flex items-center justify-between px-[18px] py-3 border-t border-[#E4E8EE] bg-white shrink-0">
+                        <span className="text-xs text-slate-500">Showing 1–{MOCK_VEHICLES.length} of {MOCK_VEHICLES.length}</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs text-slate-500 mr-2">Rows per page: 20</span>
+                            <button className="px-2 py-1 text-xs font-semibold text-slate-400 hover:text-slate-700 disabled:opacity-50" disabled>Previous</button>
+                            <button className="px-2 py-1 text-xs font-semibold text-slate-400 hover:text-slate-700 disabled:opacity-50" disabled>Next</button>
+                        </div>
+                    </div>
+                )}
             </div>
 
         </div>

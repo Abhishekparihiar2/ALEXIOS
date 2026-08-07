@@ -216,17 +216,49 @@ export const MOCK_SCHED_JOBS = [
 ];
 
 export const MOCK_SCHED_SHIFTS = [
-  { id: "SHF-001", employeeName: "Marcus Johnson", jobId: "JOB-ARM", date: "2026-08-03", time: "08:00 AM - 04:00 PM", startTime: "08:00", endTime: "16:00", status: "Published", conflict: null, site: "Downtown Financial Center", notes: "Ensure exterior gate check at top of every hour.", tasks: ["Check Gate B4", "Verify radio charging"], tourAssociated: true },
-  { id: "SHF-002", employeeName: "Sarah Chen", jobId: "JOB-SUP", date: "2026-08-03", time: "09:00 AM - 05:00 PM", startTime: "09:00", endTime: "17:00", status: "Published", conflict: null, site: "Westfield Mall", notes: "Routine site patrol and radio check.", tasks: ["Inspect security console"], tourAssociated: true },
-  { id: "SHF-003", employeeName: "Derek Wilson", jobId: "JOB-STC", date: "2026-08-03", time: "10:00 PM - 06:00 AM", startTime: "22:00", endTime: "06:00", status: "Published", conflict: "Expired Skill: Port Security Clearance", site: "Harbor District", notes: "Night duty coverage.", tasks: ["Lock perimeter gates"], tourAssociated: true },
+  { id: "SHF-001", employeeName: "Marcus Johnson", jobId: "JOB-ARM", date: "2026-08-03", time: "08:00 AM - 04:00 PM", startTime: "08:00", endTime: "16:00", status: "Published", conflict: null, site: "Downtown Financial Center", notes: "Ensure exterior gate check at top of every hour.", tasks: ["Check Gate B4", "Verify radio charging"], tourAssociated: true, replacementRequested: false },
+  { id: "SHF-002", employeeName: "Sarah Chen", jobId: "JOB-SUP", date: "2026-08-03", time: "09:00 AM - 05:00 PM", startTime: "09:00", endTime: "17:00", status: "Published", conflict: null, site: "Westfield Mall", notes: "Routine site patrol and radio check.", tasks: ["Inspect security console"], tourAssociated: true, replacementRequested: true },
+  { id: "SHF-003", employeeName: "Derek Wilson", jobId: "JOB-STC", date: "2026-08-03", time: "10:00 PM - 06:00 AM", startTime: "22:00", endTime: "06:00", status: "Published", conflict: "Expired Skill: Port Security Clearance", site: "Harbor District", notes: "Night duty coverage.", tasks: ["Lock perimeter gates"], tourAssociated: true, timeOff: true },
   { id: "SHF-004", employeeName: "Mike Torres", jobId: "JOB-GTE", date: "2026-08-04", time: "08:00 AM - 04:00 PM", startTime: "08:00", endTime: "16:00", status: "Published", conflict: null, site: "Westfield Mall", notes: "Gate log verification.", tasks: [], tourAssociated: false },
-  { id: "SHF-005", employeeName: null, jobId: "JOB-ARM", date: "2026-08-04", time: "12:00 PM - 08:00 PM", startTime: "12:00", endTime: "20:00", status: "Draft", conflict: null, site: "Downtown Financial Center", notes: "Coverage backup guard needed.", tasks: [], tourAssociated: false },
+  { id: "SHF-005", employeeName: null, jobId: "JOB-ARM", date: "2026-08-04", time: "12:00 PM - 08:00 PM", startTime: "12:00", endTime: "20:00", status: "Published", conflict: null, site: "Downtown Financial Center", notes: "Coverage backup guard needed.", tasks: [], tourAssociated: false, openShiftClaims: 3 },
   { id: "SHF-006", employeeName: "John Davis", jobId: "JOB-STC", date: "2026-08-03", time: "08:00 AM - 04:00 PM", startTime: "08:00", endTime: "16:00", status: "Published", conflict: "Site Ban: City Hall Security Post", site: "City Hall Security Post", notes: "Check badge reader registers.", tasks: [], tourAssociated: false }
 ];
 
-export const MOCK_SWAP_REQUESTS = [
-  { id: "SWP-301", guardName: "Derek Wilson", shiftDate: "2026-08-05", shiftTime: "10:00 PM - 06:00 AM", position: "Static Inspector", reason: "Family event overlap", status: "Pending" },
-  { id: "SWP-302", guardName: "Mike Torres", shiftDate: "2026-08-06", shiftTime: "08:00 AM - 04:00 PM", position: "Gate Watch Controller", reason: "Doctor appointment", status: "Pending" }
+export const MOCK_TIMEOFF_REQUESTS = [
+  { id: "TO-001", employeeName: "Derek Wilson", role: "Static Inspector", site: "Harbor District", type: "Vacation", startDate: "2026-08-10", endDate: "2026-08-14", duration: "5 Days", affectedShifts: 3, submittedDate: "2026-08-01", status: "Pending" },
+  { id: "TO-002", employeeName: "Aisha Okafor", role: "VIP Patrol", site: "Corporate HQ", type: "Sick Leave", startDate: "2026-08-04", endDate: "2026-08-05", duration: "2 Days", affectedShifts: 1, submittedDate: "2026-08-04", status: "Pending" },
+  { id: "TO-003", employeeName: "Mike Torres", role: "Gate Controller", site: "Westfield Mall", type: "Personal", startDate: "2026-08-15", endDate: "2026-08-15", duration: "1 Day", affectedShifts: 1, submittedDate: "2026-08-03", status: "Pending" }
+];
+
+export const MOCK_OPEN_SHIFT_CLAIMS = [
+  { 
+    id: "OSC-101", 
+    shiftId: "SHF-005", 
+    site: "Downtown Financial Center", 
+    position: "Armed Security Guard", 
+    date: "2026-08-04", 
+    time: "12:00 PM - 08:00 PM",
+    claims: [
+      { id: "C-1", employeeName: "John Davis", qualification: "Matches Requirements", certification: "Valid Armed License", conflict: "None", hours: "32/40 hrs", claimTime: "2 hours ago" },
+      { id: "C-2", employeeName: "Marcus Johnson", qualification: "Matches Requirements", certification: "Valid Armed License", conflict: "Overtime Risk", hours: "38/40 hrs", claimTime: "4 hours ago" }
+    ]
+  },
+  { 
+    id: "OSC-102", 
+    shiftId: "SHF-008", 
+    site: "Airport Terminal C", 
+    position: "Terminal Watch", 
+    date: "2026-08-05", 
+    time: "06:00 AM - 02:00 PM",
+    claims: [
+      { id: "C-3", employeeName: "Priya Patel", qualification: "Matches Requirements", certification: "Valid Clearance", conflict: "None", hours: "24/40 hrs", claimTime: "1 day ago" }
+    ]
+  }
+];
+
+export const MOCK_SHIFT_REPLACEMENTS = [
+  { id: "SWP-301", guardName: "Sarah Chen", site: "Westfield Mall", shiftDate: "2026-08-03", shiftTime: "09:00 AM - 05:00 PM", position: "Patrol Supervisor", reason: "Family emergency", status: "Pending", submittedDate: "1 hour ago" },
+  { id: "SWP-302", guardName: "Mike Torres", site: "Westfield Mall", shiftDate: "2026-08-06", shiftTime: "08:00 AM - 04:00 PM", position: "Gate Watch Controller", reason: "Doctor appointment", status: "Pending", submittedDate: "2 days ago" }
 ];
 
 export const MOCK_SCHED_TOURS = [

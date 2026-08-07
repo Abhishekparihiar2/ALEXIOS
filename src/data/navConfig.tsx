@@ -12,7 +12,7 @@ import {
   UserCheck, UserX, Clock3, Route, ListChecks, Send,
   Plus, FileSpreadsheet, FileDown,
   ChevronFirst, ChevronLast, Archive, ShieldCheck,
-  Trash2, Briefcase
+  Trash2, Briefcase, BadgeCheck
 } from "lucide-react";
 import alexiosLogo from "../imports/AlexiosAppLogos-white.png";
 
@@ -39,17 +39,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Security Operations",
     items: [
-      {
-        id: "dashboard",
-        label: "Dashboard",
-        icon: <LayoutDashboard className="w-4 h-4" />,
-        children: [
-
-          { id: "submodule-vehicles", label: "Vehicle Management", icon: <Truck className="w-3.5 h-3.5" /> },
-          { id: "submodule-journal", label: "Activity Journal", icon: <ClipboardList className="w-3.5 h-3.5" /> },
-          { id: "submodule-exceptions", label: "Manage Tickets", icon: <AlertTriangle className="w-3.5 h-3.5" /> },
-        ]
-      },
+      { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
       { id: "scheduling", label: "Scheduling", icon: <Calendar className="w-4 h-4" /> },
       { id: "timeclock", label: "Time Clock", icon: <Clock className="w-4 h-4" /> },
     ],
@@ -82,11 +72,14 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Communication",
     items: [
       { id: "communications", label: "Communications", icon: <MessageSquare className="w-4 h-4" /> },
+      { id: "submodule-journal", label: "Activity Journal", icon: <ClipboardList className="w-4 h-4" /> },
+      { id: "submodule-exceptions", label: "Manage Tickets", icon: <AlertTriangle className="w-4 h-4" /> },
     ],
   },
   {
     label: "Resources",
     items: [
+      { id: "skills", label: "Skills & Certifications", icon: <BadgeCheck className="w-4 h-4" /> },
       { id: "documents", label: "Documents & Policies", icon: <FolderOpen className="w-4 h-4" /> },
       { id: "training", label: "Training", icon: <GraduationCap className="w-4 h-4" /> },
       { id: "vehicles", label: "Vehicles", icon: <Truck className="w-4 h-4" /> },

@@ -39,10 +39,12 @@ export function TopHeader({
   activePage,
   onSignOut,
   notifCount,
+  onNavigate,
 }: {
   activePage: Page;
   onSignOut: () => void;
   notifCount: number;
+  onNavigate?: (page: Page) => void;
 }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQ, setSearchQ] = useState("");
@@ -88,8 +90,11 @@ export function TopHeader({
       </button>
 
       {/* Notifications */}
-      <button className="relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-gray-100"
-        style={{ color: "#64748b" }}>
+      <button 
+        onClick={() => onNavigate && onNavigate("communications")}
+        className="relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-gray-100"
+        style={{ color: "#64748b" }}
+      >
         <Bell className="w-4 h-4" />
         {notifCount > 0 && (
           <span className="absolute top-1 right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center font-semibold"
@@ -100,8 +105,11 @@ export function TopHeader({
       </button>
 
       {/* Chat */}
-      <button className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-gray-100"
-        style={{ color: "#64748b" }}>
+      <button 
+        onClick={() => onNavigate && onNavigate("communications")}
+        className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-gray-100"
+        style={{ color: "#64748b" }}
+      >
         <MessageSquare className="w-4 h-4" />
       </button>
 

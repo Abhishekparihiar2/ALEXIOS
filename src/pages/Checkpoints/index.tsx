@@ -30,13 +30,14 @@ import { SiteStatus, AccountType, SiteClient, MOCK_SITES, SITE_STATUS_STYLES, AC
 export { SchedulingPage } from '../Scheduling/index';
 import { EmpStatus, EmpUserType, Employee, DEPARTMENTS, MOCK_EMPLOYEES, STATUS_STYLES, USER_TYPE_STYLES, AVATAR_COLORS, avatarColor, EmpTab } from '../Employees/index';
 import { ProfileTab, AVAIL_CYCLE, AvailState, AVAIL_COLORS, DAYS_SHORT, HOURS_LIST, buildInitialAvail, EmployeeProfilePage, AddEmployeePage, EmployeesPage } from '../Employees/Profile';
+import { CreateTourWizard } from './CreateTourWizard';
 import { AppShell } from '../../AppShell';
 import { App } from '../../app/App';
 
 
 // ─── Checkpoints & Tour Routes Page ──────────────────────────────────────────
 
-export type CpSection = "checkpoints" | "tours" | "logs";
+export type CpSection = "checkpoints" | "tours" | "logs" | "locations";
 export type CpMonitoring = "none" | "tour" | "interval";
 export type CpExtraScan = "log" | "message" | "report";
 export type CpManual = "yes" | "no" | "yes-reason";
@@ -74,6 +75,14 @@ export interface CpLog {
   tour: string;
 }
 
+export interface CpLocation {
+  id: string;
+  name: string;
+  site: string;
+  status: "Active" | "Inactive";
+  addedBy: string;
+}
+
 export const CP_CHECKPOINTS: Checkpoint[] = [
   { id: "CP-001", name: "Main Entrance Gate", type: "NFC", monitoring: "Part of Tour", assigned: "All Positions", lastScan: "Today, 08:14 AM", status: "Active", site: "Westfield Plaza" },
   { id: "CP-002", name: "North Perimeter Fence", type: "NFC", monitoring: "Regular Interval", assigned: "Guards Only", lastScan: "Today, 07:45 AM", status: "Active", site: "Westfield Plaza" },
@@ -103,6 +112,13 @@ export const CP_LOGS: CpLog[] = [
   { time: "Yesterday, 08:00 PM", employee: "Derek Wilson", account: "Tech Tower Lvl 4", checkpoint: "Roof Access Door", tour: "Tech Tower Night Sweep" },
 ];
 
+export const CP_LOCATIONS: CpLocation[] = [
+  { id: "LOC-001", name: "Main Entrance", site: "Westfield Plaza", status: "Active", addedBy: "James Morrison" },
+  { id: "LOC-002", name: "Loading Dock A", site: "Westfield Plaza", status: "Active", addedBy: "James Morrison" },
+  { id: "LOC-003", name: "Server Room B", site: "Tech Tower Lvl 4", status: "Active", addedBy: "Sarah Chen" },
+  { id: "LOC-004", name: "Parking Garage L3", site: "Harbor View Center", status: "Active", addedBy: "James Morrison" },
+];
+
 export function CheckpointsPage() {
   // ── All state at top level (Rules of Hooks) ────────────────────────────────
   const [section, setSection] = useState<CpSection>("checkpoints");
@@ -110,6 +126,7 @@ export function CheckpointsPage() {
   const [tourSearch, setTourSearch] = useState("");
   const [logSearch, setLogSearch] = useState("");
   const [showCreateCp, setShowCreateCp] = useState(false);
+  const [showAddLocation, setShowAddLocation] = useState(false);
   const [showCreateTour, setShowCreateTour] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [showManage, setShowManage] = useState(false);
@@ -138,6 +155,16 @@ export function CheckpointsPage() {
   const [tourRecurrence, setTourRecurrence] = useState<TourRecurrence>("weekly");
   const [tourDay, setTourDay] = useState("Monday");
   const [tourTime, setTourTime] = useState("08:00");
+
+  // Location filters
+  const [locSearch, setLocSearch] = useState("");
+  const [locSiteFilter, setLocSiteFilter] = useState("All Sites");
+  
+  const [mockLocations, setMockLocations] = useState<CpLocation[]>(CP_LOCATIONS);
+  
+  // Add Location Modal State
+  const [selectedSite, setSelectedSite] = useState("");
+  const [locationInputs, setLocationInputs] = useState([{ id: 1, value: "" }]);
 
   // ── Render helpers (no hooks inside) ──────────────────────────────────────
 
@@ -290,58 +317,6 @@ export function CheckpointsPage() {
     ), true);
   }
 
-  function renderCreateTourModal() {
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    return renderModal("Create Tour Route", () => setShowCreateTour(false), (
-      <div className="space-y-5">
-        {renderField("Tour Description", renderInput("e.g. Nightly Perimeter Patrol", tourDesc, setTourDesc), true)}
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {renderField("Assigned To", renderSelect(["All Guards", "Night Guards", "Security Officers", "Selected Positions"], tourAssigned, setTourAssigned))}
-          {renderField("Estimated Duration", renderInput("e.g. 45 min", tourDuration, setTourDuration), true)}
-        </div>
-
-        {renderField("Special Instructions", (
-          <textarea value={tourInstructions} onChange={(e) => setTourInstructions(e.target.value)}
-            placeholder="Special instructions for guards..."
-            className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" rows={2}
-            style={{ border: "1.5px solid #e2e8f0" }} />
-        ))}
-
-        {renderField("Grace Period for Late Notification (min)", renderInput("15 (leave 0 for default 15 min)", tourGrace, setTourGrace, "number"))}
-
-        {renderRadioGroup("Recurrence Type", [
-          { value: "weekly", label: "Weekly" },
-          { value: "monthly", label: "Monthly" },
-        ], tourRecurrence, (v) => setTourRecurrence(v as TourRecurrence))}
-
-        <div className="grid grid-cols-2 gap-4">
-          {renderField("Tour Schedule Day", renderSelect(days, tourDay, setTourDay))}
-          {renderField("Tour Schedule Time", renderInput("", tourTime, setTourTime, "time"))}
-        </div>
-
-        <div className="rounded-xl p-4" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
-          <div className="text-xs font-bold mb-3" style={{ color: "#1e3a6e" }}>Confirmed Tour Rules</div>
-          <ul className="space-y-1.5">
-            {[
-              "Guard must start the tour manually on the mobile app",
-              "Guard must be clocked in before starting",
-              "Guard must be within the site geo-fence",
-              "Checkpoint order and requirements are configurable",
-              "Tour timing, grace period and notifications are configurable",
-            ].map((rule, i) => (
-              <li key={i} className="flex items-start gap-2 text-xs" style={{ color: "#475569" }}>
-                <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "#16a34a" }} />
-                {rule}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {renderModalFooter(() => setShowCreateTour(false), "Create Tour Route")}
-      </div>
-    ), true);
-  }
 
   function renderImportModal() {
     return renderModal("Import Checkpoints via Excel", () => setShowImport(false), (
@@ -658,6 +633,167 @@ export function CheckpointsPage() {
     );
   }
 
+  function renderLocationsSection() {
+    const filtered = mockLocations.filter((l) =>
+      (locSiteFilter === "All Sites" || l.site === locSiteFilter) &&
+      (l.name.toLowerCase().includes(locSearch.toLowerCase()) ||
+       l.site.toLowerCase().includes(locSearch.toLowerCase()))
+    );
+    const sites = Array.from(new Set(mockLocations.map(l => l.site)));
+    
+    return (
+      <div className="space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3 flex-1">
+            <div className="relative flex-1 min-w-48 max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#94a3b8" }} />
+              <input value={locSearch} onChange={(e) => setLocSearch(e.target.value)}
+                placeholder="Search locations..."
+                className="w-full pl-8 pr-3 py-2 rounded-xl text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                style={{ border: "1.5px solid #e2e8f0", color: "#0f172a" }} />
+            </div>
+            <select value={locSiteFilter} onChange={(e) => setLocSiteFilter(e.target.value)}
+              className="px-3 py-2 rounded-xl text-sm outline-none appearance-none font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
+              style={{ border: "1.5px solid #e2e8f0", color: "#475569", background: "#fff" }}>
+              <option value="All Sites">All Sites</option>
+              {sites.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+          <div className="flex gap-2">
+            <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 hover:text-slate-900"
+              style={{ border: "1.5px solid #e2e8f0", color: "#475569", background: "#fff" }}
+              title="Bulk import locations from Excel"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5 text-green-600" /> Import Excel
+            </button>
+            <button onClick={() => setShowAddLocation(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all shadow-sm hover:opacity-90"
+              style={{ background: "linear-gradient(135deg, #1e3a6e, #2563eb)" }}>
+              <Plus className="w-3.5 h-3.5" /> Add Location
+            </button>
+          </div>
+        </div>
+        <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1.5px solid #e2e8f0" }}>
+          <table className="w-full text-left" style={{ borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#f8fafc" }}>
+                {["Location Name", "Site / Account", "Status", "Added By"].map((h) => (
+                  <th key={h} className="px-6 py-4 text-xs font-bold uppercase tracking-wider"
+                    style={{ color: "#64748b", borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((loc, i) => (
+                <tr key={loc.id} className="hover:bg-slate-50 transition-colors" style={{ borderBottom: i === filtered.length -1 ? "none" : "1px solid #f1f5f9", background: "#fff" }}>
+                  <td className="px-6 py-4 text-sm font-semibold" style={{ color: "#0f172a" }}>{loc.name}</td>
+                  <td className="px-6 py-4 text-sm font-medium" style={{ color: "#475569" }}>{loc.site}</td>
+                  <td className="px-6 py-4">
+                    <span className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-md border border-green-200 shadow-sm">
+                      {loc.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm" style={{ color: "#94a3b8" }}>{loc.addedBy}</td>
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="p-10 text-center text-sm text-slate-500">
+                    No locations match your filters.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+
+  function renderAddLocationModal() {
+    const sites = Array.from(new Set(mockLocations.map(l => l.site)));
+    
+    const handleAddInput = () => {
+      setLocationInputs([...locationInputs, { id: Date.now(), value: "" }]);
+    };
+    
+    const handleRemoveInput = (id: number) => {
+      setLocationInputs(locationInputs.filter(input => input.id !== id));
+    };
+    
+    const handleInputChange = (id: number, value: string) => {
+      setLocationInputs(locationInputs.map(input => input.id === id ? { ...input, value } : input));
+    };
+
+    const handleSave = () => {
+      if (!selectedSite) return alert("Please select a site first.");
+      
+      const newLocations = locationInputs
+        .map(input => input.value.trim())
+        .filter(val => val.length > 0)
+        .map((name, i) => ({
+          id: `LOC-NEW-${Date.now()}-${i}`,
+          name,
+          site: selectedSite,
+          status: "Active" as const,
+          addedBy: "James Morrison"
+        }));
+        
+      if (newLocations.length > 0) {
+        setMockLocations([...mockLocations, ...newLocations]);
+      }
+      
+      setShowAddLocation(false);
+      setSelectedSite("");
+      setLocationInputs([{ id: Date.now(), value: "" }]);
+    };
+
+    return renderModal("Add Site Locations", () => setShowAddLocation(false), (
+      <div className="space-y-6">
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-slate-700">Select Site / Account</label>
+          <select value={selectedSite} onChange={(e) => setSelectedSite(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl text-sm outline-none appearance-none font-medium bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer">
+            <option value="" disabled>Select a site...</option>
+            {sites.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </div>
+        
+        {selectedSite && (
+          <div>
+            <label className="block text-sm font-semibold mb-3 text-slate-700">Locations to Add</label>
+            <div className="space-y-3">
+              {locationInputs.map((input, index) => (
+                <div key={input.id} className="flex gap-2">
+                  <div className="flex-1 relative">
+                    <input type="text" value={input.value} onChange={(e) => handleInputChange(input.id, e.target.value)}
+                      placeholder={`e.g. ${index === 0 ? 'Main Lobby' : index === 1 ? 'East Gate' : 'Location Name...'}`}
+                      className="w-full px-4 py-2.5 rounded-xl text-sm outline-none bg-white border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" autoFocus={index === locationInputs.length - 1} />
+                  </div>
+                  {locationInputs.length > 1 && (
+                    <button onClick={() => handleRemoveInput(input.id)}
+                      className="p-2.5 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors border border-transparent hover:border-red-100"
+                      title="Remove"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            <button onClick={handleAddInput}
+              className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors">
+              <Plus className="w-4 h-4" /> Add another location
+            </button>
+          </div>
+        )}
+        
+        {renderModalFooter(() => setShowAddLocation(false), "Save Locations", handleSave)}
+      </div>
+    ));
+  }
+
   // ── Main render ────────────────────────────────────────────────────────────
   return (
     <div className="flex-1 overflow-y-auto" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
@@ -685,6 +821,7 @@ export function CheckpointsPage() {
             { id: "checkpoints", label: "Checkpoints", icon: <MapPin className="w-3.5 h-3.5" /> },
             { id: "tours", label: "Tour Routes", icon: <Route className="w-3.5 h-3.5" /> },
             { id: "logs", label: "Scan Logs", icon: <ClipboardList className="w-3.5 h-3.5" /> },
+            { id: "locations", label: "Site Locations", icon: <Building2 className="w-3.5 h-3.5" /> },
           ] as { id: CpSection; label: string; icon: React.ReactNode }[]).map((tab) => (
             <button key={tab.id} onClick={() => setSection(tab.id)}
               className="flex items-center gap-2 px-5 py-3 text-xs font-semibold transition-all shrink-0"
@@ -704,13 +841,15 @@ export function CheckpointsPage() {
         {section === "checkpoints" && renderCheckpointsSection()}
         {section === "tours" && renderToursSection()}
         {section === "logs" && renderLogsSection()}
+        {section === "locations" && renderLocationsSection()}
       </div>
 
       {/* Modals */}
       {showCreateCp && renderCreateCheckpointModal()}
-      {showCreateTour && renderCreateTourModal()}
+      {showCreateTour && <CreateTourWizard onClose={() => setShowCreateTour(false)} />}
       {showImport && renderImportModal()}
       {showManage && renderManageCheckpointsModal()}
+      {showAddLocation && renderAddLocationModal()}
     </div>
   );
 }

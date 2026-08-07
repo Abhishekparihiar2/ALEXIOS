@@ -9,6 +9,31 @@ import { TimesheetsTab } from "./TimesheetsTab";
 import { Page } from "../../types";
 
 export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }) {
+  const HoverMapPin = ({ status, siteName }: { status: "inside" | "outside", siteName: string }) => (
+    <div className="relative group/map flex items-center justify-center">
+      {status === "inside" ? (
+        <MapPin className="w-3.5 h-3.5 text-green-500 cursor-pointer" />
+      ) : (
+        <AlertTriangle className="w-3.5 h-3.5 text-amber-500 cursor-pointer" />
+      )}
+      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 hidden group-hover/map:block w-48 h-32 bg-slate-200 border border-slate-300 rounded-lg shadow-xl z-[100] overflow-hidden pointer-events-none">
+        <div className="w-full h-full relative" style={{ background: "#e8ecf4" }}>
+          <svg className="absolute inset-0 w-full h-full opacity-30">
+            {[...Array(10)].map((_, i) => (
+              <line key={`h${i}`} x1="0" y1={i * 20} x2="100%" y2={i * 20} stroke="#94a3b8" strokeWidth="0.5" />
+            ))}
+            {[...Array(10)].map((_, i) => (
+              <line key={`v${i}`} x1={i * 20} y1="0" x2={i * 20} y2="100%" stroke="#94a3b8" strokeWidth="0.5" />
+            ))}
+          </svg>
+          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white shadow-md animate-pulse ${status === "inside" ? "bg-green-500" : "bg-red-500"}`}></div>
+          <div className="absolute bottom-0 left-0 right-0 text-center text-[10px] font-bold text-slate-700 bg-white/90 py-1.5 border-t border-slate-200 truncate px-2">
+            {status === "inside" ? "At " : "Away from "}{siteName}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   const [activeTab, setActiveTab] = useState<"Today" | "Timesheets" | "Live Map">("Today");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ClockStatus | "All">("All");
@@ -76,7 +101,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50 relative">
+    <div className="flex-1 flex flex-col h-full bg-slate-50 relative min-h-0 overflow-hidden">
       
       {/* ── HEADER ── */}
       <div className="px-6 pt-5 pb-0 bg-white border-b border-slate-200 shrink-0">
@@ -331,9 +356,9 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
           </div>
 
           {/* ── TABLE ── */}
-          <div className="flex-1 overflow-hidden px-6 pb-6 flex flex-col relative">
-            <div className="flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col relative">
-              <div className="overflow-auto flex-1">
+          <div className="flex-1 overflow-hidden px-6 pb-6 flex flex-col relative min-h-0">
+            <div className="flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col relative min-h-0">
+              <div className="overflow-auto flex-1 min-h-0">
                 <table className="w-full text-sm text-left">
                   <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 sticky top-0 z-10">
                     <tr>
@@ -408,9 +433,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                               <div className="flex items-center gap-2 group/time cursor-pointer p-1 -ml-1 rounded hover:bg-slate-100 transition-colors">
                                 <span className="font-mono font-bold text-slate-800">{row.clockIn.time}</span>
                                 <div className="flex gap-1">
-                                  {row.clockIn.geofenceStatus === "inside" && <MapPin className="w-3.5 h-3.5 text-green-500" title="Inside Geofence" />}
-                                  {row.clockIn.geofenceStatus === "outside" && <AlertTriangle className="w-3.5 h-3.5 text-amber-500" title="Outside Geofence" />}
-                                  {row.clockIn.photoVerified && <Camera className="w-3.5 h-3.5 text-slate-400" title="Photo Verified" />}
+                                  {row.clockIn.geofenceStatus && <HoverMapPin status={row.clockIn.geofenceStatus} siteName={row.shift.siteName} />}
                                 </div>
                               </div>
                             ) : (
@@ -424,8 +447,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                               <div className="flex items-center gap-2 group/time cursor-pointer p-1 -ml-1 rounded hover:bg-slate-100 transition-colors">
                                 <span className="font-mono font-bold text-slate-800">{row.clockOut.time}</span>
                                 <div className="flex gap-1">
-                                  {row.clockOut.geofenceStatus === "inside" && <MapPin className="w-3.5 h-3.5 text-green-500" title="Inside Geofence" />}
-                                  {row.clockOut.geofenceStatus === "outside" && <AlertTriangle className="w-3.5 h-3.5 text-amber-500" title="Outside Geofence" />}
+                                  {row.clockOut.geofenceStatus && <HoverMapPin status={row.clockOut.geofenceStatus} siteName={row.shift.siteName} />}
                                 </div>
                               </div>
                             ) : (

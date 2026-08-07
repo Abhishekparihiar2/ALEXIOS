@@ -6,6 +6,7 @@ import { MOCK_SCHED_JOBS, MOCK_SCHED_SHIFTS, MOCK_SWAP_REQUESTS, MOCK_SCHED_TOUR
 import { ShiftDrawer } from "./ShiftDrawer";
 import { ConflictsDrawer } from "./ConflictsDrawer";
 import { TourDrawer } from "./TourDrawer";
+import { RequestsDrawer } from "./RequestsDrawer";
 
 export function SchedulingPage() {
   const [shifts, setShifts] = useState(MOCK_SCHED_SHIFTS);
@@ -28,6 +29,7 @@ export function SchedulingPage() {
   const [editingTourId, setEditingTourId] = useState<string | null>(null);
 
   const [showConflicts, setShowConflicts] = useState(false);
+  const [showRequests, setShowRequests] = useState(false);
 
   const DAYS = [
     { date: "2026-08-03", dayLabel: "Mon", shortLabel: "Aug 3" },
@@ -241,6 +243,11 @@ export function SchedulingPage() {
           <p className="text-xs text-slate-500 mt-0.5">Advanced timeline schedule matrix</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          <button onClick={() => setShowRequests(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 rounded-xl cursor-pointer">
+            Requests
+            <span className="bg-blue-600 text-white rounded px-1.5 py-0.5 text-[10px]">7</span>
+          </button>
           <button onClick={() => setShowConflicts(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-red-50 text-red-700 hover:bg-red-100 rounded-xl cursor-pointer">
             <AlertTriangle className="w-3.5 h-3.5 animate-pulse" />Conflicts ({activeConflicts.length})
@@ -367,7 +374,24 @@ export function SchedulingPage() {
                                   {shift.status === "Draft" && <span className="text-[9px] px-1 bg-slate-200 rounded font-bold uppercase mr-6">Draft</span>}
                                 </div>
                                 <p className="text-[10px] text-slate-500 font-semibold truncate leading-tight pr-6">{MOCK_SCHED_JOBS.find(j => j.id === shift.jobId)?.title}</p>
-                                <p className="text-[10px] text-slate-400 truncate mt-0.5">{shift.site}</p>
+                                {/* Schedule Request Indicators */}
+                              {(shift as any).timeOff && (
+                                <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                                  <AlertCircle className="w-3 h-3" /> TIME OFF - Vacation
+                                </div>
+                              )}
+                              {(shift as any).openShiftClaims > 0 && (
+                                <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
+                                  <AlertCircle className="w-3 h-3" /> OPEN SHIFT ({ (shift as any).openShiftClaims } claims)
+                                </div>
+                              )}
+                              {(shift as any).replacementRequested && (
+                                <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200">
+                                  <AlertCircle className="w-3 h-3" /> Replacement Requested
+                                </div>
+                              )}
+                              
+                              <p className="text-[10px] text-slate-400 mt-1 truncate">{shift.site}</p>
                               </div>
                               <div className="flex items-center justify-between mt-2">
                                 <div></div>
@@ -642,13 +666,20 @@ export function SchedulingPage() {
           isOpen={showConflicts}
           onClose={() => setShowConflicts(false)}
           conflicts={activeConflicts}
-          onResolve={(id) => {
+          onResolve={(shiftId) => {
             setShowConflicts(false);
-            openDrawer(id);
+            openDrawer(shiftId);
           }}
-          onUnassign={handleUnassignConflict}
+          onUnassign={(shiftId) => {
+            setShifts(prev => prev.map(s => s.id === shiftId ? { ...s, conflict: null, employeeName: null, status: "Draft" } : s));
+          }}
         />
       )}
+
+      <RequestsDrawer
+        isOpen={showRequests}
+        onClose={() => setShowRequests(false)}
+      />
 
       {showTourDrawer && (
         <TourDrawer

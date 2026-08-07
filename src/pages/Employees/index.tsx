@@ -100,4 +100,4 @@ export function avatarColor(initials: string) {
   return AVATAR_COLORS[n % AVATAR_COLORS.length];
 }
 
-export type EmpTab = "active" | "admins" | "archived";
+export type EmpTab = "active" | "admins" | "archived" | "types" | "departments";
