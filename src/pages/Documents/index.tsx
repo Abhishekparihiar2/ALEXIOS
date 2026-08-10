@@ -122,7 +122,7 @@ function DocumentsList({ onNavigate }: { onNavigate: (v: "list" | "create" | "de
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full shrink-0">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Documents & Policies</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage company documents, policies, manuals, notices and team resources from one place.</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Manage company documents, policies, manuals, notices and team resources from one place.</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                     <div className="relative">
@@ -179,16 +179,16 @@ function DocumentsList({ onNavigate }: { onNavigate: (v: "list" | "create" | "de
                     Updated Date <Filter className="w-3 h-3 text-slate-400" />
                 </button>
                 <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1 shrink-0"></div>
-                <button className="shrink-0 px-3 py-1.5 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors">Clear All</button>
+                <button className="shrink-0 px-3 py-1.5 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors dark:text-slate-400">Clear All</button>
             </div>
 
             {/* Table Area */}
             <div className="bg-white/90 dark:bg-[#1a1f2e]/90 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm flex-1 flex flex-col min-h-0 min-w-0 w-full mb-2">
                 <div className="overflow-auto flex-1 min-h-0 relative">
                     <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300 min-w-[1024px]">
-                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide">
+                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide dark:text-slate-400">
                             <tr>
-                                <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300" /></th>
+                                <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600" /></th>
                                 <th className="px-5 py-4">Name</th>
                                 <th className="px-5 py-4">Category</th>
                                 <th className="px-5 py-4">Site / Scope</th>
@@ -201,12 +201,12 @@ function DocumentsList({ onNavigate }: { onNavigate: (v: "list" | "create" | "de
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
                             {MOCK_DOCS.map((doc, i) => (
                                 <tr key={doc.id} onClick={() => onNavigate("detail", doc.id)} className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors cursor-pointer group ${i % 2 === 0 ? '' : 'bg-slate-50/30 dark:bg-transparent'}`}>
-                                    <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300" /></td>
+                                    <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600" /></td>
                                     <td className="px-5 py-4 font-bold text-slate-900 dark:text-white truncate max-w-sm">{doc.name}</td>
                                     <td className="px-5 py-4 font-semibold text-slate-700 dark:text-slate-300"><span className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md text-xs">{doc.type}</span></td>
                                     <td className="px-5 py-4 text-slate-600 dark:text-slate-300">{doc.scope}</td>
                                     <td className="px-5 py-4 font-medium text-slate-800 dark:text-slate-200">{doc.author}</td>
-                                    <td className="px-5 py-4 whitespace-nowrap text-slate-500">{doc.updated}</td>
+                                    <td className="px-5 py-4 whitespace-nowrap text-slate-500 dark:text-slate-400">{doc.updated}</td>
                                     <td className="px-5 py-4 whitespace-nowrap">
                                         <span className={`px-2.5 py-1 text-xs font-bold rounded-md border ${doc.status === 'Active' ? 'text-green-700 bg-green-50 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50' : 'text-slate-600 bg-slate-100 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'}`}>
                                             {doc.status}
@@ -233,12 +233,12 @@ function DocumentCreate({ onNavigate }: { onNavigate: (v: "list" | "create" | "d
         <div className="w-full h-full flex flex-col p-4 md:p-6 mx-auto max-w-4xl relative animate-in slide-in-from-right-2">
             <div className="flex items-center justify-between mb-8 shrink-0">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Add New Resource</h1>
-                        <p className="text-sm text-slate-500 mt-1">Upload and configure a new document, policy, or manual.</p>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Upload and configure a new document, policy, or manual.</p>
                     </div>
                 </div>
             </div>
@@ -302,7 +302,7 @@ function DocumentCreate({ onNavigate }: { onNavigate: (v: "list" | "create" | "d
                                 <Upload className="w-5 h-5 text-slate-400" />
                             </div>
                             <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1">Drag and drop resource here</p>
-                            <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 shadow-sm mt-3">Browse Files</button>
+                            <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 shadow-sm mt-3 dark:hover:bg-slate-800">Browse Files</button>
                         </div>
                         <p className="text-[11px] text-slate-400 font-medium text-center">Supported file types and limits are configured by the system administrator.</p>
                     </div>
@@ -310,7 +310,7 @@ function DocumentCreate({ onNavigate }: { onNavigate: (v: "list" | "create" | "d
 
                 <div className="mt-10 pt-6 flex flex-col md:flex-row justify-between items-center border-t border-slate-200/60 dark:border-slate-800/60 gap-4">
                     <label className="flex items-center gap-2 cursor-pointer w-full md:w-auto">
-                        <input type="checkbox" defaultChecked className="rounded border-slate-300 w-4 h-4 text-[#1e3a6e] focus:ring-[#1e3a6e]" />
+                        <input type="checkbox" defaultChecked className="rounded border-slate-300 w-4 h-4 text-[#1e3a6e] focus:ring-[#1e3a6e] dark:border-slate-600" />
                         <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Set as Active</span>
                     </label>
                     <div className="flex gap-3 w-full md:w-auto">
@@ -330,12 +330,12 @@ function PackCreate({ onNavigate }: { onNavigate: (v: "list") => void }) {
     return (
         <div className="w-full h-full flex flex-col p-4 md:p-6 mx-auto max-w-4xl relative animate-in slide-in-from-right-2">
             <div className="flex items-center gap-4 mb-8 shrink-0">
-                <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+                <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors dark:text-slate-400">
                     <ChevronLeft className="w-5 h-5" />
                 </button>
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create Document Pack</h1>
-                    <p className="text-sm text-slate-500 mt-1">Group multiple related documents into a single shareable bundle.</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Group multiple related documents into a single shareable bundle.</p>
                 </div>
             </div>
 
@@ -358,10 +358,10 @@ function PackCreate({ onNavigate }: { onNavigate: (v: "list") => void }) {
                         <div className="glass-panel border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800 max-h-64 overflow-y-auto">
                             {MOCK_DOCS.map(doc => (
                                 <label key={doc.id} className="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer">
-                                    <input type="checkbox" className="rounded border-slate-300 w-4 h-4 text-[#1e3a6e]" />
+                                    <input type="checkbox" className="rounded border-slate-300 w-4 h-4 text-[#1e3a6e] dark:border-slate-600" />
                                     <div className="flex flex-col">
                                         <span className="font-semibold text-slate-900 dark:text-white text-sm">{doc.name}</span>
-                                        <span className="text-xs text-slate-500">{doc.type} • {doc.scope}</span>
+                                        <span className="text-xs text-slate-500 dark:text-slate-400">{doc.type} • {doc.scope}</span>
                                     </div>
                                 </label>
                             ))}
@@ -388,7 +388,7 @@ function DocumentDetail({ id, onNavigate }: { id: string, onNavigate: (v: "list"
             {/* Action Bar */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 shrink-0 gap-4">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
@@ -400,13 +400,13 @@ function DocumentDetail({ id, onNavigate }: { id: string, onNavigate: (v: "list"
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <Download className="w-4 h-4" /> Export / Download
                     </button>
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         Edit
                     </button>
-                    <button className="flex items-center gap-2 p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <MoreHorizontal className="w-4 h-4" />
                     </button>
                 </div>
@@ -444,7 +444,7 @@ function DocumentDetail({ id, onNavigate }: { id: string, onNavigate: (v: "list"
                     <div className="border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900 overflow-hidden flex flex-col items-center justify-center min-h-[300px] text-center p-6">
                         <FileText className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" />
                         <h4 className="font-bold text-slate-800 dark:text-slate-200">{doc.name}.pdf</h4>
-                        <p className="text-sm text-slate-500 mt-1">2.4 MB PDF Document</p>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">2.4 MB PDF Document</p>
                         <button className="mt-6 px-5 py-2 rounded-xl text-sm font-medium border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                             <Eye className="w-4 h-4" /> Preview
                         </button>
@@ -465,7 +465,7 @@ function LaterPhaseView({ title }: { title: string }) {
             </div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{title}</h2>
             <div className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px] rounded-lg mb-4">Later Phase</div>
-            <p className="text-slate-500 max-w-md text-sm leading-relaxed">This detailed workflow functionality will be available in a future phase. It is currently placed here for structural context and roadmap visibility.</p>
+            <p className="text-slate-500 max-w-md text-sm leading-relaxed dark:text-slate-400">This detailed workflow functionality will be available in a future phase. It is currently placed here for structural context and roadmap visibility.</p>
         </div>
     );
 }
@@ -480,12 +480,12 @@ function PlaceholderList({ section }: { section: string }) {
         <div className="p-4 md:p-6 w-full h-full flex flex-col animate-in fade-in">
             <div className="mb-6">
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{title}</h1>
-                <p className="text-sm text-slate-500 mt-1">{desc}</p>
+                <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">{desc}</p>
             </div>
             <div className="flex-1 glass-panel rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm flex flex-col items-center justify-center text-center p-8">
                 <FileSearch className="w-12 h-12 text-slate-300 dark:text-slate-700 mb-4" />
                 <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-1">No active records</h3>
-                <p className="text-sm text-slate-500">There is currently no data populating this view.</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">There is currently no data populating this view.</p>
             </div>
         </div>
     );
@@ -497,7 +497,7 @@ function NoticesList({ onNavigate }: { onNavigate: (v: "list") => void }) {
             <div className="flex justify-between items-end mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Workplace Notices</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage public compliance and HR notices.</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Manage public compliance and HR notices.</p>
                 </div>
                 <div className="flex gap-2">
                     <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800 bg-white/80 backdrop-blur-md shadow-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
@@ -511,7 +511,7 @@ function NoticesList({ onNavigate }: { onNavigate: (v: "list") => void }) {
             <div className="flex-1 glass-panel rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm p-8 flex items-center justify-center text-center">
                 <div>
                     <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-1">No Notices Yet</h3>
-                    <p className="text-sm text-slate-500">Add your first document or policy to get started.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Add your first document or policy to get started.</p>
                 </div>
             </div>
         </div>
@@ -524,7 +524,7 @@ function HiringList({ onNavigate }: { onNavigate: (v: "list") => void }) {
             <div className="flex justify-between items-end mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Hiring</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage recruiting profiles and open positions.</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Manage recruiting profiles and open positions.</p>
                 </div>
                 <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90" style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>
                     <Plus className="w-4 h-4" /> Add Position
@@ -533,7 +533,7 @@ function HiringList({ onNavigate }: { onNavigate: (v: "list") => void }) {
             <div className="flex-1 glass-panel rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm p-8 flex items-center justify-center text-center">
                 <div>
                     <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-1">No Positions</h3>
-                    <p className="text-sm text-slate-500">Active hiring requests will populate here.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Active hiring requests will populate here.</p>
                 </div>
             </div>
         </div>

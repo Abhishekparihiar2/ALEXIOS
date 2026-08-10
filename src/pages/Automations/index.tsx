@@ -62,7 +62,7 @@ function AutomationListManager({ onNavigate }: { onNavigate: (v: any, id?: strin
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full shrink-0">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Automations</h1>
-                    <p className="text-sm text-slate-500 mt-1">Create and manage automated operational workflows across sites, employees, shifts, reports and tasks.</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Create and manage automated operational workflows across sites, employees, shifts, reports and tasks.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <button
@@ -93,8 +93,8 @@ function AutomationListManager({ onNavigate }: { onNavigate: (v: any, id?: strin
                                 {item.icon}
                             </div>
                         </div>
-                        <p className="text-xl font-bold leading-none mb-1 text-slate-900 dark:text-white" style={{ color: "#0f172a" }}>{item.count}</p>
-                        <p className="text-[11px] font-semibold truncate text-slate-700 dark:text-slate-300" style={{ color: "#374151" }}>{item.label}</p>
+                        <p className="text-xl font-bold leading-none mb-1 text-slate-900 dark:text-white text-slate-900 dark:text-slate-100" >{item.count}</p>
+                        <p className="text-[11px] font-semibold truncate text-slate-700 dark:text-slate-300 text-slate-700 dark:text-slate-200" >{item.label}</p>
                         <div className="flex items-center gap-1 mt-1.5">
                             {item.trendUp
                                 ? <TrendingUp className="w-3 h-3 text-green-600" />
@@ -128,7 +128,7 @@ function AutomationListManager({ onNavigate }: { onNavigate: (v: any, id?: strin
                     <button className="shrink-0 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 bg-white/80 dark:bg-slate-800/80 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center gap-1.5 transition-colors">
                         Filters <Filter className="w-3 h-3 text-slate-400" />
                     </button>
-                    <button className="shrink-0 px-3 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors hidden md:block">Clear All</button>
+                    <button className="shrink-0 px-3 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors hidden md:block dark:text-slate-400">Clear All</button>
                 </div>
             </div>
 
@@ -136,7 +136,7 @@ function AutomationListManager({ onNavigate }: { onNavigate: (v: any, id?: strin
             <div className="bg-white/90 dark:bg-[#1a1f2e]/90 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm flex-1 flex flex-col min-h-0 min-w-0 w-full mb-2">
                 <div className="overflow-auto flex-1 min-h-0 relative">
                     <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300 min-w-[1024px]">
-                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide">
+                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide dark:text-slate-400">
                             <tr>
                                 <th className="px-5 py-4">Automation</th>
                                 <th className="px-5 py-4">Trigger</th>
@@ -156,7 +156,7 @@ function AutomationListManager({ onNavigate }: { onNavigate: (v: any, id?: strin
                                     <td className="px-5 py-4"><span className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md text-xs font-semibold">{a.sites}</span></td>
                                     <td className="px-5 py-4">{a.actions}</td>
                                     <td className="px-5 py-4"><StatusChip status={a.status} /></td>
-                                    <td className="px-5 py-4 whitespace-nowrap text-slate-500">{a.lastTriggered}</td>
+                                    <td className="px-5 py-4 whitespace-nowrap text-slate-500 dark:text-slate-400">{a.lastTriggered}</td>
                                     <td className="px-5 py-4 text-slate-800 dark:text-slate-200 font-medium">{a.createdBy}</td>
                                     <td className="px-5 py-4 text-center" onClick={e => e.stopPropagation()}>
                                         <button className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
@@ -179,17 +179,17 @@ function AutomationBuilder({ onNavigate }: { onNavigate: (v: any) => void }) {
 
             <div className="flex items-center justify-between mb-6 shrink-0">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create Automation</h1>
-                        <p className="text-sm text-slate-500 mt-1">Define when an automation should run, where it applies, and what action should happen.</p>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Define when an automation should run, where it applies, and what action should happen.</p>
                     </div>
                 </div>
                 <div className="hidden lg:flex gap-3">
                     <button onClick={() => onNavigate("list")} className="px-5 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancel</button>
-                    <button className="px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 shadow-sm transition-colors">
+                    <button className="px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 shadow-sm transition-colors dark:hover:bg-slate-800">
                         Save as Inactive
                     </button>
                     <button onClick={() => onNavigate("list")} className="px-6 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity" style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>
@@ -240,7 +240,7 @@ function AutomationBuilder({ onNavigate }: { onNavigate: (v: any) => void }) {
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-slate-900 dark:text-white">Late Shift</h4>
-                                            <p className="text-sm text-slate-500">Employee has not clocked in after shift start</p>
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">Employee has not clocked in after shift start</p>
                                         </div>
                                     </div>
                                     <button className="text-sm font-semibold text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800/50 bg-white dark:bg-slate-800 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">Change Trigger</button>
@@ -260,7 +260,7 @@ function AutomationBuilder({ onNavigate }: { onNavigate: (v: any) => void }) {
                         {/* Step 2: Conditions */}
                         <div className="space-y-6">
                             <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700/50 pb-4">
-                                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-extrabold text-sm border border-slate-200 dark:border-slate-700">2</div>
+                                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-extrabold text-sm border border-slate-200 dark:border-slate-700 dark:text-slate-400">2</div>
                                 <div>
                                     <h2 className="text-xl font-bold text-slate-900 dark:text-white">Only if these conditions match</h2>
                                 </div>
@@ -274,7 +274,7 @@ function AutomationBuilder({ onNavigate }: { onNavigate: (v: any) => void }) {
                                         <option>Job Type</option>
                                         <option>Employee</option>
                                     </select>
-                                    <select className="w-24 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none font-semibold text-slate-500">
+                                    <select className="w-24 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none font-semibold text-slate-500 dark:text-slate-400">
                                         <option>is</option>
                                         <option>is not</option>
                                     </select>
@@ -295,7 +295,7 @@ function AutomationBuilder({ onNavigate }: { onNavigate: (v: any) => void }) {
                         {/* Step 3: Actions */}
                         <div className="space-y-6">
                             <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700/50 pb-4">
-                                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-extrabold text-sm border border-slate-200 dark:border-slate-700">3</div>
+                                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-extrabold text-sm border border-slate-200 dark:border-slate-700 dark:text-slate-400">3</div>
                                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">Then do this</h2>
                             </div>
 
@@ -312,7 +312,7 @@ function AutomationBuilder({ onNavigate }: { onNavigate: (v: any) => void }) {
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="col-span-1 md:col-span-2">
-                                            <label className="block text-xs font-semibold mb-1 text-slate-500 uppercase tracking-wide">Recipient</label>
+                                            <label className="block text-xs font-semibold mb-1 text-slate-500 uppercase tracking-wide dark:text-slate-400">Recipient</label>
                                             <select className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none font-bold">
                                                 <option>Site Supervisor</option>
                                                 <option>Admin</option>
@@ -320,11 +320,11 @@ function AutomationBuilder({ onNavigate }: { onNavigate: (v: any) => void }) {
                                             </select>
                                         </div>
                                         <div className="col-span-1 md:col-span-2">
-                                            <label className="block text-xs font-semibold mb-1 text-slate-500 uppercase tracking-wide">Push Title</label>
+                                            <label className="block text-xs font-semibold mb-1 text-slate-500 uppercase tracking-wide dark:text-slate-400">Push Title</label>
                                             <input type="text" defaultValue="Late Shift Alert" className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none font-medium" />
                                         </div>
                                         <div className="col-span-1 md:col-span-2">
-                                            <label className="block text-xs font-semibold mb-1 text-slate-500 uppercase tracking-wide">Push Message</label>
+                                            <label className="block text-xs font-semibold mb-1 text-slate-500 uppercase tracking-wide dark:text-slate-400">Push Message</label>
                                             <textarea rows={2} defaultValue="An employee has not clocked in for their scheduled shift." className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none font-medium" />
                                         </div>
                                     </div>
@@ -388,7 +388,7 @@ function AutomationBuilder({ onNavigate }: { onNavigate: (v: any) => void }) {
             <div className="lg:hidden mt-6 pt-6 flex flex-col md:flex-row justify-between items-center border-t border-slate-200/60 dark:border-slate-800/60 gap-4 shrink-0">
                 <button onClick={() => onNavigate("list")} className="w-full md:w-auto px-5 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancel</button>
                 <div className="flex gap-3 w-full md:w-auto">
-                    <button className="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 shadow-sm transition-colors">
+                    <button className="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 shadow-sm transition-colors dark:hover:bg-slate-800">
                         Save as Inactive
                     </button>
                     <button onClick={() => onNavigate("list")} className="flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity" style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>
@@ -409,24 +409,24 @@ function AutomationDetail({ id, onNavigate }: { id: string, onNavigate: (v: any)
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 shrink-0 w-full">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <div className="flex items-center gap-3">
                             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{a.name}</h1>
                         </div>
-                        <p className="text-sm font-medium text-slate-500 mt-1">Created by {a.createdBy}</p>
+                        <p className="text-sm font-medium text-slate-500 mt-1 dark:text-slate-400">Created by {a.createdBy}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         Edit
                     </button>
                     <button className={`flex items-center gap-2 px-3 py-2 text-sm font-semibold border rounded-xl shadow-sm transition-colors ${a.status === "Active" ? 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:border-amber-800/50 dark:bg-amber-900/20 dark:text-amber-500 dark:hover:bg-amber-900/40' : 'border-green-200 bg-green-50 text-green-700 hover:bg-green-100 dark:border-green-800/50 dark:bg-green-900/20 dark:text-green-400 dark:hover:bg-green-900/40'}`}>
                         {a.status === "Active" ? "Deactivate" : "Activate"}
                     </button>
-                    <button className="p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <MoreHorizontal className="w-4 h-4" />
                     </button>
                 </div>
@@ -467,7 +467,7 @@ function AutomationDetail({ id, onNavigate }: { id: string, onNavigate: (v: any)
                 <div className="flex-1 glass-panel rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/90 dark:bg-slate-900/90 shadow-sm backdrop-blur-md p-6 lg:p-8 h-full overflow-y-auto">
                     <h3 className="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider text-sm flex justify-between items-center">
                         Automation Flow
-                        <span className="text-xs font-semibold px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-lg normal-case tracking-normal">Read-only Configuration</span>
+                        <span className="text-xs font-semibold px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-lg normal-case tracking-normal dark:text-slate-400">Read-only Configuration</span>
                     </h3>
 
                     <div className="flex flex-col items-center">
@@ -502,14 +502,14 @@ function AutomationDetail({ id, onNavigate }: { id: string, onNavigate: (v: any)
                                     <Smartphone className="w-4 h-4 text-[#1e3a6e] dark:text-blue-400 mt-0.5 shrink-0" />
                                     <div>
                                         <div className="font-bold text-slate-900 dark:text-white">Push Notification</div>
-                                        <div className="text-xs text-slate-500 font-medium mt-0.5">To: Site Supervisor</div>
+                                        <div className="text-xs text-slate-500 font-medium mt-0.5 dark:text-slate-400">To: Site Supervisor</div>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-2 bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800">
                                     <MessageSquare className="w-4 h-4 text-[#1e3a6e] dark:text-blue-400 mt-0.5 shrink-0" />
                                     <div>
                                         <div className="font-bold text-slate-900 dark:text-white">SMS</div>
-                                        <div className="text-xs text-slate-500 font-medium mt-0.5">To: Site Supervisor</div>
+                                        <div className="text-xs text-slate-500 font-medium mt-0.5 dark:text-slate-400">To: Site Supervisor</div>
                                     </div>
                                 </div>
                             </div>

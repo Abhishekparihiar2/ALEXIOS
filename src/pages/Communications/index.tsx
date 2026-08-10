@@ -34,16 +34,16 @@ export function CommunicationsPage({ onNavigate }: CommunicationsPageProps) {
   ];
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-slate-50" style={{ scrollbarWidth: "none" }}>
+    <div className="flex-1 flex flex-col min-h-0 bg-slate-50 dark:bg-slate-900" style={{ scrollbarWidth: "none" }}>
       {/* Module Header & Navigation */}
-      <div className="bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 pt-4 px-6 flex flex-col gap-4">
+      <div className="bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 pt-4 px-6 flex flex-col gap-4 dark:bg-slate-900 dark:border-slate-700">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
             <MessageSquare className="w-5 h-5" />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight leading-tight">Communications</h1>
-            <p className="text-sm text-slate-500 font-medium">Manage operations, broadcasts, and team messaging.</p>
+            <h1 className="text-2xl font-bold text-slate-800 tracking-tight leading-tight dark:text-slate-200">Communications</h1>
+            <p className="text-sm text-slate-500 font-medium dark:text-slate-400">Manage operations, broadcasts, and team messaging.</p>
           </div>
         </div>
 

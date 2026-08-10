@@ -65,7 +65,7 @@ function TrainingListManager({ activeTab, setActiveTab, onNavigate }: { activeTa
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full shrink-0">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Training</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage quizzes and RFI Academy training resources for employees.</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Manage quizzes and RFI Academy training resources for employees.</p>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@ function TrainingListManager({ activeTab, setActiveTab, onNavigate }: { activeTa
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 w-full shrink-0">
                 <div>
                     <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">{title}</h2>
-                    <p className="text-sm text-slate-500">{subtitle}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{subtitle}</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                     <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800 bg-white/80 backdrop-blur-md shadow-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
@@ -136,9 +136,9 @@ function TrainingListManager({ activeTab, setActiveTab, onNavigate }: { activeTa
 function QuizTable({ onNavigate }: { onNavigate: (v: any, id?: string) => void }) {
     return (
         <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300 min-w-[1024px]">
-            <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide">
+            <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide dark:text-slate-400">
                 <tr>
-                    <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300" /></th>
+                    <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600" /></th>
                     <th className="px-5 py-4">Quiz Name</th>
                     <th className="px-5 py-4">Status</th>
                     <th className="px-5 py-4">Created By</th>
@@ -150,12 +150,12 @@ function QuizTable({ onNavigate }: { onNavigate: (v: any, id?: string) => void }
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
                 {MOCK_QUIZZES.map((quiz, i) => (
                     <tr key={quiz.id} onClick={() => onNavigate("quiz-detail", quiz.id)} className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors cursor-pointer group ${i % 2 === 0 ? '' : 'bg-slate-50/30 dark:bg-transparent'}`}>
-                        <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300" /></td>
+                        <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600" /></td>
                         <td className="px-5 py-4 font-bold text-slate-900 dark:text-white">{quiz.name}</td>
                         <td className="px-5 py-4"><StatusChip status={quiz.status} /></td>
                         <td className="px-5 py-4 font-medium text-slate-800 dark:text-slate-200">{quiz.createdBy}</td>
-                        <td className="px-5 py-4 whitespace-nowrap text-slate-500">{quiz.created}</td>
-                        <td className="px-5 py-4 whitespace-nowrap text-slate-500">{quiz.updated}</td>
+                        <td className="px-5 py-4 whitespace-nowrap text-slate-500 dark:text-slate-400">{quiz.created}</td>
+                        <td className="px-5 py-4 whitespace-nowrap text-slate-500 dark:text-slate-400">{quiz.updated}</td>
                         <td className="px-5 py-4 text-center" onClick={e => e.stopPropagation()}>
                             <button className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
                         </td>
@@ -169,9 +169,9 @@ function QuizTable({ onNavigate }: { onNavigate: (v: any, id?: string) => void }
 function AcademyTable({ onNavigate }: { onNavigate: (v: any, id?: string) => void }) {
     return (
         <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300 min-w-[1024px]">
-            <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide">
+            <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide dark:text-slate-400">
                 <tr>
-                    <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300" /></th>
+                    <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600" /></th>
                     <th className="px-5 py-4">Training Item</th>
                     <th className="px-5 py-4">Type</th>
                     <th className="px-5 py-4">Status</th>
@@ -184,13 +184,13 @@ function AcademyTable({ onNavigate }: { onNavigate: (v: any, id?: string) => voi
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
                 {MOCK_ACADEMY.map((item, i) => (
                     <tr key={item.id} onClick={() => onNavigate("academy-detail", item.id)} className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors cursor-pointer group ${i % 2 === 0 ? '' : 'bg-slate-50/30 dark:bg-transparent'}`}>
-                        <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300" /></td>
+                        <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600" /></td>
                         <td className="px-5 py-4 font-bold text-slate-900 dark:text-white max-w-[250px] truncate">{item.name}</td>
                         <td className="px-5 py-4 font-medium text-slate-700 dark:text-slate-300"><span className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md text-xs">{item.type}</span></td>
                         <td className="px-5 py-4"><StatusChip status={item.status} /></td>
                         <td className="px-5 py-4 font-medium text-slate-800 dark:text-slate-200">{item.createdBy}</td>
-                        <td className="px-5 py-4 whitespace-nowrap text-slate-500">{item.created}</td>
-                        <td className="px-5 py-4 whitespace-nowrap text-slate-500">{item.updated}</td>
+                        <td className="px-5 py-4 whitespace-nowrap text-slate-500 dark:text-slate-400">{item.created}</td>
+                        <td className="px-5 py-4 whitespace-nowrap text-slate-500 dark:text-slate-400">{item.updated}</td>
                         <td className="px-5 py-4 text-center" onClick={e => e.stopPropagation()}>
                             <button className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
                         </td>
@@ -207,12 +207,12 @@ function QuizCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
         <div className="w-full h-full flex flex-col p-4 md:p-6 mx-auto max-w-4xl relative animate-in slide-in-from-right-2 overflow-hidden">
             <div className="flex items-center justify-between mb-6 shrink-0">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create Quiz</h1>
-                        <p className="text-sm text-slate-500 mt-1">Create a quiz for employee training and knowledge checks.</p>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Create a quiz for employee training and knowledge checks.</p>
                     </div>
                 </div>
             </div>
@@ -271,7 +271,7 @@ function QuizCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
                                             <input type="radio" name="q1" defaultChecked className="w-4 h-4 text-[#1e3a6e]" />
                                             <input type="text" defaultValue="Verify all equipment and communications" className="flex-1 px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 rounded-md text-sm outline-none focus:border-[#1e3a6e]" />
                                         </div>
-                                        <button className="text-xs font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 ml-7">+ Add Option</button>
+                                        <button className="text-xs font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 ml-7 dark:text-slate-400">+ Add Option</button>
                                     </div>
                                     <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 text-slate-400">
                                         <button className="hover:text-slate-700 dark:hover:text-slate-300 p-1" title="Duplicate"><Copy className="w-4 h-4" /></button>
@@ -285,7 +285,7 @@ function QuizCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
                 </div>
 
                 <div className="mt-10 pt-6 flex flex-col md:flex-row justify-between items-center border-t border-slate-200/60 dark:border-slate-800/60 gap-4 shrink-0">
-                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm w-full md:w-auto">
+                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm w-full md:w-auto dark:hover:bg-slate-800">
                         <Eye className="w-4 h-4" /> Preview
                     </button>
                     <div className="flex gap-3 w-full md:w-auto">
@@ -308,7 +308,7 @@ function QuizDetail({ id, onNavigate }: { id: string, onNavigate: (v: any) => vo
             {/* Action Bar */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 shrink-0 gap-4">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
@@ -316,17 +316,17 @@ function QuizDetail({ id, onNavigate }: { id: string, onNavigate: (v: any) => vo
                             <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white truncate max-w-[300px] md:max-w-md">{quiz.name}</h1>
                             {quiz.status === "Archived" && <span className="bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide">Archived</span>}
                         </div>
-                        <p className="text-sm font-medium text-slate-500 mt-1">Created by {quiz.createdBy} • {quiz.created}</p>
+                        <p className="text-sm font-medium text-slate-500 mt-1 dark:text-slate-400">Created by {quiz.createdBy} • {quiz.created}</p>
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <Download className="w-4 h-4" /> Export
                     </button>
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         Edit
                     </button>
-                    <button className="flex items-center gap-2 p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <MoreHorizontal className="w-4 h-4" />
                     </button>
                 </div>
@@ -362,7 +362,7 @@ function QuizDetail({ id, onNavigate }: { id: string, onNavigate: (v: any) => vo
                 <div className="glass-panel p-6 md:p-8 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/90 dark:bg-slate-900/90 shadow-sm backdrop-blur-md min-h-[400px]">
                     <div className="mb-6 flex justify-between items-center">
                         <h3 className="font-bold text-slate-900 dark:text-white">Quiz Content</h3>
-                        <span className="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-md">Read Only view</span>
+                        <span className="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-md dark:text-slate-400">Read Only view</span>
                     </div>
 
                     <div className="space-y-8">
@@ -395,12 +395,12 @@ function AcademyCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
         <div className="w-full h-full flex flex-col p-4 md:p-6 mx-auto max-w-4xl relative animate-in slide-in-from-right-2 overflow-hidden">
             <div className="flex items-center justify-between mb-6 shrink-0">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Add RFI Academy Training</h1>
-                        <p className="text-sm text-slate-500 mt-1">Create a new training resource for employees.</p>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Create a new training resource for employees.</p>
                     </div>
                 </div>
             </div>
@@ -435,7 +435,7 @@ function AcademyCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
                                 <Upload className="w-5 h-5 text-slate-400" />
                             </div>
                             <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1">Drag and drop file or media here</p>
-                            <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 shadow-sm mt-3">Browse Files</button>
+                            <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 shadow-sm mt-3 dark:hover:bg-slate-800">Browse Files</button>
                         </div>
                         <p className="text-[11px] text-slate-400 font-medium text-center">Supported file types and limits are configured by the system administrator.</p>
                     </div>
@@ -460,7 +460,7 @@ function AcademyDetail({ id, onNavigate }: { id: string, onNavigate: (v: any) =>
             {/* Action Bar */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 shrink-0 gap-4">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
@@ -468,17 +468,17 @@ function AcademyDetail({ id, onNavigate }: { id: string, onNavigate: (v: any) =>
                             <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white truncate max-w-[300px] md:max-w-md">{item.name}</h1>
                             {item.status === "Archived" && <span className="bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide">Archived</span>}
                         </div>
-                        <p className="text-sm font-medium text-slate-500 mt-1">Created by {item.createdBy} • {item.created}</p>
+                        <p className="text-sm font-medium text-slate-500 mt-1 dark:text-slate-400">Created by {item.createdBy} • {item.created}</p>
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <Download className="w-4 h-4" /> Export
                     </button>
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         Edit
                     </button>
-                    <button className="flex items-center gap-2 p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <MoreHorizontal className="w-4 h-4" />
                     </button>
                 </div>

@@ -15,7 +15,7 @@ export function NotificationsTab() {
       case "Tasks": return <CheckSquare className="w-4 h-4 text-blue-600" />;
       case "Reports": return <FileText className="w-4 h-4 text-emerald-600" />;
       case "Compliance": return <ShieldAlert className="w-4 h-4 text-amber-600" />;
-      default: return <Settings className="w-4 h-4 text-slate-600" />;
+      default: return <Settings className="w-4 h-4 text-slate-600 dark:text-slate-300" />;
     }
   };
 
@@ -30,11 +30,11 @@ export function NotificationsTab() {
   };
 
   return (
-    <div className="flex w-full h-full bg-white">
+    <div className="flex w-full h-full bg-white dark:bg-slate-900">
       
       {/* ─── FILTERS SIDEBAR (240px) ────────────────────── */}
-      <div className="w-[240px] border-r border-slate-200 flex flex-col shrink-0 bg-slate-50/50 p-4">
-        <h2 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+      <div className="w-[240px] border-r border-slate-200 flex flex-col shrink-0 bg-slate-50/50 p-4 dark:border-slate-700">
+        <h2 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2 dark:text-slate-200">
           <BellRing className="w-5 h-5 text-blue-600" /> Notifications
         </h2>
         
@@ -62,16 +62,16 @@ export function NotificationsTab() {
 
       {/* ─── NOTIFICATIONS LIST ──────────────────────────── */}
       <div className="flex-1 flex flex-col bg-[#f8fafc] relative">
-        <div className="h-16 px-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-sm z-10">
+        <div className="h-16 px-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-sm z-10 dark:border-slate-700 dark:bg-slate-900">
           <div className="relative w-72">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input 
               type="text"
               placeholder="Search notifications..."
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all"
+              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all dark:bg-slate-900 dark:border-slate-700"
             />
           </div>
-          <button className="flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors">
+          <button className="flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors dark:text-slate-400">
             <Check className="w-4 h-4" /> Mark all as read
           </button>
         </div>
@@ -104,7 +104,7 @@ export function NotificationsTab() {
                   {notif.description}
                 </p>
                 <div className="mt-2 flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded">
+                  <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded dark:bg-slate-800 dark:text-slate-400">
                     {notif.type}
                   </span>
                 </div>

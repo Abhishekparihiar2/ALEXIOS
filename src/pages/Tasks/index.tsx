@@ -105,15 +105,15 @@ function TasksList({ onNavigate }: { onNavigate: (v: "list" | "create" | "detail
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Tasks & Dispatch</h1>
-                    <p className="text-sm text-slate-500 mt-1">Create, assign, dispatch and track operational tasks.</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Create, assign, dispatch and track operational tasks.</p>
                 </div>
                 <div className="flex items-center space-x-3">
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800"
-                        style={{ border: "1.5px solid #e2e8f0", color: "#475569" }}>
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300"
+                        style={{ border: "1.5px solid #e2e8f0"}}>
                         <Upload className="w-4 h-4" /> Import
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800"
-                        style={{ border: "1.5px solid #e2e8f0", color: "#475569" }}>
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300"
+                        style={{ border: "1.5px solid #e2e8f0"}}>
                         <Download className="w-4 h-4" /> Export
                     </button>
                     <button
@@ -158,7 +158,7 @@ function TasksList({ onNavigate }: { onNavigate: (v: "list" | "create" | "detail
                     { label: "New Tasks", count: 14, color: "text-purple-600" },
                 ].map(stat => (
                     <div key={stat.label} className="cursor-pointer glass-panel p-4 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/70 shadow-sm hover:shadow-md transition-all backdrop-blur-md">
-                        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">{stat.label}</div>
+                        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1 dark:text-slate-400">{stat.label}</div>
                         <div className={`text-2xl font-black ${stat.color || 'text-slate-800 dark:text-slate-200'}`}>{stat.count}</div>
                     </div>
                 ))}
@@ -181,7 +181,7 @@ function TasksList({ onNavigate }: { onNavigate: (v: "list" | "create" | "detail
                         </button>
                     ))}
                     <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1 shrink-0"></div>
-                    <button className="shrink-0 px-3 py-1.5 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors">
+                    <button className="shrink-0 px-3 py-1.5 text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors dark:text-slate-400">
                         Clear All
                     </button>
                 </div>
@@ -191,9 +191,9 @@ function TasksList({ onNavigate }: { onNavigate: (v: "list" | "create" | "detail
             <div className="bg-white/90 dark:bg-[#1a1f2e]/90 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-sm rounded-xl overflow-hidden shadow-sm flex-1 flex flex-col min-h-0 min-w-0 w-full mb-2">
                 <div className="overflow-auto flex-1 min-h-0 relative">
                     <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300 min-w-[1024px]">
-                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide">
+                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide dark:text-slate-400">
                             <tr>
-                                <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300" /></th>
+                                <th className="px-5 py-4 w-12"><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600" /></th>
                                 <th className="px-5 py-4">Task</th>
                                 <th className="px-5 py-4">Subtask</th>
                                 <th className="px-5 py-4">Start Date</th>
@@ -209,10 +209,10 @@ function TasksList({ onNavigate }: { onNavigate: (v: "list" | "create" | "detail
                                 <tr key={task.id}
                                     onClick={() => onNavigate("detail", task.id)}
                                     className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors cursor-pointer group ${i % 2 === 0 ? '' : 'bg-slate-50/30 dark:bg-transparent'}`}>
-                                    <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300" /></td>
+                                    <td className="px-5 py-4" onClick={e => e.stopPropagation()}><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600" /></td>
                                     <td className="px-5 py-4">
                                         <div className="font-semibold text-slate-900 dark:text-white truncate max-w-[200px] xl:max-w-[300px]">{task.title}</div>
-                                        <div className="text-xs text-slate-500 mt-0.5 flex gap-1.5 items-center">
+                                        <div className="text-xs text-slate-500 mt-0.5 flex gap-1.5 items-center dark:text-slate-400">
                                             <span className="font-medium text-slate-600 dark:text-slate-400">{task.type}</span>
                                             {task.site && <><span className="w-1 h-1 rounded-full bg-slate-300"></span><span className="truncate">{task.site}</span></>}
                                         </div>
@@ -235,7 +235,7 @@ function TasksList({ onNavigate }: { onNavigate: (v: "list" | "create" | "detail
                                     </td>
                                     <td className="px-5 py-4">
                                         <div className="text-slate-900 dark:text-white font-medium truncate max-w-[140px]">{task.assignee}</div>
-                                        <div className="text-xs text-slate-500 flex items-center gap-1 mt-0.5"><AssigneeIcon type={task.assigneeType} /> {task.assigneeType}</div>
+                                        <div className="text-xs text-slate-500 flex items-center gap-1 mt-0.5 dark:text-slate-400"><AssigneeIcon type={task.assigneeType} /> {task.assigneeType}</div>
                                     </td>
                                     <td className="px-5 py-4 whitespace-nowrap font-medium text-slate-800 dark:text-slate-300">{task.author}</td>
                                     <td className="px-5 py-4 whitespace-nowrap">
@@ -274,11 +274,11 @@ function TaskCreate({ onBack }: { onBack: () => void }) {
         <div className="max-w-4xl mx-auto h-full flex flex-col p-6 animate-in fade-in zoom-in-95">
             <div className="flex items-center mb-8 shrink-0">
                 <button onClick={onBack} className="p-2 mr-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    <ChevronLeft className="w-5 h-5 text-slate-500" />
+                    <ChevronLeft className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                 </button>
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{selectedType ? `Create ${taskTypes.find(t => t.id === selectedType)?.title}` : 'Select Task Type'}</h1>
-                    <p className="text-sm text-slate-500 mt-1">Configure your new task assignment below.</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Configure your new task assignment below.</p>
                 </div>
             </div>
 
@@ -293,7 +293,7 @@ function TaskCreate({ onBack }: { onBack: () => void }) {
                                     {type.icon}
                                 </div>
                                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{type.title}</h3>
-                                <p className="text-sm text-slate-500 leading-relaxed">{type.desc}</p>
+                                <p className="text-sm text-slate-500 leading-relaxed dark:text-slate-400">{type.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -362,7 +362,7 @@ function TaskCreate({ onBack }: { onBack: () => void }) {
                                     <h3 className="text-sm font-bold text-[#1e3a6e] uppercase tracking-wider mb-2">Subtasks</h3>
                                     <div className="space-y-2">
                                         <div className="flex items-center gap-2">
-                                            <div className="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50/50 dark:bg-slate-800/30 flex-1 text-sm text-slate-500">1. Verify front entrance doors are locked</div>
+                                            <div className="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50/50 dark:bg-slate-800/30 flex-1 text-sm text-slate-500 dark:text-slate-400">1. Verify front entrance doors are locked</div>
                                             <button className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"><Trash2 className="w-4 h-4" /></button>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -385,7 +385,7 @@ function TaskCreate({ onBack }: { onBack: () => void }) {
             {selectedType && (
                 <div className="pt-6 flex justify-end gap-3 shrink-0 mt-4 border-t border-slate-200 dark:border-slate-800">
                     <button onClick={() => setSelectedType(null)} className="px-6 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300" style={{ border: "1.5px solid #e2e8f0" }}>Cancel</button>
-                    <button className="px-6 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 hover:bg-slate-100" style={{ border: "1.5px solid #e2e8f0" }}>Save as Draft</button>
+                    <button className="px-6 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800" style={{ border: "1.5px solid #e2e8f0" }}>Save as Draft</button>
                     <button
                         onClick={onBack}
                         className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
@@ -417,17 +417,17 @@ function TaskDetail({ id, onBack }: { id: string | null, onBack: () => void }) {
                         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{task.title}</h1>
                         <span className="px-2.5 py-1 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 rounded-md text-xs font-semibold">{task.type}</span>
                     </div>
-                    <p className="text-sm text-slate-500 mt-1">Created by {task.author} • {task.start}</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Created by {task.author} • {task.start}</p>
                 </div>
                 <div className="ml-auto flex items-center gap-3">
-                    <button className="px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800"
-                        style={{ border: "1.5px solid #e2e8f0", color: "#475569" }}>
+                    <button className="px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300"
+                        style={{ border: "1.5px solid #e2e8f0"}}>
                         Edit
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-sm transition-colors shadow-sm font-semibold">
+                    <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-sm transition-colors shadow-sm font-semibold dark:border-slate-700">
                         Change Status
                     </button>
-                    <button className="p-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shadow-sm text-slate-600 dark:text-slate-300">
+                    <button className="p-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shadow-sm text-slate-600 dark:text-slate-300 dark:border-slate-700">
                         <MoreHorizontal className="w-5 h-5" />
                     </button>
                 </div>
@@ -446,20 +446,20 @@ function TaskDetail({ id, onBack }: { id: string | null, onBack: () => void }) {
             {/* Summary Panel */}
             <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-[#1a1f2e]/80 shadow-sm backdrop-blur-md mb-6 grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div>
-                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Status</div>
+                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 dark:text-slate-400">Status</div>
                     <div className="font-bold text-slate-900 dark:text-white"><StatusChip status={task.status} /></div>
                 </div>
                 <div>
-                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Assigned To</div>
+                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 dark:text-slate-400">Assigned To</div>
                     <div className="font-bold text-slate-900 dark:text-white">{task.assignee}</div>
                     <div className="text-xs text-slate-400 mt-1">{task.assigneeType}</div>
                 </div>
                 <div>
-                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Start Date</div>
+                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 dark:text-slate-400">Start Date</div>
                     <div className="font-semibold text-slate-800 dark:text-slate-200">{task.start}</div>
                 </div>
                 <div>
-                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Due Date</div>
+                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 dark:text-slate-400">Due Date</div>
                     <div className="font-semibold text-slate-800 dark:text-slate-200">{task.due}</div>
                 </div>
             </div>
@@ -503,7 +503,7 @@ function TaskDetail({ id, onBack }: { id: string | null, onBack: () => void }) {
                 {activeTab === "subtasks" && (
                     <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-[#1a1f2e]/80 shadow-sm">
                         {task.subtasks.length === 0 ? (
-                            <div className="text-center py-8 text-slate-500 text-sm">No subtasks defined for this task.</div>
+                            <div className="text-center py-8 text-slate-500 text-sm dark:text-slate-400">No subtasks defined for this task.</div>
                         ) : (
                             <div>
                                 <div className="flex items-center justify-between mb-6">
@@ -522,7 +522,7 @@ function TaskDetail({ id, onBack }: { id: string | null, onBack: () => void }) {
                                             </div>
                                             <div>
                                                 <div className={`font-semibold text-sm ${i === 0 ? 'text-slate-400 line-through' : 'text-slate-800 dark:text-slate-200'}`}>{st}</div>
-                                                <div className="text-xs font-medium mt-1 text-slate-500">{i === 0 ? 'Completed' : 'Not Started'}</div>
+                                                <div className="text-xs font-medium mt-1 text-slate-500 dark:text-slate-400">{i === 0 ? 'Completed' : 'Not Started'}</div>
                                             </div>
                                         </div>
                                     ))}
@@ -538,12 +538,12 @@ function TaskDetail({ id, onBack }: { id: string | null, onBack: () => void }) {
                             <div className="relative pl-6">
                                 <div className="absolute w-3 h-3 bg-blue-500 rounded-full -left-[7px] top-1.5 ring-4 ring-white dark:ring-[#1a1f2e]"></div>
                                 <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">8:48 AM — Subtask completed</div>
-                                <div className="text-xs text-slate-500 mt-1">Larry Freeman Jr. checked off "Verify all access points"</div>
+                                <div className="text-xs text-slate-500 mt-1 dark:text-slate-400">Larry Freeman Jr. checked off "Verify all access points"</div>
                             </div>
                             <div className="relative pl-6">
                                 <div className="absolute w-3 h-3 bg-slate-400 rounded-full -left-[7px] top-1.5 ring-4 ring-white dark:ring-[#1a1f2e]"></div>
                                 <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">8:22 AM — Status changed to In Progress</div>
-                                <div className="text-xs text-slate-500 mt-1">System updated status</div>
+                                <div className="text-xs text-slate-500 mt-1 dark:text-slate-400">System updated status</div>
                             </div>
                             <div className="relative pl-6">
                                 <div className="absolute w-3 h-3 bg-slate-400 rounded-full -left-[7px] top-1.5 ring-4 ring-white dark:ring-[#1a1f2e]"></div>

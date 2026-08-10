@@ -56,11 +56,10 @@ export function Sidebar({
 
   return (
     <aside
-      className="flex flex-col h-full transition-all duration-200 overflow-hidden glass-sidebar dark"
+      className="flex flex-col h-full transition-all duration-200 overflow-hidden glass-sidebar dark z-30 bg-slate-950/40 backdrop-blur-2xl border-r border-slate-800/60 shadow-[4px_0_24px_rgba(0,0,0,0.5)]"
       style={{
         width: collapsed ? 64 : 240,
-        flexShrink: 0,
-        background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)"
+        flexShrink: 0
       }}
     >
       {/* Logo Header */}
@@ -78,8 +77,8 @@ export function Sidebar({
         )}
         {!collapsed && (
           <div className="overflow-hidden">
-            <p className="text-sm font-semibold leading-tight truncate" style={{ color: "#ffffff" }}>Alexios</p>
-            <p className="text-xs leading-tight truncate" style={{ color: "#e2e8f0" }}>Admin Portal</p>
+            <p className="text-sm font-semibold leading-tight truncate text-slate-100" >Alexios</p>
+            <p className="text-xs font-medium leading-tight truncate text-blue-400" >Admin Portal</p>
           </div>
         )}
         <button
@@ -122,13 +121,14 @@ export function Sidebar({
                     className="w-full flex items-center gap-2.5 rounded-xl transition-all duration-300 text-left group relative overflow-hidden"
                     style={{
                       padding: collapsed ? "10px" : "10px 12px",
-                      background: isActive && !item.children ? "rgba(255,255,255,0.12)" : "transparent",
+                      background: isActive && !item.children ? "rgba(59,130,246,0.15)" : "transparent",
+                      border: isActive && !item.children ? "1px solid rgba(59,130,246,0.3)" : "1px solid transparent",
                       backdropFilter: isActive && !item.children ? "blur(8px)" : "none",
                       color: isActive ? "#ffffff" : "#e2e8f0",
                       justifyContent: collapsed ? "center" : "flex-start",
                     }}
                     onMouseEnter={(e) => {
-                      if (!(isActive && !item.children)) { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#ffffff"; }
+                      if (!(isActive && !item.children)) { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "#ffffff"; }
                     }}
                     onMouseLeave={(e) => {
                       if (!(isActive && !item.children)) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = isActive ? "#ffffff" : "#e2e8f0"; }
@@ -214,14 +214,14 @@ export function Sidebar({
           {!collapsed && (
             <>
               <div className="flex-1 overflow-hidden">
-                <p className="text-xs font-bold truncate" style={{ color: "#ffffff" }}>{MOCK_USER.name}</p>
-                <p className="text-xs truncate" style={{ color: "#e2e8f0" }}>{MOCK_USER.role}</p>
+                <p className="text-xs font-bold truncate text-slate-100" >{MOCK_USER.name}</p>
+                <p className="text-[10px] font-medium tracking-wide text-slate-400" >{MOCK_USER.role}</p>
               </div>
               <button
                 onClick={onSignOut}
                 title="Sign out"
-                className="shrink-0 w-6 h-6 rounded flex items-center justify-center transition-colors hover:bg-white/10"
-                style={{ color: "#e2e8f0" }}
+                className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-colors hover:bg-red-500/20 hover:text-red-400 text-slate-400 bg-slate-800/50"
+                
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>

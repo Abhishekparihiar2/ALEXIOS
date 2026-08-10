@@ -1,0 +1,42 @@
+Module,Screen Level 1 (Main Screen),Screen Level 2 (Subscreen),Screen Level 3 (Deep Link/Form),Description
+Login & Setup,Device Setup,,,Admin screen to provision a device to a site
+Login & Setup,Login Screen,,,Guard authentication (PIN/Biometrics)
+Home / Dashboard,Home Dashboard,,,Main landing page displaying current status and quick actions
+Home / Dashboard,Time Clock Drawer,,,Bottom sheet to Start Break, Clock Out & Stay Signed In, Clock Out & Sign Out
+Home / Dashboard,Dispatch Tasks List,,,Checklist view of urgent tasks assigned by dispatch
+Home / Dashboard,Quick Actions Tray,,,Swipe-up tray for Flashlight toggle and Watch Mode
+Home / Dashboard,Watch Mode Camera,,,Dark UI camera interface for covert recording
+Tours & Checkpoints,Tours Dashboard,,,Main hub for tours and checkpoints
+Tours & Checkpoints,Tours Dashboard,Tour Schedules,,Chronological list of upcoming tours for the shift
+Tours & Checkpoints,Tours Dashboard,All Checkpoints,,Searchable directory of all site checkpoints
+Tours & Checkpoints,Tours Dashboard,All Checkpoints,Setup NFC Checkpoint,Admin tool to pair physical NFC tags to digital checkpoints
+Tours & Checkpoints,Tours Dashboard,All Checkpoints,Ad-hoc Scan NFC,Standalone scanner for checkpoints outside a tour
+Tours & Checkpoints,Active Tour View,,,Vertical timeline showing completed and upcoming checkpoints
+Tours & Checkpoints,Active Tour View,Scan NFC/Barcode,,Massive FAB scanner to scan the next checkpoint
+Tours & Checkpoints,Active Tour View,Add Note / Media,,Inline card to add comments and up to 5 pictures after a scan
+Tours & Checkpoints,Active Tour View,Mid-Tour Reports,,Floating button to access Report Templates during a tour
+Reports & Logs,Reports Hub,,,Main dashboard for creating and viewing reports
+Reports & Logs,Reports Hub,Create Report (Templates),,List of available report templates
+Reports & Logs,Reports Hub,Create Report (Templates),Fire Watch Log Form,Structured form utilizing native mobile inputs
+Reports & Logs,Reports Hub,Create Report (Templates),Fuel Expense Report Form,Structured form utilizing native mobile inputs
+Reports & Logs,Reports Hub,Create Report (Templates),Incident Report Form,Structured form utilizing native mobile inputs
+Reports & Logs,Reports Hub,Browse Site Reports,,Feed of recent report occurrences
+Reports & Logs,Reports Hub,Browse Site Reports,View My Site Reports,Filtered view of reports submitted by the logged-in guard
+Reports & Logs,Reports Hub,Browse Site Reports,View All Site Reports,Filtered view showing team reports (permission based)
+Communications,Comms Dashboard,,,Unified hub for messages and team interaction
+Communications,Comms Dashboard,Message Board,,Segmented lists for New Messages and All Messages
+Communications,Comms Dashboard,Message Board,Post a New Message,Chat-style input field with attachment support
+Communications,Comms Dashboard,Team Directory,,List of other employees currently clocked into the site
+Communications,Comms Dashboard,Team Directory,Employee Detail Page,Profile view with title and quick-message button
+More (Menu),More Menu Dashboard,,,Access point for secondary features and settings
+More (Menu),More Menu Dashboard,Post & Escalation Orders,,Categorized digital handbook cached for offline access
+More (Menu),More Menu Dashboard,Emergency Contacts,,Directory with one-tap dialing for authorities/dispatch
+More (Menu),More Menu Dashboard,Schedules,,Calendar/agenda view of upcoming shifts with filters
+More (Menu),More Menu Dashboard,Settings,,,App configuration and diagnostics hub
+More (Menu),More Menu Dashboard,Settings,ALEXIO Help Center,Support portal with native form submission
+More (Menu),More Menu Dashboard,Settings,Change Password,Secure password reset flow
+More (Menu),More Menu Dashboard,Settings,System Diagnostics,Visual dashboard showing GPS, Internet, and Storage status
+More (Menu),More Menu Dashboard,Settings,Session / Local Settings,Toggles for timeouts, dark mode, offline cache
+More (Menu),More Menu Dashboard,Settings,Barcode Scanner Settings,Hardware barcode vs device camera toggles
+Emergency (Panic),Panic Flow,10-Second Countdown,,Full-screen red countdown initiated by SOS button tap
+Emergency (Panic),Panic Flow,Active Panic State,,Locked screen presenting massive "Call" and "Siren Off" buttons

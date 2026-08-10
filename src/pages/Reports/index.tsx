@@ -84,7 +84,7 @@ export function ReportSettingsPage({ onNavigate, initialView }: Props) {
         </div>
 
         {/* ── Tab Content ── */}
-        <div className="flex-1 bg-white overflow-hidden flex flex-col">
+        <div className="flex-1 bg-white overflow-hidden flex flex-col dark:bg-slate-900">
           {activeTab === "reports" && <ReportFormsTab onEdit={(id) => setEditingReport(id)} onCreate={() => setEditingReport("new")} />}
           {activeTab === "report-categories" && <ReportCategoriesTab />}
           {activeTab === "incident-categories" && <IncidentCategoriesTab onEdit={(id) => setEditingIncident(id)} onCreate={() => setEditingIncident("new")} />}
@@ -120,20 +120,20 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
           { label: "Assigned Reports", value: MOCK_REPORT_FORMS.filter(f => f.assignedSites.length > 0).length, color: "#8b5cf6", icon: <Zap className="w-4 h-4"/> },
           { label: "Pending Approval", value: 12, color: "#d97706", icon: <Clock className="w-4 h-4"/> },
         ].map(s => (
-          <div key={s.label} className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 shadow-sm">
+          <div key={s.label} className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${s.color}15`, color: s.color }}>
               {s.icon}
             </div>
             <div>
-              <p className="text-xl font-bold text-slate-800 leading-none mb-1">{s.value}</p>
-              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{s.label}</p>
+              <p className="text-xl font-bold text-slate-800 leading-none mb-1 dark:text-slate-200">{s.value}</p>
+              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider dark:text-slate-400">{s.label}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* ── Compact Toolbar & Filters ── */}
-      <div className="p-3 border-b border-slate-100 flex flex-col gap-3 bg-white shrink-0">
+      <div className="p-3 border-b border-slate-100 flex flex-col gap-3 bg-white shrink-0 dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 flex-1">
             <div className="relative flex items-center flex-1 max-w-md shrink-0">
@@ -143,7 +143,7 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search reports..." 
-                className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-1 focus:ring-blue-100 transition-all"
+                className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-1 focus:ring-blue-100 transition-all dark:border-slate-700 dark:bg-slate-900"
               />
             </div>
             <button 
@@ -160,8 +160,8 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
         </div>
 
         {showFilters && (
-          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100">
-            <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap">
+          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300">
               <Filter className="w-3.5 h-3.5 text-slate-400" />
               <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="bg-transparent font-medium outline-none cursor-pointer">
                 <option value="All">All Statuses</option>
@@ -169,7 +169,7 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
                 <option value="Archived">Archived</option>
               </select>
             </div>
-            <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300">
               <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
               <select value={approvalFilter} onChange={e => setApprovalFilter(e.target.value)} className="bg-transparent font-medium outline-none cursor-pointer">
                 <option value="All">All Approvals</option>
@@ -185,7 +185,7 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
       <div className="flex-1 overflow-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+            <tr className="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700">
               <th className="px-5 py-3">Report Name</th>
               <th className="px-5 py-3">Category</th>
               <th className="px-5 py-3">Available To</th>
@@ -195,19 +195,19 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
               <th className="px-5 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {filtered.map(form => (
               <tr key={form.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => onEdit(form.id)}>
                 <td className="px-5 py-3.5">
-                  <p className="text-sm font-bold text-slate-900">{form.name}</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{form.name}</p>
                 </td>
-                <td className="px-5 py-3.5 text-sm text-slate-600 font-medium">
+                <td className="px-5 py-3.5 text-sm text-slate-600 font-medium dark:text-slate-300">
                   {MOCK_REPORT_CATEGORIES.find(c => c.id === form.categoryId)?.name}
                 </td>
-                <td className="px-5 py-3.5 text-sm text-slate-600">
+                <td className="px-5 py-3.5 text-sm text-slate-600 dark:text-slate-300">
                   {form.assignedSites.includes("All") ? "All Sites" : `${form.assignedSites.length} Site(s)`} • {form.assignedGroups.join(", ")}
                 </td>
-                <td className="px-5 py-3.5 text-sm text-slate-600">
+                <td className="px-5 py-3.5 text-sm text-slate-600 dark:text-slate-300">
                   {form.approvalRequired ? <span className="text-amber-600 font-semibold">Required</span> : "No Approval"}
                 </td>
                 <td className="px-5 py-3.5">
@@ -215,7 +215,7 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
                     {form.status}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-sm text-slate-500">{form.lastUpdated}</td>
+                <td className="px-5 py-3.5 text-sm text-slate-500 dark:text-slate-400">{form.lastUpdated}</td>
                 <td className="px-5 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-2" onClick={e => e.stopPropagation()}>
                     <button onClick={() => onEdit(form.id)} className="px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-lg transition-colors">
@@ -227,7 +227,7 @@ function ReportFormsTab({ onEdit, onCreate }: { onEdit: (id: string) => void, on
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-10 text-sm text-slate-500">
+                <td colSpan={7} className="text-center py-10 text-sm text-slate-500 dark:text-slate-400">
                   No reports match your filters.
                 </td>
               </tr>
@@ -265,9 +265,9 @@ function ReportCategoriesTab() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden relative">
-      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-100 shrink-0 flex-wrap">
+      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-100 shrink-0 flex-wrap dark:border-slate-800">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm bg-slate-50 border border-slate-200 min-w-64">
+          <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm bg-slate-50 border border-slate-200 min-w-64 dark:bg-slate-900 dark:border-slate-700">
             <Search className="w-4 h-4 text-slate-400" />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search categories..." className="bg-transparent outline-none flex-1" />
           </div>
@@ -279,7 +279,7 @@ function ReportCategoriesTab() {
       <div className="flex-1 overflow-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+            <tr className="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700">
               <th className="px-5 py-3">Category Name</th>
               <th className="px-5 py-3">Description</th>
               <th className="px-5 py-3">Reports</th>
@@ -288,18 +288,18 @@ function ReportCategoriesTab() {
               <th className="px-5 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {filtered.map(cat => (
               <tr key={cat.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer">
-                <td className="px-5 py-3.5"><p className="text-sm font-bold text-slate-900">{cat.name}</p></td>
-                <td className="px-5 py-3.5 text-sm text-slate-600">{cat.description}</td>
-                <td className="px-5 py-3.5 text-sm font-medium text-slate-700">{cat.reportCount}</td>
+                <td className="px-5 py-3.5"><p className="text-sm font-bold text-slate-900 dark:text-slate-100">{cat.name}</p></td>
+                <td className="px-5 py-3.5 text-sm text-slate-600 dark:text-slate-300">{cat.description}</td>
+                <td className="px-5 py-3.5 text-sm font-medium text-slate-700 dark:text-slate-300">{cat.reportCount}</td>
                 <td className="px-5 py-3.5">
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${cat.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>
                     {cat.status}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-sm text-slate-500">{cat.lastUpdated}</td>
+                <td className="px-5 py-3.5 text-sm text-slate-500 dark:text-slate-400">{cat.lastUpdated}</td>
                 <td className="px-5 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-2" onClick={e => e.stopPropagation()}>
                     <button className="px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-lg transition-colors">
@@ -314,7 +314,7 @@ function ReportCategoriesTab() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-sm text-slate-500">
+                <td colSpan={6} className="text-center py-10 text-sm text-slate-500 dark:text-slate-400">
                   No categories found.
                 </td>
               </tr>
@@ -324,26 +324,26 @@ function ReportCategoriesTab() {
       </div>
       {isModalOpen && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="flex items-center justify-between p-5 border-b border-slate-100">
-              <h3 className="font-bold text-slate-800">Create Category</h3>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden dark:bg-slate-900">
+            <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="font-bold text-slate-800 dark:text-slate-200">Create Category</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleCreate} className="p-6 space-y-5 bg-slate-50">
+            <form onSubmit={handleCreate} className="p-6 space-y-5 bg-slate-50 dark:bg-slate-900">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Category Name <span className="text-red-500">*</span></label>
-                <input required name="name" type="text" placeholder="e.g. Health & Safety" className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Category Name <span className="text-red-500">*</span></label>
+                <input required name="name" type="text" placeholder="e.g. Health & Safety" className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all dark:border-slate-700 dark:bg-slate-900" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Description</label>
-                <textarea name="description" rows={3} placeholder="Optional context..." className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-none"></textarea>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Description</label>
+                <textarea name="description" rows={3} placeholder="Optional context..." className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-none dark:border-slate-700 dark:bg-slate-900"></textarea>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Status</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Status</label>
                 <div className="relative">
-                  <select name="status" className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all text-slate-700">
+                  <select name="status" className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
                     <option value="Active">Active</option>
                     <option value="Archived">Archived</option>
                   </select>
@@ -372,9 +372,9 @@ function IncidentCategoriesTab({ onEdit, onCreate }: { onEdit: (id: string) => v
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-100 shrink-0 flex-wrap">
+      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-100 shrink-0 flex-wrap dark:border-slate-800">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm bg-slate-50 border border-slate-200 min-w-64">
+          <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm bg-slate-50 border border-slate-200 min-w-64 dark:bg-slate-900 dark:border-slate-700">
             <Search className="w-4 h-4 text-slate-400" />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search incidents..." className="bg-transparent outline-none flex-1" />
           </div>
@@ -386,7 +386,7 @@ function IncidentCategoriesTab({ onEdit, onCreate }: { onEdit: (id: string) => v
       <div className="flex-1 overflow-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+            <tr className="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700">
               <th className="px-5 py-3">Incident Type</th>
               <th className="px-5 py-3">Code</th>
               <th className="px-5 py-3">Severity</th>
@@ -395,14 +395,14 @@ function IncidentCategoriesTab({ onEdit, onCreate }: { onEdit: (id: string) => v
               <th className="px-5 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {filtered.map(inc => (
               <tr key={inc.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => onEdit(inc.id)}>
                 <td className="px-5 py-3.5">
-                  <p className="text-sm font-bold text-slate-900">{inc.name}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{inc.description}</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{inc.name}</p>
+                  <p className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">{inc.description}</p>
                 </td>
-                <td className="px-5 py-3.5 text-sm font-mono text-slate-600 bg-slate-50/30">{inc.code}</td>
+                <td className="px-5 py-3.5 text-sm font-mono text-slate-600 bg-slate-50/30 dark:text-slate-300">{inc.code}</td>
                 <td className="px-5 py-3.5">
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${
                     inc.severity === 'Critical' ? 'bg-red-100 text-red-700' :
@@ -412,7 +412,7 @@ function IncidentCategoriesTab({ onEdit, onCreate }: { onEdit: (id: string) => v
                     {inc.severity}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-sm text-slate-600">{inc.defaultGroup}</td>
+                <td className="px-5 py-3.5 text-sm text-slate-600 dark:text-slate-300">{inc.defaultGroup}</td>
                 <td className="px-5 py-3.5">
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${inc.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>
                     {inc.status}
@@ -432,7 +432,7 @@ function IncidentCategoriesTab({ onEdit, onCreate }: { onEdit: (id: string) => v
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-sm text-slate-500">
+                <td colSpan={6} className="text-center py-10 text-sm text-slate-500 dark:text-slate-400">
                   No incident categories found.
                 </td>
               </tr>
@@ -468,9 +468,9 @@ function FootersTab() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden relative">
-      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-100 shrink-0 flex-wrap">
+      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-100 shrink-0 flex-wrap dark:border-slate-800">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm bg-slate-50 border border-slate-200 min-w-64">
+          <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm bg-slate-50 border border-slate-200 min-w-64 dark:bg-slate-900 dark:border-slate-700">
             <Search className="w-4 h-4 text-slate-400" />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search footers..." className="bg-transparent outline-none flex-1" />
           </div>
@@ -482,7 +482,7 @@ function FootersTab() {
       <div className="flex-1 overflow-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+            <tr className="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700">
               <th className="px-5 py-3">Footer Name</th>
               <th className="px-5 py-3">Text Content</th>
               <th className="px-5 py-3">Usage</th>
@@ -490,12 +490,12 @@ function FootersTab() {
               <th className="px-5 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {filtered.map(f => (
               <tr key={f.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer">
-                <td className="px-5 py-3.5"><p className="text-sm font-bold text-slate-900">{f.name}</p></td>
-                <td className="px-5 py-3.5 text-sm text-slate-600 truncate max-w-sm">{f.text}</td>
-                <td className="px-5 py-3.5 text-sm font-medium text-slate-700">{f.usageCount} Reports</td>
+                <td className="px-5 py-3.5"><p className="text-sm font-bold text-slate-900 dark:text-slate-100">{f.name}</p></td>
+                <td className="px-5 py-3.5 text-sm text-slate-600 truncate max-w-sm dark:text-slate-300">{f.text}</td>
+                <td className="px-5 py-3.5 text-sm font-medium text-slate-700 dark:text-slate-300">{f.usageCount} Reports</td>
                 <td className="px-5 py-3.5">
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${f.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>
                     {f.status}
@@ -515,7 +515,7 @@ function FootersTab() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-10 text-sm text-slate-500">
+                <td colSpan={5} className="text-center py-10 text-sm text-slate-500 dark:text-slate-400">
                   No footers found.
                 </td>
               </tr>
@@ -525,26 +525,26 @@ function FootersTab() {
       </div>
       {isModalOpen && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="flex items-center justify-between p-5 border-b border-slate-100">
-              <h3 className="font-bold text-slate-800">Create Footer</h3>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden dark:bg-slate-900">
+            <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="font-bold text-slate-800 dark:text-slate-200">Create Footer</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleCreate} className="p-6 space-y-5 bg-slate-50">
+            <form onSubmit={handleCreate} className="p-6 space-y-5 bg-slate-50 dark:bg-slate-900">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Footer Name <span className="text-red-500">*</span></label>
-                <input required name="name" type="text" placeholder="e.g. Standard Liability Disclaimer" className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Footer Name <span className="text-red-500">*</span></label>
+                <input required name="name" type="text" placeholder="e.g. Standard Liability Disclaimer" className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all dark:border-slate-700 dark:bg-slate-900" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Text Content <span className="text-red-500">*</span></label>
-                <textarea required name="text" rows={4} placeholder="Legal text or footer note..." className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-none"></textarea>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Text Content <span className="text-red-500">*</span></label>
+                <textarea required name="text" rows={4} placeholder="Legal text or footer note..." className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-none dark:border-slate-700 dark:bg-slate-900"></textarea>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Status</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Status</label>
                 <div className="relative">
-                  <select name="status" className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all text-slate-700">
+                  <select name="status" className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
                     <option value="Active">Active</option>
                     <option value="Archived">Archived</option>
                   </select>

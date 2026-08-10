@@ -27,10 +27,10 @@ function FormsList({ onNavigate }: { onNavigate: (v: string) => void }) {
             <div className="flex flex-row justify-between items-end mb-6">
                 <div>
                     <h1 className="text-2xl font-semibold text-slate-800 dark:text-white">Forms</h1>
-                    <p className="text-sm text-slate-500">Create, assign and manage operational forms and employee submissions.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Create, assign and manage operational forms and employee submissions.</p>
                 </div>
                 <div className="flex items-center space-x-3">
-                    <button className="flex items-center space-x-2 px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm text-slate-700 dark:text-slate-200 transition-colors">
+                    <button className="flex items-center space-x-2 px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm text-slate-700 dark:text-slate-200 transition-colors dark:border-slate-700">
                         <Download className="w-4 h-4" />
                         <span>Export</span>
                     </button>
@@ -80,7 +80,7 @@ function FormsList({ onNavigate }: { onNavigate: (v: string) => void }) {
                     <button className="px-3 py-1.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md flex items-center space-x-2">
                         <span>Created By</span>
                     </button>
-                    <div className="w-px h-4 bg-slate-200 mx-2"></div>
+                    <div className="w-px h-4 bg-slate-200 mx-2 dark:bg-slate-700"></div>
                     <button className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md">
                         <Filter className="w-4 h-4" />
                     </button>
@@ -90,7 +90,7 @@ function FormsList({ onNavigate }: { onNavigate: (v: string) => void }) {
             {/* Table Area */}
             <div className="bg-white/90 dark:bg-[#1a1f2e]/90 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-sm rounded-xl overflow-hidden shadow-sm flex-1">
                 <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                    <thead className="text-xs uppercase bg-slate-50 border-b border-slate-200 dark:bg-slate-800/80 dark:border-slate-800 text-slate-500">
+                    <thead className="text-xs uppercase bg-slate-50 border-b border-slate-200 dark:bg-slate-800/80 dark:border-slate-800 text-slate-500 dark:text-slate-400">
                         <tr>
                             <th className="px-6 py-4 w-12"><input type="checkbox" className="rounded" /></th>
                             <th className="px-6 py-4">Form Name</th>
@@ -123,7 +123,7 @@ function FormsList({ onNavigate }: { onNavigate: (v: string) => void }) {
                             </td>
                             <td className="px-6 py-4">24 Employees</td>
                             <td className="px-6 py-4">James Morrison</td>
-                            <td className="px-6 py-4 text-slate-500">Aug 04, 2026</td>
+                            <td className="px-6 py-4 text-slate-500 dark:text-slate-400">Aug 04, 2026</td>
                             <td className="px-6 py-4">
                                 <div className="flex justify-center">
                                     <button className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 pointer transition-colors" title="View/Edit">
@@ -151,7 +151,7 @@ function FormsList({ onNavigate }: { onNavigate: (v: string) => void }) {
                             </td>
                             <td className="px-6 py-4">-</td>
                             <td className="px-6 py-4">James Morrison</td>
-                            <td className="px-6 py-4 text-slate-500">Aug 05, 2026</td>
+                            <td className="px-6 py-4 text-slate-500 dark:text-slate-400">Aug 05, 2026</td>
                             <td className="px-6 py-4">
                                 <div className="flex justify-center">
                                     <button className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 pointer transition-colors" title="View/Edit">
@@ -189,14 +189,14 @@ function FormsList({ onNavigate }: { onNavigate: (v: string) => void }) {
                                     <FileText className="w-6 h-6" />
                                 </div>
                                 <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Start from Scratch</h3>
-                                <p className="text-sm text-slate-500">Create a completely new form using the ALEXIOS form builder.</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">Create a completely new form using the ALEXIOS form builder.</p>
                             </div>
                             <div className="group border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:border-blue-500 hover:shadow-md cursor-pointer transition-all bg-slate-50/50 dark:bg-slate-800/30">
                                 <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                                     <LayoutTemplate className="w-6 h-6" />
                                 </div>
                                 <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Use Existing Template</h3>
-                                <p className="text-sm text-slate-500">Select from reusable predefined operational forms.</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">Select from reusable predefined operational forms.</p>
                             </div>
                         </div>
                     </div>
@@ -212,7 +212,7 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
             <div className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex items-center justify-between px-6 shrink-0 shadow-sm">
                 <div className="flex items-center space-x-4">
                     <button onClick={onBack} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors">
-                        <ChevronLeft className="w-5 h-5 text-slate-500" />
+                        <ChevronLeft className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                     </button>
                     <div className="w-px h-6 bg-slate-200 dark:bg-slate-700"></div>
                     <input
@@ -223,7 +223,7 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
                 </div>
                 <div className="flex items-center space-x-4 text-sm">
                     <span className="text-slate-400">Saved just now</span>
-                    <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 transition-colors">
+                    <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 transition-colors dark:hover:bg-slate-800">
                         Preview
                     </button>
                     <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white"
@@ -235,7 +235,7 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
             <div className="flex-1 flex overflow-hidden">
                 {/* Left: Field Library */}
                 <div className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#1a1f2e]/90 flex flex-col overflow-y-auto p-4 custom-scrollbar">
-                    <h3 className="text-xs font-semibold uppercase text-slate-500 mb-4 tracking-wider">Basic</h3>
+                    <h3 className="text-xs font-semibold uppercase text-slate-500 mb-4 tracking-wider dark:text-slate-400">Basic</h3>
                     <div className="space-y-2 mb-6">
                         <div className="p-2.5 border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 hover:border-blue-500 cursor-grab flex items-center gap-3 shadow-sm text-sm hover:shadow-md transition-all">
                             <span className="text-blue-500 font-serif font-bold text-lg w-4 text-center">Tt</span> Short Text
@@ -248,7 +248,7 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
                         </div>
                     </div>
 
-                    <h3 className="text-xs font-semibold uppercase text-slate-500 mb-4 tracking-wider">Selection</h3>
+                    <h3 className="text-xs font-semibold uppercase text-slate-500 mb-4 tracking-wider dark:text-slate-400">Selection</h3>
                     <div className="space-y-2 mb-6">
                         <div className="p-2.5 border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 hover:border-blue-500 cursor-grab flex items-center gap-3 shadow-sm text-sm hover:shadow-md transition-all">
                             <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Yes / No
@@ -258,7 +258,7 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
                         </div>
                     </div>
 
-                    <h3 className="text-xs font-semibold uppercase text-slate-500 mb-4 tracking-wider">Operational</h3>
+                    <h3 className="text-xs font-semibold uppercase text-slate-500 mb-4 tracking-wider dark:text-slate-400">Operational</h3>
                     <div className="space-y-2">
                         <div className="p-2.5 border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 hover:border-blue-500 cursor-grab flex items-center gap-3 shadow-sm text-sm hover:shadow-md transition-all">
                             <Edit className="w-4 h-4 text-indigo-500" /> Signature
@@ -270,7 +270,7 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
                 <div className="flex-1 overflow-y-auto p-10 flex flex-col items-center custom-scrollbar relative bg-slate-50 dark:bg-slate-900/50">
                     <div className="w-full max-w-2xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200/60 dark:border-slate-800 rounded-xl p-8 mb-6 relative">
                         <h1 className="text-2xl font-bold mb-2 outline-none" contentEditable suppressContentEditableWarning>Site Safety Inspection</h1>
-                        <p className="text-slate-500 mb-8 pb-8 border-b border-slate-100 dark:border-slate-800 outline-none" contentEditable suppressContentEditableWarning>Complete the following inspection before ending your shift.</p>
+                        <p className="text-slate-500 mb-8 pb-8 border-b border-slate-100 dark:border-slate-800 outline-none dark:text-slate-400" contentEditable suppressContentEditableWarning>Complete the following inspection before ending your shift.</p>
 
                         <div className="space-y-4">
                             <div className="group relative border border-transparent hover:border-slate-200 dark:hover:border-slate-700 p-4 -m-4 rounded-lg transition-colors">
@@ -283,7 +283,7 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
 
                             <div className="group relative border border-blue-500 bg-blue-50/20 dark:bg-blue-900/10 p-4 -m-4 rounded-lg">
                                 <div className="absolute right-4 top-4 flex space-x-2">
-                                    <button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded text-slate-500"><Copy className="w-4 h-4" /></button>
+                                    <button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded text-slate-500 dark:text-slate-400"><Copy className="w-4 h-4" /></button>
                                     <button className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded text-red-500"><Trash2 className="w-4 h-4" /></button>
                                 </div>
                                 <div className="absolute left-0 top-1/2 -translate-y-1/2 -ml-6 cursor-grab text-slate-400">
@@ -291,8 +291,8 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
                                 </div>
                                 <label className="block text-sm font-medium mb-1">Are all access points secured? <span className="text-red-500">*</span></label>
                                 <div className="flex gap-4 mt-3">
-                                    <button className="px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-slate-500">Yes</button>
-                                    <button className="px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-slate-500">No</button>
+                                    <button className="px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-slate-500 dark:text-slate-400">Yes</button>
+                                    <button className="px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-slate-500 dark:text-slate-400">No</button>
                                 </div>
                             </div>
                         </div>
@@ -317,7 +317,7 @@ function FormBuilder({ onBack }: { onBack: () => void }) {
                         <div className="flex items-center justify-between py-3 border-t border-slate-100 dark:border-slate-800">
                             <span className="text-slate-600 dark:text-slate-400 font-medium">Required</span>
                             <button className="w-10 h-6 bg-[#1e3a6e] rounded-full relative transition-colors shadow-sm">
-                                <div className="w-4 h-4 bg-white rounded-full absolute right-1 top-1 shadow"></div>
+                                <div className="w-4 h-4 bg-white rounded-full absolute right-1 top-1 shadow dark:bg-slate-900"></div>
                             </button>
                         </div>
                         <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
@@ -350,16 +350,16 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                         <h1 className="text-2xl font-bold">Site Safety Inspection</h1>
                         <span className="px-2.5 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full text-xs font-medium border border-green-200 dark:border-green-800/50">Published</span>
                     </div>
-                    <p className="text-sm text-slate-500 mt-1">Created by James Morrison • Aug 04, 2026</p>
+                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Created by James Morrison • Aug 04, 2026</p>
                 </div>
                 <div className="ml-auto flex items-center gap-3">
-                    <button className="px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm transition-colors shadow-sm font-medium">
+                    <button className="px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm transition-colors shadow-sm font-medium dark:border-slate-700">
                         Edit Form
                     </button>
-                    <button className="px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm transition-colors shadow-sm flex items-center gap-2 font-medium">
+                    <button className="px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm transition-colors shadow-sm flex items-center gap-2 font-medium dark:border-slate-700">
                         <Download className="w-4 h-4" /> Export
                     </button>
-                    <button className="p-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors shadow-sm text-slate-600 dark:text-slate-300">
+                    <button className="p-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors shadow-sm text-slate-600 dark:text-slate-300 dark:border-slate-700">
                         <MoreHorizontal className="w-5 h-5" />
                     </button>
                 </div>
@@ -392,7 +392,7 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                         <div className="grid grid-cols-4 gap-4">
                             <div className="glass-panel p-5 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
                                 <div>
-                                    <p className="text-sm font-medium text-slate-500">Assigned</p>
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Assigned</p>
                                     <p className="text-3xl font-bold mt-1 text-slate-900 dark:text-white">24</p>
                                 </div>
                                 <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-[#1e3a6e]">
@@ -401,7 +401,7 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                             </div>
                             <div className="glass-panel p-5 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
                                 <div>
-                                    <p className="text-sm font-medium text-slate-500">Completed</p>
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Completed</p>
                                     <p className="text-3xl font-bold mt-1 text-slate-900 dark:text-white">18</p>
                                 </div>
                                 <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
@@ -410,7 +410,7 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                             </div>
                             <div className="glass-panel p-5 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
                                 <div>
-                                    <p className="text-sm font-medium text-slate-500">Pending</p>
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Pending</p>
                                     <p className="text-3xl font-bold mt-1 text-orange-500">4</p>
                                 </div>
                                 <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-500">
@@ -419,10 +419,10 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                             </div>
                             <div className="glass-panel p-5 rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
                                 <div>
-                                    <p className="text-sm font-medium text-slate-500">Draft</p>
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Draft</p>
                                     <p className="text-3xl font-bold mt-1 text-slate-900 dark:text-white">2</p>
                                 </div>
-                                <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                                <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400">
                                     <Edit className="w-6 h-6" />
                                 </div>
                             </div>
@@ -444,15 +444,15 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                                 <h2 className="text-lg font-semibold mb-4 text-slate-900 dark:text-white">Metadata</h2>
                                 <div className="flex flex-col gap-y-4 text-sm">
                                     <div>
-                                        <p className="text-slate-500 mb-0.5 text-xs uppercase tracking-wider">Created Date</p>
+                                        <p className="text-slate-500 mb-0.5 text-xs uppercase tracking-wider dark:text-slate-400">Created Date</p>
                                         <p className="font-medium text-slate-800 dark:text-slate-200">Aug 04, 2026</p>
                                     </div>
                                     <div>
-                                        <p className="text-slate-500 mb-0.5 text-xs uppercase tracking-wider">Number of fields</p>
+                                        <p className="text-slate-500 mb-0.5 text-xs uppercase tracking-wider dark:text-slate-400">Number of fields</p>
                                         <p className="font-medium text-slate-800 dark:text-slate-200">12</p>
                                     </div>
                                     <div>
-                                        <p className="text-slate-500 mb-0.5 text-xs uppercase tracking-wider">Submission Rule</p>
+                                        <p className="text-slate-500 mb-0.5 text-xs uppercase tracking-wider dark:text-slate-400">Submission Rule</p>
                                         <p className="font-medium text-slate-800 dark:text-slate-200">Each employee may submit once</p>
                                     </div>
                                 </div>
@@ -464,7 +464,7 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                 {activeTab === "employees" && (
                     <div className="glass-panel border border-slate-200/60 dark:border-slate-800/60 shadow-sm rounded-xl overflow-hidden bg-white/90 dark:bg-[#1a1f2e]/90">
                         <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                            <thead className="text-xs uppercase bg-slate-50/80 border-b border-slate-200 dark:bg-slate-800/80 dark:border-slate-800 text-slate-500">
+                            <thead className="text-xs uppercase bg-slate-50/80 border-b border-slate-200 dark:bg-slate-800/80 dark:border-slate-800 text-slate-500 dark:text-slate-400">
                                 <tr>
                                     <th className="px-6 py-4">Employee</th>
                                     <th className="px-6 py-4">Site / Position</th>
@@ -513,7 +513,7 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                 {activeTab === "submissions" && (
                     <div className="glass-panel border border-slate-200/60 dark:border-slate-800/60 shadow-sm rounded-xl overflow-hidden bg-white/90 dark:bg-[#1a1f2e]/90">
                         <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                            <thead className="text-xs uppercase bg-slate-50/80 border-b border-slate-200 dark:bg-slate-800/80 dark:border-slate-800 text-slate-500">
+                            <thead className="text-xs uppercase bg-slate-50/80 border-b border-slate-200 dark:bg-slate-800/80 dark:border-slate-800 text-slate-500 dark:text-slate-400">
                                 <tr>
                                     <th className="px-6 py-4">Employee</th>
                                     <th className="px-6 py-4">Submitted At</th>
@@ -528,7 +528,7 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
                                     <td className="px-6 py-4">Aug 05, 2026 • 9:42 AM</td>
                                     <td className="px-6 py-4">Downtown Financial Center</td>
                                     <td className="px-6 py-4">
-                                        <span className="text-slate-500 flex items-center gap-1.5 font-medium px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md inline-flex w-max"><Lock className="w-3.5 h-3.5" /> Locked</span>
+                                        <span className="text-slate-500 flex items-center gap-1.5 font-medium px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md inline-flex w-max dark:text-slate-400"><Lock className="w-3.5 h-3.5" /> Locked</span>
                                     </td>
                                     <td className="px-6 py-4 text-center">
                                         <button onClick={onViewSubmission} className="text-[#1e3a6e] hover:text-blue-700 font-medium bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-3 py-1.5 rounded-md transition-colors">View Submission</button>
@@ -546,14 +546,14 @@ function FormDetail({ onBack, onViewSubmission }: { onBack: () => void, onViewSu
 function SubmissionDetail({ onBack }: { onBack: () => void }) {
     return (
         <div className="max-w-2xl mx-auto py-8 animate-in fade-in slide-in-from-bottom-4 h-full overflow-y-auto w-full custom-scrollbar">
-            <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 dark:hover:text-white mb-6 transition-colors">
+            <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 dark:hover:text-white mb-6 transition-colors dark:text-slate-400">
                 <ChevronLeft className="w-4 h-4" /> Back to form detail
             </button>
 
             <div className="glass-panel p-8 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-[#1a1f2e]/80 shadow-xl backdrop-blur-md mb-8">
                 <div className="border-b border-slate-200 dark:border-slate-700 pb-6 mb-6">
                     <h1 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white">Site Safety Inspection</h1>
-                    <div className="flex flex-col gap-1 text-sm text-slate-500">
+                    <div className="flex flex-col gap-1 text-sm text-slate-500 dark:text-slate-400">
                         <p>Submitted by <span className="font-semibold text-slate-800 dark:text-slate-300">Larry Freeman Jr.</span></p>
                         <p className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Aug 05, 2026 • 9:42 AM</p>
                     </div>

@@ -66,6 +66,10 @@ export const MOCK_SITES: SiteClient[] = [
   { uid: "CLT-006", accountType: "Multi-Site Client", companyName: "Marina Bay Properties", contactName: "Carla Jensen", contactEmail: "c.jensen@marina.com", contactPhone: "+1 (555) 206-0006", city: "Marina del Rey", state: "CA", country: "USA", timezone: "America/Los_Angeles", status: "Inactive", accountRep: "Sarah Chen", salesRep: "Sarah Chen", website: "www.marinabay.com", tags: ["real-estate", "marina"], addedOn: "Jun 11, 2024" },
   { uid: "CLT-007", accountType: "Custom Account Type", companyName: "TechPark Innovations", contactName: "Ivan Petrov", contactEmail: "i.petrov@techpark.io", contactPhone: "+1 (555) 207-0007", city: "Culver City", state: "CA", country: "USA", timezone: "America/Los_Angeles", status: "Pending", accountRep: "James Morrison", salesRep: "Monica Price", website: "www.techpark.io", tags: ["tech", "campus"], addedOn: "Jul 02, 2024" },
   { uid: "CLT-008", accountType: "Regular Client", companyName: "Northside Shopping Plaza", contactName: "Tanya Williams", contactEmail: "t.williams@northplaza.com", contactPhone: "+1 (555) 208-0008", city: "Burbank", state: "CA", country: "USA", timezone: "America/Los_Angeles", status: "Closed", accountRep: "Aisha Okafor", salesRep: "James Morrison", website: "www.northplaza.com", tags: ["retail", "closed"], addedOn: "Aug 05, 2024" },
+  { uid: "CLT-009", accountType: "Regular Client", companyName: "Starlight Arena", contactName: "Michael Chang", contactEmail: "m.chang@starlightarena.com", contactPhone: "+1 (555) 209-0009", city: "Los Angeles", state: "CA", country: "USA", timezone: "America/Los_Angeles", status: "Active", accountRep: "Sarah Chen", salesRep: "Linda Foster", website: "www.starlightarena.com", tags: ["entertainment", "stadium"], addedOn: "Sep 14, 2024" },
+  { uid: "CLT-010", accountType: "Multi-Site Client", companyName: "Silicon Valley Data Center", contactName: "Priya Patel", contactEmail: "p.patel@svdatacenter.com", contactPhone: "+1 (555) 210-0010", city: "San Jose", state: "CA", country: "USA", timezone: "America/Los_Angeles", status: "Active", accountRep: "James Morrison", salesRep: "Monica Price", website: "www.svdatacenter.com", tags: ["tech", "datacenter"], addedOn: "Oct 21, 2024" },
+  { uid: "CLT-011", accountType: "Site Account", companyName: "Global Logistics Hub", contactName: "David O'Connor", contactEmail: "d.oconnor@globallogistics.com", contactPhone: "+1 (555) 211-0011", city: "Long Beach", state: "CA", country: "USA", timezone: "America/Los_Angeles", status: "Active", accountRep: "Aisha Okafor", salesRep: "James Morrison", website: "www.globallogistics.com", tags: ["logistics", "warehouse"], addedOn: "Nov 03, 2024" },
+  { uid: "CLT-012", accountType: "Regular Client", companyName: "Sunrise Medical Center", contactName: "Dr. Elena Rodriguez", contactEmail: "e.rodriguez@sunrisemedical.org", contactPhone: "+1 (555) 212-0012", city: "Pasadena", state: "CA", country: "USA", timezone: "America/Los_Angeles", status: "Pending", accountRep: "Sarah Chen", salesRep: "Linda Foster", website: "www.sunrisemedical.org", tags: ["healthcare", "hospital"], addedOn: "Dec 18, 2024" },
 ];
 
 export const SITE_STATUS_STYLES: Record<SiteStatus, { color: string; bg: string; dot: string }> = {
@@ -112,7 +116,7 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
   function renderFld(label: string, required = false, children: React.ReactNode) {
     return (
       <div>
-        <label className="block text-xs font-semibold mb-1.5" style={{ color: "#475569" }}>
+        <label className="block text-xs font-semibold mb-1.5 text-slate-600 dark:text-slate-300" >
           {label}{required && <span className="text-red-500 ml-0.5">*</span>}
         </label>
         {children}
@@ -122,8 +126,8 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
   function renderInp(placeholder: string, type = "text") {
     return (
       <input type={type} placeholder={placeholder}
-        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
-        style={{ border: "1.5px solid #e2e8f0", color: "#0f172a", background: "#fff" }}
+        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all text-slate-900 dark:text-slate-100"
+        style={{ border: "1.5px solid #e2e8f0", background: "#fff" }}
         onFocus={(e) => { e.currentTarget.style.border = "1.5px solid #1e3a6e"; }}
         onBlur={(e) => { e.currentTarget.style.border = "1.5px solid #e2e8f0"; }}
       />
@@ -131,8 +135,8 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
   }
   function renderSel(options: string[]) {
     return (
-      <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-        style={{ border: "1.5px solid #e2e8f0", color: "#0f172a", background: "#fff" }}>
+      <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none text-slate-900 dark:text-slate-100"
+        style={{ border: "1.5px solid #e2e8f0", background: "#fff" }}>
         {options.map((o) => <option key={o}>{o}</option>)}
       </select>
     );
@@ -141,7 +145,7 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
   function renderStep0() {
     return (
       <div className="space-y-4">
-        <p className="text-sm" style={{ color: "#64748b" }}>Select the account classification for this client or site.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-300" >Select the account classification for this client or site.</p>
         <div className="grid grid-cols-2 gap-4">
           {ACCT_TYPES.map((a) => (
             <button key={a.type} onClick={() => setSelectedType(a.type)}
@@ -156,7 +160,7 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
                 {a.icon}
               </div>
               <div className="text-sm font-bold mb-1" style={{ color: selectedType === a.type ? a.color : "#0f172a" }}>{a.type}</div>
-              <div className="text-xs" style={{ color: "#64748b" }}>{a.desc}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-300" >{a.desc}</div>
             </button>
           ))}
         </div>
@@ -174,13 +178,13 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
         {renderFld("Time Zone", true, renderSel(["America/Los_Angeles (PT)", "America/Denver (MT)", "America/Chicago (CT)", "America/New_York (ET)", "Pacific/Honolulu (HT)", "America/Anchorage (AKT)"]))}
         {renderFld("Preferred Language", false, renderSel(["English", "Spanish", "French", "Portuguese", "Mandarin"]))}
         <div>
-          <label className="block text-xs font-semibold mb-2" style={{ color: "#475569" }}>Company Logo</label>
+          <label className="block text-xs font-semibold mb-2 text-slate-600 dark:text-slate-300" >Company Logo</label>
           <div className="flex items-center gap-5">
-            <div className="w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden shrink-0"
-              style={{ background: "#f1f5f9", border: "2px dashed #e2e8f0" }}>
+            <div className="w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800"
+              style={{border: "2px dashed #e2e8f0" }}>
               {logoPreview
                 ? <img src={logoPreview} className="w-full h-full object-contain" alt="logo" />
-                : <Building2 className="w-8 h-8" style={{ color: "#cbd5e1" }} />}
+                : <Building2 className="w-8 h-8 text-slate-300 dark:text-slate-400"  />}
             </div>
             <div>
               <label className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer"
@@ -192,7 +196,7 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
                     if (f) setLogoPreview(URL.createObjectURL(f));
                   }} />
               </label>
-              <p className="text-xs mt-1.5" style={{ color: "#94a3b8" }}>PNG, JPG up to 2 MB</p>
+              <p className="text-xs mt-1.5 text-slate-400 dark:text-slate-300" >PNG, JPG up to 2 MB</p>
             </div>
           </div>
         </div>
@@ -219,16 +223,16 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
               {renderFld("Fax", false, renderInp("+1 (555) 000-0000", "tel"))}
               {renderFld("Email", true, renderInp("contact@company.com", "email"))}
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
               <button onClick={() => setSmsConsent(!smsConsent)}
                 className="w-10 h-6 rounded-full transition-all shrink-0"
                 style={{ background: smsConsent ? "#16a34a" : "#e2e8f0", position: "relative" }}>
-                <span className="absolute top-1 w-4 h-4 rounded-full bg-white transition-all"
+                <span className="absolute top-1 w-4 h-4 rounded-full bg-white transition-all dark:bg-slate-900"
                   style={{ left: smsConsent ? "calc(100% - 20px)" : "4px", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
               </button>
               <div>
-                <div className="text-sm font-semibold" style={{ color: "#0f172a" }}>SMS Notification Consent</div>
-                <div className="text-xs" style={{ color: "#94a3b8" }}>Client consents to receive SMS notifications</div>
+                <div className="text-sm font-semibold text-slate-900 dark:text-slate-100" >SMS Notification Consent</div>
+                <div className="text-xs text-slate-400 dark:text-slate-300" >Client consents to receive SMS notifications</div>
               </div>
             </div>
           </div>
@@ -270,7 +274,7 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
             {renderFld("Website", false, renderInp("https://www.example.com", "url"))}
             {renderFld("Business Registration Number", false, renderInp("e.g. 12-3456789"))}
             <div>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: "#475569" }}>Searchable Tags</label>
+              <label className="block text-xs font-semibold mb-1.5 text-slate-600 dark:text-slate-300" >Searchable Tags</label>
               <div className="flex flex-wrap gap-2 mb-2">
                 {tags.map((t) => (
                   <span key={t} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full"
@@ -363,8 +367,8 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
                 {STEPS[step].icon}
               </div>
               <div>
-                <div className="text-base font-bold" style={{ color: "#0f172a" }}>Step {step + 1} — {STEPS[step].label}</div>
-                <div className="text-xs" style={{ color: "#94a3b8" }}>Fill in the details below</div>
+                <div className="text-base font-bold text-slate-900 dark:text-slate-100" >Step {step + 1} — {STEPS[step].label}</div>
+                <div className="text-xs text-slate-400 dark:text-slate-300" >Fill in the details below</div>
               </div>
               <div className="ml-auto flex gap-1">
                 {STEPS.map((_, i) => (
@@ -456,7 +460,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
         style={{ background: "rgba(15,23,41,0.6)", backdropFilter: "blur(4px)" }}
         onClick={onClose}>
-        <div className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden bg-white"
+        <div className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden bg-white dark:bg-slate-900"
           onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between px-6 py-4"
             style={{ background: "linear-gradient(135deg,#0f1729,#1a2f5a)" }}>
@@ -471,21 +475,21 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   function fld(label: string, children: React.ReactNode) {
     return (
       <div>
-        <label className="block text-xs font-semibold mb-1.5" style={{ color: "#475569" }}>{label}</label>
+        <label className="block text-xs font-semibold mb-1.5 text-slate-600 dark:text-slate-300" >{label}</label>
         {children}
       </div>
     );
   }
   function inp(ph: string, type = "text") {
-    return <input type={type} placeholder={ph} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={{ border: "1.5px solid #e2e8f0", color: "#0f172a" }} />;
+    return <input type={type} placeholder={ph} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none text-slate-900 dark:text-slate-100" style={{ border: "1.5px solid #e2e8f0"}} />;
   }
   function sel(opts: string[]) {
-    return <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={{ border: "1.5px solid #e2e8f0", color: "#0f172a" }}>{opts.map((o) => <option key={o}>{o}</option>)}</select>;
+    return <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none text-slate-900 dark:text-slate-100" style={{ border: "1.5px solid #e2e8f0"}}>{opts.map((o) => <option key={o}>{o}</option>)}</select>;
   }
   function foot(onClose: () => void, label = "Save") {
     return (
-      <div className="flex justify-end gap-3 pt-4 border-t" style={{ borderColor: "#f1f5f9" }}>
-        <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: "#f1f5f9", color: "#475569" }}>Cancel</button>
+      <div className="flex justify-end gap-3 pt-4 border-t bg-slate-100 dark:bg-slate-800" style={{ border }}>
+        <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800" >Cancel</button>
         <button onClick={onClose} className="px-5 py-2 rounded-xl text-sm font-bold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>{label}</button>
       </div>
     );
@@ -494,11 +498,11 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="flex items-center justify-between py-3" style={{ borderBottom: "1px solid #f1f5f9" }}>
         <div>
-          <div className="text-sm font-medium" style={{ color: "#0f172a" }}>{label}</div>
-          {sub && <div className="text-xs" style={{ color: "#94a3b8" }}>{sub}</div>}
+          <div className="text-sm font-medium text-slate-900 dark:text-slate-100" >{label}</div>
+          {sub && <div className="text-xs text-slate-400 dark:text-slate-300" >{sub}</div>}
         </div>
         <button onClick={() => set(!val)} className="w-10 h-6 rounded-full shrink-0 transition-all" style={{ background: val ? "#16a34a" : "#e2e8f0", position: "relative" }}>
-          <span className="absolute top-1 w-4 h-4 rounded-full bg-white transition-all" style={{ left: val ? "calc(100% - 20px)" : "4px", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
+          <span className="absolute top-1 w-4 h-4 rounded-full bg-white transition-all dark:bg-slate-900" style={{ left: val ? "calc(100% - 20px)" : "4px", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
         </button>
       </div>
     );
@@ -511,9 +515,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
       <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
         <table className="w-full" style={{ borderCollapse: "collapse" }}>
           <thead>
-            <tr style={{ background: "#f8fafc" }}>
+            <tr  className="bg-slate-50 dark:bg-slate-900">
               {headers.map((h) => (
-                <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap" style={{ color: "#64748b", borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -526,9 +530,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="grid grid-cols-2 gap-3">
         {fields.map(([k, v]) => (
-          <div key={k} className="p-4 rounded-xl" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
-            <div className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "#94a3b8" }}>{k}</div>
-            <div className="text-sm font-medium" style={{ color: "#0f172a" }}>{v}</div>
+          <div key={k} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
+            <div className="text-xs font-semibold uppercase tracking-wide mb-1 text-slate-400 dark:text-slate-300" >{k}</div>
+            <div className="text-sm font-medium text-slate-900 dark:text-slate-100" >{v}</div>
           </div>
         ))}
       </div>
@@ -547,9 +551,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             {initials}
           </div>
           <div className="flex-1">
-            <div className="text-lg font-bold" style={{ color: "#0f172a" }}>{site.companyName}</div>
+            <div className="text-lg font-bold text-slate-900 dark:text-slate-100" >{site.companyName}</div>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <span className="text-sm" style={{ color: "#475569" }}>{site.uid}</span>
+              <span className="text-sm text-slate-600 dark:text-slate-300" >{site.uid}</span>
               <span className="w-1 h-1 rounded-full bg-slate-300" />
               <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold" style={{ background: ats.bg, color: ats.color }}>{site.accountType}</span>
               <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold" style={{ background: sss.bg, color: sss.color }}>
@@ -620,8 +624,8 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="p-6 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5" style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4" style={{ color: "#94a3b8" }} />
+          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
             <input value={posSearch} onChange={(e) => setPosSearch(e.target.value)} placeholder="Search positions…" className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
           </div>
           <button onClick={() => setShowCreatePos(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>
@@ -632,11 +636,11 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
         {tableWrap(["UID", "Position Title", "TPT Hours", "Bill Rate", "Holiday Rate", "Temporary", "Actions"],
           filteredPos.map((p) => (
             <tr key={p.uid} style={{ borderBottom: "1px solid #f1f5f9" }}>
-              <td className="px-4 py-3 text-xs font-mono font-semibold" style={{ color: "#475569" }}>{p.uid}</td>
-              <td className="px-4 py-3 text-sm font-semibold" style={{ color: "#0f172a" }}>{p.title}</td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#475569" }}>{p.tpt}</td>
+              <td className="px-4 py-3 text-xs font-mono font-semibold text-slate-600 dark:text-slate-300" >{p.uid}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100" >{p.title}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{p.tpt}</td>
               <td className="px-4 py-3 text-sm font-semibold" style={{ color: "#16a34a" }}>{p.bill}</td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#475569" }}>{p.holiday}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{p.holiday}</td>
               <td className="px-4 py-3">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: p.temp === "Yes" ? "#fffbeb" : "#f0fdf4", color: p.temp === "Yes" ? "#d97706" : "#16a34a" }}>{p.temp}</span>
               </td>
@@ -693,8 +697,8 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="p-6 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5" style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4" style={{ color: "#94a3b8" }} />
+          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
             <input value={empSearch} onChange={(e) => setEmpSearch(e.target.value)} placeholder="Search employees…" className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
           </div>
           <button onClick={() => setShowAssignEmp(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>
@@ -710,18 +714,18 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0" style={{ background: "#1e3a6e" }}>
                     {e.name.split(" ").map((w) => w[0]).join("")}
                   </div>
-                  <span className="text-sm font-semibold" style={{ color: "#0f172a" }}>{e.name}</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-100" >{e.name}</span>
                 </div>
               </td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#475569" }}>{e.start}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{e.start}</td>
               <td className="px-4 py-3 text-sm font-semibold" style={{ color: "#16a34a" }}>{e.rate}</td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#94a3b8" }}>{e.unassign}</td>
+              <td className="px-4 py-3 text-sm text-slate-400 dark:text-slate-300" >{e.unassign}</td>
               <td className="px-4 py-3">
                 {e.primary ? <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: "#f0fdf4", color: "#16a34a" }}>Primary</span>
                   : <button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>Make Primary</button>}
               </td>
               <td className="px-4 py-3" />
-              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#f1f5f9", color: "#475569" }}>History</button></td>
+              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800" >History</button></td>
               <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#fef2f2", color: "#dc2626" }}>Remove</button></td>
               <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>View</button></td>
             </tr>
@@ -754,8 +758,8 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="p-6 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5" style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4" style={{ color: "#94a3b8" }} />
+          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
             <input value={portalSearch} onChange={(e) => setPortalSearch(e.target.value)} placeholder="Search portal users…" className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
           </div>
           <button onClick={() => setShowAddPortal(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>
@@ -771,10 +775,10 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
         {tableWrap(["Full Name", "Email", "Phone", "Last Login", "Access", "Edit"],
           filtered.map((u, i) => (
             <tr key={i} style={{ borderBottom: "1px solid #f1f5f9" }}>
-              <td className="px-4 py-3 text-sm font-semibold" style={{ color: "#0f172a" }}>{u.name}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100" >{u.name}</td>
               <td className="px-4 py-3 text-xs" style={{ color: "#2563eb" }}>{u.email}</td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#475569" }}>{u.phone}</td>
-              <td className="px-4 py-3 text-xs" style={{ color: "#64748b" }}>{u.lastLogin}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{u.phone}</td>
+              <td className="px-4 py-3 text-xs text-slate-500 dark:text-slate-300" >{u.lastLogin}</td>
               <td className="px-4 py-3">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: u.access === "Granted" ? "#f0fdf4" : "#fef2f2", color: u.access === "Granted" ? "#16a34a" : "#dc2626" }}>{u.access}</span>
               </td>
@@ -794,13 +798,13 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             {fld("Email", inp("email@example.com", "email"))}
             {fld("Password", inp("Set password", "password"))}
             {fld("Client Role", sel(["Viewer", "Manager", "Admin"]))}
-            <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
               <div>
-                <div className="text-sm font-semibold" style={{ color: "#0f172a" }}>Force Password Change</div>
-                <div className="text-xs" style={{ color: "#94a3b8" }}>User must reset on first login</div>
+                <div className="text-sm font-semibold text-slate-900 dark:text-slate-100" >Force Password Change</div>
+                <div className="text-xs text-slate-400 dark:text-slate-300" >User must reset on first login</div>
               </div>
-              <button className="w-10 h-6 rounded-full" style={{ background: "#e2e8f0", position: "relative" }}>
-                <span className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white" style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
+              <button className="w-10 h-6 rounded-full bg-slate-200 dark:bg-slate-700" style={{position: "relative" }}>
+                <span className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white dark:bg-slate-900" style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
               </button>
             </div>
             {fld("Status", sel(["Grant Access", "Revoke Access"]))}
@@ -831,10 +835,10 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
         {tableWrap(["Employee", "Employee ID", "Reason", "Banned On", "Action"],
           banned.map((b, i) => (
             <tr key={i} style={{ borderBottom: "1px solid #f1f5f9" }}>
-              <td className="px-4 py-3 text-sm font-semibold" style={{ color: "#0f172a" }}>{b.name}</td>
-              <td className="px-4 py-3 text-xs font-mono" style={{ color: "#475569" }}>{b.uid}</td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#64748b" }}>{b.reason}</td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#94a3b8" }}>{b.bannedOn}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100" >{b.name}</td>
+              <td className="px-4 py-3 text-xs font-mono text-slate-600 dark:text-slate-300" >{b.uid}</td>
+              <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-300" >{b.reason}</td>
+              <td className="px-4 py-3 text-sm text-slate-400 dark:text-slate-300" >{b.bannedOn}</td>
               <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#f0fdf4", color: "#16a34a" }}>Remove Ban</button></td>
             </tr>
           ))
@@ -868,9 +872,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
         {tableWrap(["Name", "Job Title", "Phone", "Email", "Action"],
           contacts.map((c, i) => (
             <tr key={i} style={{ borderBottom: "1px solid #f1f5f9" }}>
-              <td className="px-4 py-3 text-sm font-semibold" style={{ color: "#0f172a" }}>{c.name}</td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#475569" }}>{c.title}</td>
-              <td className="px-4 py-3 text-sm" style={{ color: "#475569" }}>{c.phone}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100" >{c.name}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{c.title}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{c.phone}</td>
               <td className="px-4 py-3 text-xs" style={{ color: "#2563eb" }}>{c.email}</td>
               <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>Edit</button></td>
             </tr>
@@ -905,9 +909,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             {fld("Attention Of", inp("Attention of"))}
             {fld("Preferred Language", sel(["English", "Spanish", "French", "Portuguese"]))}
             {fld("Status", sel(["Active", "Inactive"]))}
-            <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
               <input type="checkbox" className="w-4 h-4" style={{ accentColor: "#1e3a6e" }} />
-              <span className="text-sm" style={{ color: "#0f172a" }}>Use this address as Bill-To Address</span>
+              <span className="text-sm text-slate-900 dark:text-slate-100" >Use this address as Bill-To Address</span>
             </div>
             {foot(() => setShowAddContact(false), "Add Contact")}
           </div>
@@ -925,14 +929,14 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "#fff", color: "#1e3a6e" }}><FileText className="w-5 h-5" /></div>
             <div className="text-sm font-bold" style={{ color: "#1e3a6e" }}>Edit Site</div>
-            <div className="text-xs mt-1" style={{ color: "#64748b" }}>Update site info using the same creation fields</div>
+            <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >Update site info using the same creation fields</div>
           </button>
           <button onClick={() => setShowCloseAccount(true)} className="p-5 rounded-2xl text-left transition-all" style={{ background: "#fef2f2", border: "1.5px solid #fecaca" }}
             onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 16px #dc262622"; }}
             onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "#fff", color: "#dc2626" }}><Archive className="w-5 h-5" /></div>
             <div className="text-sm font-bold" style={{ color: "#dc2626" }}>Close Account</div>
-            <div className="text-xs mt-1" style={{ color: "#64748b" }}>Terminate site and all associated contracts</div>
+            <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >Terminate site and all associated contracts</div>
           </button>
         </div>
 
@@ -969,14 +973,14 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "#fff", color: "#16a34a" }}><Calendar className="w-5 h-5" /></div>
             <div className="text-sm font-bold" style={{ color: "#16a34a" }}>Prepare Schedule</div>
-            <div className="text-xs mt-1" style={{ color: "#64748b" }}>Build and manage dispatch schedules for this site</div>
+            <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >Build and manage dispatch schedules for this site</div>
           </div>
           <div className="p-5 rounded-2xl cursor-pointer transition-all" style={{ background: "#eff6ff", border: "1.5px solid #bfdbfe" }}
             onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 12px #1e3a6e22"; }}
             onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "#fff", color: "#1e3a6e" }}><ListChecks className="w-5 h-5" /></div>
             <div className="text-sm font-bold" style={{ color: "#1e3a6e" }}>Confirmed Schedule</div>
-            <div className="text-xs mt-1" style={{ color: "#64748b" }}>View and manage the confirmed dispatch schedule module</div>
+            <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >View and manage the confirmed dispatch schedule module</div>
           </div>
         </div>
       </div>
@@ -1011,7 +1015,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
           {[["Operation Reports", "Reports filed at this site", "#1e3a6e", "#eff6ff"], ["Patrol Tours", "Tour sessions completed", "#16a34a", "#f0fdf4"], ["Incident Analytics", "Flagged incident records", "#dc2626", "#fef2f2"], ["Post Orders", "Active post order documents", "#d97706", "#fffbeb"]].map(([label, sub, color, bg]) => (
             <div key={label} className="p-4 rounded-xl" style={{ background: bg, border: `1px solid ${color}22` }}>
               <div className="text-sm font-bold mb-1" style={{ color }}>{label}</div>
-              <div className="text-xs" style={{ color: "#64748b" }}>{sub}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-300" >{sub}</div>
               <div className="text-2xl font-bold mt-2" style={{ color }}>
                 {label === "Operation Reports" ? "47" : label === "Patrol Tours" ? "128" : label === "Incident Analytics" ? "3" : "12"}
               </div>
@@ -1026,12 +1030,12 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             return (
               <tr key={r.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
                 <td className="px-4 py-3 text-xs font-mono font-semibold" style={{ color: "#1e3a6e" }}>{r.id}</td>
-                <td className="px-4 py-3 text-sm" style={{ color: "#0f172a" }}>{r.type}</td>
-                <td className="px-4 py-3 text-sm" style={{ color: "#475569" }}>{r.date}</td>
-                <td className="px-4 py-3 text-sm" style={{ color: "#475569" }}>{r.by}</td>
+                <td className="px-4 py-3 text-sm text-slate-900 dark:text-slate-100" >{r.type}</td>
+                <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{r.date}</td>
+                <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{r.by}</td>
                 <td className="px-4 py-3"><span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: sc.bg, color: sc.color }}>{r.status}</span></td>
                 <td className="px-4 py-3 text-center">
-                  {r.flags > 0 ? <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "#fef2f2", color: "#dc2626" }}>{r.flags}</span> : <span style={{ color: "#cbd5e1" }}>—</span>}
+                  {r.flags > 0 ? <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "#fef2f2", color: "#dc2626" }}>{r.flags}</span> : <span  className="text-slate-300 dark:text-slate-400">—</span>}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1">
@@ -1056,7 +1060,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     ];
     return (
       <div className="p-6 space-y-6">
-        <p className="text-sm" style={{ color: "#64748b" }}>Configure Connecteam-style automation notification rules for this site.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-300" >Configure Connecteam-style automation notification rules for this site.</p>
         {NOTIF_GROUPS.map((g) => (
           <div key={g.group}>
             {sectionHead(g.group)}
@@ -1090,19 +1094,19 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-2 gap-4">
           {SECURITY_SECTIONS.map((s) => (
-            <div key={s.label} className="p-5 rounded-2xl cursor-pointer transition-all" style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0" }}
+            <div key={s.label} className="p-5 rounded-2xl cursor-pointer transition-all bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}
               onMouseEnter={(e) => { e.currentTarget.style.background = "#f0f5ff"; e.currentTarget.style.borderColor = "#1e3a6e44"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.borderColor = "#e2e8f0"; }}>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ color: s.color, background: `${s.color}12` }}>{s.icon}</div>
-              <div className="text-sm font-bold" style={{ color: "#0f172a" }}>{s.label}</div>
-              <div className="text-xs mt-1" style={{ color: "#64748b" }}>{s.desc}</div>
+              <div className="text-sm font-bold text-slate-900 dark:text-slate-100" >{s.label}</div>
+              <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >{s.desc}</div>
             </div>
           ))}
         </div>
 
         {sectionHead("Geo-Fencing")}
-        <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0", background: "#f8fafc", minHeight: 120 }}>
-          <div className="flex items-center justify-center h-32 gap-3" style={{ color: "#94a3b8" }}>
+        <div className="rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0", minHeight: 120 }}>
+          <div className="flex items-center justify-center h-32 gap-3 text-slate-400 dark:text-slate-300" >
             <MapIcon className="w-6 h-6" />
             <span className="text-sm">Map view — choose boundary points to define geo-fence</span>
           </div>
@@ -1151,11 +1155,11 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
           {shown.map((e, i) => (
             <div key={i} className="flex items-center gap-4 p-4 rounded-2xl" style={{ background: "#fff", border: "1.5px solid #e2e8f0" }}>
               <div className="w-2 h-2 rounded-full shrink-0" style={{ background: e.color }} />
-              <span className="text-xs font-mono" style={{ color: "#94a3b8", minWidth: 72 }}>{e.time}</span>
+              <span className="text-xs font-mono text-slate-400 dark:text-slate-300" style={{minWidth: 72 }}>{e.time}</span>
               <span className="text-xs font-bold px-2 py-0.5 rounded-lg shrink-0" style={{ background: `${e.color}15`, color: e.color }}>{e.type}</span>
               <div className="flex-1 min-w-0">
-                <span className="text-sm font-semibold" style={{ color: "#0f172a" }}>{e.emp}</span>
-                <span className="text-xs ml-2" style={{ color: "#64748b" }}>{e.detail}</span>
+                <span className="text-sm font-semibold text-slate-900 dark:text-slate-100" >{e.emp}</span>
+                <span className="text-xs ml-2 text-slate-500 dark:text-slate-300" >{e.detail}</span>
               </div>
             </div>
           ))}
@@ -1183,7 +1187,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
           <button onClick={() => setShowPostMsg(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>
             <Plus className="w-4 h-4" />Post Message
           </button>
-          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold" style={{ background: "#f1f5f9", color: "#475569" }}>
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800" >
             <Settings className="w-4 h-4" />Settings
           </button>
         </div>
@@ -1193,9 +1197,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               {p.pinned && <span className="text-xs font-bold px-2 py-0.5 rounded-full mb-2 inline-block" style={{ background: "#eff6ff", color: "#1e3a6e" }}>📌 Pinned</span>}
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold" style={{ color: "#1e3a6e" }}>{p.author}</span>
-                <span className="text-xs" style={{ color: "#94a3b8" }}>{p.time}</span>
+                <span className="text-xs text-slate-400 dark:text-slate-300" >{p.time}</span>
               </div>
-              <p className="text-sm" style={{ color: "#475569", lineHeight: 1.6 }}>{p.text}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300" style={{lineHeight: 1.6 }}>{p.text}</p>
             </div>
           ))}
         </div>
@@ -1203,9 +1207,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
           <div className="space-y-4">
             {fld("Message", <textarea className="w-full px-3 py-2.5 rounded-xl text-sm border outline-none" rows={5} style={{ border: "1.5px solid #e2e8f0" }} placeholder="Write your message to site staff..." />)}
             {fld("Visibility", sel(["All Site Staff", "Supervisors Only", "Specific Position"]))}
-            <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
               <input type="checkbox" className="w-4 h-4" style={{ accentColor: "#1e3a6e" }} />
-              <span className="text-sm" style={{ color: "#0f172a" }}>Pin this message</span>
+              <span className="text-sm text-slate-900 dark:text-slate-100" >Pin this message</span>
             </div>
             {foot(() => setShowPostMsg(false), "Post Message")}
           </div>
@@ -1223,9 +1227,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             {toggle(pdfAsLink, setPdfAsLink, "PDF Attached as a Link", "Send report PDFs as links instead of email attachments")}
           </div>
         </div>
-        <div className="p-4 rounded-xl" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
-          <div className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "#94a3b8" }}>Email Preview</div>
-          <div className="text-sm" style={{ color: "#475569" }}>
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
+          <div className="text-xs font-semibold uppercase tracking-wide mb-2 text-slate-400 dark:text-slate-300" >Email Preview</div>
+          <div className="text-sm text-slate-600 dark:text-slate-300" >
             Reports for <strong>{site.companyName}</strong> will be sent to <strong>{site.contactEmail}</strong> with PDFs {pdfAsLink ? "as downloadable links" : "attached directly"}.
           </div>
         </div>
@@ -1413,13 +1417,13 @@ export function ClientsPage() {
         {/* Toolbar */}
         <div className="flex items-center gap-3 px-5 py-4 flex-wrap"
           style={{ borderBottom: "1.5px solid #f1f5f9" }}>
-          <div className="flex items-center gap-2 flex-1 min-w-52 rounded-xl px-3 py-2.5"
-            style={{ background: "#f8fafc", border: "1.5px solid #e8edf4" }}>
-            <Search className="w-4 h-4 shrink-0" style={{ color: "#94a3b8" }} />
+          <div className="flex items-center gap-2 flex-1 min-w-52 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900"
+            style={{border: "1.5px solid #e8edf4" }}>
+            <Search className="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-300"  />
             <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder="Search accounts, contacts, locations…"
               className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
-            {search && <button onClick={() => setSearch("")}><X className="w-3.5 h-3.5" style={{ color: "#94a3b8" }} /></button>}
+            {search && <button onClick={() => setSearch("")}><X className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300"  /></button>}
           </div>
 
           <select value={acctTypeFilter}
@@ -1441,12 +1445,12 @@ export function ClientsPage() {
           </select>
 
           <div className="flex items-center gap-2 ml-auto">
-            <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl transition-all"
-              style={{ background: "#f8fafc", color: "#475569", border: "1.5px solid #e8edf4" }}>
+            <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900"
+              style={{border: "1.5px solid #e8edf4" }}>
               <RefreshCw className="w-3.5 h-3.5" />Refresh
             </button>
-            <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl transition-all"
-              style={{ background: "#f8fafc", color: "#475569", border: "1.5px solid #e8edf4" }}>
+            <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900"
+              style={{border: "1.5px solid #e8edf4" }}>
               <Download className="w-3.5 h-3.5" />Export
             </button>
           </div>
@@ -1479,14 +1483,14 @@ export function ClientsPage() {
         <div className="overflow-x-auto" style={{ minHeight: 200 }}>
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr style={{ background: "#f8fafc" }}>
+              <tr  className="bg-slate-50 dark:bg-slate-900">
                 <th className="w-12 px-4 py-3.5" style={{ borderBottom: "1.5px solid #e8edf4" }}>
                   <input type="checkbox" checked={allSelected} onChange={toggleAll}
                     className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
                 </th>
                 {["UID", "Company Name", "Account Type", "Main Contact", "Email", "City / State", "Status", "Account Rep", "Added On", "Action"].map((col) => (
-                  <th key={col} className="px-3 py-3.5 text-left whitespace-nowrap"
-                    style={{ borderBottom: "1.5px solid #e8edf4", color: "#64748b", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                  <th key={col} className="px-3 py-3.5 text-left whitespace-nowrap text-slate-500 dark:text-slate-300"
+                    style={{ borderBottom: "1.5px solid #e8edf4", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
                     {col}
                   </th>
                 ))}
@@ -1497,10 +1501,10 @@ export function ClientsPage() {
                 <tr>
                   <td colSpan={11}>
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
-                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: "#f1f5f9" }}>
-                        <Building2 className="w-7 h-7" style={{ color: "#cbd5e1" }} />
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-slate-100 dark:bg-slate-800" >
+                        <Building2 className="w-7 h-7 text-slate-300 dark:text-slate-400"  />
                       </div>
-                      <p className="text-sm font-medium" style={{ color: "#94a3b8" }}>No accounts match your filters</p>
+                      <p className="text-sm font-medium text-slate-400 dark:text-slate-300" >No accounts match your filters</p>
                       <button onClick={() => { setSearch(""); setAcctTypeFilter("All Types"); setStatusFilter("All Status"); }}
                         className="text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>
                         Clear filters
@@ -1526,8 +1530,8 @@ export function ClientsPage() {
                     </td>
 
                     <td className="px-3 py-3.5">
-                      <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-mono font-semibold"
-                        style={{ background: "#f1f5f9", color: "#475569" }}>{site.uid}</span>
+                      <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-mono font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800"
+                        >{site.uid}</span>
                     </td>
 
                     <td className="px-3 py-3.5">
@@ -1537,8 +1541,8 @@ export function ClientsPage() {
                           {initials}
                         </div>
                         <div>
-                          <div className="text-sm font-semibold whitespace-nowrap" style={{ color: "#0f172a" }}>{site.companyName}</div>
-                          <div className="text-xs" style={{ color: "#94a3b8" }}>{site.website}</div>
+                          <div className="text-sm font-semibold whitespace-nowrap text-slate-900 dark:text-slate-100" >{site.companyName}</div>
+                          <div className="text-xs text-slate-400 dark:text-slate-300" >{site.website}</div>
                         </div>
                       </div>
                     </td>
@@ -1549,15 +1553,15 @@ export function ClientsPage() {
                     </td>
 
                     <td className="px-3 py-3.5">
-                      <div className="text-sm font-medium whitespace-nowrap" style={{ color: "#0f172a" }}>{site.contactName}</div>
-                      <div className="text-xs" style={{ color: "#94a3b8" }}>{site.contactPhone}</div>
+                      <div className="text-sm font-medium whitespace-nowrap text-slate-900 dark:text-slate-100" >{site.contactName}</div>
+                      <div className="text-xs text-slate-400 dark:text-slate-300" >{site.contactPhone}</div>
                     </td>
 
                     <td className="px-3 py-3.5 text-xs whitespace-nowrap">
                       <a href={`mailto:${site.contactEmail}`} style={{ color: "#2563eb" }} className="hover:underline">{site.contactEmail}</a>
                     </td>
 
-                    <td className="px-3 py-3.5 text-sm whitespace-nowrap" style={{ color: "#475569" }}>
+                    <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-600 dark:text-slate-300" >
                       {site.city}, {site.state}
                     </td>
 
@@ -1569,16 +1573,16 @@ export function ClientsPage() {
                       </span>
                     </td>
 
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap" style={{ color: "#475569" }}>{site.accountRep}</td>
+                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-600 dark:text-slate-300" >{site.accountRep}</td>
 
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap" style={{ color: "#94a3b8" }}>{site.addedOn}</td>
+                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-400 dark:text-slate-300" >{site.addedOn}</td>
 
                     <td className="px-3 py-3.5" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-1.5">
                         <button onClick={() => setSelectedSite(site)} className="text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all"
                           style={{ background: "#eff6ff", color: "#1e3a6e" }}>View</button>
-                        <button className="w-7 h-7 rounded-xl flex items-center justify-center"
-                          style={{ color: "#94a3b8" }}
+                        <button className="w-7 h-7 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-300"
+                          
                           onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f5f9"; }}
                           onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
                           <MoreHorizontal className="w-4 h-4" />
@@ -1594,7 +1598,7 @@ export function ClientsPage() {
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-5 py-4" style={{ borderTop: "1.5px solid #f1f5f9" }}>
-          <span className="text-xs font-medium" style={{ color: "#94a3b8" }}>
+          <span className="text-xs font-medium text-slate-400 dark:text-slate-300" >
             Showing {filtered.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} accounts
           </span>
           <div className="flex items-center gap-1.5">
@@ -1618,7 +1622,7 @@ export function ClientsPage() {
               });
               return withDots.map((p, i) =>
                 p === "…"
-                  ? <span key={`d${i}`} className="w-8 h-8 flex items-center justify-center text-sm" style={{ color: "#94a3b8" }}>…</span>
+                  ? <span key={`d${i}`} className="w-8 h-8 flex items-center justify-center text-sm text-slate-400 dark:text-slate-300" >…</span>
                   : <button key={p} onClick={() => setPage(p as number)}
                     className="w-8 h-8 rounded-lg text-xs font-semibold"
                     style={{ background: page === p ? "#1e3a6e" : "transparent", color: page === p ? "#fff" : "#475569", border: page === p ? "none" : "1.5px solid #e8edf4" }}>

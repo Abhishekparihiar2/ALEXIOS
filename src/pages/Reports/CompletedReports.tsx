@@ -61,25 +61,25 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto flex flex-col bg-slate-50 relative">
+      <div className="flex-1 overflow-y-auto flex flex-col bg-slate-50 relative dark:bg-slate-900">
       {/* ── Hero Banner ── */}
-      <div className="relative overflow-hidden px-8 pt-8 pb-6 shrink-0 bg-white border-b border-slate-200">
+      <div className="relative overflow-hidden px-8 pt-8 pb-6 shrink-0 bg-white border-b border-slate-200 dark:bg-slate-900 dark:border-slate-700">
         <div className="relative flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-50 text-blue-600">
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Completed Reports</h1>
-              <p className="text-sm text-slate-500 font-medium mt-0.5">View, filter, and export all submitted forms and incidents.</p>
+              <h1 className="text-2xl font-bold text-slate-900 tracking-tight dark:text-slate-100">Completed Reports</h1>
+              <p className="text-sm text-slate-500 font-medium mt-0.5 dark:text-slate-400">View, filter, and export all submitted forms and incidents.</p>
             </div>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm shrink-0">
+          <button className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm shrink-0 dark:text-slate-300 dark:bg-slate-900 dark:border-slate-700 dark:hover:bg-slate-800">
             <Download className="w-4 h-4" /> Export CSV
           </button>
         </div>
 
-        <div className="flex items-center gap-2 mt-6 border-b border-slate-200">
+        <div className="flex items-center gap-2 mt-6 border-b border-slate-200 dark:border-slate-700">
           {TABS.map(t => {
             const active = activeTab === t.id;
             return (
@@ -101,10 +101,10 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
       </div>
 
       <div className="p-8 flex-1 flex flex-col min-h-0">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex-1 flex flex-col overflow-hidden">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex-1 flex flex-col overflow-hidden dark:bg-slate-900 dark:border-slate-700">
           
           {/* ── Compact Toolbar & Filters ── */}
-          <div className="p-3 border-b border-slate-100 flex flex-col gap-3 bg-white">
+          <div className="p-3 border-b border-slate-100 flex flex-col gap-3 bg-white dark:border-slate-800 dark:bg-slate-900">
             <div className="flex items-center gap-3">
               <div className="relative flex items-center flex-1 max-w-md shrink-0">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3" />
@@ -113,7 +113,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search reports..." 
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-1 focus:ring-blue-100 transition-all"
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-1 focus:ring-blue-100 transition-all dark:border-slate-700 dark:bg-slate-900"
                 />
               </div>
               <button 
@@ -126,7 +126,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
             </div>
 
             {isFiltersOpen && (
-              <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100">
+              <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <div className="relative">
                   <div 
                     onClick={() => setIsCalOpen(!isCalOpen)}
@@ -139,11 +139,11 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                   </div>
 
                   {isCalOpen && (
-                    <div className="absolute top-full left-0 mt-2 p-4 bg-white rounded-xl shadow-xl border border-slate-100 z-50 w-64">
+                    <div className="absolute top-full left-0 mt-2 p-4 bg-white rounded-xl shadow-xl border border-slate-100 z-50 w-64 dark:bg-slate-900 dark:border-slate-800">
                       <div className="flex items-center justify-between mb-4">
-                        <button className="p-1 hover:bg-slate-100 rounded text-slate-500"><ChevronDown className="w-4 h-4 rotate-90" /></button>
-                        <span className="text-sm font-bold text-slate-800">August 2026</span>
-                        <button className="p-1 hover:bg-slate-100 rounded text-slate-500"><ChevronDown className="w-4 h-4 -rotate-90" /></button>
+                        <button className="p-1 hover:bg-slate-100 rounded text-slate-500 dark:text-slate-400 dark:hover:bg-slate-800"><ChevronDown className="w-4 h-4 rotate-90" /></button>
+                        <span className="text-sm font-bold text-slate-800 dark:text-slate-200">August 2026</span>
+                        <button className="p-1 hover:bg-slate-100 rounded text-slate-500 dark:text-slate-400 dark:hover:bg-slate-800"><ChevronDown className="w-4 h-4 -rotate-90" /></button>
                       </div>
                       <div className="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 mb-2">
                         {['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => <div key={d}>{d}</div>)}
@@ -183,20 +183,20 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap">
+                <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300">
                   <MapPin className="w-3.5 h-3.5 text-slate-400" />
                   <select className="bg-transparent font-medium outline-none cursor-pointer">
                     <option>All Sites</option>
                     <option>Downtown Financial Center</option>
                   </select>
                 </div>
-                <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap">
+                <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300">
                   <User className="w-3.5 h-3.5 text-slate-400" />
                   <select className="bg-transparent font-medium outline-none cursor-pointer">
                     <option>All Guards</option>
                   </select>
                 </div>
-                <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap">
+                <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300">
                   <LayoutTemplate className="w-3.5 h-3.5 text-slate-400" />
                   <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="bg-transparent font-medium outline-none cursor-pointer">
                     <option value="All">All Types</option>
@@ -205,7 +205,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                     <option value="Inspection">Inspection</option>
                   </select>
                 </div>
-                <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap">
+                <div className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-600 whitespace-nowrap dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300">
                   <Filter className="w-3.5 h-3.5 text-slate-400" />
                   <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="bg-transparent font-medium outline-none cursor-pointer">
                     <option value="All">All Statuses</option>
@@ -223,7 +223,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
             {activeTab === "reports" && (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                  <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700">
                     <th className="px-4 py-2.5">Report Details</th>
                     <th className="px-4 py-2.5">Submitted By</th>
                     <th className="px-4 py-2.5">Location</th>
@@ -232,28 +232,28 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                     <th className="px-4 py-2.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredReports.map(report => (
                     <tr key={report.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer group">
                       <td className="px-4 py-3">
-                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">{report.reportName}</p>
-                        <p className="text-[11px] text-slate-500 mt-0.5 font-medium">{report.id} • {report.type}</p>
+                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors dark:text-slate-100">{report.reportName}</p>
+                        <p className="text-[11px] text-slate-500 mt-0.5 font-medium dark:text-slate-400">{report.id} • {report.type}</p>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[10px] font-bold border border-slate-200">
+                          <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[10px] font-bold border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
                             {report.submittedBy.charAt(0)}
                           </div>
-                          <span className="text-sm font-semibold text-slate-700">{report.submittedBy}</span>
+                          <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{report.submittedBy}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600">
+                        <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300">
                           <MapPin className="w-3.5 h-3.5 text-slate-400" />
                           {report.siteName}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">
                         {report.dateSubmitted}
                       </td>
                       <td className="px-4 py-3">
@@ -266,7 +266,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                         </div>
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <button className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors shadow-sm">
+                        <button className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors shadow-sm dark:text-slate-300 dark:bg-slate-900 dark:border-slate-700 dark:hover:bg-slate-800">
                           <Eye className="w-3.5 h-3.5" /> View
                         </button>
                       </td>
@@ -274,7 +274,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                   ))}
                   {filteredReports.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="text-center py-12 text-sm text-slate-500">No reports found.</td>
+                      <td colSpan={6} className="text-center py-12 text-sm text-slate-500 dark:text-slate-400">No reports found.</td>
                     </tr>
                   )}
                 </tbody>
@@ -284,7 +284,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
             {activeTab === "tours" && (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                  <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700">
                     <th className="px-4 py-2.5">Tour</th>
                     <th className="px-4 py-2.5">Guard</th>
                     <th className="px-4 py-2.5">Site</th>
@@ -297,7 +297,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                     <th className="px-4 py-2.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredTours.map(tour => (
                     <tr 
                       key={tour.id} 
@@ -305,18 +305,18 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                       className={`hover:bg-slate-50/50 transition-colors cursor-pointer group ${selectedTour?.id === tour.id ? 'bg-blue-50/50' : ''}`}
                     >
                       <td className="px-4 py-3">
-                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">{tour.tourName}</p>
-                        <p className="text-[11px] text-slate-500 mt-0.5 font-medium">{tour.id}</p>
+                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors dark:text-slate-100">{tour.tourName}</p>
+                        <p className="text-[11px] text-slate-500 mt-0.5 font-medium dark:text-slate-400">{tour.id}</p>
                       </td>
-                      <td className="px-4 py-3 text-sm font-semibold text-slate-700">{tour.guard}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{tour.siteName}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{tour.start}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{tour.end}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{tour.duration}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">
+                      <td className="px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300">{tour.guard}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{tour.siteName}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{tour.start}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{tour.end}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{tour.duration}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">
                         {tour.checkpointsHit} / {tour.checkpointsTotal}
                       </td>
-                      <td className="px-4 py-3 text-sm font-semibold text-slate-700">{tour.result}</td>
+                      <td className="px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300">{tour.result}</td>
                       <td className="px-4 py-3">
                         <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold ${
                           tour.status === 'Complete' ? 'bg-green-100 text-green-700' :
@@ -327,7 +327,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                         </div>
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <button className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors" onClick={(e) => e.stopPropagation()}>
+                        <button className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors dark:hover:bg-slate-800" onClick={(e) => e.stopPropagation()}>
                           <MoreVertical className="w-4 h-4" />
                         </button>
                       </td>
@@ -340,7 +340,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
             {activeTab === "recordings" && (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                  <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700">
                     <th className="px-4 py-2.5">Recording</th>
                     <th className="px-4 py-2.5">Type</th>
                     <th className="px-4 py-2.5">Guard</th>
@@ -351,7 +351,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                     <th className="px-4 py-2.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredRecordings.map(rec => (
                     <tr 
                       key={rec.id} 
@@ -359,28 +359,28 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                       className={`hover:bg-slate-50/50 transition-colors cursor-pointer group ${selectedRecording?.id === rec.id ? 'bg-blue-50/50' : ''}`}
                     >
                       <td className="px-4 py-3">
-                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">{rec.title}</p>
-                        <p className="text-[11px] text-slate-500 mt-0.5 font-medium">{rec.id}</p>
+                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors dark:text-slate-100">{rec.title}</p>
+                        <p className="text-[11px] text-slate-500 mt-0.5 font-medium dark:text-slate-400">{rec.id}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600">
+                        <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300">
                           {rec.type === 'Video' && <Video className="w-3.5 h-3.5 text-indigo-500" />}
                           {rec.type === 'Audio' && <Mic className="w-3.5 h-3.5 text-amber-500" />}
                           {rec.type === 'Image' && <ImageIcon className="w-3.5 h-3.5 text-emerald-500" />}
                           {rec.type}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm font-semibold text-slate-700">{rec.guard}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{rec.siteName}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{rec.dateCaptured}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">
+                      <td className="px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300">{rec.guard}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{rec.siteName}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{rec.dateCaptured}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">
                         <span className="text-blue-600 hover:underline">{rec.relatedRecord}</span>
                       </td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">
                         {rec.duration !== "--" ? `${rec.duration} • ` : ''}{rec.size}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <button className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors" onClick={(e) => e.stopPropagation()}>
+                        <button className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors dark:hover:bg-slate-800" onClick={(e) => e.stopPropagation()}>
                           <MoreVertical className="w-4 h-4" />
                         </button>
                       </td>
@@ -393,7 +393,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
             {activeTab === "summaries" && (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                  <tr className="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10 shadow-sm dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700">
                     <th className="px-4 py-2.5">Shift</th>
                     <th className="px-4 py-2.5">Site</th>
                     <th className="px-4 py-2.5">Supervisor</th>
@@ -405,7 +405,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                     <th className="px-4 py-2.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredSummaries.map(summary => (
                     <tr 
                       key={summary.id} 
@@ -413,21 +413,21 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                       className={`hover:bg-slate-50/50 transition-colors cursor-pointer group ${selectedSummary?.id === summary.id ? 'bg-blue-50/50' : ''}`}
                     >
                       <td className="px-4 py-3">
-                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">{summary.shiftName}</p>
-                        <p className="text-[11px] text-slate-500 mt-0.5 font-medium">{summary.id}</p>
+                        <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors dark:text-slate-100">{summary.shiftName}</p>
+                        <p className="text-[11px] text-slate-500 mt-0.5 font-medium dark:text-slate-400">{summary.id}</p>
                       </td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{summary.siteName}</td>
-                      <td className="px-4 py-3 text-sm font-semibold text-slate-700">{summary.supervisor}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{summary.guardsCount}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{summary.totalTours}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-600">{summary.totalReports}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{summary.siteName}</td>
+                      <td className="px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300">{summary.supervisor}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{summary.guardsCount}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{summary.totalTours}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300">{summary.totalReports}</td>
                       <td className="px-4 py-3">
                         {summary.criticalEvents > 0 ? (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-red-100 text-red-700">
                             {summary.criticalEvents} Critical
                           </span>
                         ) : (
-                          <span className="text-sm font-medium text-slate-500">None</span>
+                          <span className="text-sm font-medium text-slate-500 dark:text-slate-400">None</span>
                         )}
                       </td>
                       <td className="px-4 py-3">
@@ -457,34 +457,34 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
 
       {/* ── Patrol Tour Drawer ── */}
       {selectedTour && (
-        <div className="absolute inset-y-0 right-0 w-[400px] bg-white/90 backdrop-blur-xl border-l border-slate-200 shadow-2xl flex flex-col z-50 transform transition-transform duration-300">
-          <div className="flex items-center justify-between p-6 border-b border-slate-200">
+        <div className="absolute inset-y-0 right-0 w-[400px] bg-white/90 backdrop-blur-xl border-l border-slate-200 shadow-2xl flex flex-col z-50 transform transition-transform duration-300 dark:border-slate-700">
+          <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">{selectedTour.tourName}</h2>
-              <p className="text-sm text-slate-500">{selectedTour.id} • {selectedTour.siteName}</p>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{selectedTour.tourName}</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{selectedTour.id} • {selectedTour.siteName}</p>
             </div>
-            <button onClick={() => setSelectedTour(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-              <X className="w-5 h-5 text-slate-500" />
+            <button onClick={() => setSelectedTour(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors dark:hover:bg-slate-800">
+              <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             <div>
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Overview</h3>
-              <div className="bg-slate-50 rounded-xl p-4 space-y-3 border border-slate-100">
+              <div className="bg-slate-50 rounded-xl p-4 space-y-3 border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Guard</span>
-                  <span className="font-bold text-slate-900">{selectedTour.guard}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Guard</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-100">{selectedTour.guard}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Duration</span>
-                  <span className="font-semibold text-slate-700">{selectedTour.duration}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Duration</span>
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">{selectedTour.duration}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Start / End</span>
-                  <span className="font-medium text-slate-700">{selectedTour.start} - {selectedTour.end}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Start / End</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-300">{selectedTour.start} - {selectedTour.end}</span>
                 </div>
-                <div className="flex justify-between text-sm pt-2 border-t border-slate-200 mt-2">
-                  <span className="text-slate-500">Completion Result</span>
+                <div className="flex justify-between text-sm pt-2 border-t border-slate-200 mt-2 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400">Completion Result</span>
                   <span className={`font-bold ${selectedTour.status === 'Complete' ? 'text-green-600' : 'text-amber-600'}`}>
                     {selectedTour.result}
                   </span>
@@ -494,9 +494,9 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
 
             <div>
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Checkpoint Progress</h3>
-              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white dark:border-slate-700 dark:bg-slate-900">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] font-bold uppercase">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] font-bold uppercase dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
                     <tr>
                       <th className="px-3 py-2">Checkpoint</th>
                       <th className="px-3 py-2">Expected</th>
@@ -504,12 +504,12 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                       <th className="px-3 py-2">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {selectedTour.checkpoints.map((cp, idx) => (
                       <tr key={idx}>
-                        <td className="px-3 py-2 font-semibold text-slate-700">{cp.name}</td>
-                        <td className="px-3 py-2 text-slate-500">{cp.expected}</td>
-                        <td className="px-3 py-2 text-slate-700">{cp.actual}</td>
+                        <td className="px-3 py-2 font-semibold text-slate-700 dark:text-slate-300">{cp.name}</td>
+                        <td className="px-3 py-2 text-slate-500 dark:text-slate-400">{cp.expected}</td>
+                        <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{cp.actual}</td>
                         <td className="px-3 py-2">
                           <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                             cp.result === 'Complete' ? 'bg-green-100 text-green-700' :
@@ -527,7 +527,7 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
             <div>
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Actions</h3>
               <div className="flex gap-2">
-                <button className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 shadow-sm flex justify-center items-center gap-2">
+                <button className="flex-1 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 shadow-sm flex justify-center items-center gap-2 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
                   <MapPin className="w-4 h-4" /> View Route Path
                 </button>
               </div>
@@ -538,8 +538,8 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
 
       {/* ── Recordings Media Drawer ── */}
       {selectedRecording && (
-        <div className="absolute inset-y-0 right-0 w-[450px] bg-white/90 backdrop-blur-xl border-l border-slate-200 shadow-2xl flex flex-col z-50 transform transition-transform duration-300">
-          <div className="flex items-center justify-between p-6 border-b border-slate-200">
+        <div className="absolute inset-y-0 right-0 w-[450px] bg-white/90 backdrop-blur-xl border-l border-slate-200 shadow-2xl flex flex-col z-50 transform transition-transform duration-300 dark:border-slate-700">
+          <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                 selectedRecording.type === 'Video' ? 'bg-indigo-50 text-indigo-600' : 
@@ -550,12 +550,12 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                 {selectedRecording.type === 'Image' && <ImageIcon className="w-5 h-5" />}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 truncate w-64">{selectedRecording.title}</h2>
-                <p className="text-sm text-slate-500">{selectedRecording.id} • {selectedRecording.type}</p>
+                <h2 className="text-lg font-bold text-slate-900 truncate w-64 dark:text-slate-100">{selectedRecording.title}</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{selectedRecording.id} • {selectedRecording.type}</p>
               </div>
             </div>
-            <button onClick={() => setSelectedRecording(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-              <X className="w-5 h-5 text-slate-500" />
+            <button onClick={() => setSelectedRecording(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors dark:hover:bg-slate-800">
+              <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
             </button>
           </div>
           
@@ -577,29 +577,29 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                 </div>
               )}
               {selectedRecording.type === 'Image' && (
-                <ImageIcon className="w-16 h-16 text-slate-600" />
+                <ImageIcon className="w-16 h-16 text-slate-600 dark:text-slate-300" />
               )}
             </div>
 
             <div className="p-6 space-y-6">
               <div>
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Metadata</h3>
-                <div className="bg-slate-50 rounded-xl p-4 space-y-3 border border-slate-100">
+                <div className="bg-slate-50 rounded-xl p-4 space-y-3 border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Guard</span>
-                    <span className="font-bold text-slate-900">{selectedRecording.guard}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Guard</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-100">{selectedRecording.guard}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Site</span>
-                    <span className="font-medium text-slate-700">{selectedRecording.siteName}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Site</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300">{selectedRecording.siteName}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Recorded At</span>
-                    <span className="font-medium text-slate-700">{selectedRecording.dateCaptured}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Recorded At</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300">{selectedRecording.dateCaptured}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">File Size</span>
-                    <span className="font-medium text-slate-700">{selectedRecording.size}</span>
+                    <span className="text-slate-500 dark:text-slate-400">File Size</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300">{selectedRecording.size}</span>
                   </div>
                 </div>
               </div>
@@ -610,11 +610,11 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                   <div className="flex items-center gap-3">
                     <FileText className="w-5 h-5 text-blue-600" />
                     <div>
-                      <p className="text-sm font-bold text-slate-900">Related Record</p>
-                      <p className="text-xs text-slate-500 font-medium">Linked to {selectedRecording.relatedRecord}</p>
+                      <p className="text-sm font-bold text-slate-900 dark:text-slate-100">Related Record</p>
+                      <p className="text-xs text-slate-500 font-medium dark:text-slate-400">Linked to {selectedRecording.relatedRecord}</p>
                     </div>
                   </div>
-                  <button className="text-xs font-bold text-blue-700 px-3 py-1.5 bg-white border border-blue-200 rounded shadow-sm">Open</button>
+                  <button className="text-xs font-bold text-blue-700 px-3 py-1.5 bg-white border border-blue-200 rounded shadow-sm dark:bg-slate-900">Open</button>
                 </div>
               </div>
             </div>
@@ -624,34 +624,34 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
 
       {/* ── Shift Briefing Drawer ── */}
       {selectedSummary && (
-        <div className="absolute inset-y-0 right-0 w-[450px] bg-white/90 backdrop-blur-xl border-l border-slate-200 shadow-2xl flex flex-col z-50 transform transition-transform duration-300">
-          <div className="flex items-center justify-between p-6 border-b border-slate-200">
+        <div className="absolute inset-y-0 right-0 w-[450px] bg-white/90 backdrop-blur-xl border-l border-slate-200 shadow-2xl flex flex-col z-50 transform transition-transform duration-300 dark:border-slate-700">
+          <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">{selectedSummary.shiftName}</h2>
-              <p className="text-sm text-slate-500">{selectedSummary.siteName}</p>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{selectedSummary.shiftName}</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{selectedSummary.siteName}</p>
             </div>
-            <button onClick={() => setSelectedSummary(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-              <X className="w-5 h-5 text-slate-500" />
+            <button onClick={() => setSelectedSummary(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors dark:hover:bg-slate-800">
+              <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
                 <p className="text-xs font-bold text-slate-400 uppercase">Supervisor</p>
-                <p className="font-bold text-slate-900 mt-1">{selectedSummary.supervisor}</p>
+                <p className="font-bold text-slate-900 mt-1 dark:text-slate-100">{selectedSummary.supervisor}</p>
               </div>
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
                 <p className="text-xs font-bold text-slate-400 uppercase">Guards Active</p>
-                <p className="font-bold text-slate-900 mt-1">{selectedSummary.guardsCount} Personnel</p>
+                <p className="font-bold text-slate-900 mt-1 dark:text-slate-100">{selectedSummary.guardsCount} Personnel</p>
               </div>
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
                 <p className="text-xs font-bold text-slate-400 uppercase">Tours</p>
-                <p className="font-bold text-slate-900 mt-1">{selectedSummary.totalTours}</p>
+                <p className="font-bold text-slate-900 mt-1 dark:text-slate-100">{selectedSummary.totalTours}</p>
               </div>
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
                 <p className="text-xs font-bold text-slate-400 uppercase">Reports</p>
-                <p className="font-bold text-slate-900 mt-1">{selectedSummary.totalReports}</p>
+                <p className="font-bold text-slate-900 mt-1 dark:text-slate-100">{selectedSummary.totalReports}</p>
               </div>
             </div>
 
@@ -667,9 +667,9 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
 
             <div>
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Guard Activity</h3>
-              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white dark:border-slate-700 dark:bg-slate-900">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] font-bold uppercase">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] font-bold uppercase dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
                     <tr>
                       <th className="px-3 py-2">Guard</th>
                       <th className="px-3 py-2">Tours</th>
@@ -677,12 +677,12 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                       <th className="px-3 py-2">Exceptions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {selectedSummary.guardActivity.map((g, idx) => (
                       <tr key={idx}>
-                        <td className="px-3 py-2 font-semibold text-slate-700">{g.guard}</td>
-                        <td className="px-3 py-2 text-slate-600">{g.tours}</td>
-                        <td className="px-3 py-2 text-slate-600">{g.reports}</td>
+                        <td className="px-3 py-2 font-semibold text-slate-700 dark:text-slate-300">{g.guard}</td>
+                        <td className="px-3 py-2 text-slate-600 dark:text-slate-300">{g.tours}</td>
+                        <td className="px-3 py-2 text-slate-600 dark:text-slate-300">{g.reports}</td>
                         <td className="px-3 py-2">
                           {g.exceptions > 0 ? (
                             <span className="text-red-600 font-bold">{g.exceptions}</span>
@@ -704,17 +704,17 @@ export function CompletedReportsPage({ initialTab, initialFilter }: { initialTab
                   <div key={idx} className="relative pl-6">
                     <div className="absolute left-[-1px] top-1.5 w-2 h-2 rounded-full bg-blue-500 ring-4 ring-blue-50 z-10"></div>
                     {idx !== selectedSummary.timeline.length - 1 && (
-                      <div className="absolute left-0 top-3 bottom-[-20px] w-0.5 bg-slate-200"></div>
+                      <div className="absolute left-0 top-3 bottom-[-20px] w-0.5 bg-slate-200 dark:bg-slate-700"></div>
                     )}
-                    <p className="text-xs font-bold text-slate-500 mb-0.5">{item.time}</p>
-                    <p className="text-sm font-semibold text-slate-800">{item.event}</p>
+                    <p className="text-xs font-bold text-slate-500 mb-0.5 dark:text-slate-400">{item.time}</p>
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{item.event}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             {selectedSummary.status === 'Pending' && (
-              <div className="pt-4 border-t border-slate-200 mt-6">
+              <div className="pt-4 border-t border-slate-200 mt-6 dark:border-slate-700">
                 <button className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-md transition-all">
                   Supervisor Sign-Off
                 </button>

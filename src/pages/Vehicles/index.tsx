@@ -22,7 +22,7 @@ function StatusChip({ status }: { status: string }) {
     if (status === "Active") {
         return <span className="px-[10px] py-[5px] text-xs font-bold rounded-[6px] text-[#16a34a] bg-[#f0fdf4]">{status}</span>;
     }
-    return <span className="px-[10px] py-[5px] text-xs font-bold rounded-[6px] text-slate-500 bg-slate-100">{status}</span>;
+    return <span className="px-[10px] py-[5px] text-xs font-bold rounded-[6px] text-slate-500 bg-slate-100 dark:text-slate-400 dark:bg-slate-800">{status}</span>;
 }
 
 // ─── MAIN MODULE SHELL ──────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-[26px] w-full shrink-0">
                 <div>
                     <h1 className="text-[32px] font-bold text-slate-900 dark:text-white tracking-tight leading-tight">Vehicles</h1>
-                    <p className="text-[15px] text-slate-500 mt-1">Manage company vehicle records, ownership, status, assignments, and documentation.</p>
+                    <p className="text-[15px] text-slate-500 mt-1 dark:text-slate-400">Manage company vehicle records, ownership, status, assignments, and documentation.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <button
@@ -114,11 +114,11 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
 
             {/* Filter Toolbar */}
             <div className="flex flex-col md:flex-row items-start md:items-center gap-3 mb-5 shrink-0 w-full">
-                <div className="flex items-center bg-white h-[42px] rounded-[10px] border border-[#DDE3EA] px-2 shadow-sm">
+                <div className="flex items-center bg-white h-[42px] rounded-[10px] border border-[#DDE3EA] px-2 shadow-sm dark:bg-slate-900">
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-2">Status</span>
                     <select
                         value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-2 py-1 text-sm font-semibold bg-transparent border-none text-slate-700 outline-none cursor-pointer hover:bg-slate-50 rounded-md"
+                        className="px-2 py-1 text-sm font-semibold bg-transparent border-none text-slate-700 outline-none cursor-pointer hover:bg-slate-50 rounded-md dark:text-slate-300 dark:hover:bg-slate-800"
                     >
                         <option>All Vehicles</option>
                         <option>Active</option>
@@ -126,11 +126,11 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
                     </select>
                 </div>
 
-                <div className="flex items-center bg-white h-[42px] rounded-[10px] border border-[#DDE3EA] px-2 shadow-sm">
+                <div className="flex items-center bg-white h-[42px] rounded-[10px] border border-[#DDE3EA] px-2 shadow-sm dark:bg-slate-900">
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-2">Ownership</span>
                     <select
                         value={ownershipFilter} onChange={(e) => setOwnershipFilter(e.target.value)}
-                        className="px-2 py-1 text-sm font-semibold bg-transparent border-none text-slate-700 outline-none cursor-pointer hover:bg-slate-50 rounded-md"
+                        className="px-2 py-1 text-sm font-semibold bg-transparent border-none text-slate-700 outline-none cursor-pointer hover:bg-slate-50 rounded-md dark:text-slate-300 dark:hover:bg-slate-800"
                     >
                         <option value="All Vehicles">All</option>
                         <option>Purchased</option>
@@ -140,13 +140,13 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
 
                 <div className="relative">
                     <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="text" placeholder="Search by vehicle ID, license, make or model" className="w-full md:w-[320px] h-[42px] pl-9 pr-3 text-sm bg-white border border-[#DDE3EA] rounded-[10px] outline-none focus:border-[#1e3a8a] transition-colors shadow-sm" />
+                    <input type="text" placeholder="Search by vehicle ID, license, make or model" className="w-full md:w-[320px] h-[42px] pl-9 pr-3 text-sm bg-white border border-[#DDE3EA] rounded-[10px] outline-none focus:border-[#1e3a8a] transition-colors shadow-sm dark:bg-slate-900" />
                 </div>
 
                 {(statusFilter !== "All" || ownershipFilter !== "All Vehicles") && (
                     <button 
                         onClick={() => { setStatusFilter("All"); setOwnershipFilter("All Vehicles"); }}
-                        className="ml-2 text-sm font-medium text-slate-500 hover:text-slate-800 hover:underline transition-colors cursor-pointer"
+                        className="ml-2 text-sm font-medium text-slate-500 hover:text-slate-800 hover:underline transition-colors cursor-pointer dark:text-slate-400"
                     >
                         Clear Filters
                     </button>
@@ -154,10 +154,10 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
             </div>
 
             {/* Table wrapper block */}
-            <div className="bg-white border border-[#E4E8EE] rounded-[14px] overflow-hidden flex-1 flex flex-col min-h-0 min-w-0 w-full mb-2" style={{ boxShadow: "0 2px 8px rgba(15, 23, 42, 0.03)" }}>
+            <div className="bg-white border border-[#E4E8EE] rounded-[14px] overflow-hidden flex-1 flex flex-col min-h-0 min-w-0 w-full mb-2 dark:bg-slate-900" style={{ boxShadow: "0 2px 8px rgba(15, 23, 42, 0.03)" }}>
                 <div className="overflow-auto flex-1 min-h-0 relative">
-                    <table className="w-full text-left text-sm text-slate-600 min-w-[1024px]">
-                        <thead className="text-xs uppercase bg-slate-50 border-b border-[#E4E8EE] text-slate-500 sticky top-0 font-semibold tracking-wide">
+                    <table className="w-full text-left text-sm text-slate-600 min-w-[1024px] dark:text-slate-300">
+                        <thead className="text-xs uppercase bg-slate-50 border-b border-[#E4E8EE] text-slate-500 sticky top-0 font-semibold tracking-wide dark:bg-slate-900 dark:text-slate-400">
                             <tr>
                                 <th className="px-[18px] py-4">Vehicle ID</th>
                                 <th className="px-[18px] py-4">License</th>
@@ -173,11 +173,11 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
                                 <tr>
                                     <td colSpan={7} className="px-6 py-16 text-center">
                                         <div className="flex flex-col items-center justify-center">
-                                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 dark:bg-slate-900">
                                                 <Car className="w-8 h-8 text-slate-300" />
                                             </div>
-                                            <h3 className="text-lg font-bold text-slate-900 mb-1">No vehicles found</h3>
-                                            <p className="text-sm text-slate-500 mb-6 max-w-md">Try adjusting your filters or create a new vehicle.</p>
+                                            <h3 className="text-lg font-bold text-slate-900 mb-1 dark:text-slate-100">No vehicles found</h3>
+                                            <p className="text-sm text-slate-500 mb-6 max-w-md dark:text-slate-400">Try adjusting your filters or create a new vehicle.</p>
                                             <button
                                                 onClick={() => onNavigate("create")}
                                                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white bg-[#1e3a8a] hover:bg-[#1e40af] transition-colors"
@@ -192,19 +192,19 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
                                     <tr key={v.id} onClick={() => onNavigate("detail", v.id)} className="hover:bg-[#F8FAFD] transition-colors duration-150 ease-in-out cursor-pointer group">
                                         <td className="px-[18px] py-[16px] font-semibold text-[#17233C]">{v.id}</td>
                                         <td className="px-[18px] py-[16px]">
-                                            <div className="border border-[#D9E0EA] bg-[#F8FAFC] rounded-[6px] px-[9px] py-[5px] inline-block font-semibold tracking-[0.4px] text-slate-700">
+                                            <div className="border border-[#D9E0EA] bg-[#F8FAFC] rounded-[6px] px-[9px] py-[5px] inline-block font-semibold tracking-[0.4px] text-slate-700 dark:text-slate-300">
                                                 {v.license}
                                             </div>
                                         </td>
                                         <td className="px-[18px] py-[16px]">
-                                            <div className="font-bold text-slate-800">{v.make} {v.model}</div>
-                                            <div className="text-xs text-slate-500 mt-0.5">{v.year}</div>
+                                            <div className="font-bold text-slate-800 dark:text-slate-200">{v.make} {v.model}</div>
+                                            <div className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">{v.year}</div>
                                         </td>
-                                        <td className="px-[18px] py-[16px] text-slate-500">{v.ownership}</td>
+                                        <td className="px-[18px] py-[16px] text-slate-500 dark:text-slate-400">{v.ownership}</td>
                                         <td className="px-[18px] py-[16px]"><StatusChip status={v.status} /></td>
-                                        <td className="px-[18px] py-[16px] font-medium text-slate-600">{v.assignment || "Unassigned"}</td>
+                                        <td className="px-[18px] py-[16px] font-medium text-slate-600 dark:text-slate-300">{v.assignment || "Unassigned"}</td>
                                         <td className="px-[18px] py-[16px] text-center" onClick={e => e.stopPropagation()}>
-                                            <button className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
+                                            <button className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors dark:hover:bg-slate-700"><MoreHorizontal className="w-4 h-4" /></button>
                                         </td>
                                     </tr>
                                 ))
@@ -215,10 +215,10 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
 
                 {/* Pagination */}
                 {MOCK_VEHICLES.length > 0 && (
-                    <div className="flex items-center justify-between px-[18px] py-3 border-t border-[#E4E8EE] bg-white shrink-0">
-                        <span className="text-xs text-slate-500">Showing 1–{MOCK_VEHICLES.length} of {MOCK_VEHICLES.length}</span>
+                    <div className="flex items-center justify-between px-[18px] py-3 border-t border-[#E4E8EE] bg-white shrink-0 dark:bg-slate-900">
+                        <span className="text-xs text-slate-500 dark:text-slate-400">Showing 1–{MOCK_VEHICLES.length} of {MOCK_VEHICLES.length}</span>
                         <div className="flex items-center gap-2">
-                            <span className="text-xs text-slate-500 mr-2">Rows per page: 20</span>
+                            <span className="text-xs text-slate-500 mr-2 dark:text-slate-400">Rows per page: 20</span>
                             <button className="px-2 py-1 text-xs font-semibold text-slate-400 hover:text-slate-700 disabled:opacity-50" disabled>Previous</button>
                             <button className="px-2 py-1 text-xs font-semibold text-slate-400 hover:text-slate-700 disabled:opacity-50" disabled>Next</button>
                         </div>
@@ -236,12 +236,12 @@ function VehicleCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
         <div className="w-full h-full flex flex-col p-4 md:p-6 mx-auto max-w-5xl relative animate-in slide-in-from-right-2 overflow-hidden">
             <div className="flex items-center justify-between mb-6 shrink-0">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create Vehicle</h1>
-                        <p className="text-sm text-slate-500 mt-1">Add a new company vehicle record.</p>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Add a new company vehicle record.</p>
                     </div>
                 </div>
             </div>
@@ -285,14 +285,14 @@ function VehicleCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
                                 <label className="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Ownership Type</label>
                                 <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
                                     <button className="flex-1 py-2 text-sm font-bold bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg shadow-sm">Purchased</button>
-                                    <button className="flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Leased</button>
+                                    <button className="flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 dark:text-slate-400">Leased</button>
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Status</label>
                                 <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
                                     <button className="flex-1 py-2 text-sm font-bold bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg shadow-sm">Active</button>
-                                    <button className="flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Inactive</button>
+                                    <button className="flex-1 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 dark:text-slate-400">Inactive</button>
                                 </div>
                             </div>
                         </div>
@@ -300,7 +300,7 @@ function VehicleCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
 
                     <div className="space-y-6">
                         <h3 className="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200/60 dark:border-slate-800/60 pb-3 flex items-center gap-2">Vehicle Information <span className="text-xs font-normal text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">Optional</span></h3>
-                        <p className="text-sm text-slate-500">Additional structural fields configured for the active vehicle profile.</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">Additional structural fields configured for the active vehicle profile.</p>
                         {/* Empty/flexible area to accommodate future additional fields */}
                     </div>
 
@@ -309,7 +309,7 @@ function VehicleCreate({ onNavigate }: { onNavigate: (v: any) => void }) {
                 <div className="mt-10 pt-6 flex flex-col md:flex-row justify-between items-center border-t border-slate-200/60 dark:border-slate-800/60 gap-4 shrink-0">
                     <button onClick={() => onNavigate("list")} className="w-full md:w-auto px-5 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancel</button>
                     <div className="flex gap-3 w-full md:w-auto">
-                        <button onClick={() => onNavigate("doc-create")} className="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 shadow-sm transition-colors">
+                        <button onClick={() => onNavigate("doc-create")} className="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 shadow-sm transition-colors dark:hover:bg-slate-800">
                             Save & Add Documentation
                         </button>
                         <button onClick={() => onNavigate("list")} className="flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity" style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>
@@ -334,24 +334,24 @@ function VehicleDetail({ id, onNavigate }: { id: string, onNavigate: (v: any, dI
             {/* Header Action Bar */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 shrink-0 w-full">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("list")} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <div className="flex items-center gap-3">
                             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{v.make} {v.model} • {v.year}</h1>
                         </div>
-                        <p className="text-sm font-medium text-slate-500 mt-1">Vehicle ID: {v.id} • License: {v.license}</p>
+                        <p className="text-sm font-medium text-slate-500 mt-1 dark:text-slate-400">Vehicle ID: {v.id} • License: {v.license}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         Edit Vehicle
                     </button>
-                    <button onClick={() => onNavigate("doc-create", v.id)} className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button onClick={() => onNavigate("doc-create", v.id)} className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <Plus className="w-4 h-4" /> Add Documentation
                     </button>
-                    <button className="p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <MoreHorizontal className="w-4 h-4" />
                     </button>
                 </div>
@@ -420,14 +420,14 @@ function VehicleDetail({ id, onNavigate }: { id: string, onNavigate: (v: any, dI
                         <div className="flex justify-between items-end gap-4 mb-4 shrink-0">
                             <div>
                                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">Company Vehicle Documentation</h3>
-                                <p className="text-sm text-slate-500">Manage documentation associated with company vehicles.</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">Manage documentation associated with company vehicles.</p>
                             </div>
                             <div className="flex gap-2">
                                 <div className="relative hidden md:block">
                                     <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                                     <input type="text" placeholder="Search documentation..." className="w-64 pl-9 pr-3 py-2 text-sm bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-700 rounded-xl outline-none shadow-sm" />
                                 </div>
-                                <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                                <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                                     <Download className="w-4 h-4" /> Export
                                 </button>
                                 <button onClick={() => onNavigate("doc-create", v.id)} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90" style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>
@@ -440,7 +440,7 @@ function VehicleDetail({ id, onNavigate }: { id: string, onNavigate: (v: any, dI
                             <div className="overflow-auto flex-1 relative w-full">
                                 {docs.length > 0 ? (
                                     <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300 min-w-[700px]">
-                                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide">
+                                        <thead className="text-xs uppercase bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 sticky top-0 font-semibold tracking-wide dark:text-slate-400">
                                             <tr>
                                                 <th className="px-5 py-4">Document Name</th>
                                                 <th className="px-5 py-4">Vehicle</th>
@@ -457,7 +457,7 @@ function VehicleDetail({ id, onNavigate }: { id: string, onNavigate: (v: any, dI
                                                     <td className="px-5 py-4 font-medium">{v.make} {v.model} • {v.id}</td>
                                                     <td className="px-5 py-4"><span className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md text-xs">{d.type}</span></td>
                                                     <td className="px-5 py-4 font-medium text-slate-800 dark:text-slate-200">{d.addedBy}</td>
-                                                    <td className="px-5 py-4 whitespace-nowrap text-slate-500">{d.addedDate}</td>
+                                                    <td className="px-5 py-4 whitespace-nowrap text-slate-500 dark:text-slate-400">{d.addedDate}</td>
                                                     <td className="px-5 py-4 text-center" onClick={e => e.stopPropagation()}>
                                                         <button className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 transition-colors"><MoreHorizontal className="w-4 h-4" /></button>
                                                     </td>
@@ -469,7 +469,7 @@ function VehicleDetail({ id, onNavigate }: { id: string, onNavigate: (v: any, dI
                                     <div className="flex-1 flex flex-col items-center justify-center p-12 text-center h-full">
                                         <FileText className="w-12 h-12 text-slate-300 dark:text-slate-700 mb-4" />
                                         <h4 className="font-bold text-slate-700 dark:text-slate-300">No Documentation Supported</h4>
-                                        <p className="text-sm text-slate-500 mb-4 mt-1">No documents have been added for this vehicle.</p>
+                                        <p className="text-sm text-slate-500 mb-4 mt-1 dark:text-slate-400">No documents have been added for this vehicle.</p>
                                         <button onClick={() => onNavigate("doc-create", v.id)} className="px-4 py-2 text-sm font-bold text-white rounded-lg shadow-sm" style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>
                                             + Add Document
                                         </button>
@@ -493,12 +493,12 @@ function DocumentCreate({ vehicleId, onNavigate }: { vehicleId: string | null, o
         <div className="w-full h-full flex flex-col p-4 md:p-6 mx-auto max-w-4xl relative animate-in slide-in-from-right-2 overflow-hidden">
             <div className="flex items-center justify-between mb-6 shrink-0">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("detail", v.id)} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("detail", v.id)} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Add Vehicle Document</h1>
-                        <p className="text-sm text-slate-500 mt-1">Upload files to the vehicle repository.</p>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Upload files to the vehicle repository.</p>
                     </div>
                 </div>
             </div>
@@ -545,7 +545,7 @@ function DocumentCreate({ vehicleId, onNavigate }: { vehicleId: string | null, o
                                 <Upload className="w-5 h-5 text-slate-400" />
                             </div>
                             <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1">Drag and drop document here</p>
-                            <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 shadow-sm mt-3">Browse Files</button>
+                            <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 shadow-sm mt-3 dark:hover:bg-slate-800">Browse Files</button>
                         </div>
                         <p className="text-[11px] text-slate-400 font-medium text-center">Supported file types and limits are configured by the system administrator.</p>
                     </div>
@@ -573,24 +573,24 @@ function DocumentDetail({ id, vehicleId, onNavigate }: { id: string, vehicleId: 
             {/* Header Action Bar */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 shrink-0 gap-4">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => onNavigate("detail", v.id)} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0">
+                    <button onClick={() => onNavigate("detail", v.id)} className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0 dark:text-slate-400">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <div className="flex items-center gap-3">
                             <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white truncate">{doc.name}</h1>
                         </div>
-                        <p className="text-sm font-semibold text-slate-500 mt-1">{v.make} {v.model} • {v.id}  <span className="text-slate-300 px-2">|</span>  Added by {doc.addedBy} • {doc.addedDate}</p>
+                        <p className="text-sm font-semibold text-slate-500 mt-1 dark:text-slate-400">{v.make} {v.model} • {v.id}  <span className="text-slate-300 px-2">|</span>  Added by {doc.addedBy} • {doc.addedDate}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <Download className="w-4 h-4" /> Download
                     </button>
-                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         Edit Metadata
                     </button>
-                    <button className="p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                    <button className="p-2 text-sm font-semibold border border-slate-200 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-colors shadow-sm dark:hover:bg-slate-800">
                         <MoreHorizontal className="w-4 h-4" />
                     </button>
                 </div>
@@ -603,7 +603,7 @@ function DocumentDetail({ id, vehicleId, onNavigate }: { id: string, vehicleId: 
                     <div>
                         <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Vehicle</div>
                         <div className="text-sm font-bold text-slate-900 dark:text-white">{v.make} {v.model}</div>
-                        <div className="text-xs text-slate-500 font-medium">{v.year}</div>
+                        <div className="text-xs text-slate-500 font-medium dark:text-slate-400">{v.year}</div>
                     </div>
                     <div>
                         <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Vehicle ID</div>
@@ -626,7 +626,7 @@ function DocumentDetail({ id, vehicleId, onNavigate }: { id: string, vehicleId: 
                     <div className="flex-1 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center min-h-[300px] text-center p-6 shadow-inner">
                         <FileText className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" />
                         <h4 className="font-bold text-slate-800 dark:text-slate-200">{doc.name}.pdf</h4>
-                        <p className="text-sm text-slate-500 mt-1">2.4 MB • Preview currently unavailable</p>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">2.4 MB • Preview currently unavailable</p>
                         <button className="mt-6 px-5 py-2 rounded-xl text-sm font-bold text-white shadow-sm flex items-center gap-2 transition-transform hover:scale-105 hover:shadow-md" style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>
                             <Download className="w-4 h-4" /> Download File
                         </button>

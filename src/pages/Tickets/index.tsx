@@ -83,14 +83,14 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
     <div className="flex-1 flex overflow-hidden">
       
       {/* ─── LEFT: CATEGORIES PANEL ─── */}
-      <div className={`${categoriesCollapsed ? 'w-0 overflow-hidden opacity-0' : 'w-[280px] border-r'} shrink-0 border-slate-200/50 bg-slate-50/30 flex flex-col h-full transition-all duration-300`}>
+      <div className={`${categoriesCollapsed ? 'w-0 overflow-hidden opacity-0' : 'w-[280px] border-r'} shrink-0 border-slate-800 bg-slate-900/60 backdrop-blur-xl flex flex-col h-full transition-all duration-300`}>
         <div className="p-4 shrink-0 border-b border-slate-200/50">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <ListFilter className="w-4 h-4 text-slate-500" />
+            <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2 dark:text-slate-200">
+              <ListFilter className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               Ticket Categories
             </h2>
-            <button onClick={() => setCategoriesCollapsed(true)} className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded transition-colors">
+            <button onClick={() => setCategoriesCollapsed(true)} className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded transition-colors dark:hover:bg-slate-700">
               <PanelLeftClose className="w-4 h-4" />
             </button>
           </div>
@@ -101,7 +101,7 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
               placeholder="Search categories..."
               value={catSearch}
               onChange={(e) => setCatSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:bg-slate-900 dark:border-slate-700"
             />
           </div>
         </div>
@@ -115,13 +115,13 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
                 onClick={() => setSelectedCategory(cat.name)}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-all ${
                   isSelected 
-                    ? "bg-blue-50 border border-blue-100 shadow-sm" 
-                    : "hover:bg-slate-100 border border-transparent"
+                    ? "bg-blue-900/40 border border-blue-800/50 shadow-[0_0_10px_rgba(30,58,138,0.3)]" 
+                    : "hover:bg-slate-800/50 border border-transparent"
                 }`}
               >
                 <div className="flex items-center gap-2 flex-1 min-w-0 pr-2">
                   {isSelected && <div className="absolute left-2 w-0.5 h-4 bg-blue-600 rounded-full" />}
-                  <span className={`text-xs ${isSelected ? "font-bold text-blue-900 ml-1" : "font-medium text-slate-700"} leading-snug line-clamp-2`}>
+                  <span className={`text-xs ${isSelected ? "font-bold text-blue-400 ml-1" : "font-medium text-slate-300"} leading-snug line-clamp-2`}>
                     {cat.name}
                   </span>
                 </div>
@@ -146,43 +146,43 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
       </div>
 
       {/* ─── RIGHT: TICKETS WORKSPACE ─── */}
-      <div className="flex-1 flex flex-col h-full bg-white relative overflow-hidden">
-        <div className="px-6 pt-6 pb-4 shrink-0 border-b border-slate-200">
+      <div className="flex-1 flex flex-col h-full bg-transparent relative overflow-hidden">
+        <div className="px-6 pt-6 pb-4 shrink-0 border-b border-slate-800 bg-slate-900/40 backdrop-blur-sm">
           <div className="flex items-start gap-4">
             {categoriesCollapsed && (
               <button 
                 onClick={() => setCategoriesCollapsed(false)} 
-                className="mt-1 p-1.5 bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                className="mt-1 p-1.5 bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
                 title="Expand Categories"
               >
                 <PanelLeftOpen className="w-4 h-4" />
               </button>
             )}
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Manage Tickets</h1>
-              <p className="text-xs text-slate-500 mt-1">Review, assign and resolve operational alerts and tickets.</p>
+              <h1 className="text-xl font-bold text-slate-100">Manage Tickets</h1>
+              <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">Review, assign and resolve operational alerts and tickets.</p>
             </div>
           </div>
           
           {/* Summary Cards */}
           <div className="grid grid-cols-5 gap-3 mt-5">
             {[
-              { label: "Open", count: 124, color: "text-amber-600", bg: "bg-amber-50" },
-              { label: "Critical", count: 18, color: "text-red-600", bg: "bg-red-50" },
-              { label: "Overdue", count: 45, color: "text-purple-600", bg: "bg-purple-50" },
-              { label: "Unassigned", count: 32, color: "text-slate-600", bg: "bg-slate-50" },
-              { label: "Resolved Today", count: 87, color: "text-green-600", bg: "bg-green-50" },
+              { label: "Open", count: 124, color: "text-amber-400", bg: "bg-amber-900/20 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]" },
+              { label: "Critical", count: 18, color: "text-red-400", bg: "bg-red-900/20 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.15)]" },
+              { label: "Overdue", count: 45, color: "text-purple-400", bg: "bg-purple-900/20 border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.1)]" },
+              { label: "Unassigned", count: 32, color: "text-blue-400", bg: "bg-blue-900/20 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]" },
+              { label: "Resolved Today", count: 87, color: "text-emerald-400", bg: "bg-emerald-900/20 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]" },
             ].map(card => (
-              <div key={card.label} className={`rounded-xl p-3 border border-slate-100 ${card.bg}`}>
+              <div key={card.label} className={`rounded-xl p-3 border backdrop-blur-md transition-all hover:scale-105 cursor-pointer ${card.bg}`}>
                 <p className={`text-xl font-bold ${card.color}`}>{card.count}</p>
-                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mt-1">{card.label}</p>
+                <p className="text-[10px] font-semibold text-slate-300 uppercase tracking-widest mt-1">{card.label}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Toolbar & Tabs */}
-        <div className="px-6 py-3 flex items-center justify-between border-b border-slate-100 bg-slate-50/50 shrink-0">
+        <div className="px-6 py-3 flex items-center justify-between border-b border-slate-800 bg-slate-900/60 backdrop-blur-md shrink-0">
           <div className="flex items-center gap-1">
             {["All", "Open", "In Progress", "Pending", "Resolved", "Archived"].map(tab => (
               <button
@@ -190,8 +190,8 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
                 onClick={() => setStatusTab(tab)}
                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
                   statusTab === tab 
-                    ? "bg-white text-slate-900 shadow-sm border border-slate-200" 
-                    : "text-slate-500 hover:bg-slate-200/50 hover:text-slate-700"
+                    ? "bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] border border-blue-500" 
+                    : "text-slate-400 hover:bg-slate-800/80 hover:text-slate-200"
                 }`}
               >
                 {tab}
@@ -203,9 +203,9 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
             <div className="relative w-48">
               <Search className="absolute left-2.5 top-1.5 w-3.5 h-3.5 text-slate-400" />
               <input type="text" placeholder="Search tickets..." 
-                className="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none" />
+                className="w-full pl-8 pr-3 py-1.5 bg-slate-800/50 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-500" />
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/50 border border-slate-700 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-700 transition-colors">
               <Filter className="w-3.5 h-3.5" /> Filters
             </button>
           </div>
@@ -225,9 +225,9 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
         )}
 
         {/* Ticket Table */}
-        <div className="flex-1 overflow-auto bg-white">
+        <div className="flex-1 overflow-auto bg-transparent">
           <table className="w-full text-sm text-left">
-            <thead className="text-xs text-slate-500 bg-slate-50 sticky top-0 z-10 border-b border-slate-200">
+            <thead className="text-xs text-slate-400 bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 border-b border-slate-800 shadow-sm">
               <tr>
                 <th className="px-6 py-3 font-semibold">Ticket ID</th>
                 <th className="px-6 py-3 font-semibold">Type</th>
@@ -240,10 +240,10 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
                 <th className="px-6 py-3 font-semibold">SLA / Age</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700 text-xs">
+            <tbody className="divide-y divide-slate-800/50 text-slate-300 text-xs">
               {displayedTickets.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan={9} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
                     <p className="text-sm font-semibold">No tickets found</p>
                     <p className="text-xs mt-1">Try adjusting your filters or category selection.</p>
                   </td>
@@ -253,9 +253,9 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
                   <tr 
                     key={ticket.id} 
                     onClick={() => setSelectedTicket(ticket)}
-                    className="hover:bg-slate-50 cursor-pointer transition-colors"
+                    className="hover:bg-slate-50 cursor-pointer transition-colors dark:hover:bg-slate-800"
                   >
-                    <td className="px-6 py-3 font-mono font-bold text-slate-900">{ticket.id}</td>
+                    <td className="px-6 py-3 font-mono font-bold text-slate-900 dark:text-slate-100">{ticket.id}</td>
                     <td className="px-6 py-3 max-w-[140px]">
                       <div className="line-clamp-2 font-semibold" title={ticket.type}>
                         {ticket.type}
@@ -284,8 +284,8 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
                         bg={ticket.status === "Open" ? "#fffbeb" : ticket.status === "Resolved" ? "#f0fdf4" : "#eff6ff"} 
                       />
                     </td>
-                    <td className="px-6 py-3 text-slate-500">{ticket.created}</td>
-                    <td className="px-6 py-3 font-mono font-medium text-slate-600">{ticket.age}</td>
+                    <td className="px-6 py-3 text-slate-500 dark:text-slate-400">{ticket.created}</td>
+                    <td className="px-6 py-3 font-mono font-medium text-slate-600 dark:text-slate-300">{ticket.age}</td>
                   </tr>
                 ))
               )}
@@ -295,24 +295,24 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
 
         {/* Right Drawer: Ticket Detail Overlay */}
         {selectedTicket && (
-          <div className="absolute inset-y-0 right-0 w-[400px] bg-white shadow-2xl border-l border-slate-200 z-20 flex flex-col transform transition-transform animate-slide-in-right">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50">
-              <h3 className="font-bold text-slate-900 flex items-center gap-2">
+          <div className="absolute inset-y-0 right-0 w-[400px] bg-slate-900/80 backdrop-blur-2xl shadow-2xl border-l border-slate-800 z-20 flex flex-col transform transition-transform animate-slide-in-right">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/40">
+              <h3 className="font-bold text-slate-900 flex items-center gap-2 dark:text-slate-100">
                 Ticket {selectedTicket.id}
               </h3>
-              <button onClick={() => setSelectedTicket(null)} className="p-1 hover:bg-slate-200 rounded transition-colors text-slate-500">
+              <button onClick={() => setSelectedTicket(null)} className="p-1 hover:bg-slate-200 rounded transition-colors text-slate-500 dark:text-slate-400 dark:hover:bg-slate-700">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-6 text-sm">
               <div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Subject</p>
-                <p className="font-semibold text-slate-800">{selectedTicket.subject}</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200">{selectedTicket.subject}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Category</p>
-                  <p className="font-semibold text-slate-700">{selectedTicket.type}</p>
+                  <p className="font-semibold text-slate-700 dark:text-slate-300">{selectedTicket.type}</p>
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Priority</p>
@@ -323,19 +323,19 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Site</p>
-                  <p className="font-medium text-slate-700">{selectedTicket.client}</p>
+                  <p className="font-medium text-slate-700 dark:text-slate-300">{selectedTicket.client}</p>
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Assigned</p>
-                  <p className="font-medium text-slate-700">{selectedTicket.assigned}</p>
+                  <p className="font-medium text-slate-700 dark:text-slate-300">{selectedTicket.assigned}</p>
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-xs text-slate-500 font-medium">Ticket history and resolution workflow would appear here in production.</p>
+              <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
+                <p className="text-xs text-slate-500 font-medium dark:text-slate-400">Ticket history and resolution workflow would appear here in production.</p>
               </div>
             </div>
-            <div className="p-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 shrink-0">
-              <button onClick={() => setSelectedTicket(null)} className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">
+            <div className="p-4 border-t border-slate-800 bg-slate-900/60 flex justify-end gap-2 shrink-0">
+              <button onClick={() => setSelectedTicket(null)} className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors dark:text-slate-300 dark:hover:bg-slate-700">
                 Close
               </button>
               <button className="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-colors">

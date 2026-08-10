@@ -4,6 +4,7 @@ import {
   MoreVertical, Download, Settings, ChevronLeft, ChevronRight, MessageSquare, 
   Map, Calendar, Users, Filter, Plus, FileText, Check
 } from "lucide-react";
+import { useSiteContext } from "../../context/SiteContext";
 import { MOCK_TIMESHEETS, ClockStatus, TimesheetException } from "./mockData";
 import { TimesheetsTab } from "./TimesheetsTab";
 import { Page } from "../../types";
@@ -16,7 +17,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
       ) : (
         <AlertTriangle className="w-3.5 h-3.5 text-amber-500 cursor-pointer" />
       )}
-      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 hidden group-hover/map:block w-48 h-32 bg-slate-200 border border-slate-300 rounded-lg shadow-xl z-[100] overflow-hidden pointer-events-none">
+      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 hidden group-hover/map:block w-48 h-32 bg-slate-200 border border-slate-300 rounded-lg shadow-xl z-[100] overflow-hidden pointer-events-none dark:bg-slate-700 dark:border-slate-600">
         <div className="w-full h-full relative" style={{ background: "#e8ecf4" }}>
           <svg className="absolute inset-0 w-full h-full opacity-30">
             {[...Array(10)].map((_, i) => (
@@ -27,7 +28,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
             ))}
           </svg>
           <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white shadow-md animate-pulse ${status === "inside" ? "bg-green-500" : "bg-red-500"}`}></div>
-          <div className="absolute bottom-0 left-0 right-0 text-center text-[10px] font-bold text-slate-700 bg-white/90 py-1.5 border-t border-slate-200 truncate px-2">
+          <div className="absolute bottom-0 left-0 right-0 text-center text-[10px] font-bold text-slate-700 bg-white/90 py-1.5 border-t border-slate-200 truncate px-2 dark:text-slate-300 dark:border-slate-700">
             {status === "inside" ? "At " : "Away from "}{siteName}
           </div>
         </div>
@@ -37,7 +38,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
   const [activeTab, setActiveTab] = useState<"Today" | "Timesheets" | "Live Map">("Today");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ClockStatus | "All">("All");
-  const [siteFilter, setSiteFilter] = useState("All Sites");
+  const { globalSite, setGlobalSite } = useSiteContext();
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   
   const [isJobListOpen, setIsJobListOpen] = useState(false);
@@ -79,11 +80,11 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
         item.shift.postName.toLowerCase().includes(search.toLowerCase()) ||
         item.shift.siteName.toLowerCase().includes(search.toLowerCase());
       const matchStatus = statusFilter === "All" || item.status === statusFilter;
-      const matchSite = siteFilter === "All Sites" || item.shift.siteName === siteFilter;
+      const matchSite = globalSite === "All Sites" || item.shift.siteName === globalSite;
       const matchPosition = selectedPositions.size === 0 || selectedPositions.has(item.guard.position);
       return matchSearch && matchStatus && matchSite && matchPosition;
     });
-  }, [search, statusFilter, siteFilter, selectedPositions]);
+  }, [search, statusFilter, globalSite, selectedPositions]);
 
   const toggleRow = (id: string) => {
     const next = new Set(selectedRows);
@@ -101,23 +102,22 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50 relative min-h-0 overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-transparent relative min-h-0 overflow-hidden">
       
-      {/* ── HEADER ── */}
-      <div className="px-6 pt-5 pb-0 bg-white border-b border-slate-200 shrink-0">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+      <div className="px-6 pt-3 pb-0 bg-slate-900/60 backdrop-blur-xl border-b border-slate-800 shrink-0">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900">Time Clock</h1>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Time Clock</h1>
               <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-xs font-bold rounded-md border border-blue-100 uppercase tracking-wider">
                 Security Ops
               </span>
             </div>
-            <p className="text-sm text-slate-500 mt-1">Manage live attendance, exceptions, and timesheets.</p>
+            <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Manage live attendance, exceptions, and timesheets.</p>
           </div>
           
           <div className="flex items-center gap-2">
-             <select className="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/20">
+             <select className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/50 backdrop-blur-sm">
                <option>All Clients & Sites</option>
                <option>United Distributors</option>
                <option>Westfield Mall</option>
@@ -126,15 +126,15 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
              <div className="relative">
               <button 
                 onClick={() => setIsPositionListOpen(!isPositionListOpen)}
-                className="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 flex items-center gap-2"
+                className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm hover:bg-slate-800 flex items-center gap-2 backdrop-blur-sm"
               >
-                <Users className="w-4 h-4 text-slate-500" />
+                <Users className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                 Select Position
               </button>
               {isPositionListOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2">
+                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 dark:bg-slate-900 dark:border-slate-700">
                   {availablePositions.map(pos => (
-                    <label key={pos} className="flex items-center gap-2 p-2 hover:bg-slate-50 cursor-pointer rounded">
+                    <label key={pos} className="flex items-center gap-2 p-2 hover:bg-slate-50 cursor-pointer rounded dark:hover:bg-slate-800">
                       <input 
                         type="checkbox" 
                         checked={selectedPositions.has(pos)}
@@ -144,9 +144,9 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                           else next.add(pos);
                           setSelectedPositions(next);
                         }}
-                        className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600"
                       />
-                      <span className="text-sm text-slate-700">{pos}</span>
+                      <span className="text-sm text-slate-700 dark:text-slate-300">{pos}</span>
                     </label>
                   ))}
                 </div>
@@ -154,7 +154,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
              </div>
              <button 
                onClick={() => setIsSettingsOpen(true)}
-               className="p-2 bg-white border border-slate-300 rounded-lg text-slate-500 shadow-sm hover:bg-slate-50"
+               className="p-2 bg-white border border-slate-300 rounded-lg text-slate-500 shadow-sm hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-800"
              >
                <Settings className="w-5 h-5" />
              </button>
@@ -183,13 +183,13 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
       </div>
 
       {activeTab === "Live Map" ? (
-         <div className="flex-1 flex flex-col relative w-full h-full bg-slate-100 overflow-hidden">
-            <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-slate-200">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+         <div className="flex-1 flex flex-col relative w-full h-full bg-slate-100 overflow-hidden dark:bg-slate-800">
+            <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
+              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2 dark:text-slate-100">
                 <Map className="w-5 h-5 text-blue-600" />
                 Live Guard Map
               </h2>
-              <p className="text-sm text-slate-500 mt-1 max-w-sm">
+              <p className="text-sm text-slate-500 mt-1 max-w-sm dark:text-slate-400">
                 Real-time GPS locations of all active guards, patrols, and geofence boundaries.
               </p>
             </div>
@@ -226,8 +226,8 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                     {pin.count}
                   </div>
                   <span
-                    className="text-sm font-bold mt-2 whitespace-nowrap rounded-md px-3 py-1 shadow-md"
-                    style={{ background: "rgba(255,255,255,0.95)", color: "#1e293b" }}
+                    className="text-sm font-bold mt-2 whitespace-nowrap rounded-md px-3 py-1 shadow-md text-slate-800 dark:text-slate-100"
+                    style={{ background: "rgba(255,255,255,0.95)"}}
                   >
                     {pin.label}
                   </span>
@@ -236,13 +236,13 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
 
               {/* Legend */}
               <div
-                className="absolute bottom-6 left-6 rounded-xl px-4 py-3 flex flex-col gap-3 text-sm shadow-xl"
-                style={{ background: "rgba(255,255,255,0.95)", border: "1px solid #e2e8f0" }}
+                className="absolute bottom-6 left-6 rounded-xl px-4 py-3 flex flex-col gap-3 text-sm shadow-xl border-slate-200 dark:bg-slate-700 dark:border-slate-700"
+                style={{ background: "rgba(255,255,255,0.95)"}}
               >
-                <span className="font-bold text-slate-800 uppercase tracking-wider text-xs mb-1">Coverage Status</span>
-                <span className="flex items-center gap-2 font-semibold text-slate-700"><span className="w-3 h-3 rounded-full bg-green-500 shadow-sm" />Optimal Coverage</span>
-                <span className="flex items-center gap-2 font-semibold text-slate-700"><span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm" />Partial Staffing</span>
-                <span className="flex items-center gap-2 font-semibold text-slate-700"><span className="w-3 h-3 rounded-full bg-red-500 shadow-sm" />Understaffed</span>
+                <span className="font-bold text-slate-800 uppercase tracking-wider text-xs mb-1 dark:text-slate-200">Coverage Status</span>
+                <span className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300"><span className="w-3 h-3 rounded-full bg-green-500 shadow-sm" />Optimal Coverage</span>
+                <span className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300"><span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm" />Partial Staffing</span>
+                <span className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300"><span className="w-3 h-3 rounded-full bg-red-500 shadow-sm" />Understaffed</span>
               </div>
             </div>
          </div>
@@ -271,13 +271,13 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                   placeholder="Search name, position, post..." 
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm outline-none shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full pl-9 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-slate-200 outline-none shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-500 backdrop-blur-sm"
                 />
               </div>
               <select 
                 value={statusFilter} 
                 onChange={(e) => setStatusFilter(e.target.value as any)}
-                className="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 shadow-sm outline-none"
+                className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm outline-none backdrop-blur-sm"
               >
                 <option value="All">All Statuses</option>
                 <option value="Clocked In">Clocked In</option>
@@ -287,9 +287,9 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                 <option value="On Time Off">On Time Off</option>
               </select>
               <select 
-                value={siteFilter} 
-                onChange={(e) => setSiteFilter(e.target.value)}
-                className="px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 shadow-sm outline-none"
+                value={globalSite} 
+                onChange={(e) => setGlobalSite(e.target.value)}
+                className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm outline-none backdrop-blur-sm"
               >
                 <option>All Sites</option>
                 <option>Downtown Financial Center</option>
@@ -299,28 +299,28 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
               </select>
             </div>
             
-            <div className="flex items-center bg-white border border-slate-300 rounded-lg shadow-sm p-0.5 relative">
-              <button className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-md transition-colors"><ChevronLeft className="w-4 h-4" /></button>
+            <div className="flex items-center bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg shadow-sm p-0.5 relative">
+              <button className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-md transition-colors dark:text-slate-400 dark:hover:bg-slate-800"><ChevronLeft className="w-4 h-4" /></button>
               <div 
                 onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-                className="px-3 py-1 flex items-center gap-2 border-x border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors min-w-[140px] justify-center"
+                className="px-3 py-1 flex items-center gap-2 border-x border-slate-700 cursor-pointer hover:bg-slate-800 transition-colors min-w-[140px] justify-center"
               >
                 <Calendar className="w-4 h-4 text-slate-400" />
-                <span className="text-sm font-bold text-slate-700">
+                <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
                   {dateRange.start.getTime() === dateRange.end.getTime() 
                     ? `${(dateRange.start.getMonth() + 1).toString().padStart(2, '0')}/${dateRange.start.getDate().toString().padStart(2, '0')}` 
                     : `${(dateRange.start.getMonth() + 1).toString().padStart(2, '0')}/${dateRange.start.getDate().toString().padStart(2, '0')} - ${(dateRange.end.getMonth() + 1).toString().padStart(2, '0')}/${dateRange.end.getDate().toString().padStart(2, '0')}`
                   }
                 </span>
               </div>
-              <button className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-md transition-colors"><ChevronRight className="w-4 h-4" /></button>
+              <button className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-md transition-colors dark:text-slate-400 dark:hover:bg-slate-800"><ChevronRight className="w-4 h-4" /></button>
 
               {isDatePickerOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl z-50 animate-in fade-in py-4 px-5">
-                  <h4 className="font-bold text-slate-800 text-sm mb-3">Select Date Range</h4>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl z-50 animate-in fade-in py-4 px-5 dark:bg-slate-900 dark:border-slate-700">
+                  <h4 className="font-bold text-slate-800 text-sm mb-3 dark:text-slate-200">Select Date Range</h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1">From Date</label>
+                      <label className="block text-xs font-bold text-slate-500 mb-1 dark:text-slate-400">From Date</label>
                       <input 
                         type="date" 
                         value={tempStart} 
@@ -329,7 +329,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1">To Date</label>
+                      <label className="block text-xs font-bold text-slate-500 mb-1 dark:text-slate-400">To Date</label>
                       <input 
                         type="date" 
                         value={tempEnd} 
@@ -339,7 +339,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                     </div>
                   </div>
                   <div className="mt-4 flex gap-2 justify-end">
-                    <button onClick={() => setIsDatePickerOpen(false)} className="px-3 py-1.5 text-xs font-bold text-slate-500">Cancel</button>
+                    <button onClick={() => setIsDatePickerOpen(false)} className="px-3 py-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">Cancel</button>
                     <button onClick={() => {
                        const [sy, sm, sd] = tempStart.split('-');
                        const [ey, em, ed] = tempEnd.split('-');
@@ -357,13 +357,13 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
 
           {/* ── TABLE ── */}
           <div className="flex-1 overflow-hidden px-6 pb-6 flex flex-col relative min-h-0">
-            <div className="flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col relative min-h-0">
+            <div className="flex-1 bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-xl shadow-sm overflow-hidden flex flex-col relative min-h-0">
               <div className="overflow-auto flex-1 min-h-0">
                 <table className="w-full text-sm text-left">
-                  <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 sticky top-0 z-10">
+                  <thead className="bg-slate-900/80 backdrop-blur-md text-slate-400 font-bold border-b border-slate-800 sticky top-0 z-10 shadow-sm">
                     <tr>
                       <th className="px-4 py-3 w-10">
-                        <input type="checkbox" className="rounded border-slate-300 text-blue-600 focus:ring-blue-500" 
+                        <input type="checkbox" className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600" 
                           checked={selectedRows.size > 0 && selectedRows.size === filteredData.length}
                           onChange={toggleAll}
                         />
@@ -381,28 +381,28 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                       <th className="px-4 py-3 w-10"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                  <tbody className="divide-y divide-slate-800/50 text-slate-300">
                     {filteredData.length === 0 ? (
                       <tr>
                         <td colSpan={9} className="px-6 py-16 text-center">
-                          <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                          <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 dark:bg-slate-900">
                             <Clock className="w-8 h-8 text-slate-300" />
                           </div>
-                          <p className="text-base font-bold text-slate-700">No shifts found</p>
-                          <p className="text-sm text-slate-500 mt-1">Try adjusting your filters or date range.</p>
+                          <p className="text-base font-bold text-slate-700 dark:text-slate-300">No shifts found</p>
+                          <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Try adjusting your filters or date range.</p>
                         </td>
                       </tr>
                     ) : (
                       filteredData.map((row) => (
-                        <tr key={row.id} className={`hover:bg-slate-50/80 transition-colors group ${selectedRows.has(row.id) ? 'bg-blue-50/30' : ''}`}>
+                        <tr key={row.id} className={`hover:bg-slate-800/60 transition-colors group ${selectedRows.has(row.id) ? 'bg-blue-900/30' : ''}`}>
                           <td className="px-4 py-3 align-top pt-4">
-                            <input type="checkbox" className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" 
+                            <input type="checkbox" className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer dark:border-slate-600" 
                               checked={selectedRows.has(row.id)} onChange={() => toggleRow(row.id)}
                             />
                           </td>
                           {dateRange.start.getTime() !== dateRange.end.getTime() && (
                             <td className="px-4 py-3 align-top">
-                              <span className="font-semibold text-slate-800">
+                              <span className="font-semibold text-slate-800 dark:text-slate-200">
                                 {dateRange.start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                               </span>
                             </td>
@@ -413,25 +413,25 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                                 {row.guard.initials}
                               </div>
                               <div>
-                                <p className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors cursor-pointer">{row.guard.name}</p>
-                                <p className="text-xs text-slate-500 mt-0.5">{row.guard.position}</p>
+                                <p className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors cursor-pointer dark:text-slate-100">{row.guard.name}</p>
+                                <p className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">{row.guard.position}</p>
                               </div>
                             </div>
                           </td>
                           <td className="px-4 py-3 align-top">
-                            <p className="font-semibold text-slate-800 leading-tight">{row.shift.postName}</p>
-                            <p className="text-xs text-slate-500 mt-1 truncate max-w-[160px]">{row.shift.siteName}</p>
+                            <p className="font-semibold text-slate-800 leading-tight dark:text-slate-200">{row.shift.postName}</p>
+                            <p className="text-xs text-slate-500 mt-1 truncate max-w-[160px] dark:text-slate-400">{row.shift.siteName}</p>
                           </td>
                           <td className="px-4 py-3 align-top">
-                            <p className="font-mono text-xs font-semibold text-slate-600">{row.shift.scheduledStart} - {row.shift.scheduledEnd}</p>
+                            <p className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">{row.shift.scheduledStart} - {row.shift.scheduledEnd}</p>
                             <p className="text-xs text-slate-400 mt-1">{row.shift.totalHours}h scheduled</p>
                           </td>
                           
                           {/* CLOCK IN */}
                           <td className="px-4 py-3 align-top">
                             {row.clockIn ? (
-                              <div className="flex items-center gap-2 group/time cursor-pointer p-1 -ml-1 rounded hover:bg-slate-100 transition-colors">
-                                <span className="font-mono font-bold text-slate-800">{row.clockIn.time}</span>
+                              <div className="flex items-center gap-2 group/time cursor-pointer p-1 -ml-1 rounded hover:bg-slate-100 transition-colors dark:hover:bg-slate-800">
+                                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{row.clockIn.time}</span>
                                 <div className="flex gap-1">
                                   {row.clockIn.geofenceStatus && <HoverMapPin status={row.clockIn.geofenceStatus} siteName={row.shift.siteName} />}
                                 </div>
@@ -444,8 +444,8 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                           {/* CLOCK OUT */}
                           <td className="px-4 py-3 align-top">
                             {row.clockOut ? (
-                              <div className="flex items-center gap-2 group/time cursor-pointer p-1 -ml-1 rounded hover:bg-slate-100 transition-colors">
-                                <span className="font-mono font-bold text-slate-800">{row.clockOut.time}</span>
+                              <div className="flex items-center gap-2 group/time cursor-pointer p-1 -ml-1 rounded hover:bg-slate-100 transition-colors dark:hover:bg-slate-800">
+                                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{row.clockOut.time}</span>
                                 <div className="flex gap-1">
                                   {row.clockOut.geofenceStatus && <HoverMapPin status={row.clockOut.geofenceStatus} siteName={row.shift.siteName} />}
                                 </div>
@@ -461,7 +461,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                           {/* TOTALS */}
                           <td className="px-4 py-3 align-top">
                             <div className="flex flex-col items-center gap-1">
-                              <span className="font-mono font-bold text-slate-800">{row.dailyTotal}</span>
+                              <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{row.dailyTotal}</span>
                               {row.overtimeHours !== "0h" && row.overtimeHours !== "0h 0m" && (
                                 <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 rounded uppercase">{row.overtimeHours} OT</span>
                               )}
@@ -489,7 +489,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
 
                           {/* ACTIONS */}
                           <td className="px-4 py-3 align-top">
-                            <button className="p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 rounded transition-colors opacity-0 group-hover:opacity-100">
+                            <button className="p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 rounded transition-colors opacity-0 group-hover:opacity-100 dark:hover:bg-slate-800">
                               <MoreVertical className="w-4 h-4" />
                             </button>
                           </td>
@@ -529,28 +529,28 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
       {/* Select Position Modal */}
       {isJobListOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-              <h3 className="font-bold text-lg text-slate-900">Select Positions</h3>
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col dark:bg-slate-900">
+            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">Select Positions</h3>
               <button onClick={() => setIsJobListOpen(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
               </button>
             </div>
             <div className="p-6 overflow-y-auto max-h-[60vh] space-y-3">
-              <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors">
-                <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
-                <span className="font-bold text-slate-800">Operation Manager</span>
+              <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors dark:border-slate-700">
+                <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600" />
+                <span className="font-bold text-slate-800 dark:text-slate-200">Operation Manager</span>
               </label>
-              <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors">
-                <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
-                <span className="font-bold text-slate-800">Guard</span>
+              <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors dark:border-slate-700">
+                <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600" />
+                <span className="font-bold text-slate-800 dark:text-slate-200">Guard</span>
               </label>
-              <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors">
-                <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
-                <span className="font-bold text-slate-800">Admin</span>
+              <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors dark:border-slate-700">
+                <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600" />
+                <span className="font-bold text-slate-800 dark:text-slate-200">Admin</span>
               </label>
             </div>
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end dark:border-slate-700 dark:bg-slate-900">
               <button onClick={() => setIsJobListOpen(false)} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors">Apply Selection</button>
             </div>
           </div>
@@ -560,49 +560,49 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
       {/* Settings Modal */}
       {isSettingsOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-              <h3 className="font-bold text-lg text-slate-900">Time Clock Settings</h3>
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col dark:bg-slate-900">
+            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">Time Clock Settings</h3>
               <button onClick={() => setIsSettingsOpen(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
               </button>
             </div>
             <div className="p-6 space-y-5">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">Grace Period (Minutes)</label>
-                <p className="text-xs text-slate-500 mb-2">Time allowed before a punch is marked as late.</p>
-                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold outline-none focus:border-blue-500">
+                <label className="block text-sm font-bold text-slate-700 mb-1 dark:text-slate-300">Grace Period (Minutes)</label>
+                <p className="text-xs text-slate-500 mb-2 dark:text-slate-400">Time allowed before a punch is marked as late.</p>
+                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold outline-none focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600">
                   <option>5 Minutes</option>
                   <option selected>15 Minutes</option>
                   <option>30 Minutes</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">Auto Clock-Out</label>
-                <p className="text-xs text-slate-500 mb-2">Automatically clock out guards who miss their punch.</p>
-                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold outline-none focus:border-blue-500">
+                <label className="block text-sm font-bold text-slate-700 mb-1 dark:text-slate-300">Auto Clock-Out</label>
+                <p className="text-xs text-slate-500 mb-2 dark:text-slate-400">Automatically clock out guards who miss their punch.</p>
+                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold outline-none focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600">
                   <option>Disabled (Flag as Missing Punch)</option>
                   <option>At shift scheduled end time</option>
                   <option>1 hour after shift ends</option>
                 </select>
               </div>
               <div className="flex items-center gap-3">
-                <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600" />
                 <div>
-                  <p className="text-sm font-bold text-slate-700">Require Photo Verification</p>
-                  <p className="text-xs text-slate-500">Guards must take a selfie when clocking in.</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Require Photo Verification</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Guards must take a selfie when clocking in.</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600" />
                 <div>
-                  <p className="text-sm font-bold text-slate-700">Enforce Geofence Location</p>
-                  <p className="text-xs text-slate-500">Prevent clocking in if outside site boundary.</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Enforce Geofence Location</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Prevent clocking in if outside site boundary.</p>
                 </div>
               </div>
             </div>
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
-              <button onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50">Cancel</button>
+            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3 dark:border-slate-700 dark:bg-slate-900">
+              <button onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
               <button onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors">Save Settings</button>
             </div>
           </div>
@@ -617,22 +617,22 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
 
 function KpiCard({ label, value, active, onClick, color }: { label: string, value: number, active: boolean, onClick: () => void, color: "blue" | "green" | "red" | "orange" | "purple" }) {
   const colors = {
-    blue: { bg: "bg-blue-50", border: "border-blue-200", text: "text-blue-700", ring: "ring-blue-500" },
-    green: { bg: "bg-green-50", border: "border-green-200", text: "text-green-700", ring: "ring-green-500" },
-    red: { bg: "bg-red-50", border: "border-red-200", text: "text-red-700", ring: "ring-red-500" },
-    orange: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-700", ring: "ring-amber-500" },
-    purple: { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700", ring: "ring-purple-500" },
+    blue: { bg: "bg-blue-900/30", border: "border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.15)]", text: "text-blue-400", ring: "ring-blue-500" },
+    green: { bg: "bg-emerald-900/30", border: "border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]", text: "text-emerald-400", ring: "ring-emerald-500" },
+    red: { bg: "bg-red-900/30", border: "border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.15)]", text: "text-red-400", ring: "ring-red-500" },
+    orange: { bg: "bg-amber-900/30", border: "border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)]", text: "text-amber-400", ring: "ring-amber-500" },
+    purple: { bg: "bg-purple-900/30", border: "border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.15)]", text: "text-purple-400", ring: "ring-purple-500" },
   };
   const theme = colors[color];
   
   return (
     <div 
       onClick={onClick}
-      className={`rounded-xl p-3 cursor-pointer transition-all border ${active ? `ring-2 ring-offset-2 ${theme.ring} border-transparent bg-white shadow-md` : `bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm`}`}
+      className={`rounded-xl p-3 cursor-pointer transition-all border backdrop-blur-md ${active ? `ring-1 ring-offset-1 ring-offset-slate-900 ${theme.ring} border-transparent bg-slate-800/80 shadow-[0_0_20px_rgba(255,255,255,0.05)]` : `bg-slate-900/40 border-slate-800 hover:border-slate-700 hover:bg-slate-800/60`}`}
     >
-      <p className="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">{label}</p>
+      <p className="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider dark:text-slate-400">{label}</p>
       <div className="flex items-center gap-2">
-        <div className={`w-8 h-8 rounded-lg ${theme.bg} ${theme.text} flex items-center justify-center font-bold text-lg`}>
+        <div className={`w-8 h-8 rounded-lg ${theme.bg} ${theme.text} ${theme.border} border flex items-center justify-center font-bold text-lg backdrop-blur-sm`}>
           {value}
         </div>
       </div>

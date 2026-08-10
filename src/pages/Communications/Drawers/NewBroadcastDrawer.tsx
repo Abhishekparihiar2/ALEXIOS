@@ -17,39 +17,39 @@ export function NewBroadcastDrawer({ isOpen, onClose }: NewBroadcastDrawerProps)
     <>
       <div className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="fixed top-0 right-0 bottom-0 w-full max-w-[600px] bg-slate-50 shadow-2xl z-40 flex flex-col animate-in slide-in-from-right duration-300">
-        <div className="px-6 py-5 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
+      <div className="fixed top-0 right-0 bottom-0 w-full max-w-[600px] bg-slate-50 shadow-2xl z-40 flex flex-col animate-in slide-in-from-right duration-300 dark:bg-slate-900">
+        <div className="px-6 py-5 bg-white border-b border-slate-200 flex items-center justify-between shrink-0 dark:bg-slate-900 dark:border-slate-700">
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-bold text-slate-800">New Broadcast</h2>
-            <p className="text-sm text-slate-500">Send an important message to a targeted audience.</p>
+            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">New Broadcast</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Send an important message to a targeted audience.</p>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-full transition-colors">
+          <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-full transition-colors dark:hover:bg-slate-800">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
           
-          <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-slate-700">Broadcast Title <span className="text-red-500">*</span></label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Broadcast Title <span className="text-red-500">*</span></label>
               <input 
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Important Policy Update"
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all dark:bg-slate-900 dark:border-slate-600"
               />
             </div>
             
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-slate-700">Message <span className="text-red-500">*</span></label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Message <span className="text-red-500">*</span></label>
               <textarea 
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type your broadcast message here..."
                 rows={6}
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all resize-none"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all resize-none dark:bg-slate-900 dark:border-slate-600"
               />
             </div>
 
@@ -60,8 +60,8 @@ export function NewBroadcastDrawer({ isOpen, onClose }: NewBroadcastDrawerProps)
             </div>
           </div>
 
-          <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <label className="text-sm font-bold text-slate-800">Select Audience <span className="text-red-500">*</span></label>
+          <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+            <label className="text-sm font-bold text-slate-800 dark:text-slate-200">Select Audience <span className="text-red-500">*</span></label>
             
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -81,9 +81,9 @@ export function NewBroadcastDrawer({ isOpen, onClose }: NewBroadcastDrawerProps)
             </div>
 
             {audience !== "All Employees" && (
-              <div className="pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                <label className="text-sm font-semibold text-slate-700 mb-1.5 block">Select specific {audience.toLowerCase()}(s)</label>
-                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+              <div className="pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-slate-800">
+                <label className="text-sm font-semibold text-slate-700 mb-1.5 block dark:text-slate-300">Select specific {audience.toLowerCase()}(s)</label>
+                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all dark:bg-slate-900 dark:border-slate-600">
                   <option value="" disabled selected>Choose a {audience.toLowerCase()}...</option>
                   <option value="1">Example 1</option>
                   <option value="2">Example 2</option>
@@ -93,13 +93,13 @@ export function NewBroadcastDrawer({ isOpen, onClose }: NewBroadcastDrawerProps)
           </div>
         </div>
 
-        <div className="px-6 py-4 bg-white border-t border-slate-200 flex justify-between items-center shrink-0">
-          <button className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-50 px-3 py-2 rounded-lg transition-colors border border-slate-200">
+        <div className="px-6 py-4 bg-white border-t border-slate-200 flex justify-between items-center shrink-0 dark:bg-slate-900 dark:border-slate-700">
+          <button className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-50 px-3 py-2 rounded-lg transition-colors border border-slate-200 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-800">
             <Calendar className="w-4 h-4" /> Schedule for later
           </button>
           
           <div className="flex items-center gap-3">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 rounded-lg transition-colors border border-slate-200">
+            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 rounded-lg transition-colors border border-slate-200 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-800">
               Cancel
             </button>
             <button disabled={!title || !message} className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 rounded-lg transition-colors shadow-sm">

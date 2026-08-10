@@ -29,15 +29,15 @@ export function ReportBuilder({ reportId, onBack }: Props) {
   };
 
   return (
-    <div className="flex-1 overflow-hidden flex flex-col bg-slate-50">
+    <div className="flex-1 overflow-hidden flex flex-col bg-slate-50 dark:bg-slate-900">
       {/* ── Header ── */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10">
+      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 dark:bg-slate-900 dark:border-slate-700">
         <div className="flex items-center gap-5">
-          <button onClick={onBack} className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors">
+          <button onClick={onBack} className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
-            <h2 className="text-lg font-bold text-slate-900 leading-tight">
+            <h2 className="text-lg font-bold text-slate-900 leading-tight dark:text-slate-100">
               {reportId === 'new' ? 'Create Report' : 'Edit Report'}
             </h2>
             <div className="flex items-center gap-5 mt-2">
@@ -54,7 +54,7 @@ export function ReportBuilder({ reportId, onBack }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={onBack} className="px-4 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors">
+          <button onClick={onBack} className="px-4 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors dark:text-slate-300 dark:bg-slate-900 dark:border-slate-700 dark:hover:bg-slate-800">
             Cancel
           </button>
           <button onClick={handleSave} className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-blue-800 hover:bg-blue-900 rounded-xl transition-colors shadow-sm">
@@ -80,28 +80,28 @@ function OverviewStep() {
   return (
     <div className="h-full overflow-y-auto p-8 flex justify-center">
       <div className="w-full max-w-3xl space-y-6">
-        <div className="glass-card rounded-2xl p-6 bg-white border border-slate-200 shadow-sm">
-          <h3 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-100 pb-3">
+        <div className="glass-card rounded-2xl p-6 bg-white border border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+          <h3 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-100 pb-3 dark:text-slate-200 dark:border-slate-800">
             <Settings className="w-4 h-4 text-blue-600" /> Basic Information
           </h3>
           
           <div className="space-y-5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Report Name <span className="text-red-500">*</span></label>
-              <input type="text" placeholder="e.g. Daily Activity Log" className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Report Name <span className="text-red-500">*</span></label>
+              <input type="text" placeholder="e.g. Daily Activity Log" className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all dark:border-slate-700 dark:bg-slate-900" />
             </div>
             
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Description / Instructions</label>
-              <textarea rows={3} placeholder="Record all significant activities, observations and incidents..." className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-none" />
-              <p className="text-[11px] text-slate-500 mt-1">This text will be visible to guards before they start the report.</p>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Description / Instructions</label>
+              <textarea rows={3} placeholder="Record all significant activities, observations and incidents..." className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-none dark:border-slate-700 dark:bg-slate-900" />
+              <p className="text-[11px] text-slate-500 mt-1 dark:text-slate-400">This text will be visible to guards before they start the report.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Report Type</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Report Type</label>
                 <div className="relative">
-                  <select className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 transition-all text-slate-700">
+                  <select className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 transition-all text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
                     <option value="report">Report (Regular)</option>
                     <option value="dispatch">Dispatchable Task</option>
                     <option value="ticket">Ticket</option>
@@ -112,9 +112,9 @@ function OverviewStep() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Report Category</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Report Category</label>
                 <div className="relative">
-                  <select className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 transition-all text-slate-700">
+                  <select className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 transition-all text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
                     <option value="" disabled selected>Select category...</option>
                     {MOCK_REPORT_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
@@ -123,9 +123,9 @@ function OverviewStep() {
               </div>
               
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Status</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Status</label>
                 <div className="relative">
-                  <select className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 transition-all text-slate-700">
+                  <select className="w-full appearance-none px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 transition-all text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
                     <option value="Active">Active</option>
                     <option value="Archived">Archived</option>
                   </select>
@@ -238,12 +238,12 @@ function FormBuilderStep() {
   return (
     <div className="h-full flex">
       {/* LEFT: Library */}
-      <div className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
-        <div className="p-4 border-b border-slate-100">
-          <h3 className="text-sm font-bold text-slate-800">Fields Library</h3>
+      <div className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 dark:bg-slate-900 dark:border-slate-700">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800">
+          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Fields Library</h3>
           <div className="mt-3 relative">
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-            <input type="text" placeholder="Search fields..." className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400" />
+            <input type="text" placeholder="Search fields..." className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 outline-none focus:bg-white focus:border-blue-400 dark:border-slate-700 dark:bg-slate-900" />
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -256,10 +256,10 @@ function FormBuilderStep() {
                     key={item.id} 
                     draggable
                     onDragStart={(e) => handleLibraryDragStart(e, item.id, item.label)}
-                    className="flex items-center gap-3 p-2 rounded-lg border border-slate-100 bg-slate-50 hover:border-slate-300 hover:bg-white cursor-grab active:cursor-grabbing transition-all"
+                    className="flex items-center gap-3 p-2 rounded-lg border border-slate-100 bg-slate-50 hover:border-slate-300 hover:bg-white cursor-grab active:cursor-grabbing transition-all dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
                   >
-                    <div className="text-slate-500 pointer-events-none">{item.icon}</div>
-                    <span className="text-xs font-semibold text-slate-700 pointer-events-none">{item.label}</span>
+                    <div className="text-slate-500 pointer-events-none dark:text-slate-400">{item.icon}</div>
+                    <span className="text-xs font-semibold text-slate-700 pointer-events-none dark:text-slate-300">{item.label}</span>
                   </div>
                 ))}
               </div>
@@ -269,15 +269,15 @@ function FormBuilderStep() {
       </div>
 
       {/* CENTER: Canvas */}
-      <div className="flex-1 overflow-y-auto bg-slate-50 p-8 flex flex-col items-center">
+      <div className="flex-1 overflow-y-auto bg-slate-50 p-8 flex flex-col items-center dark:bg-slate-900">
         <div className="w-full max-w-xl">
-          <div className="bg-white rounded-t-2xl border border-slate-200 border-b-0 p-5 shadow-sm">
-            <h3 className="text-lg font-bold text-slate-800 text-center uppercase tracking-wide">Incident Report</h3>
-            <p className="text-xs text-slate-500 text-center mt-1">Form Preview & Ordering</p>
+          <div className="bg-white rounded-t-2xl border border-slate-200 border-b-0 p-5 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+            <h3 className="text-lg font-bold text-slate-800 text-center uppercase tracking-wide dark:text-slate-200">Incident Report</h3>
+            <p className="text-xs text-slate-500 text-center mt-1 dark:text-slate-400">Form Preview & Ordering</p>
           </div>
           
           <div 
-            className="space-y-3 bg-slate-100/50 p-4 border border-slate-200 shadow-inner rounded-b-2xl min-h-[300px]"
+            className="space-y-3 bg-slate-100/50 p-4 border border-slate-200 shadow-inner rounded-b-2xl min-h-[300px] dark:border-slate-700"
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleCanvasDrop}
           >
@@ -301,10 +301,10 @@ function FormBuilderStep() {
                   <GripVertical className="w-4 h-4" />
                 </div>
                 <div className="flex-1 pointer-events-none">
-                  <p className="text-sm font-bold text-slate-800 flex items-center gap-1">
+                  <p className="text-sm font-bold text-slate-800 flex items-center gap-1 dark:text-slate-200">
                     {f.label} {f.required && <span className="text-red-500">*</span>}
                   </p>
-                  <div className="mt-2 px-3 py-2 text-xs text-slate-400 bg-slate-50 border border-dashed border-slate-200 rounded-lg">
+                  <div className="mt-2 px-3 py-2 text-xs text-slate-400 bg-slate-50 border border-dashed border-slate-200 rounded-lg dark:bg-slate-900 dark:border-slate-700">
                     [ Input Area ]
                   </div>
                 </div>
@@ -323,22 +323,22 @@ function FormBuilderStep() {
       </div>
 
       {/* RIGHT: Properties */}
-      <div className="w-80 bg-white border-l border-slate-200 flex flex-col shrink-0">
-        <div className="p-4 border-b border-slate-100">
-          <h3 className="text-sm font-bold text-slate-800">Field Settings</h3>
+      <div className="w-80 bg-white border-l border-slate-200 flex flex-col shrink-0 dark:bg-slate-900 dark:border-slate-700">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800">
+          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Field Settings</h3>
         </div>
         <div className="flex-1 overflow-y-auto p-5">
           {selectedField ? (
             <div className="space-y-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Field Input Type</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Field Input Type</label>
                 <div className="relative">
                   <select 
                     value={canvasFields.find(f => f.id === selectedField)?.type || ''}
                     onChange={(e) => {
                       setCanvasFields(canvasFields.map(f => f.id === selectedField ? { ...f, type: e.target.value } : f));
                     }}
-                    className="w-full appearance-none px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400"
+                    className="w-full appearance-none px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400 dark:border-slate-700 dark:bg-slate-900"
                   >
                     {FIELD_TYPES.map(group => (
                       <optgroup key={group.group} label={group.group}>
@@ -352,22 +352,22 @@ function FormBuilderStep() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Field Label</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Field Label</label>
                 <input 
                   type="text" 
                   value={canvasFields.find(f => f.id === selectedField)?.label || ''} 
                   onChange={(e) => {
                     setCanvasFields(canvasFields.map(f => f.id === selectedField ? { ...f, label: e.target.value } : f));
                   }}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400" 
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400 dark:border-slate-700 dark:bg-slate-900" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Help Text</label>
-                <textarea rows={2} placeholder="Optional instructions..." className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400 resize-none" />
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Help Text</label>
+                <textarea rows={2} placeholder="Optional instructions..." className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400 resize-none dark:border-slate-700 dark:bg-slate-900" />
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-slate-50">
-                <span className="text-sm font-semibold text-slate-700">Required Field</span>
+              <div className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Required Field</span>
                 <input 
                   type="checkbox" 
                   checked={canvasFields.find(f => f.id === selectedField)?.required || false} 
@@ -413,20 +413,20 @@ function AccessStep() {
   return (
     <div className="h-full overflow-y-auto p-8 flex justify-center">
       <div className="w-full max-w-3xl space-y-6">
-        <div className="glass-card rounded-2xl p-6 bg-white border border-slate-200 shadow-sm">
-          <h3 className="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
+        <div className="glass-card rounded-2xl p-6 bg-white border border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+          <h3 className="text-base font-bold text-slate-800 mb-2 flex items-center gap-2 dark:text-slate-200">
             <Briefcase className="w-4 h-4 text-blue-600" /> Access & Assignment
           </h3>
-          <p className="text-xs text-slate-500 mb-6 border-b border-slate-100 pb-4">
+          <p className="text-xs text-slate-500 mb-6 border-b border-slate-100 pb-4 dark:text-slate-400 dark:border-slate-800">
             Define which Guards can see and submit this report. Note: If assigned to multiple employees, each employee submits their own report individually.
           </p>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Available To Scope</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 dark:text-slate-300">Available To Scope</label>
               <div className="relative w-64">
                 <div 
-                  className="w-full flex items-center justify-between px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-white transition-all text-slate-700"
+                  className="w-full flex items-center justify-between px-4 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-white transition-all text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                   <span className="truncate">
@@ -437,16 +437,16 @@ function AccessStep() {
                 {isDropdownOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)}></div>
-                    <div className="absolute top-full left-0 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-lg z-50 p-2 space-y-1">
+                    <div className="absolute top-full left-0 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-lg z-50 p-2 space-y-1 dark:bg-slate-900 dark:border-slate-700">
                       {scopeOptions.map(option => (
-                        <label key={option.id} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors">
+                        <label key={option.id} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors dark:hover:bg-slate-800">
                           <input 
                             type="checkbox" 
                             checked={scopes.includes(option.id)}
                             onChange={() => toggleScope(option.id)}
                             className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
                           />
-                          <span className="text-sm font-medium text-slate-700">{option.label}</span>
+                          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{option.label}</span>
                         </label>
                       ))}
                     </div>
@@ -456,14 +456,14 @@ function AccessStep() {
             </div>
 
             {scopes.includes('sites') && (
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                <label className="block text-xs font-bold text-slate-700 mb-3">Selected Sites</label>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+                <label className="block text-xs font-bold text-slate-700 mb-3 dark:text-slate-300">Selected Sites</label>
                 <div className="flex flex-wrap gap-2">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 shadow-sm">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 shadow-sm dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300">
                     Downtown Financial Center
                     <X className="w-3.5 h-3.5 text-slate-400 hover:text-slate-800 cursor-pointer ml-1" />
                   </div>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 shadow-sm">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 shadow-sm dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300">
                     Westfield Mall
                     <X className="w-3.5 h-3.5 text-slate-400 hover:text-slate-800 cursor-pointer ml-1" />
                   </div>
@@ -475,14 +475,14 @@ function AccessStep() {
             )}
 
             {scopes.includes('employees') && (
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                <label className="block text-xs font-bold text-slate-700 mb-3">Selected Guards</label>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+                <label className="block text-xs font-bold text-slate-700 mb-3 dark:text-slate-300">Selected Guards</label>
                 <div className="flex flex-wrap gap-2">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 shadow-sm">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 shadow-sm dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300">
                     John Doe
                     <X className="w-3.5 h-3.5 text-slate-400 hover:text-slate-800 cursor-pointer ml-1" />
                   </div>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 shadow-sm">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 shadow-sm dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300">
                     Sarah Jenkins
                     <X className="w-3.5 h-3.5 text-slate-400 hover:text-slate-800 cursor-pointer ml-1" />
                   </div>
@@ -512,31 +512,31 @@ function WorkflowStep() {
   return (
     <div className="h-full overflow-y-auto p-8 flex justify-center">
       <div className="w-full max-w-2xl space-y-6">
-        <div className="glass-card rounded-2xl p-6 bg-white border border-slate-200 shadow-sm">
-          <h3 className="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
+        <div className="glass-card rounded-2xl p-6 bg-white border border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+          <h3 className="text-base font-bold text-slate-800 mb-2 flex items-center gap-2 dark:text-slate-200">
             <CheckSquare className="w-4 h-4 text-blue-600" /> Approval Workflow
           </h3>
-          <p className="text-xs text-slate-500 mb-6 border-b border-slate-100 pb-4">
+          <p className="text-xs text-slate-500 mb-6 border-b border-slate-100 pb-4 dark:text-slate-400 dark:border-slate-800">
             Determine if submitted reports require manual review before being marked as Approved.
           </p>
 
           <div className="space-y-4">
-            <label className="flex items-start gap-4 p-4 rounded-xl border border-slate-200 bg-white hover:border-blue-400 cursor-pointer transition-colors shadow-sm">
+            <label className="flex items-start gap-4 p-4 rounded-xl border border-slate-200 bg-white hover:border-blue-400 cursor-pointer transition-colors shadow-sm dark:border-slate-700 dark:bg-slate-900">
               <input type="radio" name="approval" className="mt-1 w-4 h-4 text-blue-600 cursor-pointer" />
               <div>
-                <p className="text-sm font-bold text-slate-800">No Approval Required</p>
-                <p className="text-xs text-slate-500 mt-1">Submissions are automatically accepted into the system.</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">No Approval Required</p>
+                <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">Submissions are automatically accepted into the system.</p>
               </div>
             </label>
 
             <label className="flex items-start gap-4 p-4 rounded-xl border-2 border-blue-500 bg-blue-50/30 cursor-pointer transition-colors shadow-sm relative overflow-hidden">
               <input type="radio" name="approval" defaultChecked className="mt-1 w-4 h-4 text-blue-600 cursor-pointer" />
               <div>
-                <p className="text-sm font-bold text-slate-800">Approval Required</p>
-                <p className="text-xs text-slate-500 mt-1">Submitted reports will remain in "Pending Approval" state until reviewed by an authorized user.</p>
-                <div className="mt-4 p-3 bg-white border border-blue-100 rounded-lg flex items-start gap-2">
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Approval Required</p>
+                <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">Submitted reports will remain in "Pending Approval" state until reviewed by an authorized user.</p>
+                <div className="mt-4 p-3 bg-white border border-blue-100 rounded-lg flex items-start gap-2 dark:bg-slate-900">
                   <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-slate-600 font-medium">Important: The employee submitting the report cannot approve their own report, regardless of their system permissions.</p>
+                  <p className="text-[11px] text-slate-600 font-medium dark:text-slate-300">Important: The employee submitting the report cannot approve their own report, regardless of their system permissions.</p>
                 </div>
               </div>
             </label>
@@ -553,7 +553,7 @@ function PreviewStep() {
     <div className="h-full overflow-y-auto bg-slate-900 flex justify-center py-10 relative">
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
       
-      <div className="relative w-[375px] h-[812px] bg-slate-50 rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden flex flex-col">
+      <div className="relative w-[375px] h-[812px] bg-slate-50 rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden flex flex-col dark:bg-slate-900">
         {/* Device Notch */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-2xl z-20"></div>
 
@@ -567,27 +567,27 @@ function PreviewStep() {
 
         {/* Form Body */}
         <div className="flex-1 overflow-y-auto p-5 space-y-5 pb-20">
-          <p className="text-xs text-slate-500 mb-4">* Required fields</p>
+          <p className="text-xs text-slate-500 mb-4 dark:text-slate-400">* Required fields</p>
           
           <div className="space-y-1.5">
-            <label className="text-sm font-bold text-slate-700">Incident Date & Time <span className="text-red-500">*</span></label>
-            <div className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 flex items-center justify-between">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Incident Date & Time <span className="text-red-500">*</span></label>
+            <div className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 flex items-center justify-between dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300">
               Aug 5, 2026 — 7:45 PM
               <Calendar className="w-4 h-4 text-slate-400" />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-bold text-slate-700">Site <span className="text-red-500">*</span></label>
-            <div className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Site <span className="text-red-500">*</span></label>
+            <div className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
               Downtown Financial Center
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-bold text-slate-700">Incident Category <span className="text-red-500">*</span></label>
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Incident Category <span className="text-red-500">*</span></label>
             <div className="relative">
-              <select className="w-full appearance-none px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-400">
+              <select className="w-full appearance-none px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-400 dark:bg-slate-900 dark:border-slate-700">
                 <option>Select incident category...</option>
               </select>
               <ChevronDown className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2" />
@@ -595,12 +595,12 @@ function PreviewStep() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-bold text-slate-700">Description <span className="text-red-500">*</span></label>
-            <textarea rows={4} placeholder="Describe what happened..." className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm resize-none"></textarea>
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Description <span className="text-red-500">*</span></label>
+            <textarea rows={4} placeholder="Describe what happened..." className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm resize-none dark:bg-slate-900 dark:border-slate-700"></textarea>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-bold text-slate-700">Photos</label>
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Photos</label>
             <button className="w-full py-8 bg-blue-50/50 border-2 border-dashed border-blue-200 rounded-xl text-sm font-semibold text-blue-600 flex flex-col items-center justify-center gap-2">
               <ImageIcon className="w-6 h-6" />
               + Add Photo
@@ -608,15 +608,15 @@ function PreviewStep() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-bold text-slate-700">Signature <span className="text-red-500">*</span></label>
-            <div className="w-full h-32 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-sm font-semibold text-slate-400">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Signature <span className="text-red-500">*</span></label>
+            <div className="w-full h-32 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-sm font-semibold text-slate-400 dark:bg-slate-900 dark:border-slate-700">
               Tap to Sign
             </div>
           </div>
         </div>
 
         {/* Footer actions */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 bg-white border-t border-slate-200 shadow-[0_-4px_16px_rgba(0,0,0,0.05)]">
+        <div className="absolute bottom-0 left-0 right-0 p-5 bg-white border-t border-slate-200 shadow-[0_-4px_16px_rgba(0,0,0,0.05)] dark:bg-slate-900 dark:border-slate-700">
           <button className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md">
             Submit Report
           </button>

@@ -37,8 +37,8 @@ export function HelpDeskPage() {
                 <div className="p-4 md:p-6 flex-1 h-full flex flex-col min-w-0 min-h-0 overflow-hidden">
                     {/* Header */}
                     <div className="mb-6 shrink-0">
-                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Help Desk</h1>
-                        <p className="text-sm text-slate-500 mt-1">Review and manage support requests available to you.</p>
+                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight dark:text-slate-100">Help Desk</h1>
+                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Review and manage support requests available to you.</p>
                     </div>
 
                     {/* View Controls & Toolbar */}
@@ -74,7 +74,7 @@ export function HelpDeskPage() {
                                     placeholder="Search by ID, Requester..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full lg:w-64 pl-9 pr-3 py-2.5 text-sm bg-white/80 border border-slate-200 rounded-xl outline-none focus:border-blue-600 transition-colors shadow-sm backdrop-blur-md font-medium"
+                                    className="w-full lg:w-64 pl-9 pr-3 py-2.5 text-sm bg-white/80 border border-slate-200 rounded-xl outline-none focus:border-blue-600 transition-colors shadow-sm backdrop-blur-md font-medium dark:border-slate-700"
                                 />
                             </div>
                         </div>
@@ -84,8 +84,8 @@ export function HelpDeskPage() {
                     <div className="bg-white/90 border border-slate-200/60 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm flex-1 flex flex-col min-h-0 min-w-0 w-full mb-2">
                         {displayedTickets.length > 0 ? (
                             <div className="overflow-auto flex-1 min-h-0 relative">
-                                <table className="w-full text-left text-sm text-slate-600 min-w-[1100px]">
-                                    <thead className="text-xs uppercase bg-slate-50/80 border-b border-slate-200 text-slate-500 sticky top-0 font-bold tracking-wide z-10">
+                                <table className="w-full text-left text-sm text-slate-600 min-w-[1100px] dark:text-slate-300">
+                                    <thead className="text-xs uppercase bg-slate-50/80 border-b border-slate-200 text-slate-500 sticky top-0 font-bold tracking-wide z-10 dark:border-slate-700 dark:text-slate-400">
                                         <tr>
                                             <th className="px-5 py-4">Request / Ticket</th>
                                             <th className="px-5 py-4">Requester</th>
@@ -96,37 +96,37 @@ export function HelpDeskPage() {
                                             <th className="px-5 py-4 text-center">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-100">
+                                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                                         {displayedTickets.map((t) => (
                                             <tr
                                                 key={t.id}
                                                 onClick={() => setSelectedTicket(t)}
                                                 className={`transition-colors cursor-pointer group ${selectedTicket?.id === t.id ? "bg-blue-50/50" : "hover:bg-slate-50/80"} ${t.assignedTo === "Unassigned" && view === "unassigned" ? "bg-orange-50/30" : ""}`}
                                             >
-                                                <td className="px-5 py-4 font-bold text-slate-900 border-l-2 border-transparent group-hover:border-blue-600">
+                                                <td className="px-5 py-4 font-bold text-slate-900 border-l-2 border-transparent group-hover:border-blue-600 dark:text-slate-100">
                                                     {t.id}
                                                 </td>
-                                                <td className="px-5 py-4 font-semibold text-slate-700">
+                                                <td className="px-5 py-4 font-semibold text-slate-700 dark:text-slate-300">
                                                     {t.requester}
                                                 </td>
-                                                <td className="px-5 py-4 font-medium text-slate-600 truncate max-w-[280px]">
+                                                <td className="px-5 py-4 font-medium text-slate-600 truncate max-w-[280px] dark:text-slate-300">
                                                     {t.subject}
                                                 </td>
                                                 <td className="px-5 py-4 font-medium">
                                                     {t.assignedTo === "Unassigned" ? (
                                                         <span className="text-orange-600 font-bold bg-orange-50 px-2 py-1 rounded-md text-xs">{t.assignedTo}</span>
                                                     ) : (
-                                                        <span className="text-slate-600 font-medium">{t.assignedTo}</span>
+                                                        <span className="text-slate-600 font-medium dark:text-slate-300">{t.assignedTo}</span>
                                                     )}
                                                 </td>
-                                                <td className="px-5 py-4 text-slate-500 font-medium text-xs">
+                                                <td className="px-5 py-4 text-slate-500 font-medium text-xs dark:text-slate-400">
                                                     {t.created}
                                                 </td>
-                                                <td className="px-5 py-4 text-slate-500 font-medium text-xs">
+                                                <td className="px-5 py-4 text-slate-500 font-medium text-xs dark:text-slate-400">
                                                     {t.lastActivity}
                                                 </td>
                                                 <td className="px-5 py-4 text-center" onClick={(e) => e.stopPropagation()}>
-                                                    <button className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors">
+                                                    <button className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-colors dark:hover:bg-slate-700">
                                                         <MoreHorizontal className="w-5 h-5" />
                                                     </button>
                                                 </td>
@@ -157,11 +157,11 @@ function EmptyState({ view }: { view: ViewType }) {
     if (view === "unassigned") {
         return (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50/30">
-                <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4 dark:bg-slate-800">
                     <User className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-1">No unassigned requests</h3>
-                <p className="text-sm text-slate-500 max-w-sm">There are currently no permitted Help Desk records waiting for assignment.</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-1 dark:text-slate-100">No unassigned requests</h3>
+                <p className="text-sm text-slate-500 max-w-sm dark:text-slate-400">There are currently no permitted Help Desk records waiting for assignment.</p>
             </div>
         );
     }
@@ -172,69 +172,69 @@ function EmptyState({ view }: { view: ViewType }) {
                 <div className="w-16 h-16 bg-blue-50 text-blue-400 rounded-full flex items-center justify-center mb-4 border border-blue-100">
                     <Briefcase className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-1">Nothing assigned to you</h3>
-                <p className="text-sm text-slate-500 max-w-sm">Help Desk records assigned to you will appear here.</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-1 dark:text-slate-100">Nothing assigned to you</h3>
+                <p className="text-sm text-slate-500 max-w-sm dark:text-slate-400">Help Desk records assigned to you will appear here.</p>
             </div>
         );
     }
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50/30">
-            <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4 dark:bg-slate-800">
                 <Search className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-1">No Help Desk records found</h3>
-            <p className="text-sm text-slate-500 max-w-sm">There are no permitted records matching the current search or filters.</p>
+            <h3 className="text-lg font-bold text-slate-900 mb-1 dark:text-slate-100">No Help Desk records found</h3>
+            <p className="text-sm text-slate-500 max-w-sm dark:text-slate-400">There are no permitted records matching the current search or filters.</p>
         </div>
     );
 }
 
 function HelpDeskDetail({ ticket, onClose }: { ticket: any, onClose: () => void }) {
     return (
-        <div className="w-[450px] shrink-0 border-l border-slate-200 bg-white shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] flex flex-col h-full animate-in slide-in-from-right-2">
-            <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div className="w-[450px] shrink-0 border-l border-slate-200 bg-white shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] flex flex-col h-full animate-in slide-in-from-right-2 dark:border-slate-700 dark:bg-slate-900">
+            <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
                 <div className="flex items-center gap-3">
-                    <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 transition-colors">
+                    <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 transition-colors dark:text-slate-400 dark:hover:bg-slate-700">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
-                        <h2 className="text-lg font-bold text-slate-900">{ticket.id}</h2>
+                        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{ticket.id}</h2>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-700 transition-colors shadow-sm">
+                    <button className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-700 transition-colors shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800">
                         <MoreHorizontal className="w-5 h-5" />
                     </button>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-8 bg-white hide-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 space-y-8 bg-white hide-scrollbar dark:bg-slate-900">
 
                 {/* Request Information */}
                 <div>
                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-1">Request Information</h3>
-                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-4">
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-4 dark:bg-slate-900 dark:border-slate-800">
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-500 font-medium">Requester</span>
-                            <span className="text-sm font-bold text-slate-900">{ticket.requester}</span>
+                            <span className="text-sm text-slate-500 font-medium dark:text-slate-400">Requester</span>
+                            <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{ticket.requester}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-500 font-medium">Created</span>
-                            <span className="text-sm font-medium text-slate-700">{ticket.created}</span>
+                            <span className="text-sm text-slate-500 font-medium dark:text-slate-400">Created</span>
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{ticket.created}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-500 font-medium">Assigned To</span>
+                            <span className="text-sm text-slate-500 font-medium dark:text-slate-400">Assigned To</span>
                             {ticket.assignedTo === "Unassigned" ? (
                                 <span className="text-sm font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Unassigned</span>
                             ) : (
-                                <span className="text-sm font-bold text-slate-900">{ticket.assignedTo}</span>
+                                <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{ticket.assignedTo}</span>
                             )}
                         </div>
                     </div>
 
                     {/* Assignment Action */}
                     {ticket.assignedTo === "Unassigned" && (
-                        <button className="w-full mt-3 py-2.5 border-2 border-dashed border-slate-300 rounded-xl text-sm font-bold text-slate-600 hover:text-blue-700 hover:border-blue-400 hover:bg-blue-50 transition-colors">
+                        <button className="w-full mt-3 py-2.5 border-2 border-dashed border-slate-300 rounded-xl text-sm font-bold text-slate-600 hover:text-blue-700 hover:border-blue-400 hover:bg-blue-50 transition-colors dark:border-slate-600 dark:text-slate-300">
                             Claim/Assign Ticket
                         </button>
                     )}
@@ -243,9 +243,9 @@ function HelpDeskDetail({ ticket, onClose }: { ticket: any, onClose: () => void 
                 {/* Subject / Summary */}
                 <div>
                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-1">Subject / Summary</h3>
-                    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                        <h4 className="font-bold text-slate-900 mb-2">{ticket.subject}</h4>
-                        <p className="text-sm text-slate-600 leading-relaxed">
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                        <h4 className="font-bold text-slate-900 mb-2 dark:text-slate-100">{ticket.subject}</h4>
+                        <p className="text-sm text-slate-600 leading-relaxed dark:text-slate-300">
                             Hello team, I am trying to access the weekly site report for downtown but the portal says I do not have permission. Can someone check my roles? This was working fine last week. Thank you!
                         </p>
                     </div>
@@ -254,25 +254,25 @@ function HelpDeskDetail({ ticket, onClose }: { ticket: any, onClose: () => void 
                 {/* Activity */}
                 <div>
                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-1">Activity</h3>
-                    <div className="border-l-2 border-slate-100 ml-3 space-y-6">
+                    <div className="border-l-2 border-slate-100 ml-3 space-y-6 dark:border-slate-800">
                         <div className="relative pl-6">
-                            <div className="absolute w-3 h-3 bg-white border-2 border-blue-500 rounded-full -left-[7px] top-1"></div>
-                            <p className="text-sm font-bold text-slate-900">Requester followed up</p>
-                            <p className="text-xs font-medium text-slate-500 mt-0.5">{ticket.lastActivity}</p>
+                            <div className="absolute w-3 h-3 bg-white border-2 border-blue-500 rounded-full -left-[7px] top-1 dark:bg-slate-900"></div>
+                            <p className="text-sm font-bold text-slate-900 dark:text-slate-100">Requester followed up</p>
+                            <p className="text-xs font-medium text-slate-500 mt-0.5 dark:text-slate-400">{ticket.lastActivity}</p>
                         </div>
                         <div className="relative pl-6">
-                            <div className="absolute w-3 h-3 bg-white border-2 border-slate-300 rounded-full -left-[7px] top-1"></div>
-                            <p className="text-sm font-bold text-slate-900">Ticket created</p>
-                            <p className="text-xs font-medium text-slate-500 mt-0.5">{ticket.created} via System</p>
+                            <div className="absolute w-3 h-3 bg-white border-2 border-slate-300 rounded-full -left-[7px] top-1 dark:bg-slate-900 dark:border-slate-600"></div>
+                            <p className="text-sm font-bold text-slate-900 dark:text-slate-100">Ticket created</p>
+                            <p className="text-xs font-medium text-slate-500 mt-0.5 dark:text-slate-400">{ticket.created} via System</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Quick Reply (Mock) */}
-            <div className="p-4 border-t border-slate-200 bg-slate-50 mt-auto shrink-0">
+            <div className="p-4 border-t border-slate-200 bg-slate-50 mt-auto shrink-0 dark:border-slate-700 dark:bg-slate-900">
                 <div className="flex gap-2">
-                    <input type="text" placeholder="Type an internal note..." className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-500" />
+                    <input type="text" placeholder="Type an internal note..." className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-500 dark:border-slate-600" />
                     <button className="p-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors">
                         <Send className="w-4 h-4" />
                     </button>

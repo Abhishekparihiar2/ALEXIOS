@@ -123,8 +123,8 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
               style={{ background: "#0f1729", boxShadow: "0 8px 24px rgba(15,23,41,0.4)" }}>
               <img src={alexiosLogo} alt="Alexios" className="w-full h-full object-contain p-1" />
             </div>
-            <h1 className="text-xl font-semibold tracking-tight" style={{ color: "#0f172a" }}>Alexios</h1>
-            <p className="text-sm mt-0.5" style={{ color: "#64748b" }}>
+            <h1 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100" >Alexios</h1>
+            <p className="text-sm mt-0.5 text-slate-500 dark:text-slate-300" >
               {screen === "login" ? "Admin Portal" : screen === "force-change-password" ? "Set New Password" : "Reset Password"}
             </p>
           </div>
@@ -140,7 +140,7 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
           {screen === "login" && (
             <form onSubmit={handleSignIn} noValidate className="space-y-5">
               <div className="space-y-1.5">
-                <label htmlFor="email" className="block text-sm font-medium" style={{ color: "#374151" }}>Email Address</label>
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-200" >Email Address</label>
                 <input id="email" type="email" autoComplete="email" value={email}
                   onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); }}
                   placeholder="you@alexios.com"
@@ -152,7 +152,7 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="password" className="block text-sm font-medium" style={{ color: "#374151" }}>Password</label>
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-200" >Password</label>
                 <div className="relative">
                   <input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password"
                     value={password}
@@ -176,15 +176,15 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
                     style={{ background: rememberMe ? "#1e3a6e" : "#f8fafc", border: rememberMe ? "1.5px solid #1e3a6e" : "1.5px solid #cbd5e1" }}>
                     {rememberMe && <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 10"><path d="M1.5 5L4 7.5 8.5 2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
                   </div>
-                  <span className="text-sm" style={{ color: "#475569" }}>Remember me</span>
+                  <span className="text-sm text-slate-600 dark:text-slate-300" >Remember me</span>
                 </label>
                 <button type="button" onClick={() => { setScreen("forgot-password"); setErrors({}); setResetEmail(email); }}
                   className="text-sm font-medium" style={{ color: "#1e3a6e" }}>Forgot password?</button>
               </div>
 
               <button type="submit" disabled={isLoading}
-                className="w-full rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2 transition-all mt-1"
-                style={{ background: isLoading ? "#334d7a" : "#1e3a6e", color: "#ffffff", boxShadow: isLoading ? "none" : "0 4px 12px rgba(30,58,110,0.35)" }}>
+                className="w-full rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2 transition-all mt-1 bg-white dark:bg-slate-900"
+                style={{ background: isLoading ? "#334d7a" : "#1e3a6e", boxShadow: isLoading ? "none" : "0 4px 12px rgba(30,58,110,0.35)" }}>
                 {isLoading ? <><Loader2 className="w-4 h-4 animate-spin" />Signing in…</> : <><Shield className="w-4 h-4" />Sign In</>}
               </button>
             </form>
@@ -203,7 +203,7 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
                 { id: "confirmPassword", label: "Confirm Password", val: confirmPassword, set: setConfirmPassword, show: showConfirmPassword, toggle: () => setShowConfirmPassword(!showConfirmPassword), err: errors.confirmPassword, errKey: "confirmPassword" as const, hint: "" },
               ].map((f) => (
                 <div key={f.id} className="space-y-1.5">
-                  <label htmlFor={f.id} className="block text-sm font-medium" style={{ color: "#374151" }}>{f.label}</label>
+                  <label htmlFor={f.id} className="block text-sm font-medium text-slate-700 dark:text-slate-200" >{f.label}</label>
                   <div className="relative">
                     <input id={f.id} type={f.show ? "text" : "password"} autoComplete="new-password"
                       value={f.val} onChange={(e) => { f.set(e.target.value); setErrors((p) => ({ ...p, [f.errKey]: undefined })); }}
@@ -211,17 +211,17 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
                       style={inputStyle(f.err)}
                       onFocus={(e) => (e.currentTarget.style.borderColor = "#1e3a6e")}
                       onBlur={(e) => (e.currentTarget.style.borderColor = f.err ? "#dc2626" : "#e2e8f0")} />
-                    <button type="button" tabIndex={-1} onClick={f.toggle} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#94a3b8" }}>
+                    <button type="button" tabIndex={-1} onClick={f.toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300" >
                       {f.show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                   {f.err && <p className="text-xs flex items-center gap-1" style={{ color: "#dc2626" }}><AlertCircle className="w-3 h-3" />{f.err}</p>}
-                  {f.hint && !f.err && <p className="text-xs" style={{ color: "#94a3b8" }}>{f.hint}</p>}
+                  {f.hint && !f.err && <p className="text-xs text-slate-400 dark:text-slate-300" >{f.hint}</p>}
                 </div>
               ))}
               <button type="submit" disabled={isLoading}
-                className="w-full rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2 transition-all"
-                style={{ background: isLoading ? "#334d7a" : "#1e3a6e", color: "#ffffff", boxShadow: isLoading ? "none" : "0 4px 12px rgba(30,58,110,0.35)" }}>
+                className="w-full rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-900"
+                style={{ background: isLoading ? "#334d7a" : "#1e3a6e", boxShadow: isLoading ? "none" : "0 4px 12px rgba(30,58,110,0.35)" }}>
                 {isLoading ? <><Loader2 className="w-4 h-4 animate-spin" />Updating…</> : "Set New Password"}
               </button>
             </form>
@@ -236,16 +236,16 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
                     style={{ background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
                     <CheckCircle2 className="w-6 h-6" style={{ color: "#16a34a" }} />
                   </div>
-                  <p className="text-sm font-medium" style={{ color: "#0f172a" }}>Reset link sent</p>
-                  <p className="text-xs" style={{ color: "#64748b" }}>Check your inbox for <strong>{resetEmail}</strong>.</p>
+                  <p className="text-sm font-medium text-slate-900 dark:text-slate-100" >Reset link sent</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-300" >Check your inbox for <strong>{resetEmail}</strong>.</p>
                   <button type="button" onClick={() => { setScreen("login"); setErrors({}); }}
                     className="text-sm font-medium" style={{ color: "#1e3a6e" }}>← Back to Sign In</button>
                 </div>
               ) : (
                 <>
-                  <p className="text-sm" style={{ color: "#475569" }}>Enter your email and we'll send a reset link.</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300" >Enter your email and we'll send a reset link.</p>
                   <div className="space-y-1.5">
-                    <label htmlFor="resetEmail" className="block text-sm font-medium" style={{ color: "#374151" }}>Email Address</label>
+                    <label htmlFor="resetEmail" className="block text-sm font-medium text-slate-700 dark:text-slate-200" >Email Address</label>
                     <input id="resetEmail" type="email" value={resetEmail}
                       onChange={(e) => { setResetEmail(e.target.value); setErrors({}); }}
                       placeholder="you@alexios.com"
@@ -256,8 +256,8 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
                     {errors.email && <p className="text-xs flex items-center gap-1" style={{ color: "#dc2626" }}><AlertCircle className="w-3 h-3" />{errors.email}</p>}
                   </div>
                   <button type="submit" disabled={isLoading}
-                    className="w-full rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2"
-                    style={{ background: isLoading ? "#334d7a" : "#1e3a6e", color: "#ffffff", boxShadow: "0 4px 12px rgba(30,58,110,0.35)" }}>
+                    className="w-full rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2 bg-white dark:bg-slate-900"
+                    style={{ background: isLoading ? "#334d7a" : "#1e3a6e", boxShadow: "0 4px 12px rgba(30,58,110,0.35)" }}>
                     {isLoading ? <><Loader2 className="w-4 h-4 animate-spin" />Sending…</> : "Send Reset Link"}
                   </button>
                   <div className="text-center">
@@ -270,10 +270,10 @@ export function LoginPage({ onSuccess }: { onSuccess: () => void }) {
           )}
         </div>
 
-        <div className="px-8 py-4 flex items-center justify-between"
-          style={{ background: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
-          <span className="text-xs" style={{ color: "#94a3b8" }}>© {new Date().getFullYear()} Alexios</span>
-          <span className="text-xs" style={{ color: "#94a3b8" }}>ALEXIOS v2.1</span>
+        <div className="px-8 py-4 flex items-center justify-between bg-slate-50 dark:bg-slate-900"
+          style={{borderTop: "1px solid #e2e8f0" }}>
+          <span className="text-xs text-slate-400 dark:text-slate-300" >© {new Date().getFullYear()} Alexios</span>
+          <span className="text-xs text-slate-400 dark:text-slate-300" >ALEXIOS v2.1</span>
         </div>
       </div>
     </div>

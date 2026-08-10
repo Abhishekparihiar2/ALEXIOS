@@ -3,6 +3,7 @@
 :root {
   --font-size: 16px;
   --font-family: "Inter", system-ui, sans-serif;
+  --font-tech: "Chakra Petch", monospace;
   --background: #f4f6fa;
   --foreground: #0f172a;
   --card: #ffffff;
@@ -51,21 +52,21 @@
 }
 
 .dark {
-  --background: #0f172a;
+  --background: #0b0e14;
   --foreground: #f1f5f9;
-  --card: #1e293b;
+  --card: rgba(15, 23, 42, 0.4);
   --card-foreground: #f1f5f9;
-  --popover: #1e293b;
+  --popover: #111827;
   --popover-foreground: #f1f5f9;
   --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: #1e293b;
+  --secondary: rgba(30, 41, 59, 0.5);
   --secondary-foreground: #f1f5f9;
-  --muted: #1e293b;
+  --muted: rgba(30, 41, 59, 0.5);
   --muted-foreground: #94a3b8;
-  --accent: #1e293b;
-  --accent-foreground: #f1f5f9;
-  --destructive: #dc2626;
+  --accent: rgba(59, 130, 246, 0.1);
+  --accent-foreground: #60a5fa;
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.08);
@@ -85,6 +86,12 @@
   --sidebar-accent-foreground: #e2e8f0;
   --sidebar-border: rgba(255, 255, 255, 0.04);
   --sidebar-ring: #3b82f6;
+
+  /* Neon Colors */
+  --neon-blue: #0ea5e9;
+  --neon-orange: #f59e0b;
+  --neon-red: #ef4444;
+  --neon-green: #22c55e;
 }
 
 @theme inline {
@@ -276,5 +283,52 @@
   .dark .glass-modal, .dark .glass-drawer {
     background: rgba(15, 23, 42, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Neon Glow Utilities */
+  .neon-border-blue {
+    border: 1px solid var(--neon-blue);
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.3), inset 0 0 8px rgba(14, 165, 233, 0.1);
+  }
+
+  .neon-border-orange {
+    border: 1px solid var(--neon-orange);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3), inset 0 0 8px rgba(245, 158, 11, 0.1);
+  }
+
+  .neon-border-red {
+    border: 1px solid var(--neon-red);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3), inset 0 0 8px rgba(239, 68, 68, 0.1);
+  }
+
+  .neon-border-green {
+    border: 1px solid var(--neon-green);
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3), inset 0 0 8px rgba(34, 197, 94, 0.1);
+  }
+
+  .neon-text-blue {
+    color: var(--neon-blue);
+    text-shadow: 0 0 8px rgba(14, 165, 233, 0.5);
+  }
+
+  .neon-text-orange {
+    color: var(--neon-orange);
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+  }
+
+  .neon-text-red {
+    color: var(--neon-red);
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+  }
+  
+  .font-tech {
+    font-family: var(--font-tech);
+  }
+
+  .tech-header {
+    font-family: var(--font-tech);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
   }
 }

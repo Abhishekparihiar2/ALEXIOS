@@ -113,53 +113,53 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
         
         {/* KPI Summary Cards */}
         <div className="grid grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center gap-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center gap-4 dark:bg-slate-900 dark:border-slate-700">
             <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
               <BadgeCheck className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-500">Total Skills</p>
-              <p className="text-2xl font-bold text-slate-800">{totalSkills}</p>
+              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Total Skills</p>
+              <p className="text-2xl font-bold text-slate-800 dark:text-slate-200">{totalSkills}</p>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center gap-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center gap-4 dark:bg-slate-900 dark:border-slate-700">
             <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
               <BadgeCheck className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-500">Active Certs</p>
-              <p className="text-2xl font-bold text-slate-800">{activeSkills}</p>
+              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Active Certs</p>
+              <p className="text-2xl font-bold text-slate-800 dark:text-slate-200">{activeSkills}</p>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center gap-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center gap-4 dark:bg-slate-900 dark:border-slate-700">
             <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-500">Expiring Soon</p>
-              <p className="text-2xl font-bold text-slate-800">{expiringCount}</p>
+              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Expiring Soon</p>
+              <p className="text-2xl font-bold text-slate-800 dark:text-slate-200">{expiringCount}</p>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center gap-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center gap-4 dark:bg-slate-900 dark:border-slate-700">
             <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-500">Assigned Employees</p>
-              <p className="text-2xl font-bold text-slate-800">{totalAssigned}</p>
+              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Assigned Employees</p>
+              <p className="text-2xl font-bold text-slate-800 dark:text-slate-200">{totalAssigned}</p>
             </div>
           </div>
         </div>
 
         {/* Toolbar */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-visible">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-visible dark:bg-slate-900 dark:border-slate-700">
           <div className="p-2.5 flex items-center gap-2">
             <div className="relative w-72 shrink-0">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input 
                 type="text" 
                 placeholder="Search skills or certifications..." 
-                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:bg-slate-900 dark:border-slate-700"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -168,7 +168,7 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
             {/* In-line Filter Selects */}
             <div className="flex items-center gap-2 overflow-x-auto flex-1 no-scrollbar">
               <select 
-                className="py-2 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:16px]"
+                className="py-2 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:16px] dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300"
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")` }}
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value as any)}
@@ -184,7 +184,7 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
               </select>
 
               <select 
-                className="py-2 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:16px]"
+                className="py-2 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:16px] dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300"
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")` }}
                 value={regionFilter}
                 onChange={(e) => setRegionFilter(e.target.value)}
@@ -196,7 +196,7 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
               </select>
 
               <select 
-                className="py-2 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:16px]"
+                className="py-2 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:16px] dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300"
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")` }}
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
@@ -208,7 +208,7 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
               </select>
 
               <select 
-                className="py-2 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:16px]"
+                className="py-2 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:16px] dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300"
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")` }}
                 value={expiryFilter}
                 onChange={(e) => setExpiryFilter(e.target.value)}
@@ -220,10 +220,10 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
               </select>
             </div>
 
-            <div className="shrink-0 pl-2 ml-auto border-l border-slate-200">
+            <div className="shrink-0 pl-2 ml-auto border-l border-slate-200 dark:border-slate-700">
               <button 
                 onClick={clearFilters}
-                className="text-sm font-medium text-slate-500 hover:text-slate-700 px-3 py-2 transition-colors"
+                className="text-sm font-medium text-slate-500 hover:text-slate-700 px-3 py-2 transition-colors dark:text-slate-400"
               >
                 Clear Filters
               </button>
@@ -232,10 +232,10 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
         </div>
 
         {/* Data Table */}
-        <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden flex flex-col">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden flex flex-col dark:bg-slate-900 dark:border-slate-700">
           <div className="overflow-x-auto min-h-[400px]">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500">
+              <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 dark:border-slate-700 dark:text-slate-400">
                 <tr>
                   <th className="px-5 py-3 font-semibold">Skill / Certification</th>
                   <th className="px-5 py-3 font-semibold">Category</th>
@@ -247,20 +247,20 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
                   <th className="px-5 py-3 font-semibold w-12 text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filteredSkills.map(skill => (
                   <tr key={skill.id} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="px-5 py-3">
                       <button 
                         onClick={() => setSelectedSkillForDetail(skill)}
-                        className="font-semibold text-slate-800 hover:text-blue-600 transition-colors"
+                        className="font-semibold text-slate-800 hover:text-blue-600 transition-colors dark:text-slate-200"
                       >
                         {skill.name}
                       </button>
                     </td>
-                    <td className="px-5 py-3 text-slate-600">{skill.category}</td>
+                    <td className="px-5 py-3 text-slate-600 dark:text-slate-300">{skill.category}</td>
                     <td className="px-5 py-3">
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-medium dark:bg-slate-800 dark:text-slate-300">
                         {skill.scope}
                       </span>
                     </td>
@@ -312,7 +312,7 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
                 
                 {filteredSkills.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-5 py-12 text-center text-slate-500">
+                    <td colSpan={8} className="px-5 py-12 text-center text-slate-500 dark:text-slate-400">
                       No skills found matching your filters.
                     </td>
                   </tr>
@@ -320,12 +320,12 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
               </tbody>
             </table>
           </div>
-          <div className="p-4 border-t border-slate-200 bg-slate-50 text-xs text-slate-500 flex justify-between items-center">
+          <div className="p-4 border-t border-slate-200 bg-slate-50 text-xs text-slate-500 flex justify-between items-center dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
             <span>Showing {filteredSkills.length} skills</span>
             <div className="flex gap-1">
-              <button className="px-2 py-1 border border-slate-200 rounded text-slate-400 bg-white" disabled>Prev</button>
-              <button className="px-2 py-1 border border-slate-200 rounded text-slate-700 bg-white">1</button>
-              <button className="px-2 py-1 border border-slate-200 rounded text-slate-400 bg-white" disabled>Next</button>
+              <button className="px-2 py-1 border border-slate-200 rounded text-slate-400 bg-white dark:border-slate-700 dark:bg-slate-900" disabled>Prev</button>
+              <button className="px-2 py-1 border border-slate-200 rounded text-slate-700 bg-white dark:border-slate-700 dark:text-slate-300 dark:bg-slate-900">1</button>
+              <button className="px-2 py-1 border border-slate-200 rounded text-slate-400 bg-white dark:border-slate-700 dark:bg-slate-900" disabled>Next</button>
             </div>
           </div>
         </div>

@@ -31,6 +31,7 @@ import { CpSection, CpMonitoring, CpExtraScan, CpManual, TourRecurrence, Checkpo
 import { EmpStatus, EmpUserType, Employee, DEPARTMENTS, MOCK_EMPLOYEES, STATUS_STYLES, USER_TYPE_STYLES, AVATAR_COLORS, avatarColor, EmpTab } from '../pages/Employees/index';
 import { ProfileTab, AVAIL_CYCLE, AvailState, AVAIL_COLORS, DAYS_SHORT, HOURS_LIST, buildInitialAvail, EmployeeProfilePage, AddEmployeePage, EmployeesPage } from '../pages/Employees/Profile';
 import { AppShell } from '../AppShell';
+import { SiteProvider } from '../context/SiteContext';
 
 
 // ─── Root App ─────────────────────────────────────────────────────────────────
@@ -44,5 +45,9 @@ export default function App() {
     return <LoginPage onSuccess={() => setAuthenticated(true)} />;
   }
 
-  return <AppShell onSignOut={() => setAuthenticated(false)} />;
+  return (
+    <SiteProvider>
+      <AppShell onSignOut={() => setAuthenticated(false)} />
+    </SiteProvider>
+  );
 }
