@@ -104,7 +104,8 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
   return (
     <div className="flex-1 flex flex-col h-full bg-transparent relative min-h-0 overflow-hidden">
       
-      <div className="px-6 pt-3 pb-0 bg-slate-900/60 backdrop-blur-xl border-b border-slate-800 shrink-0">
+      {/* TOP ACTIONS */}
+      <div className="px-6 pt-3 pb-0 bg-slate-900/60 backdrop-blur-xl border-b border-slate-800 shrink-0 relative z-40">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
           <div>
             <div className="flex items-center gap-3">
@@ -183,20 +184,20 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
       </div>
 
       {activeTab === "Live Map" ? (
-         <div className="flex-1 flex flex-col relative w-full h-full bg-slate-100 overflow-hidden dark:bg-slate-800">
-            <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2 dark:text-slate-100">
-                <Map className="w-5 h-5 text-blue-600" />
+         <div className="flex-1 flex flex-col relative w-full h-full bg-transparent overflow-hidden">
+            <div className="absolute top-4 left-4 z-10 bg-slate-900/60 backdrop-blur-md p-4 rounded-xl shadow-lg border border-slate-700">
+              <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2">
+                <Map className="w-5 h-5 text-blue-500" />
                 Live Guard Map
               </h2>
-              <p className="text-sm text-slate-500 mt-1 max-w-sm dark:text-slate-400">
+              <p className="text-sm text-slate-400 mt-1 max-w-sm">
                 Real-time GPS locations of all active guards, patrols, and geofence boundaries.
               </p>
             </div>
             
-            <div className="relative flex-1 w-full h-full" style={{ background: "#e8ecf4" }}>
+            <div className="relative flex-1 w-full h-full mx-6 mb-6 mt-4 bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-xl overflow-hidden shadow-sm">
               {/* Grid lines */}
-              <svg className="absolute inset-0 w-full h-full opacity-30">
+              <svg className="absolute inset-0 w-full h-full opacity-10">
                 {[...Array(20)].map((_, i) => (
                   <line key={`h${i}`} x1="0" y1={i * 40} x2="100%" y2={i * 40} stroke="#94a3b8" strokeWidth="0.5" />
                 ))}
@@ -220,14 +221,13 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                   onClick={() => setSelectedPin(pin)}
                 >
                   <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-xl group-hover:scale-110 transition-all"
-                    style={{ background: pin.status, border: "3px solid white" }}
+                    className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-all border-[3px] border-slate-800"
+                    style={{ background: pin.status }}
                   >
                     {pin.count}
                   </div>
                   <span
-                    className="text-sm font-bold mt-2 whitespace-nowrap rounded-md px-3 py-1 shadow-md text-slate-800 dark:text-slate-100"
-                    style={{ background: "rgba(255,255,255,0.95)"}}
+                    className="text-sm font-bold mt-2 whitespace-nowrap rounded-md px-3 py-1 shadow-lg text-slate-200 bg-slate-900/80 backdrop-blur-md border border-slate-700"
                   >
                     {pin.label}
                   </span>
@@ -236,13 +236,12 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
 
               {/* Legend */}
               <div
-                className="absolute bottom-6 left-6 rounded-xl px-4 py-3 flex flex-col gap-3 text-sm shadow-xl border-slate-200 dark:bg-slate-700 dark:border-slate-700"
-                style={{ background: "rgba(255,255,255,0.95)"}}
+                className="absolute bottom-6 left-6 rounded-xl px-4 py-3 flex flex-col gap-3 text-sm shadow-xl border border-slate-700 bg-slate-900/80 backdrop-blur-md"
               >
-                <span className="font-bold text-slate-800 uppercase tracking-wider text-xs mb-1 dark:text-slate-200">Coverage Status</span>
-                <span className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300"><span className="w-3 h-3 rounded-full bg-green-500 shadow-sm" />Optimal Coverage</span>
-                <span className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300"><span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm" />Partial Staffing</span>
-                <span className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300"><span className="w-3 h-3 rounded-full bg-red-500 shadow-sm" />Understaffed</span>
+                <span className="font-bold text-slate-400 uppercase tracking-wider text-xs mb-1">Coverage Status</span>
+                <span className="flex items-center gap-2 font-semibold text-slate-300"><span className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />Optimal Coverage</span>
+                <span className="flex items-center gap-2 font-semibold text-slate-300"><span className="w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]" />Partial Staffing</span>
+                <span className="flex items-center gap-2 font-semibold text-slate-300"><span className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" />Understaffed</span>
               </div>
             </div>
          </div>

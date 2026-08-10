@@ -68,7 +68,7 @@ export function TimesheetsTab() {
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-transparent relative">
       
       {/* HEADER ROW */}
-      <div className="px-6 py-4 bg-slate-900/60 backdrop-blur-xl border-b border-slate-800 shrink-0 flex flex-wrap items-center justify-between gap-4">
+      <div className="px-6 py-4 bg-slate-900/60 backdrop-blur-xl border-b border-slate-800 shrink-0 flex flex-wrap items-center justify-between gap-4 relative z-40">
         <div className="flex items-center gap-3 flex-1 min-w-[300px]">
           <div className="relative flex-1 max-w-xs">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />

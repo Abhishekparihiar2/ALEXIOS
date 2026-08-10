@@ -2219,7 +2219,7 @@ export function EmployeesPage() {
       <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900" >
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">{isTypes ? "Employee Types" : "Departments"}</h3>
+            <h3 className="text-xl font-bold text-slate-100">{isTypes ? "Employee Types" : "Departments"}</h3>
             <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">
               Manage the options available in the {isTypes ? "Employee Type" : "Department"} dropdown when creating or editing an employee.
             </p>
@@ -2295,7 +2295,7 @@ export function EmployeesPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
+    <div className="flex-1 overflow-y-auto flex flex-col bg-transparent" style={{ scrollbarWidth: "none" }}>
 
       {/* ── Hero Header Banner ── */}
       <div className="relative overflow-hidden px-6 pt-6 pb-5 shrink-0"
@@ -2349,26 +2349,20 @@ export function EmployeesPage() {
       </div>
 
       {/* ── Main Card ── */}
-      <div className="mx-5 mb-5 -mt-1 rounded-2xl flex flex-col overflow-hidden glass-card"
-        style={{ boxShadow: "0 4px 24px rgba(15,23,41,0.10)" }}>
+      <div className="mx-5 mb-5 -mt-1 rounded-2xl flex flex-col overflow-hidden bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-sm">
 
         {/* ── Tabs ── */}
-        <div className="flex items-center gap-1 px-5 pt-4 pb-0" style={{ borderBottom: "1.5px solid #f1f5f9" }}>
+        <div className="flex items-center gap-1 px-5 pt-4 pb-0 border-b border-slate-800">
           {TABS.map((t) => {
             const active = tab === t.id;
             return (
               <button key={t.id}
                 onClick={() => { setTab(t.id); setPage(1); setSelected(new Set()); }}
-                className="relative flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-all"
-                style={{ color: active ? "#1e3a6e" : "#94a3b8", background: "none", marginBottom: -1.5 }}
+                className={`relative flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-all ${active ? "text-blue-500" : "text-slate-400 hover:text-slate-300"}`} style={{ marginBottom: -1.5 }}
               >
                 {t.icon}
                 {t.label}
-                <span className="rounded-full px-2 py-0.5 text-xs font-bold leading-none"
-                  style={{
-                    background: active ? "#1e3a6e" : "#f1f5f9",
-                    color: active ? "#fff" : "#94a3b8",
-                  }}>
+                <span className={`rounded-full px-2 py-0.5 text-xs font-bold leading-none ${active ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400"}`}>
                   {t.count}
                 </span>
                 {active && (
@@ -2383,15 +2377,13 @@ export function EmployeesPage() {
         {tab === "types" || tab === "departments" ? renderManagementView() : (
           <>
             {/* ── Toolbar ── */}
-            <div className="flex flex-wrap items-center gap-2 px-5 py-3.5" style={{ borderBottom: "1px solid #f1f5f9" }}>
+            <div className="flex flex-wrap items-center gap-2 px-5 py-3.5 border-b border-slate-800">
               {/* Search */}
-          <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 flex-1 min-w-52 transition-all bg-slate-50 dark:bg-slate-900"
-            style={{border: "1.5px solid #e8edf4" }}>
+          <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 flex-1 min-w-52 transition-all bg-slate-800/50 border border-slate-700">
             <Search className="w-3.5 h-3.5 shrink-0 text-slate-400 dark:text-slate-300"  />
             <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder="Search name, email, username, UID…"
-              className="text-sm outline-none bg-transparent flex-1 min-w-0"
-              style={{ color: "#0f172a" }} />
+              className="text-sm outline-none bg-transparent flex-1 min-w-0 text-slate-200 placeholder-slate-500" />
             {search && (
               <button onClick={() => setSearch("")}
                 className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
@@ -2404,8 +2396,7 @@ export function EmployeesPage() {
           {/* Department */}
           <div className="relative">
             <select value={deptFilter} onChange={(e) => { setDeptFilter(e.target.value); setPage(1); }}
-              className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium"
-              style={{ background: deptFilter !== "All Departments" ? "#eff6ff" : "#f8fafc", border: `1.5px solid ${deptFilter !== "All Departments" ? "#bfdbfe" : "#e8edf4"}`, color: deptFilter !== "All Departments" ? "#1e3a6e" : "#64748b" }}>
+              className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
               {DEPARTMENTS.map((d) => <option key={d}>{d}</option>)}
             </select>
             <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
@@ -2414,8 +2405,7 @@ export function EmployeesPage() {
           {/* Status */}
           <div className="relative">
             <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-              className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium"
-              style={{ background: statusFilter !== "All Status" ? "#f0fdf4" : "#f8fafc", border: `1.5px solid ${statusFilter !== "All Status" ? "#bbf7d0" : "#e8edf4"}`, color: statusFilter !== "All Status" ? "#16a34a" : "#64748b" }}>
+              className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
               {["All Status", "Active", "Inactive", "On Leave", "Terminated"].map((s) => <option key={s}>{s}</option>)}
             </select>
             <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
@@ -2424,22 +2414,13 @@ export function EmployeesPage() {
           <div className="flex-1" />
 
           {/* Export group */}
-          <div className="flex items-center rounded-xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
+          <div className="flex items-center rounded-xl overflow-hidden border border-slate-700">
             {[
               { label: "CSV", icon: <FileDown className="w-3.5 h-3.5" />, fn: exportCSV, color: "#16a34a" },
               { label: "PDF", icon: <FileText className="w-3.5 h-3.5" />, fn: () => { }, color: "#dc2626" },
               { label: "Excel", icon: <FileSpreadsheet className="w-3.5 h-3.5" />, fn: () => { }, color: "#2563eb" },
             ].map((btn, i) => (
-              <button key={btn.label} onClick={btn.fn}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold transition-all"
-                style={{
-                  color: btn.color,
-                  background: "#fff",
-                  borderLeft: i > 0 ? "1px solid #e2e8f0" : "none",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
-              >
+              <button key={btn.label} onClick={btn.fn} className={`flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold transition-all bg-slate-800/50 hover:bg-slate-700 ${i > 0 ? "border-l border-slate-700" : ""}`} style={{ color: btn.color }}>
                 {btn.icon}{btn.label}
               </button>
             ))}
@@ -2448,20 +2429,16 @@ export function EmployeesPage() {
 
         {/* ── Bulk selection bar ── */}
         {selected.size > 0 && (
-          <div className="flex items-center gap-3 px-5 py-2.5"
-            style={{ background: "linear-gradient(90deg,#eff6ff,#f0f9ff)", borderBottom: "1px solid #bfdbfe" }}>
+          <div className="flex items-center gap-3 px-5 py-2.5 bg-blue-900/30 border-b border-blue-900/50">
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                style={{ background: "#1e3a6e" }}>{selected.size}</div>
-              <span className="text-sm font-semibold" style={{ color: "#1e3a6e" }}>employee{selected.size > 1 ? "s" : ""} selected</span>
+              <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white bg-blue-600">{selected.size}</div>
+              <span className="text-sm font-semibold text-blue-400">employee{selected.size > 1 ? "s" : ""} selected</span>
             </div>
             <div className="flex items-center gap-2 ml-2">
-              <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
-                style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca" }}>
+              <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all bg-red-900/40 text-red-400 border border-red-900/50 hover:bg-red-900/60">
                 <UserX className="w-3.5 h-3.5" />Deactivate
               </button>
-              <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
-                style={{ background: "#1e3a6e", color: "#fff" }}>
+              <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all bg-blue-600 text-white hover:bg-blue-700">
                 <FileDown className="w-3.5 h-3.5" />Export
               </button>
             </div>
@@ -2476,18 +2453,17 @@ export function EmployeesPage() {
         <div className="overflow-x-auto" style={{ minHeight: 200 }}>
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
-                <th className="w-12 px-4 py-3.5" style={{ borderBottom: "1.5px solid #e8edf4" }}>
+              <tr className="bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+                <th className="w-12 px-4 py-3.5">
                   <input type="checkbox" checked={allSelected} onChange={toggleAll}
                     className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
                 </th>
                 {COLS.map((col) => (
-                  <th key={col} className="px-3 py-3.5 text-left whitespace-nowrap text-slate-500 dark:text-slate-300"
-                    style={{ borderBottom: "1.5px solid #e8edf4", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                  <th key={col} className="px-3 py-3.5 text-left whitespace-nowrap text-slate-400 text-[11px] font-bold tracking-wider uppercase">
                     {col}
                   </th>
                 ))}
-                <th className="w-12 px-3 py-3.5" style={{ borderBottom: "1.5px solid #e8edf4" }} />
+                <th className="w-12 px-3 py-3.5" />
               </tr>
             </thead>
             <tbody>
@@ -2495,7 +2471,7 @@ export function EmployeesPage() {
                 <tr>
                   <td colSpan={15}>
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
-                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-slate-100 dark:bg-slate-800"
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-slate-800/80"
                         >
                         <Users className="w-7 h-7 text-slate-300 dark:text-slate-400"  />
                       </div>
@@ -2513,17 +2489,7 @@ export function EmployeesPage() {
                 const ut = USER_TYPE_STYLES[emp.userType];
                 const ac = avatarColor(emp.avatar);
                 return (
-                  <tr key={emp.uid}
-                    onClick={() => setSelectedEmployee(emp)}
-                    style={{
-                      background: isSelected ? "#f0f5ff" : "#fff",
-                      borderBottom: "1px solid #f1f5f9",
-                      transition: "background 0.12s",
-                      cursor: "pointer",
-                    }}
-                    onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = "#fafbfd"; }}
-                    onMouseLeave={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = "#fff"; }}
-                  >
+                  <tr key={emp.uid} onClick={() => setSelectedEmployee(emp)} className={`cursor-pointer transition-colors border-b border-slate-800/50 ${isSelected ? "bg-blue-900/30" : "hover:bg-slate-800/60"}`}>
                     {/* Checkbox */}
                     <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
                       <input type="checkbox" checked={isSelected} onChange={() => toggleOne(emp.uid)}
@@ -2532,7 +2498,7 @@ export function EmployeesPage() {
 
                     {/* UID */}
                     <td className="px-3 py-3.5">
-                      <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-mono font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800"
+                      <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-mono font-semibold text-slate-300 bg-slate-800/80"
                         style={{letterSpacing: "0.03em" }}>
                         {emp.uid}
                       </span>
@@ -2551,20 +2517,20 @@ export function EmployeesPage() {
                               style={{ background: "#16a34a" }} />
                           )}
                         </div>
-                        <span className="text-sm font-semibold whitespace-nowrap text-slate-900 dark:text-slate-100" >
+                        <span className="text-sm font-semibold whitespace-nowrap text-slate-100" >
                           {emp.firstName}
                         </span>
                       </div>
                     </td>
 
                     {/* Middle Name */}
-                    <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-500 dark:text-slate-300" >{emp.middleName}</td>
+                    <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-400" >{emp.middleName}</td>
 
                     {/* Last Name */}
-                    <td className="px-3 py-3.5 text-sm font-semibold whitespace-nowrap text-slate-800 dark:text-slate-100" >{emp.lastName}</td>
+                    <td className="px-3 py-3.5 text-sm font-semibold whitespace-nowrap text-slate-100" >{emp.lastName}</td>
 
                     {/* Title */}
-                    <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-600 dark:text-slate-300" >{emp.title}</td>
+                    <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-300" >{emp.title}</td>
 
                     {/* Termination Date */}
                     <td className="px-3 py-3.5 whitespace-nowrap">
@@ -2576,13 +2542,13 @@ export function EmployeesPage() {
                     </td>
 
                     {/* Email */}
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-600 dark:text-slate-300" >
+                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-300" >
                       <a href={`mailto:${emp.email}`} style={{ color: "#2563eb" }} className="hover:underline">{emp.email}</a>
                     </td>
 
                     {/* Username */}
                     <td className="px-3 py-3.5">
-                      <span className="text-xs font-mono rounded-md px-2 py-1 text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700"
+                      <span className="text-xs font-mono rounded-md px-2 py-1 text-slate-400 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700"
                         >
                         @{emp.username}
                       </span>
@@ -2599,7 +2565,7 @@ export function EmployeesPage() {
                     </td>
 
                     {/* Department */}
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap font-medium text-slate-700 dark:text-slate-200" >
+                    <td className="px-3 py-3.5 text-xs whitespace-nowrap font-medium text-slate-200" >
                       {emp.department}
                     </td>
 
@@ -2613,7 +2579,7 @@ export function EmployeesPage() {
                     </td>
 
                     {/* Last Visit */}
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-500 dark:text-slate-300" >{emp.lastVisit}</td>
+                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-400" >{emp.lastVisit}</td>
 
                     {/* Added By */}
                     <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-400 dark:text-slate-300" >{emp.addedBy}</td>
@@ -2644,9 +2610,9 @@ export function EmployeesPage() {
         </div>
 
         {/* ── Pagination ── */}
-        <div className="flex items-center justify-between px-5 py-4" style={{ borderTop: "1.5px solid #f1f5f9" }}>
+        <div className="flex items-center justify-between px-5 py-4 border-t border-slate-800">
           <p className="text-xs font-medium text-slate-400 dark:text-slate-300" >
-            {filtered.length === 0 ? "No results" : <>Showing <span  className="text-slate-700 dark:text-slate-200">{(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}</span> of <span  className="text-slate-700 dark:text-slate-200">{filtered.length}</span> employees</>}
+            {filtered.length === 0 ? "No results" : <>Showing <span  className="text-slate-200">{(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}</span> of <span  className="text-slate-200">{filtered.length}</span> employees</>}
           </p>
           <div className="flex items-center gap-1">
             {[
@@ -2654,7 +2620,7 @@ export function EmployeesPage() {
               { icon: <ChevronLeft className="w-3.5 h-3.5" />, fn: () => setPage((p) => Math.max(1, p - 1)), disabled: page === 1 },
             ].map((btn, i) => (
               <button key={i} onClick={btn.fn} disabled={btn.disabled}
-                className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 text-slate-600 dark:text-slate-300"
+                className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 text-slate-300"
                 
                 onMouseEnter={(e) => { if (!btn.disabled) e.currentTarget.style.background = "#f1f5f9"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
@@ -2688,7 +2654,7 @@ export function EmployeesPage() {
               { icon: <ChevronLast className="w-3.5 h-3.5" />, fn: () => setPage(totalPages), disabled: page === totalPages || totalPages === 0 },
             ].map((btn, i) => (
               <button key={i} onClick={btn.fn} disabled={btn.disabled}
-                className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 text-slate-600 dark:text-slate-300"
+                className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 text-slate-300"
                 
                 onMouseEnter={(e) => { if (!btn.disabled) e.currentTarget.style.background = "#f1f5f9"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
