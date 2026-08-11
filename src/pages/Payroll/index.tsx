@@ -5,6 +5,7 @@ import {
     Search, Filter, MoreHorizontal, ChevronRight, TrendingUp,
     AlertTriangle, PlayCircle, Menu, ChevronLeft
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 export function PayrollPage() {
     const [activeTab, setActiveTab] = useState("overview");
@@ -40,10 +41,23 @@ export function PayrollPage() {
             ]
         }
     ];
+    const currentTabInfo = useMemo(() => {
+        for (const group of NAV_GROUPS) {
+            const item = group.items.find(i => i.id === activeTab);
+            if (item) return item;
+        }
+        return { label: "Payroll", icon: <DollarSign className="w-5 h-5 text-slate-900 dark:text-slate-100" /> };
+    }, [activeTab]);
 
     return (
-        <div className="flex-1 flex overflow-hidden bg-slate-50 relative dark:bg-slate-900">
-            {/* Secondary Sidebar */}
+        <div className="flex-1 flex flex-col overflow-hidden bg-transparent relative">
+            <PageHeader
+                title={currentTabInfo.label}
+                subtitle="Manage payroll policies, schedules, and configuration."
+                icon={<DollarSign className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+            />
+            <div className="flex-1 flex overflow-hidden">
+                {/* Secondary Sidebar */}
             <div className={`transition-all duration-300 border-r border-slate-200 bg-white flex flex-col pt-5 ${sidebarOpen ? 'w-64' : 'w-16'}`}>
                 <div className={`px-5 pb-4 border-b border-slate-100 flex items-center justify-between ${!sidebarOpen && 'px-2 justify-center'}`}>
                     {sidebarOpen && (
@@ -103,6 +117,7 @@ export function PayrollPage() {
                 {activeTab === "audit" && <AuditHistory />}
                 {activeTab === "settings" && <PayrollSettings />}
             </div>
+        </div>
         </div>
     );
 }

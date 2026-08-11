@@ -13,6 +13,7 @@ import {
   PanelLeftOpen
 } from "lucide-react";
 import { StatusBadge } from "../../components/StatusBadge";
+import { PageHeader } from "../../components/PageHeader";
 
 const TICKET_CATEGORIES = [
   { name: "View All", count: 684 },
@@ -147,39 +148,40 @@ export function TicketsPage({ onNavigate, initialCategory }: { onNavigate?: (p: 
 
       {/* ─── RIGHT: TICKETS WORKSPACE ─── */}
       <div className="flex-1 flex flex-col h-full bg-transparent relative overflow-hidden">
-        <div className="px-6 pt-6 pb-4 shrink-0 border-b border-slate-800 bg-slate-900/40 backdrop-blur-sm">
-          <div className="flex items-start gap-4">
-            {categoriesCollapsed && (
+        <PageHeader
+          title="Manage Tickets"
+          subtitle="Review, assign and resolve operational alerts and tickets."
+          icon={<AlertTriangle className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+          actions={
+            categoriesCollapsed && (
               <button 
                 onClick={() => setCategoriesCollapsed(false)} 
-                className="mt-1 p-1.5 bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+                className="flex items-center gap-2 p-2 bg-slate-800/50 border border-slate-700 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 rounded-lg transition-colors"
                 title="Expand Categories"
               >
                 <PanelLeftOpen className="w-4 h-4" />
+                <span className="text-sm font-semibold">Categories</span>
               </button>
-            )}
-            <div>
-              <h1 className="text-xl font-bold text-slate-100">Manage Tickets</h1>
-              <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">Review, assign and resolve operational alerts and tickets.</p>
+            )
+          }
+          bottomContent={
+            <div className="grid grid-cols-5 gap-3 mt-2">
+              {[
+                { label: "Open", count: 124, color: "text-amber-400", bg: "bg-amber-900/20 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]" },
+                { label: "Critical", count: 18, color: "text-red-400", bg: "bg-red-900/20 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.15)]" },
+                { label: "Overdue", count: 45, color: "text-purple-400", bg: "bg-purple-900/20 border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.1)]" },
+                { label: "Unassigned", count: 32, color: "text-blue-400", bg: "bg-blue-900/20 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]" },
+                { label: "Resolved Today", count: 87, color: "text-emerald-400", bg: "bg-emerald-900/20 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]" },
+              ].map(card => (
+                <div key={card.label} className={`rounded-xl p-3 border backdrop-blur-md transition-all hover:scale-105 cursor-pointer ${card.bg}`}>
+                  <p className={`text-xl font-bold ${card.color}`}>{card.count}</p>
+                  <p className="text-[10px] font-semibold text-slate-300 uppercase tracking-widest mt-1">{card.label}</p>
+                </div>
+              ))}
             </div>
-          </div>
-          
-          {/* Summary Cards */}
-          <div className="grid grid-cols-5 gap-3 mt-5">
-            {[
-              { label: "Open", count: 124, color: "text-amber-400", bg: "bg-amber-900/20 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]" },
-              { label: "Critical", count: 18, color: "text-red-400", bg: "bg-red-900/20 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.15)]" },
-              { label: "Overdue", count: 45, color: "text-purple-400", bg: "bg-purple-900/20 border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.1)]" },
-              { label: "Unassigned", count: 32, color: "text-blue-400", bg: "bg-blue-900/20 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]" },
-              { label: "Resolved Today", count: 87, color: "text-emerald-400", bg: "bg-emerald-900/20 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]" },
-            ].map(card => (
-              <div key={card.label} className={`rounded-xl p-3 border backdrop-blur-md transition-all hover:scale-105 cursor-pointer ${card.bg}`}>
-                <p className={`text-xl font-bold ${card.color}`}>{card.count}</p>
-                <p className="text-[10px] font-semibold text-slate-300 uppercase tracking-widest mt-1">{card.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+          }
+        />
+
 
         {/* Toolbar & Tabs */}
         <div className="px-6 py-3 flex items-center justify-between border-b border-slate-800 bg-slate-900/60 backdrop-blur-md shrink-0">

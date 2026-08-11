@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BookOpen, HelpCircle, MessageCircle, ExternalLink, Headphones, ChevronLeft, Search, FileText, Send, Phone, Video } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 export function HelpPage() {
     const [view, setView] = useState<"index" | "resource-center" | "talk-expert">("index");
@@ -8,14 +9,13 @@ export function HelpPage() {
     if (view === "talk-expert") return <TalkExpertView onBack={() => setView("index")} />;
 
     return (
-        <div className="w-full h-full flex flex-col p-4 md:p-8 animate-in fade-in bg-transparent min-w-0 overflow-y-auto">
-            <div className="max-w-5xl mx-auto w-full">
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-slate-900 tracking-tight dark:text-slate-100">Help</h1>
-                    <p className="text-slate-500 mt-2 text-lg dark:text-slate-400">Find support resources or connect with an expert.</p>
-                </div>
-
+        <div className="w-full h-full flex flex-col animate-in fade-in bg-transparent min-w-0 overflow-y-auto">
+            <PageHeader
+                title="Help"
+                subtitle="Find support resources or connect with an expert."
+                icon={<HelpCircle className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+            />
+            <div className="max-w-5xl mx-auto w-full p-4 md:p-8">
                 {/* Cards Container */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                     {/* Resource Center */}

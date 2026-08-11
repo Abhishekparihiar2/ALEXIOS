@@ -1,26 +1,26 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { 
   X, Check, ChevronRight, ChevronLeft, Search, AlertCircle, GripVertical, Trash2, 
   Clock, Calendar, ChevronDown, ChevronUp, Plus, MapPin, Building2, Route
 } from "lucide-react";
-import { Checkpoint, CP_CHECKPOINTS } from "./index";
+import { Checkpoint, CP_CHECKPOINTS, TourRoute } from "./index";
 import { MOCK_SITES } from "../Clients/index";
 import { MOCK_EMPLOYEES } from "../Employees/index";
 
-export function CreateTourWizard({ onClose }: { onClose: () => void }) {
+export function CreateTourWizard({ onClose, tourToEdit }: { onClose: () => void, tourToEdit?: TourRoute | null }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [showDiscard, setShowDiscard] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   
   // Step 1 State
-  const [tourName, setTourName] = useState("");
-  const [site, setSite] = useState("");
+  const [tourName, setTourName] = useState(tourToEdit ? tourToEdit.description : "");
+  const [site, setSite] = useState(tourToEdit ? tourToEdit.site : "");
   const [assignedType, setAssignedType] = useState<"All Qualified Guards" | "Specific Employee(s)" | "Position" | "Shift">("All Qualified Guards");
-  const [assignedValues, setAssignedValues] = useState<string[]>([]);
-  const [duration, setDuration] = useState("30");
-  const [gracePeriod, setGracePeriod] = useState("15");
+  const [assignedValues, setAssignedValues] = useState<string[]>(tourToEdit ? [tourToEdit.assignedTo] : []);
+  const [duration, setDuration] = useState(tourToEdit ? tourToEdit.duration.replace(/\D/g, '') : "30");
+  const [gracePeriod, setGracePeriod] = useState(tourToEdit ? tourToEdit.gracePeriod.replace(/\D/g, '') : "15");
   const [instructions, setInstructions] = useState("");
-  const [status, setStatus] = useState<"Active" | "Inactive">("Active");
+  const [status, setStatus] = useState<"Active" | "Inactive">(tourToEdit ? tourToEdit.status : "Active");
 
   // Step 2 State
   const [selectedCheckpoints, setSelectedCheckpoints] = useState<Checkpoint[]>([]);
@@ -28,7 +28,7 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
   const [cpSearch, setCpSearch] = useState("");
 
   // Step 3 State
-  const [recurrence, setRecurrence] = useState<"Once" | "Daily" | "Weekly" | "Monthly">("Weekly");
+  const [recurrence, setRecurrence] = useState<"Once" | "Daily" | "Weekly" | "Monthly">(tourToEdit && tourToEdit.recurrence === "Weekly" ? "Weekly" : tourToEdit && tourToEdit.recurrence === "Monthly" ? "Monthly" : "Weekly");
   const [weeklyDays, setWeeklyDays] = useState<string[]>(["Monday", "Wednesday", "Friday"]);
   const [tourTimes, setTourTimes] = useState<string[]>(["20:00"]);
   const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
@@ -149,14 +149,14 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
             <label className="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Tour Name <span className="text-red-500">*</span></label>
             <input type="text" value={tourName} onChange={e => { setTourName(e.target.value); setHasChanges(true); }}
               placeholder="e.g. Nightly Perimeter Patrol"
-              className="w-full px-4 py-2.5 rounded-xl text-sm border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all dark:border-slate-700" />
+              className="w-full px-4 py-2.5 rounded-xl text-sm border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all bg-white text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100" />
             <p className="text-xs text-slate-500 mt-1.5 dark:text-slate-400">Use a name that is easy for guards and supervisors to recognize.</p>
           </div>
 
           <div>
             <label className="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Site <span className="text-red-500">*</span></label>
             <select value={site} onChange={e => { setSite(e.target.value); setHasChanges(true); }}
-              className="w-full px-4 py-2.5 rounded-xl text-sm border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none bg-white appearance-none cursor-pointer dark:border-slate-700 dark:bg-slate-900">
+              className="w-full px-4 py-2.5 rounded-xl text-sm border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none bg-white text-slate-900 appearance-none cursor-pointer dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
               <option value="" disabled>Select site...</option>
               {MOCK_SITES.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
             </select>
@@ -195,7 +195,7 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
             </div>
             
             {assignedType === "Position" && (
-              <select className="mt-3 w-full max-w-sm px-4 py-2.5 rounded-xl text-sm border border-slate-200 bg-white cursor-pointer dark:border-slate-700 dark:bg-slate-900">
+              <select className="mt-3 w-full max-w-sm px-4 py-2.5 rounded-xl text-sm border border-slate-200 bg-white text-slate-900 cursor-pointer dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
                 <option value="">Select position...</option>
                 <option value="Security Officer">Security Officer</option>
                 <option value="Night Guard">Night Guard</option>
@@ -205,7 +205,7 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
             
             {assignedType === "Specific Employee(s)" && (
               <div className="mt-3 space-y-2">
-                <select className="w-full max-w-sm px-4 py-2.5 rounded-xl text-sm border border-slate-200 bg-white cursor-pointer dark:border-slate-700 dark:bg-slate-900"
+                <select className="w-full max-w-sm px-4 py-2.5 rounded-xl text-sm border border-slate-200 bg-white text-slate-900 cursor-pointer dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                   onChange={e => {
                     if (e.target.value && !assignedValues.includes(e.target.value)) {
                       setAssignedValues([...assignedValues, e.target.value]);
@@ -246,7 +246,7 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
               <label className="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Estimated Duration <span className="text-red-500">*</span></label>
               <div className="flex items-center">
                 <input type="number" value={duration} onChange={e => { setDuration(e.target.value); setHasChanges(true); }}
-                  className="w-24 px-4 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all dark:border-slate-700" />
+                  className="w-24 px-4 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-white text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100" />
                 <div className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-r-xl text-sm text-slate-500 font-medium dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">Minutes</div>
               </div>
             </div>
@@ -254,7 +254,7 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
               <label className="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Grace Period <span className="text-red-500">*</span></label>
               <div className="flex items-center">
                 <input type="number" value={gracePeriod} onChange={e => { setGracePeriod(e.target.value); setHasChanges(true); }}
-                  className="w-24 px-4 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all dark:border-slate-700" />
+                  className="w-24 px-4 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-white text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100" />
                 <div className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-r-xl text-sm text-slate-500 font-medium dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">Minutes</div>
               </div>
               <p className="text-xs text-slate-500 mt-1.5 dark:text-slate-400">Supervisors are alerted when the tour exceeds this grace period. Default: 15 minutes</p>
@@ -265,13 +265,13 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
             <label className="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Special Instructions</label>
             <textarea value={instructions} onChange={e => { setInstructions(e.target.value); setHasChanges(true); }} rows={2}
               placeholder="Add instructions guards should follow during this tour..."
-              className="w-full px-4 py-3 rounded-xl text-sm border border-slate-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all dark:border-slate-700" />
+              className="w-full px-4 py-3 rounded-xl text-sm border border-slate-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all bg-white text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100" />
           </div>
           
           <div>
             <label className="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Status</label>
             <select value={status} onChange={e => { setStatus(e.target.value as "Active"|"Inactive"); setHasChanges(true); }}
-              className="w-full max-w-xs px-4 py-2.5 rounded-xl text-sm border border-slate-200 bg-white outline-none cursor-pointer dark:border-slate-700 dark:bg-slate-900">
+              className="w-full max-w-xs px-4 py-2.5 rounded-xl text-sm border border-slate-200 bg-white text-slate-900 outline-none cursor-pointer dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
@@ -308,7 +308,7 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input type="text" value={cpSearch} onChange={e => setCpSearch(e.target.value)}
                   placeholder="Search checkpoints..."
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl text-sm border border-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all dark:border-slate-700" />
+                  className="w-full pl-9 pr-3 py-2.5 rounded-xl text-sm border border-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-white text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100" />
               </div>
             </div>
             
@@ -486,7 +486,7 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
                 {tourTimes.map((time, idx) => (
                   <div key={idx} className="flex items-center gap-3">
                     <input type="time" value={time} onChange={e => handleUpdateTourTime(idx, e.target.value)}
-                      className="px-4 py-2.5 rounded-xl text-sm border border-slate-200 outline-none focus:border-blue-500 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900" />
+                      className="px-4 py-2.5 rounded-xl text-sm border border-slate-200 outline-none focus:border-blue-500 bg-white text-slate-900 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
                     {tourTimes.length > 1 && (
                       <button onClick={() => handleRemoveTourTime(idx)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                         <X className="w-5 h-5" />
@@ -503,7 +503,7 @@ export function CreateTourWizard({ onClose }: { onClose: () => void }) {
             <div>
               <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Start Date <span className="text-red-500">*</span></label>
               <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
-                className="px-4 py-2.5 rounded-xl text-sm border border-slate-200 outline-none focus:border-blue-500 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900" />
+                className="px-4 py-2.5 rounded-xl text-sm border border-slate-200 outline-none focus:border-blue-500 bg-white text-slate-900 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
             </div>
           </div>
         </div>

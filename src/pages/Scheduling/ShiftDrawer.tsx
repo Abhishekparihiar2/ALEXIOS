@@ -68,8 +68,8 @@ export function ShiftDrawer({ isOpen, onClose, editingShiftId, shifts, prefillDa
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-slate-900/30 backdrop-blur-[2px]" onClick={onClose} />
-      <div className="fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col dark:bg-slate-900">
+      <div className="fixed inset-0 z-40 bg-black/60" onClick={onClose} />
+      <div className="fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700">
         
         {/* Header (Connecteam Style) */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-700">
@@ -229,14 +229,34 @@ export function ShiftDrawer({ isOpen, onClose, editingShiftId, shifts, prefillDa
         {/* Footer Actions */}
         <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
           <div className="flex gap-2">
-            <button onClick={() => { setStatus("Published"); handleSave(); }}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm">
-              Publish
-            </button>
-            <button onClick={() => { setStatus("Draft"); handleSave(); }}
-              className="px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-bold rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
-              Save Draft
-            </button>
+            {editingShiftId && status === "Published" ? (
+              <button onClick={() => { handleSave(); }}
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm">
+                Update Shift
+              </button>
+            ) : editingShiftId && status === "Draft" ? (
+              <>
+                <button onClick={() => { setStatus("Published"); handleSave(); }}
+                  className="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-lg shadow-sm">
+                  Publish Draft
+                </button>
+                <button onClick={() => { setStatus("Draft"); handleSave(); }}
+                  className="px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-bold rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
+                  Update Draft
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => { setStatus("Published"); handleSave(); }}
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm">
+                  Publish Shift
+                </button>
+                <button onClick={() => { setStatus("Draft"); handleSave(); }}
+                  className="px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-bold rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
+                  Save as Draft
+                </button>
+              </>
+            )}
           </div>
           {editingShiftId && (
             <button onClick={() => onDelete(editingShiftId)}

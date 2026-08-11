@@ -15,8 +15,7 @@ import {
   Trash2, Briefcase, Edit2
 } from "lucide-react";
 import alexiosLogo from "../imports/AlexiosAppLogos-white.png";
-
-
+import { PageHeader } from "../../components/PageHeader";
 import { Page, AuthScreen, FormErrors, NavItem, NavGroup } from '../../types/index';
 import { MOCK_USER, MOCK_KPI, MOCK_ACTIVITY, MOCK_TOURS, MOCK_TASKS, MOCK_ATTENDANCE, MOCK_CLOCKED_IN_DETAILS, MOCK_INACTIVE_TICKETS, MOCK_EXPIRING_SKILLS, MOCK_MESSAGES, MOCK_VEHICLES_DETAILED, MOCK_ACTIVITY_JOURNAL, MOCK_SCHED_JOBS, MOCK_SCHED_SHIFTS, MOCK_SWAP_REQUESTS } from '../../data/mockData';
 import { NAV_GROUPS } from '../../data/navConfig';
@@ -2146,6 +2145,7 @@ export function EmployeesPage() {
   const [customDepartments, setCustomDepartments] = useState<string[]>([]);
 
   const [page, setPage] = useState(1);
+  const [openMenuUid, setOpenMenuUid] = useState<string | null>(null);
   const PAGE_SIZE = 10;
 
   const tabEmployees = useMemo(() => {
@@ -2200,7 +2200,7 @@ export function EmployeesPage() {
     { id: "departments", label: "Department", count: 6 + customDepartments.length, icon: <Building2 className="w-3.5 h-3.5" /> },
   ];
 
-  const COLS = ["UID", "Name", "Middle Name", "Last Name", "Title", "Term. Date", "Email", "Username", "User Type", "Department", "Status", "Last Visit", "Added By"];
+  const COLS = ["UID", "Name", "Last Name", "Title", "Email", "User Type", "Department", "Status"];
 
   if (showAddForm) return <AddEmployeePage 
     onBack={() => setShowAddForm(false)} 
@@ -2297,59 +2297,40 @@ export function EmployeesPage() {
   return (
     <div className="flex-1 overflow-y-auto flex flex-col bg-transparent" style={{ scrollbarWidth: "none" }}>
 
-      {/* ── Hero Header Banner ── */}
-      <div className="relative overflow-hidden px-6 pt-6 pb-5 shrink-0"
-        style={{ background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)" }}>
-        {/* Decorative blobs */}
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
-          style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }} />
-        <div className="absolute bottom-0 left-1/2 w-72 h-20 opacity-5 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, #60a5fa, transparent 70%)" }} />
-
-        <div className="relative flex items-start justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2.5 mb-1">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(6px)" }}>
-                <Users className="w-4 h-4 text-white" />
-              </div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Employee Management</h2>
-            </div>
-            <p className="text-sm ml-10" style={{ color: "rgba(255,255,255,0.55)" }}>
-              {MOCK_EMPLOYEES.length} total employees · {MOCK_EMPLOYEES.filter(e => e.status === "Active").length} active now
-            </p>
-          </div>
+      <PageHeader
+        title="Employee Management"
+        icon={<Users className="w-4 h-4 text-slate-900 dark:text-slate-100" />}
+        subtitle={`${MOCK_EMPLOYEES.length} total employees · ${MOCK_EMPLOYEES.filter(e => e.status === "Active").length} active now`}
+        actions={
           <button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold shrink-0 transition-all"
-            style={{ background: "#ffffff", color: "#1e3a6e", boxShadow: "0 4px 16px rgba(0,0,0,0.25)" }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#f0f5ff"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.3)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)"; }}
+            className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold shrink-0 transition-all text-white shadow-sm hover:opacity-90"
+            style={{ background: "#1e3a6e" }}
           >
             <Plus className="w-4 h-4" />Add Employee
           </button>
-        </div>
-
-        {/* Stat pills */}
-        <div className="relative flex items-center gap-3 mt-5">
-          {[
-            { label: "Active", value: MOCK_EMPLOYEES.filter(e => e.status === "Active").length, color: "#4ade80", bg: "rgba(74,222,128,0.12)" },
-            { label: "On Leave", value: MOCK_EMPLOYEES.filter(e => e.status === "On Leave").length, color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
-            { label: "Inactive", value: MOCK_EMPLOYEES.filter(e => e.status === "Inactive").length, color: "#94a3b8", bg: "rgba(148,163,184,0.12)" },
-            { label: "Terminated", value: MOCK_EMPLOYEES.filter(e => e.status === "Terminated").length, color: "#f87171", bg: "rgba(248,113,113,0.12)" },
-          ].map((s) => (
-            <div key={s.label} className="flex items-center gap-2 rounded-lg px-3.5 py-2"
-              style={{ background: s.bg, border: `1px solid ${s.color}22` }}>
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
-              <span className="text-xs font-semibold" style={{ color: s.color }}>{s.value}</span>
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>{s.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+        }
+        bottomContent={
+          <div className="relative flex items-center gap-3">
+            {[
+              { label: "Active", value: MOCK_EMPLOYEES.filter(e => e.status === "Active").length, color: "#4ade80", bg: "rgba(74,222,128,0.12)" },
+              { label: "On Leave", value: MOCK_EMPLOYEES.filter(e => e.status === "On Leave").length, color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
+              { label: "Inactive", value: MOCK_EMPLOYEES.filter(e => e.status === "Inactive").length, color: "#94a3b8", bg: "rgba(148,163,184,0.12)" },
+              { label: "Terminated", value: MOCK_EMPLOYEES.filter(e => e.status === "Terminated").length, color: "#f87171", bg: "rgba(248,113,113,0.12)" },
+            ].map((s) => (
+              <div key={s.label} className="flex items-center gap-2 rounded-lg px-3.5 py-1.5"
+                style={{ background: s.bg, border: `1px solid ${s.color}22` }}>
+                <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
+                <span className="text-xs font-semibold" style={{ color: s.color }}>{s.value}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{s.label}</span>
+              </div>
+            ))}
+          </div>
+        }
+      />
 
       {/* ── Main Card ── */}
-      <div className="mx-5 mb-5 -mt-1 rounded-2xl flex flex-col overflow-hidden bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-sm">
+      <div className="mx-5 mb-5 -mt-1 shrink-0 rounded-2xl flex flex-col overflow-hidden bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-sm">
 
         {/* ── Tabs ── */}
         <div className="flex items-center gap-1 px-5 pt-4 pb-0 border-b border-slate-800">
@@ -2523,8 +2504,7 @@ export function EmployeesPage() {
                       </div>
                     </td>
 
-                    {/* Middle Name */}
-                    <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-400" >{emp.middleName}</td>
+
 
                     {/* Last Name */}
                     <td className="px-3 py-3.5 text-sm font-semibold whitespace-nowrap text-slate-100" >{emp.lastName}</td>
@@ -2532,27 +2512,14 @@ export function EmployeesPage() {
                     {/* Title */}
                     <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-300" >{emp.title}</td>
 
-                    {/* Termination Date */}
-                    <td className="px-3 py-3.5 whitespace-nowrap">
-                      {emp.terminationDate === "—"
-                        ? <span style={{fontSize: 13 }} className="text-slate-300 dark:text-slate-400">—</span>
-                        : <span className="text-xs font-semibold px-2 py-1 rounded-md"
-                          style={{ background: "#fef2f2", color: "#dc2626" }}>{emp.terminationDate}</span>
-                      }
-                    </td>
+
 
                     {/* Email */}
                     <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-300" >
                       <a href={`mailto:${emp.email}`} style={{ color: "#2563eb" }} className="hover:underline">{emp.email}</a>
                     </td>
 
-                    {/* Username */}
-                    <td className="px-3 py-3.5">
-                      <span className="text-xs font-mono rounded-md px-2 py-1 text-slate-400 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700"
-                        >
-                        @{emp.username}
-                      </span>
-                    </td>
+
 
                     {/* User Type */}
                     <td className="px-3 py-3.5">
@@ -2578,28 +2545,27 @@ export function EmployeesPage() {
                       </span>
                     </td>
 
-                    {/* Last Visit */}
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-400" >{emp.lastVisit}</td>
 
-                    {/* Added By */}
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-400 dark:text-slate-300" >{emp.addedBy}</td>
 
                     {/* Actions */}
-                    <td className="px-3 py-3.5" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-3 py-3.5 relative" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-1">
                         <button className="w-8 h-8 rounded-xl flex items-center justify-center transition-all text-slate-400 dark:text-slate-300"
-                          
+                          onClick={() => setOpenMenuUid(openMenuUid === emp.uid ? null : emp.uid)}
                           onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#475569"; }}
                           onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }}>
                           <MoreHorizontal className="w-4 h-4" />
                         </button>
-                        <button className="w-8 h-8 rounded-xl flex items-center justify-center transition-all text-slate-400 dark:text-slate-300"
-                          
-                          title="Delete Employee"
-                          onMouseEnter={(e) => { e.currentTarget.style.background = "#fef2f2"; e.currentTarget.style.color = "#dc2626"; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }}>
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {openMenuUid === emp.uid && (
+                          <div className="absolute right-8 top-10 w-32 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
+                            <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" onClick={() => { setSelectedEmployee(emp); setOpenMenuUid(null); }}>
+                              Edit
+                            </button>
+                            <button className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30" onClick={() => setOpenMenuUid(null)}>
+                              Delete
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </td>
                   </tr>

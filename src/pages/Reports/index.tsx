@@ -10,6 +10,7 @@ import {
 import { ReportBuilder } from './ReportBuilder';
 import { IncidentCategoryBuilder } from './IncidentCategoryBuilder';
 
+import { PageHeader } from '../../components/PageHeader';
 export type ReportTab = "reports" | "report-categories" | "incident-categories" | "footers";
 
 interface Props {
@@ -37,26 +38,12 @@ export function ReportSettingsPage({ onNavigate, initialView }: Props) {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
-      {/* ── Hero Banner ── */}
-      <div className="relative overflow-hidden px-6 pt-6 pb-5 shrink-0"
-        style={{ background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)" }}>
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
-          style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }} />
-        
-        <div className="relative flex flex-col gap-2">
-          <div className="flex items-center gap-2.5 mb-1">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(6px)" }}>
-              <Settings className="w-4 h-4 text-white" />
-            </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Report Settings</h2>
-          </div>
-          <p className="text-sm ml-10" style={{ color: "rgba(255,255,255,0.55)" }}>
-            Create and configure the reports used by guards across security operations.
-          </p>
-        </div>
-      </div>
+    <div className="flex-1 overflow-y-auto flex flex-col bg-slate-50 dark:bg-[#000000]" style={{ scrollbarWidth: "none" }}>
+      <PageHeader
+        title="Report Settings"
+        subtitle="Create and configure the reports used by guards across security operations."
+        icon={<Settings className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+      />
 
       {/* ── Main Workspace Card ── */}
       <div className="mx-5 mb-5 mt-4 rounded-2xl flex flex-col overflow-hidden glass-card flex-1 min-h-[700px]"

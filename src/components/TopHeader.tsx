@@ -41,11 +41,13 @@ export function TopHeader({
   onSignOut,
   notifCount,
   onNavigate,
+  onToggleSidebar,
 }: {
   activePage: Page;
   onSignOut: () => void;
   notifCount: number;
   onNavigate?: (page: Page) => void;
+  onToggleSidebar?: () => void;
 }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQ, setSearchQ] = useState("");
@@ -65,14 +67,17 @@ export function TopHeader({
 
   return (
     <header
-      className="flex items-center gap-3 px-5 shrink-0 glass-header border-b border-b-[var(--neon-blue)] shadow-[0_4px_12px_rgba(14,165,233,0.3)]"
+      className="flex items-center gap-3 px-5 shrink-0 bg-black border-b border-neutral-800"
       style={{
         height: 56,
-        zIndex: 10,
+        zIndex: 50,
         position: "relative",
       }}
     >
-      <h2 className="text-base tech-header flex-1 truncate text-slate-800 dark:text-slate-100">
+      <button onClick={onToggleSidebar} className="p-1.5 rounded-md hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors">
+        <Menu className="w-5 h-5" />
+      </button>
+      <h2 className="text-base font-bold flex-1 truncate text-slate-100 uppercase tracking-widest">
         {pageLabels[activePage] || "Dashboard"}
       </h2>
 

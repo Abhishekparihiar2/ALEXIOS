@@ -18,7 +18,11 @@ export function TourDrawer({ isOpen, onClose, editingTourId, tours, onSave, onDe
     startTime: "",
     endTime: "",
     jobId: "",
-    site: ""
+    site: "",
+    duration: "30",
+    gracePeriod: "15",
+    instructions: "",
+    status: "Active"
   });
 
   useEffect(() => {
@@ -31,7 +35,11 @@ export function TourDrawer({ isOpen, onClose, editingTourId, tours, onSave, onDe
           startTime: tour.startTime || "",
           endTime: tour.endTime || "",
           jobId: tour.jobId || "",
-          site: tour.site || ""
+          site: tour.site || "",
+          duration: tour.duration || "30",
+          gracePeriod: tour.gracePeriod || "15",
+          instructions: tour.instructions || "",
+          status: tour.status || "Active"
         });
       }
     } else {
@@ -41,7 +49,11 @@ export function TourDrawer({ isOpen, onClose, editingTourId, tours, onSave, onDe
         startTime: "",
         endTime: "",
         jobId: "",
-        site: ""
+        site: "",
+        duration: "30",
+        gracePeriod: "15",
+        instructions: "",
+        status: "Active"
       });
     }
   }, [editingTourId, tours]);
@@ -57,9 +69,9 @@ export function TourDrawer({ isOpen, onClose, editingTourId, tours, onSave, onDe
 
   return (
     <>
-      <div className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-[100]" onClick={onClose} />
-      <div className="fixed top-0 right-0 h-full w-[400px] bg-white shadow-2xl z-[101] flex flex-col transform transition-transform dark:bg-slate-900">
-        <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50/50 dark:border-slate-800">
+      <div className="fixed inset-0 bg-transparent z-[100]" onClick={onClose} />
+      <div className="fixed top-0 right-0 h-full w-[450px] bg-white shadow-2xl z-[101] flex flex-col transform transition-transform dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50/50 dark:bg-slate-950 dark:border-slate-800">
           <div>
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 dark:text-slate-100">
               <Map className="w-5 h-5 text-blue-600" />
@@ -136,23 +148,67 @@ export function TourDrawer({ isOpen, onClose, editingTourId, tours, onSave, onDe
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider flex items-center gap-1 dark:text-slate-300"><Briefcase className="w-3.5 h-3.5"/> Required Role</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider flex items-center gap-1 dark:text-slate-300"><Briefcase className="w-3.5 h-3.5"/> Assigned To / Role</label>
               <select
                 value={formData.jobId}
                 onChange={e => setFormData({ ...formData, jobId: e.target.value })}
                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-900 dark:border-slate-700"
                 required
               >
-                <option value="">Select required role...</option>
+                <option value="">Select assigned role...</option>
                 {MOCK_SCHED_JOBS.map(job => (
                   <option key={job.id} value={job.id}>{job.title}</option>
                 ))}
               </select>
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider dark:text-slate-300">Duration (mins)</label>
+                <input
+                  type="number"
+                  value={formData.duration}
+                  onChange={e => setFormData({ ...formData, duration: e.target.value })}
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-900 dark:border-slate-700"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider dark:text-slate-300">Grace Period (mins)</label>
+                <input
+                  type="number"
+                  value={formData.gracePeriod}
+                  onChange={e => setFormData({ ...formData, gracePeriod: e.target.value })}
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-900 dark:border-slate-700"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider dark:text-slate-300">Special Instructions</label>
+              <textarea
+                value={formData.instructions}
+                onChange={e => setFormData({ ...formData, instructions: e.target.value })}
+                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-900 dark:border-slate-700"
+                rows={2}
+                placeholder="Add instructions..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider dark:text-slate-300">Status</label>
+              <select
+                value={formData.status}
+                onChange={e => setFormData({ ...formData, status: e.target.value })}
+                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-900 dark:border-slate-700"
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
           </div>
         </form>
 
-        <div className="p-5 border-t border-slate-100 bg-slate-50 flex items-center gap-3 dark:border-slate-800 dark:bg-slate-900">
+        <div className="p-5 border-t border-slate-100 bg-slate-50 flex items-center gap-3 dark:border-slate-800 dark:bg-slate-950">
           {editingTourId && (
             <button
               type="button"

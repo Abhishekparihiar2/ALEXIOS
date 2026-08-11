@@ -3,6 +3,7 @@ import {
     Search, Filter, Plus, MoreHorizontal, ChevronLeft, Calendar,
     CheckCircle2, Users, Archive, TrendingUp, HelpCircle, UserCheck, X
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 // ─── MOCK DATA ─────────────────────────────────────────────────────────────
 const MOCK_GROUPS = [
@@ -46,14 +47,12 @@ export function GroupsPage() {
 
 function GroupList({ onNavigate }: { onNavigate: (v: any, g?: any) => void }) {
     return (
-        <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full shrink-0">
-                <div>
-                    <h1 className="text-3xl font-bold text-slate-900 tracking-tight dark:text-slate-100">Groups & Segments</h1>
-                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Create and manage user groups for operational organization and access.</p>
-                </div>
-                <div className="flex items-center gap-3">
+        <div className="w-full h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
+            <PageHeader
+                title="Groups & Segments"
+                subtitle="Create and manage user groups for operational organization and access."
+                icon={<Users className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+                actions={
                     <button
                         onClick={() => onNavigate("create")}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
@@ -61,8 +60,9 @@ function GroupList({ onNavigate }: { onNavigate: (v: any, g?: any) => void }) {
                     >
                         <Plus className="w-4 h-4" /> Create Group
                     </button>
-                </div>
-            </div>
+                }
+            />
+            <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
 
             {/* Toolbar */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 shrink-0 min-w-0">
@@ -119,6 +119,7 @@ function GroupList({ onNavigate }: { onNavigate: (v: any, g?: any) => void }) {
                         </tbody>
                     </table>
                 </div>
+            </div>
             </div>
         </div>
     );

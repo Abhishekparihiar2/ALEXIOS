@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Search, Filter, MoreHorizontal, MessageSquare, Clock, User, ChevronLeft, Briefcase, Plus, Send, AlertTriangle } from "lucide-react";
+import { Search, Filter, MoreHorizontal, MessageSquare, Clock, User, ChevronLeft, Briefcase, Plus, Send, AlertTriangle, HeadphonesIcon } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 type ViewType = "unassigned" | "assigned" | "all";
 
@@ -32,38 +33,38 @@ export function HelpDeskPage() {
 
     return (
         <div className="w-full h-full flex flex-col animate-in fade-in bg-transparent min-w-0 overflow-hidden relative">
+            <PageHeader
+                title="Help Desk"
+                subtitle="Review and manage support requests available to you."
+                icon={<HeadphonesIcon className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+                bottomContent={
+                    <div className="flex bg-slate-200/50 p-1 rounded-xl w-full lg:w-auto max-w-fit mt-2">
+                        <button
+                            onClick={() => setView("unassigned")}
+                            className={`flex-1 lg:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-colors ${view === "unassigned" ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
+                        >
+                            Unassigned
+                        </button>
+                        <button
+                            onClick={() => setView("assigned")}
+                            className={`flex-1 lg:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-colors ${view === "assigned" ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
+                        >
+                            Assigned to Me
+                        </button>
+                        <button
+                            onClick={() => setView("all")}
+                            className={`flex-1 lg:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-colors ${view === "all" ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
+                        >
+                            All
+                        </button>
+                    </div>
+                }
+            />
             <div className="w-full flex-1 flex min-w-0 overflow-hidden">
                 {/* Main Help Desk Table Area */}
                 <div className="p-4 md:p-6 flex-1 h-full flex flex-col min-w-0 min-h-0 overflow-hidden">
-                    {/* Header */}
-                    <div className="mb-6 shrink-0">
-                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight dark:text-slate-100">Help Desk</h1>
-                        <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Review and manage support requests available to you.</p>
-                    </div>
-
                     {/* View Controls & Toolbar */}
-                    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4 shrink-0 border-b border-slate-200/60 pb-4">
-                        {/* Segmented Control */}
-                        <div className="flex bg-slate-200/50 p-1 rounded-xl w-full lg:w-auto">
-                            <button
-                                onClick={() => setView("unassigned")}
-                                className={`flex-1 lg:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-colors ${view === "unassigned" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
-                            >
-                                Unassigned
-                            </button>
-                            <button
-                                onClick={() => setView("assigned")}
-                                className={`flex-1 lg:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-colors ${view === "assigned" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
-                            >
-                                Assigned to Me
-                            </button>
-                            <button
-                                onClick={() => setView("all")}
-                                className={`flex-1 lg:flex-none px-4 py-2 rounded-lg text-sm font-bold transition-colors ${view === "all" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
-                            >
-                                All
-                            </button>
-                        </div>
+                    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4 shrink-0 pb-4">
 
                         {/* Search and Filters */}
                         <div className="flex gap-2 items-center w-full lg:w-auto">

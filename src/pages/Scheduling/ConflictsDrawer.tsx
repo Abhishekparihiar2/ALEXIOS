@@ -14,7 +14,7 @@ export function ConflictsDrawer({ isOpen, onClose, conflicts, onResolve, onUnass
 
   return (
     <>
-      <div className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-[100]" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/60 z-[100]" onClick={onClose} />
       <div className="fixed top-0 right-0 h-full w-[400px] bg-white shadow-2xl z-[101] flex flex-col transform transition-transform border-l border-slate-200 dark:bg-slate-900 dark:border-slate-700">
         <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-red-50/50 dark:border-slate-800">
           <div>

@@ -5,6 +5,7 @@ import {
     AlertTriangle, Zap, Check, User, MapPin, SearchCheck, UserCheck, Search as SearchIcon,
     Layers, CheckCircle2, Archive, TrendingUp, TrendingDown
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 // ─── MOCK DATA ─────────────────────────────────────────────────────────────
 const MOCK_AUTOMATIONS = [
@@ -56,15 +57,12 @@ function AutomationListManager({ onNavigate }: { onNavigate: (v: any, id?: strin
     const summaryCounts = { total: 34, active: 27, inactive: 7, triggered: 16 };
 
     return (
-        <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
-
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full shrink-0">
-                <div>
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Automations</h1>
-                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Create and manage automated operational workflows across sites, employees, shifts, reports and tasks.</p>
-                </div>
-                <div className="flex items-center gap-3">
+        <div className="w-full h-full flex flex-col animate-in fade-in bg-transparent min-w-0 overflow-hidden">
+            <PageHeader
+                title="Automations"
+                subtitle="Create and manage automated operational workflows across sites, employees, shifts, reports and tasks."
+                icon={<Zap className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+                actions={
                     <button
                         onClick={() => onNavigate("create")}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
@@ -72,39 +70,39 @@ function AutomationListManager({ onNavigate }: { onNavigate: (v: any, id?: strin
                     >
                         <Plus className="w-4 h-4" /> Create Automation
                     </button>
-                </div>
-            </div>
-
-            {/* Summary Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-6 shrink-0 w-full">
-                {[
-                    { key: "Total Automations", label: "TOTAL AUTOMATIONS", count: summaryCounts.total, icon: <Layers className="w-4 h-4" />, bg: "#eff6ff", color: "#2563eb", trendUp: true, trend: "+12%" },
-                    { key: "Active", label: "ACTIVE", count: summaryCounts.active, icon: <CheckCircle2 className="w-4 h-4" />, bg: "#f0fdf4", color: "#16a34a", trendUp: true, trend: "+5%" },
-                    { key: "Inactive", label: "INACTIVE", count: summaryCounts.inactive, icon: <Archive className="w-4 h-4" />, bg: "#f1f5f9", color: "#64748b", trendUp: false, trend: "-2%" },
-                    { key: "Triggered Today", label: "TRIGGERED TODAY", count: summaryCounts.triggered, icon: <Zap className="w-4 h-4" />, bg: "#fffbeb", color: "#d97706", trendUp: true, trend: "+24%" }
-                ].map((item) => (
-                    <div
-                        key={item.key}
-                        className="glass-card rounded-xl p-3 cursor-pointer transition-all hover:shadow-md group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md"
-                        style={{ border: "1px solid var(--border)", borderColor: "rgba(226, 232, 240, 0.6)" }}
-                    >
-                        <div className="flex items-start justify-between mb-1.5">
-                            <div className="w-7 h-7 rounded flex items-center justify-center p-1" style={{ background: item.bg, color: item.color }}>
-                                {item.icon}
+                }
+                bottomContent={
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mt-2 w-full">
+                        {[
+                            { key: "Total Automations", label: "TOTAL AUTOMATIONS", count: summaryCounts.total, icon: <Layers className="w-4 h-4" />, bg: "#eff6ff", color: "#2563eb", trendUp: true, trend: "+12%" },
+                            { key: "Active", label: "ACTIVE", count: summaryCounts.active, icon: <CheckCircle2 className="w-4 h-4" />, bg: "#f0fdf4", color: "#16a34a", trendUp: true, trend: "+5%" },
+                            { key: "Inactive", label: "INACTIVE", count: summaryCounts.inactive, icon: <Archive className="w-4 h-4" />, bg: "#f1f5f9", color: "#64748b", trendUp: false, trend: "-2%" },
+                            { key: "Triggered Today", label: "TRIGGERED TODAY", count: summaryCounts.triggered, icon: <Zap className="w-4 h-4" />, bg: "#fffbeb", color: "#d97706", trendUp: true, trend: "+24%" }
+                        ].map((item) => (
+                            <div
+                                key={item.key}
+                                className="glass-card rounded-xl p-3 cursor-pointer transition-all hover:shadow-md group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md"
+                                style={{ border: "1px solid var(--border)", borderColor: "rgba(226, 232, 240, 0.6)" }}
+                            >
+                                <div className="flex items-start justify-between mb-1.5">
+                                    <div className="w-7 h-7 rounded flex items-center justify-center p-1" style={{ background: item.bg, color: item.color }}>
+                                        {item.icon}
+                                    </div>
+                                </div>
+                                <p className="text-xl font-bold leading-none mb-1 text-slate-900 dark:text-white" >{item.count}</p>
+                                <p className="text-[11px] font-semibold truncate text-slate-700 dark:text-slate-300" >{item.label}</p>
+                                <div className="flex items-center gap-1 mt-1.5">
+                                    {item.trendUp
+                                        ? <TrendingUp className="w-3 h-3 text-green-600" />
+                                        : <TrendingDown className="w-3 h-3 text-red-600" />}
+                                    <span className="text-xs font-semibold" style={{ color: item.trendUp ? "#16a34a" : "#dc2626" }}>{item.trend} past month</span>
+                                </div>
                             </div>
-                        </div>
-                        <p className="text-xl font-bold leading-none mb-1 text-slate-900 dark:text-white text-slate-900 dark:text-slate-100" >{item.count}</p>
-                        <p className="text-[11px] font-semibold truncate text-slate-700 dark:text-slate-300 text-slate-700 dark:text-slate-200" >{item.label}</p>
-                        <div className="flex items-center gap-1 mt-1.5">
-                            {item.trendUp
-                                ? <TrendingUp className="w-3 h-3 text-green-600" />
-                                : <TrendingDown className="w-3 h-3 text-red-600" />}
-                            <span className="text-xs font-semibold" style={{ color: item.trendUp ? "#16a34a" : "#dc2626" }}>{item.trend} past month</span>
-                        </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-
+                }
+            />
+            <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
             {/* Tabs & Search */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 shrink-0 min-w-0">
 
@@ -167,7 +165,7 @@ function AutomationListManager({ onNavigate }: { onNavigate: (v: any, id?: strin
                     </table>
                 </div>
             </div>
-
+            </div>
         </div>
     );
 }

@@ -8,6 +8,7 @@ import {
   ClipboardList,
   Megaphone
 } from 'lucide-react';
+import { PageHeader } from '../../components/PageHeader';
 import { ChatTab } from './Tabs/ChatTab';
 import { MessageBoardTab } from './Tabs/MessageBoardTab';
 import { BroadcastsTab } from './Tabs/BroadcastsTab';
@@ -34,40 +35,30 @@ export function CommunicationsPage({ onNavigate }: CommunicationsPageProps) {
   ];
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-slate-50 dark:bg-slate-900" style={{ scrollbarWidth: "none" }}>
-      {/* Module Header & Navigation */}
-      <div className="bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 pt-4 px-6 flex flex-col gap-4 dark:bg-slate-900 dark:border-slate-700">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
-            <MessageSquare className="w-5 h-5" />
+    <div className="flex-1 flex flex-col min-h-0 bg-transparent" style={{ scrollbarWidth: "none" }}>
+      <PageHeader
+        title="Communications"
+        subtitle="Manage operations, broadcasts, and team messaging."
+        icon={<MessageSquare className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+        bottomContent={
+          <div className="flex items-center gap-6 overflow-x-auto no-scrollbar mt-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 pb-3 text-sm font-semibold transition-colors relative whitespace-nowrap ${
+                  activeTab === tab.id 
+                    ? "text-blue-600 border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500" 
+                    : "text-slate-500 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 dark:hover:text-slate-300"
+                }`}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
           </div>
-          <div className="flex flex-col">
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight leading-tight dark:text-slate-200">Communications</h1>
-            <p className="text-sm text-slate-500 font-medium dark:text-slate-400">Manage operations, broadcasts, and team messaging.</p>
-          </div>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 pb-3 text-sm font-semibold transition-colors relative whitespace-nowrap ${
-                activeTab === tab.id 
-                  ? "text-blue-600" 
-                  : "text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              {tab.icon}
-              {tab.label}
-              {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t-full" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
+        }
+      />
 
       {/* Main Content Area */}
       <div className="flex-1 overflow-hidden flex">

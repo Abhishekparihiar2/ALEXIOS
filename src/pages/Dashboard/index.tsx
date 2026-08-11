@@ -184,201 +184,126 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
         </div>
       )}
 
-      {/* Page header row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-3">
-            <h3 className="text-base tech-header" style={{ color: "var(--neon-blue)" }}>SECURITY OPERATIONS</h3>
-            <div className="relative" onMouseEnter={() => setIsMapHovered(true)} onMouseLeave={() => setIsMapHovered(false)}>
-              <div className="p-1.5 rounded-lg bg-blue-900/30 border border-blue-800/50 cursor-pointer hover:bg-blue-800/50 transition-colors">
-                <MapIcon className="w-4 h-4 text-blue-400" />
-              </div>
-              {isMapHovered && (
-                <div className="absolute top-full left-0 mt-2 z-50 w-[500px] h-[350px] rounded-xl overflow-hidden shadow-[0_0_40px_rgba(30,58,138,0.5)] border border-blue-900/80 bg-slate-900/95 backdrop-blur-xl flex flex-col">
-                  <div className="flex items-center gap-2 px-4 py-3 shrink-0 border-b border-slate-800 bg-slate-900/50">
-                    <MapIcon className="w-4 h-4 text-blue-400" />
-                    <h4 className="text-sm font-bold text-slate-200 uppercase tracking-widest">Live Operations Map</h4>
-                  </div>
-                  <div className="relative flex-1 w-full h-full bg-[#0f172a]">
-                    <svg className="absolute inset-0 w-full h-full opacity-20">
-                      {[...Array(12)].map((_, i) => (
-                        <line key={`h${i}`} x1="0" y1={i * 40} x2="100%" y2={i * 40} stroke="#3b82f6" strokeWidth="1" />
-                      ))}
-                      {[...Array(20)].map((_, i) => (
-                        <line key={`v${i}`} x1={i * 40} y1="0" x2={i * 40} y2="100%" stroke="#3b82f6" strokeWidth="1" />
-                      ))}
-                    </svg>
-                    {[
-                      { x: "20%", y: "25%", label: "Downtown Financial Center", status: "#16a34a", count: 11 },
-                      { x: "55%", y: "40%", label: "Westfield Mall", status: "#16a34a", count: 6 },
-                      { x: "75%", y: "60%", label: "Harbor District", status: "#d97706", count: 8 },
-                      { x: "35%", y: "65%", label: "Airport Terminal C", status: "#d97706", count: 6 },
-                      { x: "60%", y: "20%", label: "City Hall Security Post", status: "#dc2626", count: 3 },
-                    ].map((pin) => (
-                      <div key={pin.label} className="absolute flex flex-col items-center group" style={{ left: pin.x, top: pin.y, transform: "translate(-50%, -50%)" }}>
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all" style={{ background: pin.status, border: "2px solid #1e293b" }}>
-                          {pin.count}
-                        </div>
-                        <span className="text-[10px] font-bold mt-1.5 whitespace-nowrap rounded-md px-2 py-0.5 bg-slate-800/90 text-slate-200 border border-slate-700">
-                          {pin.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          <p className="text-xs mt-0.5 font-tech text-slate-300">
-            Last updated: {new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })} · Auto-refresh every 60s
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => triggerToast("Dashboard data reloaded manually.", "success")}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer hover:bg-gray-100"
-            style={{ background: "#f1f5f9", color: "#475569", border: "1px solid #e2e8f0" }}>
-            <RefreshCw className="w-3.5 h-3.5" />Refresh
-          </button>
-          <button onClick={() => setShowSendUpdate(true)}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer text-white"
-            style={{ background: "#1e3a6e" }}>
-            <Send className="w-3.5 h-3.5" />Send Update
-          </button>
-        </div>
-      </div>
-
-      {/* Submodule Navigation Bar (§3.9) */}
-      <div className="flex items-center gap-2 overflow-x-auto py-1 px-1 rounded-xl bg-slate-900 border border-slate-700 shrink-0" style={{ scrollbarWidth: "none" }}>
-        <span className="text-xs font-bold uppercase tracking-wider text-slate-300 px-3 border-r border-slate-600">Quick Modules</span>
-        {[
-          { label: "Manage Tickets", icon: <AlertTriangle className="w-3.5 h-3.5" />, page: "submodule-exceptions" },
-          { label: "Activity Journal", icon: <ClipboardList className="w-3.5 h-3.5" />, page: "submodule-journal" },
-        ].map((sub) => (
-          <button
-            key={sub.label}
-            onClick={() => sub.page ? onNavigate(sub.page as any) : setActiveDrawer(sub.drawer)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 hover:text-white hover:bg-slate-800 transition-all cursor-pointer whitespace-nowrap"
-          >
-            {sub.icon}{sub.label}
-          </button>
-        ))}
-      </div>
+      {/* Removed Page Header and Quick Modules */}
 
 
       {/* ── COMMAND CENTER QUADRANTS (2x2 Grid) ── */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
 
         {/* Q1: Security Operations */}
-        <div className="rounded-2xl p-4 flex flex-col h-[400px] bg-slate-900/60 backdrop-blur-md border border-blue-900/50 shadow-[0_0_15px_rgba(30,58,138,0.3)]">
-          <div className="flex items-center gap-2 mb-4 shrink-0 pb-3 border-b border-slate-800">
-            <Clock className="w-5 h-5 text-blue-400" />
-            <h3 className="text-sm font-bold text-slate-100 uppercase tracking-widest">Security Operations</h3>
+        <div className="rounded-2xl p-4 flex flex-col h-[400px] bg-black border border-neutral-800">
+          <div className="flex items-center justify-center gap-2 mb-4 shrink-0 pb-3 border-b border-neutral-800">
+            <Clock className="w-5 h-5 text-white" />
+            <h3 className="text-sm font-bold text-white uppercase tracking-widest">Security Operations</h3>
           </div>
 
           {/* Progress Rings */}
           <div className="flex justify-around items-center shrink-0 mb-4 px-4">
             <div className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105" onClick={() => document.getElementById('tours-quadrant')?.scrollIntoView({ behavior: 'smooth' })}>
-              <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-[#0f172a]">
+              <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-black">
                 <svg className="absolute inset-0 w-full h-full -rotate-90">
                   <circle cx="45" cy="45" r="38" className="stroke-slate-800/80 fill-none" strokeWidth="6" />
                   <circle cx="45" cy="45" r="38" className="stroke-blue-500 fill-none" strokeWidth="6" strokeDasharray="239" strokeDashoffset="50" style={{ strokeLinecap: 'round', filter: 'drop-shadow(0 0 6px rgba(59,130,246,0.8))' }} />
                 </svg>
                 <div className="text-center z-10 relative">
                   <div className="text-2xl font-bold text-white leading-none">7</div>
-                  <div className="text-[10px] text-slate-400 mt-1">of 9</div>
+                  <div className="text-[10px] text-neutral-300 mt-1">of 9</div>
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-blue-400 mt-3 tracking-widest uppercase">Tours</span>
+              <span className="text-[10px] font-bold text-white mt-3 tracking-widest uppercase">Tours</span>
             </div>
 
             <div className="flex flex-col items-center">
-              <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-[#0f172a]">
+              <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-black">
                 <svg className="absolute inset-0 w-full h-full -rotate-90">
                   <circle cx="45" cy="45" r="38" className="stroke-slate-800/80 fill-none" strokeWidth="6" />
                   <circle cx="45" cy="45" r="38" className="stroke-blue-500 fill-none" strokeWidth="6" strokeDasharray="239" strokeDashoffset="80" style={{ strokeLinecap: 'round', filter: 'drop-shadow(0 0 6px rgba(59,130,246,0.8))' }} />
                 </svg>
                 <div className="text-center z-10 relative">
                   <div className="text-2xl font-bold text-white leading-none">11</div>
-                  <div className="text-[10px] text-slate-400 mt-1">of 17</div>
+                  <div className="text-[10px] text-neutral-300 mt-1">of 17</div>
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-blue-400 mt-3 tracking-widest uppercase">Reports</span>
+              <span className="text-[10px] font-bold text-white mt-3 tracking-widest uppercase">Reports</span>
             </div>
 
             <div className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105" onClick={() => document.getElementById('tasks-quadrant')?.scrollIntoView({ behavior: 'smooth' })}>
-              <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-[#0f172a]">
+              <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-black">
                 <svg className="absolute inset-0 w-full h-full -rotate-90">
                   <circle cx="45" cy="45" r="38" className="stroke-slate-800/80 fill-none" strokeWidth="6" />
                   <circle cx="45" cy="45" r="38" className="stroke-blue-500 fill-none" strokeWidth="6" strokeDasharray="239" strokeDashoffset="40" style={{ strokeLinecap: 'round', filter: 'drop-shadow(0 0 6px rgba(59,130,246,0.8))' }} />
                 </svg>
                 <div className="text-center z-10 relative">
                   <div className="text-2xl font-bold text-white leading-none">18</div>
-                  <div className="text-[10px] text-slate-400 mt-1">of 22</div>
+                  <div className="text-[10px] text-neutral-300 mt-1">of 22</div>
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-blue-400 mt-3 tracking-widest uppercase">Tasks</span>
+              <span className="text-[10px] font-bold text-white mt-3 tracking-widest uppercase">Tasks</span>
             </div>
           </div>
 
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" /> Live Activity
+          <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse" /> Live Activity
           </p>
           <div className="flex-1 overflow-y-auto space-y-2 pr-1" style={{ scrollbarWidth: "none" }}>
             {MOCK_ACTIVITY.slice(0, 4).map(item => (
-              <div key={item.id} className="flex items-center justify-between py-1.5 border-b border-slate-800/50">
+              <div key={item.id} className="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-mono text-slate-400">{item.time}</span>
-                  <span className="text-xs font-medium text-slate-200">{item.text}</span>
+                  <span className="text-xs font-mono text-neutral-300">{item.time}</span>
+                  <span className="text-xs font-medium text-white">{item.text}</span>
                 </div>
-                <span className="text-[10px] font-mono text-slate-500">System</span>
+                <span className="text-[10px] font-mono text-neutral-400">{(item as any).actor || "System"}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Q2: Security Team */}
-        <div className="rounded-2xl p-4 flex flex-col h-[400px] bg-slate-900/60 backdrop-blur-md border border-blue-900/50 shadow-[0_0_15px_rgba(30,58,138,0.3)]">
-          <div className="flex items-center justify-between mb-4 shrink-0 pb-3 border-b border-slate-800">
+        <div className="rounded-2xl p-4 flex flex-col h-[400px] bg-black border border-neutral-800">
+          <div className="relative flex items-center justify-center mb-4 shrink-0 pb-3 border-b border-neutral-800">
             <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-blue-400" />
-              <h3 className="text-sm font-bold text-slate-100 uppercase tracking-widest">Security Team</h3>
+              <Users className="w-5 h-5 text-white" />
+              <h3 className="text-sm font-bold text-white uppercase tracking-widest">Security Team</h3>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">6 ASSIGNED</span>
+            <span className="absolute right-0 text-[10px] text-neutral-300 font-mono">9 ASSIGNED</span>
           </div>
 
           <div className="flex items-center gap-4 mb-4">
-            <span className="flex items-center gap-1.5 text-xs text-slate-300 font-medium"><span className="w-2 h-2 rounded-full bg-blue-500" /> ON DUTY (4)</span>
-            <span className="flex items-center gap-1.5 text-xs text-slate-300 font-medium"><span className="w-2 h-2 rounded-full bg-amber-500" /> LATE (1)</span>
-            <span className="flex items-center gap-1.5 text-xs text-slate-300 font-medium"><span className="w-2 h-2 rounded-full bg-red-500" /> BEHIND (1)</span>
+            <span className="flex items-center gap-1.5 text-xs text-white font-medium"><span className="w-2 h-2 rounded-full bg-slate-300" /> ON DUTY (7)</span>
+            <span className="flex items-center gap-1.5 text-xs text-white font-medium"><span className="w-2 h-2 rounded-full bg-amber-500" /> LATE (1)</span>
+            <span className="flex items-center gap-1.5 text-xs text-white font-medium"><span className="w-2 h-2 rounded-full bg-red-500" /> BEHIND (1)</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 flex-1 overflow-y-auto pr-1" style={{ scrollbarWidth: "none" }}>
+          <div className="grid grid-cols-3 gap-3 flex-1 overflow-y-auto pr-1" style={{ scrollbarWidth: "none" }}>
             {[
-              { name: "J. Rivera", id: "S-041", status: "ON DUTY", actual: "06:00 ✓", color: "border-blue-500/50", bg: "bg-blue-950/30", badge: "bg-blue-900/50 text-blue-300" },
-              { name: "M. Chen", id: "S-019", status: "ON DUTY", actual: "06:02 +2m", color: "border-blue-500/50", bg: "bg-blue-950/30", badge: "bg-blue-900/50 text-blue-300" },
+              { name: "J. Rivera", id: "S-041", status: "ON DUTY", actual: "06:00 ✓", color: "border-neutral-700", bg: "bg-neutral-900", badge: "bg-neutral-800 text-white" },
+              { name: "M. Chen", id: "S-019", status: "ON DUTY", actual: "06:02 +2m", color: "border-neutral-700", bg: "bg-neutral-900", badge: "bg-neutral-800 text-white" },
               { name: "T. Williams", id: "S-057", status: "LATE", actual: "—", color: "border-amber-500/50", bg: "bg-amber-950/30", badge: "bg-amber-900/50 text-amber-300" },
-              { name: "A. Okafor", id: "S-033", status: "ON DUTY", actual: "05:58 ✓", color: "border-blue-500/50", bg: "bg-blue-950/30", badge: "bg-blue-900/50 text-blue-300" },
+              { name: "A. Okafor", id: "S-033", status: "ON DUTY", actual: "05:58 ✓", color: "border-neutral-700", bg: "bg-neutral-900", badge: "bg-neutral-800 text-white" },
               { name: "D. Patel", id: "S-062", status: "BEHIND", actual: "06:00 ✓", color: "border-red-500/50", bg: "bg-red-950/30", badge: "bg-red-900/50 text-red-300" },
-              { name: "L. Santos", id: "S-024", status: "ON DUTY", actual: "05:58 ✓", color: "border-blue-500/50", bg: "bg-blue-950/30", badge: "bg-blue-900/50 text-blue-300" }
+              { name: "L. Santos", id: "S-024", status: "ON DUTY", actual: "05:58 ✓", color: "border-neutral-700", bg: "bg-neutral-900", badge: "bg-neutral-800 text-white" },
+              { name: "K. Jones", id: "S-078", status: "ON DUTY", actual: "06:00 ✓", color: "border-neutral-700", bg: "bg-neutral-900", badge: "bg-neutral-800 text-white" },
+              { name: "R. Smith", id: "S-089", status: "ON DUTY", actual: "05:59 ✓", color: "border-neutral-700", bg: "bg-neutral-900", badge: "bg-neutral-800 text-white" },
+              { name: "B. Lee", id: "S-094", status: "ON DUTY", actual: "06:01 ✓", color: "border-neutral-700", bg: "bg-neutral-900", badge: "bg-neutral-800 text-white" }
             ].map(guard => (
               <div key={guard.name} className={`border ${guard.color} ${guard.bg} rounded-xl p-3 flex flex-col justify-between`}>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-300">
+                  <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-[10px] font-bold text-white">
                     {guard.name.split(" ")[0][0]}{guard.name.split(" ")[1][0]}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-200">{guard.name}</p>
-                    <p className="text-[10px] text-slate-500">{guard.id}</p>
+                    <p className="text-xs font-bold text-white">{guard.name}</p>
+                    <p className="text-[10px] text-neutral-400">{guard.id}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[9px] text-slate-500 uppercase tracking-wider">Sched.</p>
-                    <p className="text-sm font-bold text-slate-300">06:00</p>
+                    <p className="text-[9px] text-neutral-400 uppercase tracking-wider">Sched.</p>
+                    <p className="text-sm font-bold text-white">06:00</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[9px] text-slate-500 uppercase tracking-wider">Actual</p>
-                    <p className={`text-sm font-bold ${guard.status === 'LATE' ? 'text-amber-500' : guard.status === 'BEHIND' ? 'text-red-500' : 'text-blue-400'}`}>{guard.actual}</p>
+                    <p className="text-[9px] text-neutral-400 uppercase tracking-wider">Actual</p>
+                    <p className={`text-sm font-bold ${guard.status === 'LATE' ? 'text-amber-500' : guard.status === 'BEHIND' ? 'text-red-500' : 'text-white'}`}>{guard.actual}</p>
                   </div>
                 </div>
                 <div className="mt-2 text-right">
@@ -390,10 +315,10 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
         </div>
 
         {/* Q3: Communications */}
-        <div className="rounded-2xl p-4 flex flex-col h-[400px] bg-slate-900/60 backdrop-blur-md border border-blue-900/50 shadow-[0_0_15px_rgba(30,58,138,0.3)]">
-          <div className="flex items-center gap-2 mb-4 shrink-0 pb-3 border-b border-slate-800">
-            <MessageSquare className="w-5 h-5 text-blue-400" />
-            <h3 className="text-sm font-bold text-slate-100 uppercase tracking-widest">Communications</h3>
+        <div className="rounded-2xl p-4 flex flex-col h-[400px] bg-black border border-neutral-800">
+          <div className="flex items-center justify-center gap-2 mb-4 shrink-0 pb-3 border-b border-neutral-800">
+            <MessageSquare className="w-5 h-5 text-white" />
+            <h3 className="text-sm font-bold text-white uppercase tracking-widest">Communications</h3>
           </div>
 
           <div className="bg-red-950/40 border border-red-900/50 rounded-xl p-3 mb-4 shrink-0">
@@ -416,19 +341,19 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               { name: "A. Okafor", msg: "Level 4 elevator key box checked & sealed.", time: "07:20" },
               { name: "SYSTEM", msg: "D. Patel tour checkpoint overdue by 12 min.", time: "07:16", unread: true, sys: true }
             ].map((msg, i) => (
-              <div key={i} className="flex items-start justify-between p-3 rounded-xl bg-slate-800/30 border border-slate-800/50">
+              <div key={i} className="flex items-start justify-between p-3 rounded-xl bg-neutral-900 border border-neutral-800/50">
                 <div className="flex items-start gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${msg.sys ? 'bg-amber-900/50 text-amber-400' : 'bg-slate-700 text-slate-300'}`}>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${msg.sys ? 'bg-amber-900/50 text-amber-400' : 'bg-slate-700 text-white'}`}>
                     {msg.name.slice(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-200">{msg.name}</p>
-                    <p className={`text-xs mt-0.5 ${msg.sys ? 'text-amber-400/80' : 'text-slate-400'}`}>{msg.msg}</p>
+                    <p className="text-xs font-bold text-white">{msg.name}</p>
+                    <p className={`text-xs mt-0.5 ${msg.sys ? 'text-amber-400/80' : 'text-neutral-300'}`}>{msg.msg}</p>
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                  <span className="text-[10px] font-mono text-slate-500">{msg.time}</span>
-                  {msg.unread && <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />}
+                  <span className="text-[10px] font-mono text-neutral-400">{msg.time}</span>
+                  {msg.unread && <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />}
                 </div>
               </div>
             ))}
@@ -436,100 +361,43 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
         </div>
 
         {/* Q4: Administration */}
-        <div className="rounded-2xl p-4 flex flex-col h-[400px] bg-slate-900/60 backdrop-blur-md border border-blue-900/50 shadow-[0_0_15px_rgba(30,58,138,0.3)]">
-          <div className="flex items-center justify-between mb-4 shrink-0 pb-3 border-b border-slate-800">
+        <div className="rounded-2xl p-4 flex flex-col h-[400px] bg-black border border-neutral-800">
+          <div className="relative flex items-center justify-center mb-4 shrink-0 pb-3 border-b border-neutral-800">
             <div className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-blue-400" />
-              <h3 className="text-sm font-bold text-slate-100 uppercase tracking-widest">Administration</h3>
+              <Settings className="w-5 h-5 text-white" />
+              <h3 className="text-sm font-bold text-white uppercase tracking-widest">Administration</h3>
             </div>
-            <span className="text-[9px] font-bold text-blue-300 bg-blue-900/40 px-2 py-0.5 rounded border border-blue-800/50 uppercase tracking-wider">● Secured</span>
+            <span className="absolute right-0 text-[9px] font-bold text-white bg-neutral-900 px-2 py-0.5 rounded border border-neutral-700 uppercase tracking-wider">● Secured</span>
           </div>
 
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Admin Portal</p>
+          <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-3">Admin Portal</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { icon: <Users className="w-4 h-4" />, count: "10", title: "Users", sub: "Accounts", color: "text-blue-400" },
-              { icon: <Building2 className="w-4 h-4" />, count: "4", title: "Sites", sub: "Locations", color: "text-blue-400" },
-              { icon: <Users className="w-4 h-4" />, count: "6", title: "Groups", sub: "Teams", color: "text-blue-400" },
+              { icon: <Users className="w-4 h-4" />, count: "10", title: "Users", sub: "Accounts", color: "text-white" },
+              { icon: <Building2 className="w-4 h-4" />, count: "4", title: "Sites", sub: "Locations", color: "text-white" },
+              { icon: <Users className="w-4 h-4" />, count: "6", title: "Groups", sub: "Teams", color: "text-white" },
               { icon: <Zap className="w-4 h-4" />, count: "6", title: "Automations", sub: "Rules", color: "text-amber-400" },
-              { icon: <FileText className="w-4 h-4" />, count: "8", title: "Documents", sub: "Files", color: "text-slate-300" },
-              { icon: <ClipboardList className="w-4 h-4" />, count: "6", title: "Forms", sub: "Custom", color: "text-blue-400" },
-              { icon: <HelpCircle className="w-4 h-4" />, count: "6", title: "Quizzes", sub: "Assessments", color: "text-blue-400" },
-              { icon: <Settings className="w-4 h-4" />, count: "", title: "Settings", sub: "Config", color: "text-slate-400" }
+              { icon: <FileText className="w-4 h-4" />, count: "8", title: "Documents", sub: "Files", color: "text-white" },
+              { icon: <ClipboardList className="w-4 h-4" />, count: "6", title: "Forms", sub: "Custom", color: "text-white" },
+              { icon: <HelpCircle className="w-4 h-4" />, count: "6", title: "Quizzes", sub: "Assessments", color: "text-white" },
+              { icon: <Settings className="w-4 h-4" />, count: "", title: "Settings", sub: "Config", color: "text-neutral-300" }
             ].map(card => (
-              <div key={card.title} className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-3 flex flex-col justify-between hover:bg-slate-800 hover:border-blue-500/30 transition-all cursor-pointer h-24">
+              <div key={card.title} className="bg-neutral-900 border border-neutral-700 rounded-xl p-3 flex flex-col justify-between hover:bg-slate-800 hover:border-blue-500/30 transition-all cursor-pointer h-24">
                 <div className="flex items-start justify-between">
                   <div className={card.color}>{card.icon}</div>
                   {card.count && <span className="text-base font-bold text-white">{card.count}</span>}
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-200">{card.title}</p>
-                  <p className="text-[9px] text-blue-400/80">{card.sub}</p>
+                  <p className="text-xs font-bold text-white">{card.title}</p>
+                  <p className="text-[9px] text-white/80">{card.sub}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Q5: Tasks For Today */}
-        <div id="tasks-quadrant" className="rounded-2xl p-4 flex flex-col h-[400px] bg-slate-900/60 backdrop-blur-md border border-blue-900/50 shadow-[0_0_15px_rgba(30,58,138,0.3)]">
-          <div className="flex items-center justify-between mb-4 shrink-0 pb-3 border-b border-slate-800">
-            <div className="flex items-center gap-2">
-              <CheckSquare className="w-5 h-5 text-blue-400" />
-              <h3 className="text-sm font-bold text-slate-100 uppercase tracking-widest">Tasks For Today ({filteredTasks.length})</h3>
-            </div>
-            <button onClick={() => setShowNewTask(true)} className="flex items-center gap-1 text-[10px] font-bold text-blue-300 bg-blue-900/40 px-2 py-0.5 rounded border border-blue-800/50 uppercase tracking-wider hover:bg-blue-800/50 transition-colors">
-              <Plus className="w-3 h-3" /> New
-            </button>
-          </div>
-          <div className="flex-1 overflow-y-auto pr-1 space-y-2" style={{ scrollbarWidth: "none" }}>
-            {filteredTasks.map((task) => (
-              <div key={task.id} className="p-3 rounded-xl bg-slate-800/30 border border-slate-800/50 flex flex-col">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <p className="text-xs font-bold text-slate-200 flex-1">{task.title}</p>
-                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${task.status === "Overdue" ? "bg-red-900/50 text-red-300 border border-red-800/50" : task.status === "Open" ? "bg-amber-900/50 text-amber-300 border border-amber-800/50" : "bg-green-900/50 text-green-300 border border-green-800/50"}`}>
-                    {task.status}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-[10px] text-slate-400 flex items-center gap-1"><MapPin className="w-3 h-3" /> {task.site}</p>
-                  <p className="text-[10px] font-medium text-slate-500">{task.assigned}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Q6: Tours For Today */}
-        <div id="tours-quadrant" className="rounded-2xl p-4 flex flex-col h-[400px] bg-slate-900/60 backdrop-blur-md border border-blue-900/50 shadow-[0_0_15px_rgba(30,58,138,0.3)]">
-          <div className="flex items-center justify-between mb-4 shrink-0 pb-3 border-b border-slate-800">
-            <div className="flex items-center gap-2">
-              <Route className="w-5 h-5 text-blue-400" />
-              <h3 className="text-sm font-bold text-slate-100 uppercase tracking-widest">Tours For Today ({filteredTours.length})</h3>
-            </div>
-            <button onClick={() => onNavigate("Checkpoints" as any)} className="flex items-center gap-1 text-[10px] font-bold text-blue-300 bg-blue-900/40 px-2 py-0.5 rounded border border-blue-800/50 uppercase tracking-wider hover:bg-blue-800/50 transition-colors">
-              <Plus className="w-3 h-3" /> New
-            </button>
-          </div>
-          <div className="flex-1 overflow-y-auto pr-1 space-y-2" style={{ scrollbarWidth: "none" }}>
-            {filteredTours.map((tour) => (
-              <div key={tour.id} className="p-3 rounded-xl bg-slate-800/30 border border-slate-800/50 flex flex-col">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <p className="text-xs font-bold text-slate-200">{tour.name}</p>
-                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider border ${tour.statusColor === "#16a34a" ? "bg-green-900/50 text-green-300 border-green-800/50" : tour.statusColor === "#d97706" ? "bg-amber-900/50 text-amber-300 border-amber-800/50" : "bg-blue-900/50 text-blue-300 border-blue-800/50"}`}>
-                    {tour.status}
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-400 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" /> {tour.site}</p>
-                <div className="h-1 rounded-full overflow-hidden bg-slate-800" >
-                  <div className="h-full rounded-full transition-all"
-                    style={{ width: `${tour.total > 0 ? (tour.scanned / tour.total) * 100 : 0}%`, background: tour.statusColor === "#16a34a" ? "#22c55e" : tour.statusColor === "#d97706" ? "#f59e0b" : "#3b82f6" }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
         {/* ── Slide-Over Drawer Shell (HCI Context-Preserving Overlay) ── */}
         {activeDrawer && (
           <div className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs transition-opacity" onClick={() => setActiveDrawer(null)} />
@@ -549,7 +417,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 {activeDrawer === "submodule-journal" && "Company Activity Journal (Admin Logs)"}
                 {activeDrawer === "live-feed-explore" && "Live Feed (All Activity)"}
               </h3>
-              <p className="text-xs text-slate-300 mt-0.5">RFI Admin Portal · HCI Context View</p>
+              <p className="text-xs text-white mt-0.5">RFI Admin Portal · HCI Context View</p>
             </div>
             <button onClick={() => setActiveDrawer(null)} className="text-white/60 hover:text-white transition-colors cursor-pointer"><X className="w-5 h-5" /></button>
           </div>
@@ -561,7 +429,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               <div className="space-y-6">
                 <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden dark:bg-slate-900 dark:border-slate-700">
                   <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
-                    <h4 className="font-bold text-slate-800 dark:text-slate-200">Site Coverage Breakdown</h4>
+                    <h4 className="font-bold text-slate-800 dark:text-white">Site Coverage Breakdown</h4>
                     <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded">Overall: 81%</span>
                   </div>
                   <div className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -570,12 +438,12 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                       return (
                         <div key={row.site} className="p-4 hover:bg-slate-50 transition-colors dark:hover:bg-slate-800">
                           <div className="flex items-center justify-between mb-2">
-                            <p className="font-semibold text-slate-800 dark:text-slate-200">{row.site}</p>
+                            <p className="font-semibold text-slate-800 dark:text-white">{row.site}</p>
                             <span className={`text-sm font-bold ${pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-amber-600' : 'text-red-600'}`}>
                               {pct}%
                             </span>
                           </div>
-                          <div className="flex items-center justify-between text-xs text-slate-500 mb-2 dark:text-slate-400">
+                          <div className="flex items-center justify-between text-xs text-neutral-400 mb-2 dark:text-neutral-300">
                             <span>{row.present} Present / {row.scheduled} Scheduled</span>
                             {row.absent > 0 && <span className="text-red-600 font-semibold">{row.absent} Missing</span>}
                           </div>
@@ -590,18 +458,18 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden dark:bg-slate-900 dark:border-slate-700">
                   <div className="p-4 border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
-                    <h4 className="font-bold text-slate-800 dark:text-slate-200">Employee Roster Details</h4>
+                    <h4 className="font-bold text-slate-800 dark:text-white">Employee Roster Details</h4>
                   </div>
                   <div className="divide-y divide-slate-100 dark:divide-slate-800">
                     {MOCK_CLOCKED_IN_DETAILS.map((emp, i) => (
                       <div key={i} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition-colors dark:hover:bg-slate-800">
                         <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0 dark:bg-slate-700 dark:text-slate-300">
+                          <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0 dark:bg-slate-700 dark:text-white">
                             {emp.name.charAt(0)}
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{emp.name}</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">{emp.position} • {emp.shift}</p>
+                            <p className="text-sm font-semibold text-slate-800 dark:text-white">{emp.name}</p>
+                            <p className="text-xs text-neutral-400 dark:text-neutral-300">{emp.position} • {emp.shift}</p>
                           </div>
                         </div>
                         <div className="flex flex-col sm:items-end">
@@ -611,7 +479,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                             }`}>
                             {emp.status}
                           </span>
-                          {emp.time !== "—" && <span className="text-[10px] font-medium text-slate-400 mt-1">{emp.time}</span>}
+                          {emp.time !== "—" && <span className="text-[10px] font-medium text-neutral-300 mt-1">{emp.time}</span>}
                         </div>
                       </div>
                     ))}
@@ -624,13 +492,13 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
             {activeDrawer === "inactive-mobile" && (
               <div className="space-y-4">
                 <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-300" />
                   <input type="text" placeholder="Search tickets..." value={inactiveSearch} onChange={(e) => setInactiveSearch(e.target.value)}
                     className="w-full pl-9 pr-4 py-2 border rounded-xl text-sm outline-none" style={{ borderColor: "#cbd5e1" }} />
                 </div>
                 <div className="overflow-x-auto border rounded-xl">
                   <table className="w-full text-sm">
-                    <thead className="bg-slate-50 text-slate-500 font-semibold dark:bg-slate-900 dark:text-slate-400">
+                    <thead className="bg-slate-50 text-neutral-400 font-semibold dark:bg-slate-900 dark:text-neutral-300">
                       <tr className="border-b">
                         <th className="px-4 py-3 text-left">Ticket ID</th>
                         <th className="px-4 py-3 text-left">Date</th>
@@ -640,10 +508,10 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                         <th className="px-4 py-3 text-center">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y text-slate-700 dark:text-slate-300">
+                    <tbody className="divide-y text-slate-700 dark:text-white">
                       {filteredInactive.map((item, idx) => (
                         <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800">
-                          <td className="px-4 py-3 font-mono text-xs text-slate-900 font-bold dark:text-slate-100">{item.id}</td>
+                          <td className="px-4 py-3 font-mono text-xs text-slate-900 font-bold dark:text-white">{item.id}</td>
                           <td className="px-4 py-3 whitespace-nowrap">{item.date}</td>
                           <td className="px-4 py-3 font-semibold">{item.firstName} {item.lastName}</td>
                           <td className="px-4 py-3 text-xs">{item.subject}</td>
@@ -667,7 +535,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex-1 min-w-[200px] relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-300" />
                     <input type="text" placeholder="Search skills..." value={skillsSearch} onChange={(e) => setSkillsSearch(e.target.value)}
                       className="w-full pl-9 pr-4 py-2 border rounded-xl text-sm outline-none glow-input font-mono" style={{ borderColor: "#cbd5e1" }} />
                   </div>
@@ -683,7 +551,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 {/* Exports options */}
                 <div className="flex items-center justify-between border-t border-b py-3 px-1">
-                  <span className="text-xs font-bold text-slate-500 uppercase dark:text-slate-400">Export Table Data</span>
+                  <span className="text-xs font-bold text-neutral-400 uppercase dark:text-neutral-300">Export Table Data</span>
                   <div className="flex items-center gap-2">
                     <button onClick={() => triggerToast("Generating skill reports CSV download...", "success")}
                       className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-green-700 bg-green-50 hover:bg-green-100 rounded-lg cursor-pointer transition-colors">
@@ -702,7 +570,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 <div className="overflow-x-auto border rounded-xl">
                   <table className="w-full text-sm">
-                    <thead className="bg-slate-50 text-slate-500 font-semibold dark:bg-slate-900 dark:text-slate-400">
+                    <thead className="bg-slate-50 text-neutral-400 font-semibold dark:bg-slate-900 dark:text-neutral-300">
                       <tr className="border-b">
                         <th className="px-4 py-3 text-left">Employee</th>
                         <th className="px-4 py-3 text-left">Skill / Credential</th>
@@ -712,19 +580,19 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                         <th className="px-4 py-3 text-left">Category</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y text-slate-700 dark:text-slate-300">
+                    <tbody className="divide-y text-slate-700 dark:text-white">
                       {filteredSkills.map((item, idx) => (
                         <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800">
-                          <td className="px-4 py-3 font-semibold text-slate-900 dark:text-slate-100">{item.name}</td>
-                          <td className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">{item.skill}</td>
+                          <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{item.name}</td>
+                          <td className="px-4 py-3 font-semibold text-slate-700 dark:text-white">{item.skill}</td>
                           <td className="px-4 py-3 font-mono text-xs">{item.expiry}</td>
                           <td className="px-4 py-3">
                             <span className="font-semibold" style={{ color: item.expires.includes("Expired") ? "#dc2626" : "#d97706" }}>
                               {item.expires}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{item.region}</td>
-                          <td className="px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{item.category}</td>
+                          <td className="px-4 py-3 text-neutral-400 dark:text-neutral-300">{item.region}</td>
+                          <td className="px-4 py-3 text-xs text-neutral-400 dark:text-neutral-300">{item.category}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -738,7 +606,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex-1 min-w-[200px] relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-300" />
                     <input type="text" placeholder="Search message content..." value={msgSearch} onChange={(e) => setMsgSearch(e.target.value)}
                       className="w-full pl-9 pr-4 py-2 border rounded-xl text-sm outline-none" style={{ borderColor: "#cbd5e1" }} />
                   </div>
@@ -760,13 +628,13 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                         }}>
                         {msg.type.split(" ")[0]}
                       </span>
-                      <h5 className="font-bold text-slate-800 text-sm dark:text-slate-200">{msg.title}</h5>
-                      <p className="text-xs text-slate-600 mt-1 dark:text-slate-300">{msg.message}</p>
-                      <div className="flex flex-wrap items-center gap-4 mt-3 pt-3 border-t text-xs text-slate-400">
-                        <span>Sender: <strong className="text-slate-600 font-semibold dark:text-slate-300">{msg.sender}</strong></span>
-                        <span>Site: <strong className="text-slate-600 font-semibold dark:text-slate-300">{msg.site}</strong></span>
-                        <span>Time: <strong className="text-slate-600 font-semibold dark:text-slate-300">{msg.time}</strong></span>
-                        <span>Audience: <strong className="text-slate-600 font-semibold dark:text-slate-300">{msg.viewBy}</strong></span>
+                      <h5 className="font-bold text-slate-800 text-sm dark:text-white">{msg.title}</h5>
+                      <p className="text-xs text-slate-600 mt-1 dark:text-white">{msg.message}</p>
+                      <div className="flex flex-wrap items-center gap-4 mt-3 pt-3 border-t text-xs text-neutral-300">
+                        <span>Sender: <strong className="text-slate-600 font-semibold dark:text-white">{msg.sender}</strong></span>
+                        <span>Site: <strong className="text-slate-600 font-semibold dark:text-white">{msg.site}</strong></span>
+                        <span>Time: <strong className="text-slate-600 font-semibold dark:text-white">{msg.time}</strong></span>
+                        <span>Audience: <strong className="text-slate-600 font-semibold dark:text-white">{msg.viewBy}</strong></span>
                       </div>
                     </div>
                   ))}
@@ -780,10 +648,10 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 {/* Custom Incident categories */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 pb-1 border-b dark:text-slate-400">Custom Incident Categories</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2 pb-1 border-b dark:text-neutral-300">Custom Incident Categories</h4>
                   <div className="overflow-x-auto border rounded-xl">
                     <table className="w-full text-sm">
-                      <thead className="bg-slate-50 text-slate-500 font-semibold dark:bg-slate-900 dark:text-slate-400">
+                      <thead className="bg-slate-50 text-neutral-400 font-semibold dark:bg-slate-900 dark:text-neutral-300">
                         <tr className="border-b">
                           <th className="px-4 py-2 text-left">Code</th>
                           <th className="px-4 py-2 text-left">Region</th>
@@ -793,7 +661,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                           <th className="px-4 py-2 text-left">Default Group</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y text-slate-700 text-xs dark:text-slate-300">
+                      <tbody className="divide-y text-slate-700 text-xs dark:text-white">
                         {[
                           { code: "INC-FIRE", region: "All Regions", desc: "Fire or Smoke Outbreak", level: "Critical", parent: "Emergency", group: "Operations Team" },
                           { code: "INC-THEFT", region: "North America", desc: "Suspected Theft or Robbery", level: "High", parent: "Security Event", group: "Emergency Dispatch" },
@@ -801,7 +669,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                           { code: "INC-PROP", region: "All Regions", desc: "Property Damage / Graffiti", level: "Low", parent: "Maintenance Request", group: "Maintenance" }
                         ].map((item, idx) => (
                           <tr key={idx}>
-                            <td className="px-4 py-2 font-mono font-bold text-slate-800 dark:text-slate-200">{item.code}</td>
+                            <td className="px-4 py-2 font-mono font-bold text-slate-800 dark:text-white">{item.code}</td>
                             <td className="px-4 py-2">{item.region}</td>
                             <td className="px-4 py-2">{item.desc}</td>
                             <td className="px-4 py-2 text-center">
@@ -824,8 +692,8 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 {/* Standard Report Footers */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 pb-1 border-b dark:text-slate-400">Report Footers & Attributions</h4>
-                  <div className="p-4 rounded-xl border bg-slate-50 text-slate-700 text-xs font-mono space-y-2 dark:bg-slate-900 dark:text-slate-300">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2 pb-1 border-b dark:text-neutral-300">Report Footers & Attributions</h4>
+                  <div className="p-4 rounded-xl border bg-slate-50 text-slate-700 text-xs font-mono space-y-2 dark:bg-slate-900 dark:text-white">
                     <p><strong>Primary Footer:</strong> "© {new Date().getFullYear()} RFI Security LLC. Confidential Security Report. Verbatim audit preserved."</p>
                     <p><strong>Emergency Disclaimer:</strong> "FOR EMERGENCY MEDICAL OR LAW ENFORCEMENT SERVICES DIAL 911 IMMEDIATELY. Dispatch logs are timestamped."</p>
                   </div>
@@ -838,7 +706,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               <div className="space-y-4">
                 <div className="overflow-x-auto border rounded-xl">
                   <table className="w-full text-sm">
-                    <thead className="bg-slate-50 text-slate-500 font-semibold dark:bg-slate-900 dark:text-slate-400">
+                    <thead className="bg-slate-50 text-neutral-400 font-semibold dark:bg-slate-900 dark:text-neutral-300">
                       <tr className="border-b">
                         <th className="px-4 py-3 text-left">Vehicle ID</th>
                         <th className="px-4 py-3 text-left">License Plate</th>
@@ -847,11 +715,11 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                         <th className="px-4 py-3 text-center">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y text-slate-700 text-xs dark:text-slate-300">
+                    <tbody className="divide-y text-slate-700 text-xs dark:text-white">
                       {MOCK_VEHICLES_DETAILED.map((item, idx) => (
                         <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800">
                           <td className="px-4 py-3 font-mono font-bold">{item.id}</td>
-                          <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">{item.license}</td>
+                          <td className="px-4 py-3 font-semibold text-slate-800 dark:text-white">{item.license}</td>
                           <td className="px-4 py-3">{item.makeModelYear}</td>
                           <td className="px-4 py-3">
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.ownership === "Leased" ? "bg-purple-100 text-purple-700" : "bg-blue-100 text-blue-700"}`}>
@@ -905,7 +773,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 <div className="space-y-4">
                   <div className="flex flex-col md:flex-row md:items-end gap-3 p-3 bg-slate-50 border rounded-xl dark:bg-slate-900">
                     <div className="flex-1">
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 dark:text-slate-400">Event Type</label>
+                      <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1 dark:text-neutral-300">Event Type</label>
                       <select
                         value={liveFeedEventFilter}
                         onChange={(e) => setLiveFeedEventFilter(e.target.value)}
@@ -916,7 +784,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                     </div>
                     <div className="flex items-center gap-2">
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 dark:text-slate-400">From Date</label>
+                        <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1 dark:text-neutral-300">From Date</label>
                         <input
                           type="date"
                           value={liveFeedDateFrom}
@@ -925,7 +793,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 dark:text-slate-400">To Date</label>
+                        <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1 dark:text-neutral-300">To Date</label>
                         <input
                           type="date"
                           value={liveFeedDateTo}
@@ -938,18 +806,18 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                   <div className="divide-y border rounded-xl overflow-hidden bg-white dark:bg-slate-900">
                     {filteredFeed.length === 0 ? (
-                      <div className="p-8 text-center text-slate-500 font-semibold text-sm dark:text-slate-400">No activity found for these filters.</div>
+                      <div className="p-8 text-center text-neutral-400 font-semibold text-sm dark:text-neutral-300">No activity found for these filters.</div>
                     ) : filteredFeed.map((item) => (
                       <div key={item.id} className="p-4 hover:bg-slate-50 transition-colors flex items-start gap-4 dark:hover:bg-slate-800">
                         <div className="mt-1">
                           <ActivityIcon type={item.type} status={item.status} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{item.text}</p>
-                          <div className="flex items-center gap-2 mt-1 text-xs text-slate-500 dark:text-slate-400">
+                          <p className="text-sm font-semibold text-slate-800 dark:text-white">{item.text}</p>
+                          <div className="flex items-center gap-2 mt-1 text-xs text-neutral-400 dark:text-neutral-300">
                             <span className="font-medium text-blue-700">{item.site}</span>
                             <span>·</span>
-                            <span className="text-slate-400 font-bold">{item.time}</span>
+                            <span className="text-neutral-300 font-bold">{item.time}</span>
                           </div>
                         </div>
                       </div>
@@ -984,7 +852,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 style={{ background: "linear-gradient(135deg, #0f1729, #1a2f5a)" }}>
                 <div>
                   <h3 className="text-base font-bold text-white">Live Monitoring: {selectedPin.label}</h3>
-                  <p className="text-xs text-slate-300 mt-0.5">Active Staffing & Remote Terminal Commands</p>
+                  <p className="text-xs text-white mt-0.5">Active Staffing & Remote Terminal Commands</p>
                 </div>
                 <button onClick={() => setSelectedPin(null)} className="text-white/60 hover:text-white transition-colors cursor-pointer"><X className="w-5 h-5" /></button>
               </div>
@@ -995,15 +863,15 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 {/* Site Details Card */}
                 <div className="grid grid-cols-3 gap-3 p-4 rounded-xl border bg-slate-50 text-center dark:bg-slate-900">
                   <div>
-                    <p className="text-xs text-slate-400 uppercase font-semibold">Status</p>
+                    <p className="text-xs text-neutral-300 uppercase font-semibold">Status</p>
                     <p className="text-sm font-bold text-green-600 mt-0.5">On Duty</p>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400 uppercase font-semibold">Active Staff</p>
-                    <p className="text-sm font-bold text-slate-800 mt-0.5 dark:text-slate-200">{selectedPin.count} Guards</p>
+                    <p className="text-xs text-neutral-300 uppercase font-semibold">Active Staff</p>
+                    <p className="text-sm font-bold text-slate-800 mt-0.5 dark:text-white">{selectedPin.count} Guards</p>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400 uppercase font-semibold">Staffing Alert</p>
+                    <p className="text-xs text-neutral-300 uppercase font-semibold">Staffing Alert</p>
                     <p className="text-sm font-bold mt-0.5" style={{ color: selectedPin.status }}>
                       {selectedPin.status === "#16a34a" ? "Optimal" : selectedPin.status === "#d97706" ? "Partial" : "Understaffed"}
                     </p>
@@ -1012,19 +880,19 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 {/* Guard Listing */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">On-Duty Guard Registry</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">On-Duty Guard Registry</h4>
                   <div className="divide-y border rounded-xl overflow-hidden bg-white dark:bg-slate-900">
                     {selectedPin.guardList.map((guard: string, idx: number) => (
                       <div key={idx} className="flex items-center justify-between p-3 hover:bg-slate-50 text-sm dark:hover:bg-slate-800">
                         <div className="flex items-center gap-2">
                           <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping" />
-                          <span className="font-semibold text-slate-800 dark:text-slate-200">{guard}</span>
+                          <span className="font-semibold text-slate-800 dark:text-white">{guard}</span>
                         </div>
 
                         {/* Actions for this guard */}
                         <div className="flex items-center gap-1.5">
                           <button onClick={() => handleRemoteClockOut({ name: guard }, "stay")}
-                            className="px-2 py-1 rounded text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer dark:text-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700">
+                            className="px-2 py-1 rounded text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer dark:text-white dark:bg-slate-800 dark:hover:bg-slate-700">
                             Clock Out
                           </button>
                           <button onClick={() => handleRemoteClockOut({ name: guard }, "signout")}
@@ -1039,7 +907,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 {/* Remote Commands Section */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Remote Device Broadcast Commands</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">Remote Device Broadcast Commands</h4>
                   <div className="grid grid-cols-2 gap-3">
 
                     {/* Message with Siren */}
@@ -1051,8 +919,8 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                       className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:border-amber-300 transition-all text-center cursor-pointer group dark:border-slate-700 dark:bg-slate-900"
                     >
                       <Bell className="w-5 h-5 text-amber-600 group-hover:animate-bounce" />
-                      <span className="text-xs font-bold mt-1 text-slate-700 dark:text-slate-300">Message with Siren</span>
-                      <span className="text-[10px] text-slate-400 mt-0.5">Audible push siren notification</span>
+                      <span className="text-xs font-bold mt-1 text-slate-700 dark:text-white">Message with Siren</span>
+                      <span className="text-[10px] text-neutral-300 mt-0.5">Audible push siren notification</span>
                     </button>
 
                     {/* Send Audio Message */}
@@ -1064,8 +932,8 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                       className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 transition-all text-center cursor-pointer group dark:border-slate-700 dark:bg-slate-900"
                     >
                       <Headphones className="w-5 h-5 text-blue-600" />
-                      <span className="text-xs font-bold mt-1 text-slate-700 dark:text-slate-300">Send Audio Message</span>
-                      <span className="text-[10px] text-slate-400 mt-0.5">Record and stream microphone</span>
+                      <span className="text-xs font-bold mt-1 text-slate-700 dark:text-white">Send Audio Message</span>
+                      <span className="text-[10px] text-neutral-300 mt-0.5">Record and stream microphone</span>
                     </button>
 
                     {/* Reload Install / Settings */}
@@ -1077,15 +945,15 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                       className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-green-50 hover:border-green-300 transition-all text-center cursor-pointer group dark:border-slate-700 dark:bg-slate-900"
                     >
                       <RefreshCw className={`w-5 h-5 text-green-600 ${isSyncing ? "animate-spin" : ""}`} />
-                      <span className="text-xs font-bold mt-1 text-slate-700 dark:text-slate-300">Reload Install / Config</span>
-                      <span className="text-[10px] text-slate-400 mt-0.5">Sync server files & templates</span>
+                      <span className="text-xs font-bold mt-1 text-slate-700 dark:text-white">Reload Install / Config</span>
+                      <span className="text-[10px] text-neutral-300 mt-0.5">Sync server files & templates</span>
                     </button>
 
                     {/* Remote Speak (LATER PHASE placeholder) */}
                     <div
-                      className="flex flex-col items-center justify-center p-3 rounded-xl border border-dashed border-slate-200 bg-slate-100 text-slate-400 text-center relative dark:border-slate-700 dark:bg-slate-800"
+                      className="flex flex-col items-center justify-center p-3 rounded-xl border border-dashed border-slate-200 bg-slate-100 text-neutral-300 text-center relative dark:border-slate-700 dark:bg-slate-800"
                     >
-                      <Lock className="w-5 h-5 text-slate-400" />
+                      <Lock className="w-5 h-5 text-neutral-300" />
                       <span className="text-xs font-bold mt-1">Remote Speak</span>
                       <span className="text-[9px] font-bold text-red-500 uppercase mt-0.5 bg-red-50 px-1 rounded">Later Phase Only</span>
                     </div>
@@ -1098,7 +966,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               {/* Modal Footer */}
               <div className="px-6 py-4 bg-slate-50 border-t flex justify-end dark:bg-slate-900">
                 <button onClick={() => setSelectedPin(null)}
-                  className="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-600 transition-all cursor-pointer dark:bg-slate-700 dark:text-slate-300">
+                  className="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-600 transition-all cursor-pointer dark:bg-slate-700 dark:text-white">
                   Close View
                 </button>
               </div>
@@ -1111,9 +979,9 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
             style={{ background: "rgba(15,23,41,0.8)", backdropFilter: "blur(4px)" }}>
             <div className="w-full max-w-md rounded-2xl shadow-2xl bg-white p-6 relative dark:bg-slate-900">
-              <h3 className="text-base font-bold text-slate-900 mb-2 dark:text-slate-100">Remote Action: Confirm Guard Clock-Out</h3>
-              <p className="text-xs text-slate-500 leading-relaxed mb-4 dark:text-slate-400">
-                You are about to force a remote clock-out command for <strong className="text-slate-800 dark:text-slate-200">{clockOutGuard?.name}</strong>.
+              <h3 className="text-base font-bold text-slate-900 mb-2 dark:text-white">Remote Action: Confirm Guard Clock-Out</h3>
+              <p className="text-xs text-neutral-400 leading-relaxed mb-4 dark:text-neutral-300">
+                You are about to force a remote clock-out command for <strong className="text-slate-800 dark:text-white">{clockOutGuard?.name}</strong>.
                 The system will log your Admin ID and record this timesheet adjustment.
               </p>
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-800 flex gap-2">
@@ -1124,7 +992,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               {/* Action buttons */}
               <div className="flex items-center justify-end gap-3">
                 <button onClick={() => { setShowClockOutConfirm(false); setClockOutGuard(null); }}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-600 transition-all cursor-pointer dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
+                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-600 transition-all cursor-pointer dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
                   Cancel Command
                 </button>
                 <button onClick={executeClockOut}
@@ -1141,7 +1009,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
             style={{ background: "rgba(15,23,41,0.7)" }}>
             <div className="w-full max-w-sm rounded-2xl shadow-2xl bg-white p-6 text-center space-y-4 dark:bg-slate-900">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Send Audio Stream: {audioTarget}</h3>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-white">Send Audio Stream: {audioTarget}</h3>
 
               {/* Visualizer animation */}
               <div className="h-16 flex items-center justify-center gap-1.5 bg-slate-50 rounded-xl border border-dashed relative dark:bg-slate-900">
@@ -1157,7 +1025,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                     <span className="absolute bottom-2 text-[9px] text-blue-600 font-bold uppercase tracking-wider">Recording Live Microphone...</span>
                   </>
                 ) : (
-                  <span className="text-xs text-slate-400 font-medium">Microphone is idle</span>
+                  <span className="text-xs text-neutral-300 font-medium">Microphone is idle</span>
                 )}
               </div>
 
@@ -1177,7 +1045,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
               <div className="flex justify-end pt-2 border-t text-xs">
                 <button onClick={() => { setShowAudioModal(false); setIsRecording(false); }}
-                  className="px-3 py-1.5 rounded-lg font-semibold bg-slate-100 hover:bg-slate-200 text-slate-500 transition-all cursor-pointer dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">
+                  className="px-3 py-1.5 rounded-lg font-semibold bg-slate-100 hover:bg-slate-200 text-neutral-400 transition-all cursor-pointer dark:bg-slate-800 dark:text-neutral-300 dark:hover:bg-slate-700">
                   Cancel
                 </button>
               </div>
@@ -1200,7 +1068,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               <div className="p-5 space-y-4">
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Target Grouping Type</label>
+                  <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Target Grouping Type</label>
                   <div className="grid grid-cols-3 gap-2">
                     {["Specific Group", "Specific User", "User Type"].map((t) => (
                       <button key={t} onClick={() => { setUpdateTargetType(t); setUpdateTarget("All"); }}
@@ -1217,7 +1085,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Select Target Recipients</label>
+                  <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Select Target Recipients</label>
                   <select value={updateTarget} onChange={(e) => setUpdateTarget(e.target.value)}
                     className="w-full px-3 py-2 border rounded-xl text-xs outline-none bg-white dark:bg-slate-900" style={{ borderColor: "#cbd5e1" }}>
                     {updateTargetType === "Specific Group" && ["All Groups", "Supervisors Group", "West Patrol Group", "Marina Complex Team"].map((o) => <option key={o}>{o}</option>)}
@@ -1227,14 +1095,14 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Message Content</label>
+                  <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Message Content</label>
                   <textarea rows={4} placeholder="Type update notice here..." value={updateMsg} onChange={(e) => setUpdateMsg(e.target.value)}
                     className="w-full px-3 py-2 border rounded-xl text-xs outline-none" style={{ borderColor: "#cbd5e1" }} />
                 </div>
 
                 <div className="flex items-center justify-end gap-3 pt-3 border-t">
                   <button onClick={() => setShowSendUpdate(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-500 cursor-pointer dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">
+                    className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-neutral-400 cursor-pointer dark:bg-slate-800 dark:text-neutral-300 dark:hover:bg-slate-700">
                     Cancel
                   </button>
                   <button
@@ -1269,7 +1137,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Task Type</label>
+                    <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Task Type</label>
                     <select value={taskType} onChange={(e) => setTaskType(e.target.value)}
                       className="w-full px-3 py-2 border rounded-xl text-xs outline-none bg-white dark:bg-slate-900" style={{ borderColor: "#cbd5e1" }}>
                       <option value="Dispatch">Dispatch Task</option>
@@ -1279,7 +1147,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Task Priority (§38.1)</label>
+                    <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Task Priority (§38.1)</label>
                     <select value={taskPriority} onChange={(e) => setTaskPriority(e.target.value)}
                       className="w-full px-3 py-2 border rounded-xl text-xs outline-none bg-white font-bold dark:bg-slate-900"
                       style={{
@@ -1294,14 +1162,14 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Task Title</label>
+                  <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Task Title</label>
                   <input type="text" placeholder="e.g. Inquire gate alert trigger" value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)}
                     className="w-full px-3 py-2 border rounded-xl text-xs outline-none" style={{ borderColor: "#cbd5e1" }} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Assigned Guard</label>
+                    <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Assigned Guard</label>
                     <select value={taskAssignee} onChange={(e) => setTaskAssignee(e.target.value)}
                       className="w-full px-3 py-2 border rounded-xl text-xs outline-none bg-white dark:bg-slate-900" style={{ borderColor: "#cbd5e1" }}>
                       <option value="Marcus Johnson">Marcus Johnson</option>
@@ -1311,7 +1179,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Due Date</label>
+                    <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Due Date</label>
                     <select value={taskDueDate} onChange={(e) => setTaskDueDate(e.target.value)}
                       className="w-full px-3 py-2 border rounded-xl text-xs outline-none bg-white dark:bg-slate-900" style={{ borderColor: "#cbd5e1" }}>
                       <option value="Today">Today</option>
@@ -1323,7 +1191,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 dark:text-slate-400">Operational Site</label>
+                  <label className="block text-xs font-semibold text-neutral-400 uppercase mb-1 dark:text-neutral-300">Operational Site</label>
                   <select value={taskSite} onChange={(e) => setTaskSite(e.target.value)}
                     className="w-full px-3 py-2 border rounded-xl text-xs outline-none bg-white dark:bg-slate-900" style={{ borderColor: "#cbd5e1" }}>
                     <option value="Downtown Financial Center">Downtown Financial Center</option>
@@ -1335,7 +1203,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
                 <div className="flex items-center justify-end gap-3 pt-3 border-t">
                   <button onClick={() => setShowNewTask(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-500 cursor-pointer dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">
+                    className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-neutral-400 cursor-pointer dark:bg-slate-800 dark:text-neutral-300 dark:hover:bg-slate-700">
                     Cancel
                   </button>
                   <button

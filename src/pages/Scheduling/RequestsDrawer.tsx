@@ -21,9 +21,9 @@ export function RequestsDrawer({ isOpen, onClose }: RequestsDrawerProps) {
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={onClose} />
+      <div className="fixed inset-0 z-40 bg-black/60 transition-opacity" onClick={onClose} />
       
-      <div className="fixed top-0 right-0 h-full w-full max-w-[800px] bg-slate-50 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300 dark:bg-slate-900">
+      <div className="fixed top-0 right-0 h-full w-full max-w-[800px] bg-slate-50 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700">
         
         {/* Header */}
         <div className="flex flex-col px-6 py-5 bg-white border-b border-slate-200 shrink-0 dark:bg-slate-900 dark:border-slate-700">
@@ -147,11 +147,11 @@ export function RequestsDrawer({ isOpen, onClose }: RequestsDrawerProps) {
                   </div>
                   
                   {expandedDetails === req.id && (
-                    <div className="p-5 border-t border-slate-100 bg-slate-50/50 dark:border-slate-800">
+                    <div className="p-5 border-t border-slate-100 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800">
                       <h5 className="font-bold text-sm text-slate-800 mb-3 dark:text-slate-200">Audit Trail & Impact</h5>
-                      <div className="text-sm text-slate-600 space-y-2 dark:text-slate-300">
-                        <p><span className="font-semibold text-slate-800 dark:text-slate-200">Submitted:</span> {req.submittedDate}</p>
-                        <p><span className="font-semibold text-slate-800 dark:text-slate-200">Schedule Impact:</span> Approving this will remove the employee from {req.affectedShifts} scheduled shifts.</p>
+                      <div className="text-sm text-slate-600 space-y-2 dark:text-slate-400">
+                        <p><span className="font-semibold text-slate-800 dark:text-slate-300">Submitted:</span> {req.submittedDate}</p>
+                        <p><span className="font-semibold text-slate-800 dark:text-slate-300">Schedule Impact:</span> Approving this will remove the employee from {req.affectedShifts} scheduled shifts.</p>
                       </div>
                     </div>
                   )}
@@ -267,7 +267,7 @@ export function RequestsDrawer({ isOpen, onClose }: RequestsDrawerProps) {
 
       {/* MODAL: Approving Time Off */}
       {approvingTimeOff && (
-        <div className="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[60] bg-black/60 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200 dark:bg-slate-900">
             <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
               <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">Approve Time Off</h3>
@@ -312,7 +312,7 @@ export function RequestsDrawer({ isOpen, onClose }: RequestsDrawerProps) {
 
       {/* MODAL: Find Replacement */}
       {replacingShift && (
-        <div className="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm flex flex-col justify-end sm:items-center sm:justify-center p-4">
+        <div className="fixed inset-0 z-[60] bg-black/60 flex flex-col justify-end sm:items-center sm:justify-center p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full h-[80vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 dark:bg-slate-900">
             <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0 dark:border-slate-700 dark:bg-slate-900">
               <div>

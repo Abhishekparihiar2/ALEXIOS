@@ -8,7 +8,7 @@ export function TimesheetsTab() {
   const [expandedDay, setExpandedDay] = useState<{ empId: string, date: string } | null>(null);
   const [selectedIssueEmp, setSelectedIssueEmp] = useState<PayPeriodSummary | null>(null);
   const [compareSchedule, setCompareSchedule] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isRequestsOpen, setIsRequestsOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -43,9 +43,7 @@ export function TimesheetsTab() {
     unpaid: acc.unpaid + curr.unpaidTimeOffHours,
   }), { regular: 0, overtime: 0, pto: 0, unpaid: 0 });
 
-  const totalItems = MOCK_WEEKLY_TIMESHEETS.length;
-  const totalPages = Math.ceil(totalItems / rowsPerPage);
-  const paginatedData = MOCK_WEEKLY_TIMESHEETS.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  // Pagination removed
 
   // Generate date array
   const datesToRender: Date[] = [];
@@ -65,7 +63,7 @@ export function TimesheetsTab() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-transparent relative">
+    <div className="flex-1 flex flex-col bg-transparent relative">
       
       {/* HEADER ROW */}
       <div className="px-6 py-4 bg-slate-900/60 backdrop-blur-xl border-b border-slate-800 shrink-0 flex flex-wrap items-center justify-between gap-4 relative z-40">
@@ -216,41 +214,10 @@ export function TimesheetsTab() {
         </div>
       </div>
 
-      {/* TOTALS STRIP */}
-      <div className="px-6 py-3 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 shrink-0 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">Regular Hours</span>
-            <span className="text-sm font-bold text-slate-800 dark:text-slate-200">{globalTotals.regular}h</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">Overtime</span>
-            <span className="text-sm font-bold text-amber-600 flex items-center gap-1">{globalTotals.overtime}h</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">Paid Time Off</span>
-            <span className="text-sm font-bold text-purple-600">{globalTotals.pto}h</span>
-          </div>
-          <div className="h-6 w-px bg-slate-300 mx-2"></div>
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">Total Paid Hours</span>
-            <span className="text-base font-black text-blue-700">{globalTotals.regular + globalTotals.overtime + globalTotals.pto}h</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-6 text-right">
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">Selected Period</span>
-            <span className="text-sm font-bold text-slate-800 dark:text-slate-200">{globalTotals.regular + globalTotals.overtime + globalTotals.pto}h total</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">Unpaid Time Off</span>
-            <span className="text-sm font-bold text-slate-500 dark:text-slate-400">{globalTotals.unpaid}h</span>
-          </div>
-        </div>
-      </div>
+
 
       {/* MAIN GRID */}
-      <div className="flex-1 overflow-auto relative bg-slate-900/40 backdrop-blur-xl">
+      <div className="shrink-0 overflow-x-auto relative bg-slate-900/40 backdrop-blur-xl pb-6">
         <div className="inline-block min-w-max w-full">
           <table className="w-full text-sm text-left border-collapse">
             <thead className="bg-slate-900/80 backdrop-blur-md text-slate-400 font-bold border-b border-slate-800 sticky top-0 z-20 shadow-sm">
@@ -272,7 +239,7 @@ export function TimesheetsTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50 text-slate-300">
-              {paginatedData.map((emp) => {
+              {MOCK_WEEKLY_TIMESHEETS.map((emp) => {
                 const totalHours = emp.regularHours + emp.overtimeHours + emp.ptoHours;
                 const hasIssues = emp.entries.some(e => e.issues.length > 0 && !e.issues.every(i => i.resolved));
                 
@@ -462,44 +429,6 @@ export function TimesheetsTab() {
         </div>
       </div>
 
-      {/* PAGINATION */}
-      <div className="px-6 py-3 border-t border-slate-800 bg-slate-900/80 backdrop-blur-md flex items-center justify-between shrink-0">
-        <span className="text-sm text-slate-500 font-medium dark:text-slate-400">
-          Showing {(currentPage - 1) * rowsPerPage + 1} to {Math.min(currentPage * rowsPerPage, totalItems)} of {totalItems} entries
-        </span>
-        <div className="flex items-center gap-1">
-          <button 
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            className="px-3 py-1.5 border border-slate-200 rounded-md text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-          >
-            Previous
-          </button>
-          
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1.5 border rounded-md text-sm font-semibold transition-colors ${
-                currentPage === i + 1 
-                  ? "bg-blue-50 border-blue-200 text-blue-700" 
-                  : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button 
-            disabled={currentPage === totalPages || totalPages === 0}
-            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-            className="px-3 py-1.5 border border-slate-200 rounded-md text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-          >
-            Next
-          </button>
-        </div>
-      </div>
-
       {/* BULK ACTION BAR */}
       {selectedRows.size > 0 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white rounded-xl shadow-2xl px-4 py-3 flex items-center gap-4 animate-in slide-in-from-bottom-5 z-40">
@@ -523,19 +452,19 @@ export function TimesheetsTab() {
       {/* ISSUES SIDE PANEL OVERLAY */}
       {selectedIssueEmp && (
         <>
-          <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40" onClick={() => setSelectedIssueEmp(null)}></div>
-          <div className="absolute top-0 right-0 h-full w-[400px] bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right dark:bg-slate-900">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+          <div className="fixed inset-0 bg-black/60 z-40 transition-opacity" onClick={() => setSelectedIssueEmp(null)}></div>
+          <div className="fixed top-0 right-0 h-full w-[400px] bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 flex flex-col animate-in slide-in-from-right border-l border-slate-800">
+            <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-red-900/30 text-red-500 flex items-center justify-center border border-red-800/50">
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 leading-tight dark:text-slate-100">Timesheet Issues</h3>
-                  <p className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">{selectedIssueEmp.guardName}</p>
+                  <h3 className="font-bold text-slate-100 leading-tight">Timesheet Issues</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">{selectedIssueEmp.guardName}</p>
                 </div>
               </div>
-              <button onClick={() => setSelectedIssueEmp(null)} className="p-2 text-slate-400 hover:bg-slate-200 rounded-lg transition-colors dark:hover:bg-slate-700">
+              <button onClick={() => setSelectedIssueEmp(null)} className="p-2 text-slate-400 hover:bg-slate-800 rounded-lg transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -543,31 +472,31 @@ export function TimesheetsTab() {
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {selectedIssueEmp.entries.flatMap(entry => 
                 entry.issues.map(issue => (
-                  <div key={issue.id} className={`p-4 rounded-xl border ${issue.resolved ? 'bg-slate-50 border-slate-200' : 'bg-red-50/50 border-red-200'}`}>
+                  <div key={issue.id} className={`p-4 rounded-xl border ${issue.resolved ? 'bg-slate-800/40 border-slate-700/50' : 'bg-red-900/10 border-red-800/30'}`}>
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold font-mono text-slate-500 dark:text-slate-400">{entry.date.slice(5)}</span>
+                        <span className="text-xs font-bold font-mono text-slate-400">{entry.date.slice(5)}</span>
                         <span className={`text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
-                          issue.type === 'missing_punch' || issue.type === 'no_show' ? 'bg-red-100 text-red-700' :
-                          issue.type === 'geofence' || issue.type === 'late' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'
+                          issue.type === 'missing_punch' || issue.type === 'no_show' ? 'bg-red-900/30 text-red-400 border border-red-800/50' :
+                          issue.type === 'geofence' || issue.type === 'late' ? 'bg-amber-900/30 text-amber-400 border border-amber-800/50' : 'bg-slate-800 text-slate-300 border border-slate-700'
                         }`}>
                           {issue.type.replace('_', ' ')}
                         </span>
                       </div>
-                      {issue.resolved && <span className="flex items-center gap-1 text-xs font-bold text-green-600"><Check className="w-3.5 h-3.5" /> Resolved</span>}
+                      {issue.resolved && <span className="flex items-center gap-1 text-xs font-bold text-green-500"><Check className="w-3.5 h-3.5" /> Resolved</span>}
                     </div>
-                    <p className="text-sm text-slate-700 font-medium mb-1 dark:text-slate-300">
+                    <p className="text-sm text-slate-300 font-medium mb-1">
                       {issue.type === 'missing_punch' ? 'Guard failed to clock out.' :
                        issue.type === 'geofence' ? 'Clocked in outside assigned geofence.' :
                        issue.type === 'late' ? 'Clocked in past scheduled start time.' :
                        issue.type === 'no_show' ? 'Scheduled shift missed completely.' : 'Unapproved schedule deviation.'}
                     </p>
-                    {issue.note && <p className="text-xs text-slate-500 bg-white px-2 py-1.5 rounded border border-slate-200 dark:text-slate-400 dark:bg-slate-900 dark:border-slate-700">Note: {issue.note}</p>}
+                    {issue.note && <p className="text-xs text-slate-400 bg-slate-900/60 px-2 py-1.5 rounded border border-slate-800">Note: {issue.note}</p>}
                     
                     {!issue.resolved && (
                       <div className="mt-3 flex gap-2">
-                        <button className="flex-1 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">View Details</button>
-                        <button className="flex-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700">Approve & Resolve</button>
+                        <button className="flex-1 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-700">View Details</button>
+                        <button className="flex-1 px-3 py-1.5 bg-blue-600/90 text-white rounded-lg text-xs font-bold hover:bg-blue-600">Approve & Resolve</button>
                       </div>
                     )}
                   </div>
@@ -581,49 +510,49 @@ export function TimesheetsTab() {
       {/* REQUESTS SIDE PANEL OVERLAY */}
       {isRequestsOpen && (
         <>
-          <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40" onClick={() => setIsRequestsOpen(false)}></div>
-          <div className="absolute top-0 right-0 h-full w-[400px] bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right dark:bg-slate-900">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+          <div className="fixed inset-0 bg-black/60 z-40 transition-opacity" onClick={() => setIsRequestsOpen(false)}></div>
+          <div className="fixed top-0 right-0 h-full w-[400px] bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 flex flex-col animate-in slide-in-from-right border-l border-slate-800">
+            <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-blue-900/30 text-blue-500 flex items-center justify-center border border-blue-800/50">
                   <Calendar className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 leading-tight dark:text-slate-100">Time Off Requests</h3>
-                  <p className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">3 Pending Approval</p>
+                  <h3 className="font-bold text-slate-100 leading-tight">Time Off Requests</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">3 Pending Approval</p>
                 </div>
               </div>
-              <button onClick={() => setIsRequestsOpen(false)} className="p-2 text-slate-400 hover:bg-slate-200 rounded-lg transition-colors dark:hover:bg-slate-700">
+              <button onClick={() => setIsRequestsOpen(false)} className="p-2 text-slate-400 hover:bg-slate-800 rounded-lg transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              <div className="p-4 rounded-xl border bg-white border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+              <div className="p-4 rounded-xl border bg-slate-800/40 border-slate-700/50 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-purple-100 text-purple-700">PTO Request</span>
-                  <span className="text-xs text-slate-500 font-mono dark:text-slate-400">Submitted 2 days ago</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-purple-900/30 text-purple-400 border border-purple-800/50">PTO Request</span>
+                  <span className="text-xs text-slate-400 font-mono">Submitted 2 days ago</span>
                 </div>
-                <p className="font-bold text-slate-800 mb-1 dark:text-slate-200">Marcus Johnson</p>
-                <p className="text-sm text-slate-600 mb-2 font-medium dark:text-slate-300">Aug 15 - Aug 18 (24h total)</p>
-                <p className="text-xs text-slate-500 bg-slate-50 p-2 rounded mb-3 border border-slate-100 dark:text-slate-400 dark:bg-slate-900 dark:border-slate-800">"Family vacation out of state."</p>
+                <p className="font-bold text-slate-200 mb-1">Marcus Johnson</p>
+                <p className="text-sm text-slate-400 mb-2 font-medium">Aug 15 - Aug 18 (24h total)</p>
+                <p className="text-xs text-slate-400 bg-slate-900/60 p-2 rounded mb-3 border border-slate-800">"Family vacation out of state."</p>
                 <div className="flex gap-2">
-                  <button className="flex-1 px-3 py-1.5 border border-red-200 text-red-600 rounded-lg text-xs font-bold hover:bg-red-50">Deny</button>
-                  <button className="flex-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700">Approve</button>
+                  <button className="flex-1 px-3 py-1.5 border border-red-900/50 text-red-400 bg-red-900/10 rounded-lg text-xs font-bold hover:bg-red-900/20">Deny</button>
+                  <button className="flex-1 px-3 py-1.5 bg-blue-600/90 text-white rounded-lg text-xs font-bold hover:bg-blue-600">Approve</button>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl border bg-white border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+              <div className="p-4 rounded-xl border bg-slate-800/40 border-slate-700/50 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-amber-100 text-amber-700">Shift Swap</span>
-                  <span className="text-xs text-slate-500 font-mono dark:text-slate-400">Submitted today</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-amber-900/30 text-amber-400 border border-amber-800/50">Shift Swap</span>
+                  <span className="text-xs text-slate-400 font-mono">Submitted today</span>
                 </div>
-                <p className="font-bold text-slate-800 mb-1 dark:text-slate-200">Sarah Chen <span className="font-normal text-slate-500 text-sm mx-1 dark:text-slate-400">with</span> Mike Torres</p>
-                <p className="text-sm text-slate-600 mb-2 font-medium dark:text-slate-300">Sat Aug 08, Sector 4 Patrol</p>
-                <p className="text-xs text-slate-500 bg-slate-50 p-2 rounded mb-3 border border-slate-100 dark:text-slate-400 dark:bg-slate-900 dark:border-slate-800">"Mike agreed to cover my shift on Saturday."</p>
+                <p className="font-bold text-slate-200 mb-1">Sarah Chen <span className="font-normal text-slate-500 text-sm mx-1">with</span> Mike Torres</p>
+                <p className="text-sm text-slate-400 mb-2 font-medium">Sat Aug 08, Sector 4 Patrol</p>
+                <p className="text-xs text-slate-400 bg-slate-900/60 p-2 rounded mb-3 border border-slate-800">"Mike agreed to cover my shift on Saturday."</p>
                 <div className="flex gap-2">
-                  <button className="flex-1 px-3 py-1.5 border border-red-200 text-red-600 rounded-lg text-xs font-bold hover:bg-red-50">Deny</button>
-                  <button className="flex-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700">Approve</button>
+                  <button className="flex-1 px-3 py-1.5 border border-red-900/50 text-red-400 bg-red-900/10 rounded-lg text-xs font-bold hover:bg-red-900/20">Deny</button>
+                  <button className="flex-1 px-3 py-1.5 bg-blue-600/90 text-white rounded-lg text-xs font-bold hover:bg-blue-600">Approve</button>
                 </div>
               </div>
             </div>

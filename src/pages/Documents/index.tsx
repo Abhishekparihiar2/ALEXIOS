@@ -4,6 +4,7 @@ import {
     FolderPlus, Lock, CheckCircle2, FileSearch, Calendar, Paperclip,
     AlertTriangle, ShieldCheck, ChevronLeft, Upload, File, Printer, Tag, FileDiff, Settings, Inbox, Gift, HeartHandshake, Smile, BarChart3, Scale, UserX, AlignLeft, Users, Briefcase, MapPin
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 // ─── MOCK DATA ─────────────────────────────────────────────────────────────
 const MOCK_DOCS = [
@@ -117,33 +118,34 @@ function DocumentsList({ onNavigate }: { onNavigate: (v: "list" | "create" | "de
     ];
 
     return (
-        <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full shrink-0">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Documents & Policies</h1>
-                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Manage company documents, policies, manuals, notices and team resources from one place.</p>
-                </div>
-                <div className="flex flex-wrap items-center gap-3">
-                    <div className="relative">
-                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input type="text" placeholder="Search documents..." className="w-full sm:w-56 pl-9 pr-3 py-2 text-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1e3a6e] transition-colors shadow-sm backdrop-blur-md" />
-                    </div>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800 bg-white/80 backdrop-blur-md shadow-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
-                        <Download className="w-4 h-4" /> Export
-                    </button>
-                    <button onClick={() => onNavigate("pack")} className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 dark:hover:bg-slate-800 bg-white/80 backdrop-blur-md shadow-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
-                        <FolderPlus className="w-4 h-4" /> Create Pack
-                    </button>
-                    <button
-                        onClick={() => onNavigate("create")}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
-                        style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}
-                    >
-                        <Plus className="w-4 h-4" /> Add New
-                    </button>
-                </div>
-            </div>
+        <div className="w-full h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
+            <PageHeader
+                title="Documents & Policies"
+                subtitle="Manage company documents, policies, manuals, notices and team resources from one place."
+                icon={<FileText className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+                actions={
+                    <>
+                        <div className="relative">
+                            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input type="text" placeholder="Search documents..." className="w-full sm:w-56 pl-9 pr-3 py-2 text-sm bg-slate-800/50 border border-slate-700 rounded-lg outline-none text-slate-200 placeholder-slate-500 focus:bg-slate-800/80 transition-colors shadow-sm backdrop-blur-md" />
+                        </div>
+                        <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white/10 hover:bg-white/20 border border-white/10 text-white shadow-sm backdrop-blur-md">
+                            <Download className="w-4 h-4" /> Export
+                        </button>
+                        <button onClick={() => onNavigate("pack")} className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white/10 hover:bg-white/20 border border-white/10 text-white shadow-sm backdrop-blur-md">
+                            <FolderPlus className="w-4 h-4" /> Create Pack
+                        </button>
+                        <button
+                            onClick={() => onNavigate("create")}
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+                            style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}
+                        >
+                            <Plus className="w-4 h-4" /> Add New
+                        </button>
+                    </>
+                }
+            />
+            <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
 
             {/* Categories & Filter Block */}
             <div className="mb-6 flex flex-col md:flex-row gap-4 shrink-0 overflow-hidden min-h-0">
@@ -220,6 +222,7 @@ function DocumentsList({ onNavigate }: { onNavigate: (v: "list" | "create" | "de
                         </tbody>
                     </table>
                 </div>
+            </div>
             </div>
         </div>
     );

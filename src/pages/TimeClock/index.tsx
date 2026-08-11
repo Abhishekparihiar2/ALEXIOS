@@ -1,9 +1,10 @@
 import { useState, useMemo } from "react";
 import { 
   Search, Clock, MapPin, Camera, AlertTriangle, CheckCircle, Flame, 
-  MoreVertical, Download, Settings, ChevronLeft, ChevronRight, MessageSquare, 
+  MoreVertical, MoreHorizontal, Download, Settings, ChevronLeft, ChevronRight, MessageSquare, 
   Map, Calendar, Users, Filter, Plus, FileText, Check
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 import { useSiteContext } from "../../context/SiteContext";
 import { MOCK_TIMESHEETS, ClockStatus, TimesheetException } from "./mockData";
 import { TimesheetsTab } from "./TimesheetsTab";
@@ -47,6 +48,10 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
   const [selectedPositions, setSelectedPositions] = useState<Set<string>>(new Set());
   
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
+  // Pagination
+  const [page, setPage] = useState(1);
+  const perPage = 10;
   const [dateRange, setDateRange] = useState({
     start: new Date(2026, 7, 4), // Aug 4, 2026
     end: new Date(2026, 7, 4)    // Aug 4, 2026
@@ -101,30 +106,21 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
     }
   };
 
+  const paginatedData = useMemo(() => {
+    const start = (page - 1) * perPage;
+    return filteredData.slice(start, start + perPage);
+  }, [filteredData, page]);
+
   return (
-    <div className="flex-1 flex flex-col h-full bg-transparent relative min-h-0 overflow-hidden">
+    <div className="flex-1 flex flex-col bg-transparent overflow-y-auto" style={{ scrollbarWidth: "none" }}>
       
-      {/* TOP ACTIONS */}
-      <div className="px-6 pt-3 pb-0 bg-slate-900/60 backdrop-blur-xl border-b border-slate-800 shrink-0 relative z-40">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Time Clock</h1>
-              <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-xs font-bold rounded-md border border-blue-100 uppercase tracking-wider">
-                Security Ops
-              </span>
-            </div>
-            <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Manage live attendance, exceptions, and timesheets.</p>
-          </div>
-          
-          <div className="flex items-center gap-2">
-             <select className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/50 backdrop-blur-sm">
-               <option>All Clients & Sites</option>
-               <option>United Distributors</option>
-               <option>Westfield Mall</option>
-               <option>Harbor District</option>
-             </select>
-             <div className="relative">
+      <PageHeader
+        title="Time Clock"
+        badge="Security Ops"
+        subtitle="Manage live attendance, exceptions, and timesheets."
+        actions={
+          <>
+            <div className="relative">
               <button 
                 onClick={() => setIsPositionListOpen(!isPositionListOpen)}
                 className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm hover:bg-slate-800 flex items-center gap-2 backdrop-blur-sm"
@@ -152,36 +148,36 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                   ))}
                 </div>
               )}
-             </div>
-             <button 
-               onClick={() => setIsSettingsOpen(true)}
-               className="p-2 bg-white border border-slate-300 rounded-lg text-slate-500 shadow-sm hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-800"
-             >
-               <Settings className="w-5 h-5" />
-             </button>
-          </div>
-        </div>
-
-        {/* TABS */}
-        <div className="flex items-center gap-6">
-          {(["Today", "Timesheets", "Live Map"] as const).map(tab => (
+            </div>
             <button 
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
-                activeTab === tab 
-                  ? "border-blue-600 text-blue-700" 
-                  : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
-              }`}
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 bg-white border border-slate-300 rounded-lg text-slate-500 shadow-sm hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-800"
             >
-              {tab === "Today" && <Clock className="w-4 h-4" />}
-              {tab === "Timesheets" && <FileText className="w-4 h-4" />}
-              {tab === "Live Map" && <Map className="w-4 h-4" />}
-              {tab}
+              <Settings className="w-5 h-5" />
             </button>
-          ))}
-        </div>
-      </div>
+          </>
+        }
+        bottomContent={
+          <div className="flex items-center gap-6 mt-2">
+            {(["Today", "Timesheets", "Live Map"] as const).map(tab => (
+              <button 
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                  activeTab === tab 
+                    ? "border-blue-600 text-blue-700" 
+                    : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                }`}
+              >
+                {tab === "Today" && <Clock className="w-4 h-4" />}
+                {tab === "Timesheets" && <FileText className="w-4 h-4" />}
+                {tab === "Live Map" && <Map className="w-4 h-4" />}
+                {tab}
+              </button>
+            ))}
+          </div>
+        }
+      />
 
       {activeTab === "Live Map" ? (
          <div className="flex-1 flex flex-col relative w-full h-full bg-transparent overflow-hidden">
@@ -195,16 +191,12 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
               </p>
             </div>
             
-            <div className="relative flex-1 w-full h-full mx-6 mb-6 mt-4 bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-              {/* Grid lines */}
-              <svg className="absolute inset-0 w-full h-full opacity-10">
-                {[...Array(20)].map((_, i) => (
-                  <line key={`h${i}`} x1="0" y1={i * 40} x2="100%" y2={i * 40} stroke="#94a3b8" strokeWidth="0.5" />
-                ))}
-                {[...Array(40)].map((_, i) => (
-                  <line key={`v${i}`} x1={i * 40} y1="0" x2={i * 40} y2="100%" stroke="#94a3b8" strokeWidth="0.5" />
-                ))}
-              </svg>
+            <div 
+              className="relative flex-1 w-full h-full mx-6 mb-6 mt-4 border border-slate-800 rounded-xl overflow-hidden shadow-sm"
+              style={{ backgroundImage: 'url("/dark_map.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}
+            >
+              {/* Map Dark Overlay for better contrast */}
+              <div className="absolute inset-0 bg-slate-950/20"></div>
 
               {/* Site pins */}
               {[
@@ -269,13 +261,13 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                   type="text" 
                   placeholder="Search name, position, post..." 
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                   className="w-full pl-9 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-slate-200 outline-none shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-500 backdrop-blur-sm"
                 />
               </div>
               <select 
                 value={statusFilter} 
-                onChange={(e) => setStatusFilter(e.target.value as any)}
+                onChange={(e) => { setStatusFilter(e.target.value as any); setPage(1); }}
                 className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm outline-none backdrop-blur-sm"
               >
                 <option value="All">All Statuses</option>
@@ -287,7 +279,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
               </select>
               <select 
                 value={globalSite} 
-                onChange={(e) => setGlobalSite(e.target.value)}
+                onChange={(e) => { setGlobalSite(e.target.value); setPage(1); }}
                 className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm outline-none backdrop-blur-sm"
               >
                 <option>All Sites</option>
@@ -355,10 +347,9 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
           </div>
 
           {/* ── TABLE ── */}
-          <div className="flex-1 overflow-hidden px-6 pb-6 flex flex-col relative min-h-0">
-            <div className="flex-1 bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-xl shadow-sm overflow-hidden flex flex-col relative min-h-0">
-              <div className="overflow-auto flex-1 min-h-0">
-                <table className="w-full text-sm text-left">
+          <div className="shrink-0 mx-6 mb-6 rounded-2xl overflow-hidden flex flex-col bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left">
                   <thead className="bg-slate-900/80 backdrop-blur-md text-slate-400 font-bold border-b border-slate-800 sticky top-0 z-10 shadow-sm">
                     <tr>
                       <th className="px-4 py-3 w-10">
@@ -377,11 +368,10 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                       <th className="px-4 py-3">Clock Out</th>
                       <th className="px-4 py-3 text-center">Totals</th>
                       <th className="px-4 py-3 text-center">Status</th>
-                      <th className="px-4 py-3 w-10"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/50 text-slate-300">
-                    {filteredData.length === 0 ? (
+                    {paginatedData.length === 0 ? (
                       <tr>
                         <td colSpan={9} className="px-6 py-16 text-center">
                           <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 dark:bg-slate-900">
@@ -392,21 +382,21 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                         </td>
                       </tr>
                     ) : (
-                      filteredData.map((row) => (
-                        <tr key={row.id} className={`hover:bg-slate-800/60 transition-colors group ${selectedRows.has(row.id) ? 'bg-blue-900/30' : ''}`}>
-                          <td className="px-4 py-3 align-top pt-4">
+                      paginatedData.map((row) => (
+                        <tr key={row.id} className={`hover:bg-slate-800/60 transition-colors group cursor-pointer ${selectedRows.has(row.id) ? 'bg-blue-900/30' : ''}`} onClick={() => toggleRow(row.id)}>
+                          <td className="px-4 py-3 align-middle" onClick={(e) => e.stopPropagation()}>
                             <input type="checkbox" className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer dark:border-slate-600" 
                               checked={selectedRows.has(row.id)} onChange={() => toggleRow(row.id)}
                             />
                           </td>
                           {dateRange.start.getTime() !== dateRange.end.getTime() && (
-                            <td className="px-4 py-3 align-top">
+                            <td className="px-4 py-3 align-middle">
                               <span className="font-semibold text-slate-800 dark:text-slate-200">
                                 {dateRange.start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                               </span>
                             </td>
                           )}
-                          <td className="px-4 py-3 align-top">
+                          <td className="px-4 py-3 align-middle">
                             <div className="flex items-start gap-3">
                               <div className="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 shadow-sm">
                                 {row.guard.initials}
@@ -417,17 +407,17 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                               </div>
                             </div>
                           </td>
-                          <td className="px-4 py-3 align-top">
+                          <td className="px-4 py-3 align-middle">
                             <p className="font-semibold text-slate-800 leading-tight dark:text-slate-200">{row.shift.postName}</p>
                             <p className="text-xs text-slate-500 mt-1 truncate max-w-[160px] dark:text-slate-400">{row.shift.siteName}</p>
                           </td>
-                          <td className="px-4 py-3 align-top">
+                          <td className="px-4 py-3 align-middle">
                             <p className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">{row.shift.scheduledStart} - {row.shift.scheduledEnd}</p>
                             <p className="text-xs text-slate-400 mt-1">{row.shift.totalHours}h scheduled</p>
                           </td>
                           
                           {/* CLOCK IN */}
-                          <td className="px-4 py-3 align-top">
+                          <td className="px-4 py-3 align-middle">
                             {row.clockIn ? (
                               <div className="flex items-center gap-2 group/time cursor-pointer p-1 -ml-1 rounded hover:bg-slate-100 transition-colors dark:hover:bg-slate-800">
                                 <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{row.clockIn.time}</span>
@@ -441,7 +431,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                           </td>
 
                           {/* CLOCK OUT */}
-                          <td className="px-4 py-3 align-top">
+                          <td className="px-4 py-3 align-middle">
                             {row.clockOut ? (
                               <div className="flex items-center gap-2 group/time cursor-pointer p-1 -ml-1 rounded hover:bg-slate-100 transition-colors dark:hover:bg-slate-800">
                                 <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{row.clockOut.time}</span>
@@ -458,20 +448,20 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                           </td>
 
                           {/* TOTALS */}
-                          <td className="px-4 py-3 align-top">
-                            <div className="flex flex-col items-center gap-1">
+                          <td className="px-4 py-3 align-middle">
+                            <div className="flex items-center justify-center gap-2">
                               <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{row.dailyTotal}</span>
                               {row.overtimeHours !== "0h" && row.overtimeHours !== "0h 0m" && (
-                                <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 rounded uppercase">{row.overtimeHours} OT</span>
+                                <span className="text-[10px] font-bold bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded uppercase">{row.overtimeHours} OT</span>
                               )}
                               {row.ptoHours !== "0h" && row.ptoHours !== "0h 0m" && (
-                                <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-1.5 rounded uppercase">PTO</span>
+                                <span className="text-[10px] font-bold bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 px-1.5 py-0.5 rounded uppercase">PTO</span>
                               )}
                             </div>
                           </td>
 
                           {/* STATUS */}
-                          <td className="px-4 py-3 align-top text-center">
+                          <td className="px-4 py-3 align-middle text-center">
                             <div className="flex flex-col items-center gap-2">
                               <StatusPill status={row.status} />
                               {row.exceptions.length > 0 && (
@@ -485,13 +475,6 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                               )}
                             </div>
                           </td>
-
-                          {/* ACTIONS */}
-                          <td className="px-4 py-3 align-top">
-                            <button className="p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 rounded transition-colors opacity-0 group-hover:opacity-100 dark:hover:bg-slate-800">
-                              <MoreVertical className="w-4 h-4" />
-                            </button>
-                          </td>
                         </tr>
                       ))
                     )}
@@ -499,27 +482,56 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                 </table>
               </div>
 
+              {/* Pagination */}
+              <div className="flex items-center justify-between px-5 py-4 border-t border-slate-800">
+                <span className="text-sm text-slate-500">
+                  Showing {(page - 1) * perPage + 1} to {Math.min(page * perPage, filteredData.length)} of {filteredData.length} records
+                </span>
+                <div className="flex items-center gap-1">
+                  <button 
+                    onClick={() => setPage(Math.max(1, page - 1))}
+                    disabled={page === 1}
+                    className="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button 
+                    onClick={() => setPage(page + 1)}
+                    disabled={page * perPage >= filteredData.length}
+                    className="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
               {/* FLOATING BULK ACTION BAR */}
               {selectedRows.size > 0 && (
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white rounded-xl shadow-2xl px-4 py-3 flex items-center gap-4 animate-in slide-in-from-bottom-5">
+                <div className="fixed bottom-6 z-50 left-1/2 -translate-x-1/2 bg-slate-900 text-white rounded-xl shadow-2xl px-4 py-3 flex items-center gap-4 animate-in slide-in-from-bottom-5">
                   <div className="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
                     <span className="w-5 h-5 bg-blue-600 rounded text-xs font-bold flex items-center justify-center">{selectedRows.size}</span>
                     <span className="text-sm font-semibold">Selected</span>
                   </div>
                   <div className="w-px h-6 bg-slate-700"></div>
-                  <button className="text-sm font-semibold hover:text-blue-400 transition-colors flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4" /> Approve Exceptions
-                  </button>
-                  <button className="text-sm font-semibold hover:text-blue-400 transition-colors flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4" /> Message Guards
-                  </button>
-                  <button className="text-sm font-semibold hover:text-blue-400 transition-colors flex items-center gap-2">
-                    <Download className="w-4 h-4" /> Export Selected
-                  </button>
+                  <div className="relative group">
+                    <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-300 hover:text-white">
+                      <MoreHorizontal className="w-5 h-5" />
+                    </button>
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                      <button className="w-full text-left px-4 py-2 text-sm font-semibold hover:bg-slate-700 hover:text-blue-400 transition-colors flex items-center gap-2 text-slate-200">
+                        <CheckCircle className="w-4 h-4" /> Approve Exceptions
+                      </button>
+                      <button className="w-full text-left px-4 py-2 text-sm font-semibold hover:bg-slate-700 hover:text-blue-400 transition-colors flex items-center gap-2 text-slate-200">
+                        <MessageSquare className="w-4 h-4" /> Message Guards
+                      </button>
+                      <button className="w-full text-left px-4 py-2 text-sm font-semibold hover:bg-slate-700 hover:text-blue-400 transition-colors flex items-center gap-2 text-slate-200">
+                        <Download className="w-4 h-4" /> Export Selected
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
-          </div>
         </>
       )}
 
@@ -641,12 +653,12 @@ function KpiCard({ label, value, active, onClick, color }: { label: string, valu
 
 function StatusPill({ status }: { status: ClockStatus }) {
   const styles: Record<ClockStatus, { bg: string, text: string, dot: string }> = {
-    "Clocked In": { bg: "bg-green-100", text: "text-green-700", dot: "bg-green-500" },
-    "Clocked Out": { bg: "bg-slate-100", text: "text-slate-600", dot: "bg-slate-400" },
-    "Running Late": { bg: "bg-red-100", text: "text-red-700", dot: "bg-red-500" },
-    "Need to Clock Out": { bg: "bg-amber-100", text: "text-amber-700", dot: "bg-amber-500" },
-    "On Time Off": { bg: "bg-purple-100", text: "text-purple-700", dot: "bg-purple-500" },
-    "Missed Shift": { bg: "bg-slate-800", text: "text-white", dot: "bg-white" },
+    "Clocked In": { bg: "bg-green-100 dark:bg-green-500/20", text: "text-green-700 dark:text-green-400", dot: "bg-green-500 dark:bg-green-400" },
+    "Clocked Out": { bg: "bg-slate-200 dark:bg-slate-600", text: "text-slate-800 dark:text-white", dot: "bg-slate-500 dark:bg-slate-300" },
+    "Running Late": { bg: "bg-red-100 dark:bg-red-500/20", text: "text-red-700 dark:text-red-400", dot: "bg-red-500 dark:bg-red-400" },
+    "Need to Clock Out": { bg: "bg-amber-100 dark:bg-amber-500/20", text: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500 dark:bg-amber-400" },
+    "On Time Off": { bg: "bg-purple-100 dark:bg-purple-500/20", text: "text-purple-700 dark:text-purple-400", dot: "bg-purple-500 dark:bg-purple-400" },
+    "Missed Shift": { bg: "bg-slate-800 dark:bg-slate-800", text: "text-white dark:text-slate-300", dot: "bg-white dark:bg-slate-400" },
   };
   const s = styles[status];
 

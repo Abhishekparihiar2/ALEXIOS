@@ -204,7 +204,7 @@
   }
 
   .dark .glass-container {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.9) 100%);
+    background: #000000;
   }
 
   .glass-sidebar {
@@ -330,5 +330,80 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-weight: 600;
+  }
+
+  /* Global High Contrast Dark Theme Overrides */
+  .dark [class*="bg-slate-900"],
+  .dark [class*="bg-[#1a1f2e]"],
+  .dark [class*="bg-[#151923]"],
+  .dark [class*="bg-slate-800"],
+  .dark .glass-panel {
+      background-color: #000000 !important;
+  }
+
+  .dark [class*="border-slate-800"],
+  .dark [class*="border-slate-700"],
+  .dark [class*="border-[#1a1f2e]"] {
+      border-color: #262626 !important;
+  }
+
+  /* Text color overrides for high contrast */
+  .dark [class*="text-slate-400"],
+  .dark [class*="text-slate-500"] {
+      color: #a3a3a3 !important;
+  }
+
+  .dark [class*="text-slate-300"],
+  .dark [class*="text-slate-600"] {
+      color: #e5e5e5 !important;
+  }
+
+  /* 
+   * GLOBAL AGGRESSIVE OVERRIDES ("The Nuclear Option")
+   * This updates all pages globally by targeting the legacy inline styles directly.
+   */
+
+  /* Target and neutralize all hardcoded light background inline styles */
+  .dark [style*="background: #fff"],
+  .dark [style*="background: #ffffff"],
+  .dark [style*="background: rgb(255, 255, 255)"],
+  .dark [style*="background: #f0f2f8"],
+  .dark [style*="background: #f8fafc"],
+  .dark [style*="background-color: #fff"] {
+      background: transparent !important;
+      background-color: transparent !important;
+  }
+
+  /* Override legacy Hero Banner gradients globally */
+  .dark [style*="linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)"] {
+      background: #000000 !important;
+  }
+
+  /* Ensure all inputs and textareas have dark backgrounds and readable text */
+  .dark input, 
+  .dark select, 
+  .dark textarea {
+      background-color: #000000 !important;
+      color: #ffffff !important;
+      border-color: #334155 !important;
+  }
+
+  /* Ensure placeholders are visible and styled correctly */
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+      color: #94a3b8 !important;
+      opacity: 1 !important;
+  }
+
+  /* Force table rows */
+  .dark tr[style*="background"],
+  .dark td[style*="background"],
+  .dark th[style*="background"] {
+      background-color: transparent !important;
+  }
+
+  .dark tr:hover,
+  .dark tr:hover td {
+      background-color: #171717 !important;
   }
 }

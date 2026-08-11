@@ -4,6 +4,7 @@ import {
     Archive, Trash2, Edit, Copy, ChevronLeft, Calendar, User,
     CheckCircle2, Clock, Move, Download, X, GripVertical, Check, LayoutTemplate, Lock, CheckSquare
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 export function FormsPage() {
     const [view, setView] = useState("list"); // list, builder, detail, submission, assign
@@ -22,43 +23,44 @@ function FormsList({ onNavigate }: { onNavigate: (v: string) => void }) {
     const [showAddModal, setShowAddModal] = useState(false);
 
     return (
-        <div className="p-6 max-w-7xl mx-auto h-full flex flex-col animate-in fade-in">
-            {/* Header */}
-            <div className="flex flex-row justify-between items-end mb-6">
-                <div>
-                    <h1 className="text-2xl font-semibold text-slate-800 dark:text-white">Forms</h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">Create, assign and manage operational forms and employee submissions.</p>
-                </div>
-                <div className="flex items-center space-x-3">
-                    <button className="flex items-center space-x-2 px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm text-slate-700 dark:text-slate-200 transition-colors dark:border-slate-700">
-                        <Download className="w-4 h-4" />
-                        <span>Export</span>
-                    </button>
-                    <button
-                        onClick={() => setShowAddModal(true)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white"
-                        style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}
-                    >
-                        <Plus className="w-4 h-4" /> Create Form
-                    </button>
-                </div>
-            </div>
-
-            {/* Tabs */}
-            <div className="flex space-x-6 border-b border-slate-200 dark:border-slate-800 mb-6">
-                <button
-                    onClick={() => setActiveTab("active")}
-                    className={`pb-3 text-sm font-medium transition-colors ${activeTab === 'active' ? 'text-[#1e3a6e] border-b-2 border-[#1e3a6e]' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                    Active (9)
-                </button>
-                <button
-                    onClick={() => setActiveTab("archived")}
-                    className={`pb-3 text-sm font-medium transition-colors ${activeTab === 'archived' ? 'text-[#1e3a6e] border-b-2 border-[#1e3a6e]' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                    Archived (3)
-                </button>
-            </div>
+        <div className="w-full h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
+            <PageHeader
+                title="Forms"
+                subtitle="Create, assign and manage operational forms and employee submissions."
+                icon={<ClipboardList className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+                actions={
+                    <>
+                        <button className="flex items-center space-x-2 px-4 py-2 border border-slate-200 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm text-slate-700 dark:text-slate-200 transition-colors dark:border-slate-700">
+                            <Download className="w-4 h-4" />
+                            <span>Export</span>
+                        </button>
+                        <button
+                            onClick={() => setShowAddModal(true)}
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white"
+                            style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}
+                        >
+                            <Plus className="w-4 h-4" /> Create Form
+                        </button>
+                    </>
+                }
+                bottomContent={
+                    <div className="flex space-x-6 w-full overflow-x-auto hide-scrollbar mt-2">
+                        <button
+                            onClick={() => setActiveTab("active")}
+                            className={`pb-3 text-sm font-medium transition-colors ${activeTab === 'active' ? 'text-blue-600 border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500' : 'text-slate-500 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 dark:hover:text-slate-300'}`}
+                        >
+                            Active (9)
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("archived")}
+                            className={`pb-3 text-sm font-medium transition-colors ${activeTab === 'archived' ? 'text-blue-600 border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500' : 'text-slate-500 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 dark:hover:text-slate-300'}`}
+                        >
+                            Archived (3)
+                        </button>
+                    </div>
+                }
+            />
+            <div className="p-6 max-w-7xl mx-auto flex flex-col flex-1 w-full min-w-0 min-h-0 overflow-hidden">
 
             {/* Toolbar */}
             <div className="glass-panel p-3 rounded-lg mb-6 flex justify-between items-center bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-md">
@@ -162,6 +164,7 @@ function FormsList({ onNavigate }: { onNavigate: (v: string) => void }) {
                         </tr>
                     </tbody>
                 </table>
+            </div>
             </div>
 
             {/* Add Form Modal */}

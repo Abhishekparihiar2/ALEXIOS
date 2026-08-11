@@ -56,9 +56,9 @@ export function Sidebar({
 
   return (
     <aside
-      className="flex flex-col h-full transition-all duration-200 overflow-hidden glass-sidebar dark z-30 bg-slate-950/40 backdrop-blur-2xl border-r border-slate-800/60 shadow-[4px_0_24px_rgba(0,0,0,0.5)]"
+      className="flex flex-col h-full transition-all duration-300 overflow-hidden z-30 bg-black border-r border-neutral-800"
       style={{
-        width: collapsed ? 64 : 240,
+        width: collapsed ? 0 : 260,
         flexShrink: 0
       }}
     >

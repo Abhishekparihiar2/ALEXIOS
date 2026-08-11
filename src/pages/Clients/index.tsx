@@ -24,6 +24,7 @@ import { StatusBadge } from '../../components/StatusBadge';
 import { ActivityIcon } from '../../components/ActivityIcon';
 import { LoginPage } from '../LoginPage';
 import { Sidebar } from '../../components/Sidebar';
+import { PageHeader } from '../../components/PageHeader';
 import { TopHeader } from '../../components/TopHeader';
 import { Dashboard } from '../Dashboard/index';
 import { CpSection, CpMonitoring, CpExtraScan, CpManual, TourRecurrence, Checkpoint, TourRoute, CpLog, CP_CHECKPOINTS, CP_TOURS, CP_LOGS, CheckpointsPage, SchedulingPage, PlaceholderPage } from '../Checkpoints/index';
@@ -126,17 +127,13 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
   function renderInp(placeholder: string, type = "text") {
     return (
       <input type={type} placeholder={placeholder}
-        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all text-slate-900 dark:text-slate-100"
-        style={{ border: "1.5px solid #e2e8f0", background: "#fff" }}
-        onFocus={(e) => { e.currentTarget.style.border = "1.5px solid #1e3a6e"; }}
-        onBlur={(e) => { e.currentTarget.style.border = "1.5px solid #e2e8f0"; }}
+        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all text-slate-900 dark:text-slate-100 bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800 focus:border-blue-700 dark:focus:border-blue-500"
       />
     );
   }
   function renderSel(options: string[]) {
     return (
-      <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none text-slate-900 dark:text-slate-100"
-        style={{ border: "1.5px solid #e2e8f0", background: "#fff" }}>
+      <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none text-slate-900 dark:text-slate-100 bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800 focus:border-blue-700 dark:focus:border-blue-500">
         {options.map((o) => <option key={o}>{o}</option>)}
       </select>
     );
@@ -149,17 +146,17 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
         <div className="grid grid-cols-2 gap-4">
           {ACCT_TYPES.map((a) => (
             <button key={a.type} onClick={() => setSelectedType(a.type)}
-              className="p-5 rounded-2xl text-left transition-all"
+              className={`p-5 rounded-2xl text-left transition-all ${selectedType === a.type ? '' : 'bg-slate-50 dark:bg-[#111] border-slate-200 dark:border-slate-800'}`}
               style={{
-                background: selectedType === a.type ? a.bg : "#f8fafc",
-                border: `2px solid ${selectedType === a.type ? a.color : "#e2e8f0"}`,
+                background: selectedType === a.type ? a.bg : undefined,
+                border: selectedType === a.type ? `2px solid ${a.color}` : `2px solid transparent`,
                 boxShadow: selectedType === a.type ? `0 4px 16px ${a.color}22` : "none",
               }}>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
                 style={{ background: a.bg, color: a.color }}>
                 {a.icon}
               </div>
-              <div className="text-sm font-bold mb-1" style={{ color: selectedType === a.type ? a.color : "#0f172a" }}>{a.type}</div>
+              <div className={`text-sm font-bold mb-1 ${selectedType === a.type ? '' : 'text-slate-900 dark:text-slate-100'}`} style={{ color: selectedType === a.type ? a.color : undefined }}>{a.type}</div>
               <div className="text-xs text-slate-500 dark:text-slate-300" >{a.desc}</div>
             </button>
           ))}
@@ -308,59 +305,37 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
   const stepContent: (() => React.ReactNode)[] = [renderStep0, renderStep1, renderStep2, renderStep3];
 
   return (
-    <div ref={scrollRef} className="flex-1 overflow-y-auto" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
+    <div ref={scrollRef} className="flex-1 overflow-y-auto bg-slate-50 dark:bg-black" style={{ scrollbarWidth: "none" }}>
       {/* Hero banner */}
-      <div className="relative overflow-hidden px-6 pt-6 pb-5 shrink-0"
-        style={{ background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)" }}>
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
-          style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }} />
-        <button onClick={onBack}
-          className="flex items-center gap-1.5 mb-4 text-sm font-semibold"
-          style={{ color: "rgba(255,255,255,0.7)" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}>
-          <ChevronLeft className="w-4 h-4" />Back to Clients & Sites
-        </button>
-        <div className="flex items-center gap-3 mb-1">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: "rgba(255,255,255,0.12)" }}>
-            <Building2 className="w-4 h-4 text-white" />
+      <PageHeader
+        title="Create Site / Client Account"
+        subtitle={`Set up a new client or site account in ${STEPS.length} steps`}
+        icon={<Building2 className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+        action={{ label: "Back to Clients & Sites", onClick: onBack }}
+        bottomContent={
+          <div className="flex items-center gap-0 mt-4 overflow-x-auto border-t border-slate-200 dark:border-slate-800 pt-4" style={{ scrollbarWidth: "none" }}>
+            {STEPS.map((s, i) => (
+              <div key={i} className="flex items-center gap-0 shrink-0">
+                <button onClick={() => setStep(i)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${i === step ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}`}>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${i < step ? 'bg-green-500 text-white' : i === step ? 'bg-blue-600 text-white dark:bg-blue-500' : 'bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400'}`}>
+                    {i < step ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
+                  </div>
+                  {s.label}
+                </button>
+                {i < STEPS.length - 1 && (
+                  <div className="w-6 h-px mx-1 bg-slate-200 dark:bg-slate-800" />
+                )}
+              </div>
+            ))}
           </div>
-          <h2 className="text-xl font-bold text-white">Create Site / Client Account</h2>
-        </div>
-        <p className="text-sm ml-11" style={{ color: "rgba(255,255,255,0.55)" }}>
-          Set up a new client or site account in {STEPS.length} steps
-        </p>
-
-        {/* Step indicators */}
-        <div className="flex items-center gap-0 mt-5 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-          {STEPS.map((s, i) => (
-            <div key={i} className="flex items-center gap-0 shrink-0">
-              <button onClick={() => setStep(i)}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
-                style={{
-                  background: i === step ? "rgba(255,255,255,0.18)" : "transparent",
-                  color: i === step ? "#fff" : i < step ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.55)",
-                  cursor: "pointer",
-                }}>
-                <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
-                  style={{ background: i < step ? "#4ade80" : i === step ? "#fff" : "rgba(255,255,255,0.2)", color: i === step ? "#1e3a6e" : i < step ? "#fff" : "rgba(255,255,255,0.5)" }}>
-                  {i < step ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
-                </div>
-                {s.label}
-              </button>
-              {i < STEPS.length - 1 && (
-                <div className="w-6 h-px mx-1" style={{ background: "rgba(255,255,255,0.2)" }} />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+        }
+      />
 
       {/* Form card */}
       <div className="p-6">
         <div className="max-w-2xl mx-auto">
-          <div className="rounded-2xl p-7" style={{ background: "#fff", border: "1.5px solid #e2e8f0", boxShadow: "0 4px 24px rgba(15,23,41,0.06)" }}>
+          <div className="rounded-2xl p-7 bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800" style={{ boxShadow: "0 4px 24px rgba(15,23,41,0.06)" }}>
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center"
                 style={{ background: "#e8eef8", color: "#1e3a6e" }}>
@@ -411,6 +386,7 @@ export type SiteProfileTab =
 
 export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: () => void }) {
   const [activeTab, setActiveTab] = useState<SiteProfileTab>("overview");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Modal states
   const [showAssignEmp, setShowAssignEmp] = useState(false);
@@ -528,13 +504,15 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
   function infoCard(fields: [string, string][]) {
     return (
-      <div className="grid grid-cols-2 gap-3">
-        {fields.map(([k, v]) => (
-          <div key={k} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
-            <div className="text-xs font-semibold uppercase tracking-wide mb-1 text-slate-400 dark:text-slate-300" >{k}</div>
-            <div className="text-sm font-medium text-slate-900 dark:text-slate-100" >{v}</div>
-          </div>
-        ))}
+      <div className="p-5 rounded-2xl bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-6 gap-x-8">
+          {fields.map(([k, v]) => (
+            <div key={k}>
+              <div className="text-xs font-semibold uppercase tracking-wider mb-1.5 text-slate-500 dark:text-slate-400">{k}</div>
+              <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{v}</div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -545,7 +523,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="p-6 space-y-6">
         {/* identity card */}
-        <div className="flex items-center gap-5 p-5 rounded-2xl" style={{ background: "linear-gradient(135deg,#f0f5ff,#e8f0fe)", border: "1.5px solid #bfdbfe" }}>
+        <div className="flex items-center gap-5 p-5 rounded-2xl bg-blue-50 dark:bg-slate-900/50 border border-blue-200 dark:border-slate-800">
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold text-white shrink-0"
             style={{ background: `linear-gradient(135deg,${bgColor},${bgColor}cc)`, boxShadow: `0 4px 16px ${bgColor}44` }}>
             {initials}
@@ -624,30 +602,30 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="p-6 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
-            <input value={posSearch} onChange={(e) => setPosSearch(e.target.value)} placeholder="Search positions…" className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
+          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800">
+            <Search className="w-4 h-4 text-slate-400" />
+            <input value={posSearch} onChange={(e) => setPosSearch(e.target.value)} placeholder="Search positions…" className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100" />
           </div>
-          <button onClick={() => setShowCreatePos(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>
+          <button onClick={() => setShowCreatePos(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors">
             <Plus className="w-4 h-4" />Create Position
           </button>
         </div>
 
         {tableWrap(["UID", "Position Title", "TPT Hours", "Bill Rate", "Holiday Rate", "Temporary", "Actions"],
           filteredPos.map((p) => (
-            <tr key={p.uid} style={{ borderBottom: "1px solid #f1f5f9" }}>
-              <td className="px-4 py-3 text-xs font-mono font-semibold text-slate-600 dark:text-slate-300" >{p.uid}</td>
-              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100" >{p.title}</td>
-              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{p.tpt}</td>
-              <td className="px-4 py-3 text-sm font-semibold" style={{ color: "#16a34a" }}>{p.bill}</td>
-              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{p.holiday}</td>
+            <tr key={p.uid} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <td className="px-4 py-3 text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">{p.uid}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">{p.title}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{p.tpt}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-green-600 dark:text-green-500">{p.bill}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{p.holiday}</td>
               <td className="px-4 py-3">
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: p.temp === "Yes" ? "#fffbeb" : "#f0fdf4", color: p.temp === "Yes" ? "#d97706" : "#16a34a" }}>{p.temp}</span>
+                <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${p.temp === "Yes" ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400" : "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"}`}>{p.temp}</span>
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-1.5">
                   {["Duplicate", "Edit", "History", "Remove"].map((a) => (
-                    <button key={a} className="text-xs font-semibold px-2 py-1 rounded-lg" style={{ background: a === "Remove" ? "#fef2f2" : "#f1f5f9", color: a === "Remove" ? "#dc2626" : "#475569" }}>{a}</button>
+                    <button key={a} className={`text-xs font-semibold px-2 py-1 rounded-lg transition-colors ${a === "Remove" ? "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/30" : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"}`}>{a}</button>
                   ))}
                 </div>
               </td>
@@ -662,7 +640,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               {fld("Post Name", inp("e.g. Day Shift Guard"))}
               {fld("Post ID", inp("Auto or custom ID"))}
             </div>
-            {fld("Short Description of Tasks", <textarea className="w-full px-3 py-2.5 rounded-xl text-sm border outline-none" rows={2} style={{ border: "1.5px solid #e2e8f0" }} />)}
+            {fld("Short Description of Tasks", <textarea className="w-full px-3 py-2.5 rounded-xl text-sm outline-none bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:border-blue-700 dark:focus:border-blue-500 transition-colors" rows={2} />)}
             {fld("Schedule Memo", inp("Internal memo"))}
             {fld("Status", sel(["Active", "Archived"]))}
             {sectionHead("Service Dates")}
@@ -697,37 +675,37 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="p-6 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
-            <input value={empSearch} onChange={(e) => setEmpSearch(e.target.value)} placeholder="Search employees…" className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
+          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800">
+            <Search className="w-4 h-4 text-slate-400" />
+            <input value={empSearch} onChange={(e) => setEmpSearch(e.target.value)} placeholder="Search employees…" className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100" />
           </div>
-          <button onClick={() => setShowAssignEmp(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>
+          <button onClick={() => setShowAssignEmp(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors">
             <Plus className="w-4 h-4" />Assign Employee
           </button>
         </div>
 
         {tableWrap(["Employee", "Start Date", "Rate", "Unassignment Date", "Primary", "", "History", "Remove", "View"],
           filteredEmps.map((e, i) => (
-            <tr key={i} style={{ borderBottom: "1px solid #f1f5f9" }}>
+            <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
               <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0" style={{ background: "#1e3a6e" }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0 bg-blue-800 dark:bg-blue-900">
                     {e.name.split(" ").map((w) => w[0]).join("")}
                   </div>
-                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-100" >{e.name}</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">{e.name}</span>
                 </div>
               </td>
-              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{e.start}</td>
-              <td className="px-4 py-3 text-sm font-semibold" style={{ color: "#16a34a" }}>{e.rate}</td>
-              <td className="px-4 py-3 text-sm text-slate-400 dark:text-slate-300" >{e.unassign}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{e.start}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-green-600 dark:text-green-500">{e.rate}</td>
+              <td className="px-4 py-3 text-sm text-slate-400 dark:text-slate-500">{e.unassign}</td>
               <td className="px-4 py-3">
-                {e.primary ? <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: "#f0fdf4", color: "#16a34a" }}>Primary</span>
-                  : <button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>Make Primary</button>}
+                {e.primary ? <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400">Primary</span>
+                  : <button className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors">Make Primary</button>}
               </td>
               <td className="px-4 py-3" />
-              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800" >History</button></td>
-              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#fef2f2", color: "#dc2626" }}>Remove</button></td>
-              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>View</button></td>
+              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-200 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors">History</button></td>
+              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/30 transition-colors">Remove</button></td>
+              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors">View</button></td>
             </tr>
           ))
         )}
@@ -758,31 +736,31 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="p-6 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
-            <input value={portalSearch} onChange={(e) => setPortalSearch(e.target.value)} placeholder="Search portal users…" className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
+          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800">
+            <Search className="w-4 h-4 text-slate-400" />
+            <input value={portalSearch} onChange={(e) => setPortalSearch(e.target.value)} placeholder="Search portal users…" className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100" />
           </div>
-          <button onClick={() => setShowAddPortal(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>
+          <button onClick={() => setShowAddPortal(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors">
             <Plus className="w-4 h-4" />Add Portal Access
           </button>
         </div>
 
-        <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: "#fffbeb", border: "1px solid #fde68a" }}>
-          <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#d97706" }} />
-          <p className="text-xs" style={{ color: "#92400e" }}>Client Portal visibility, actions, service requests, invoice behavior and shared-site access are pending discussion.</p>
+        <div className="p-3 rounded-xl flex items-start gap-2 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30">
+          <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-500" />
+          <p className="text-xs text-amber-800 dark:text-amber-400">Client Portal visibility, actions, service requests, invoice behavior and shared-site access are pending discussion.</p>
         </div>
 
         {tableWrap(["Full Name", "Email", "Phone", "Last Login", "Access", "Edit"],
           filtered.map((u, i) => (
-            <tr key={i} style={{ borderBottom: "1px solid #f1f5f9" }}>
-              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100" >{u.name}</td>
-              <td className="px-4 py-3 text-xs" style={{ color: "#2563eb" }}>{u.email}</td>
-              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{u.phone}</td>
-              <td className="px-4 py-3 text-xs text-slate-500 dark:text-slate-300" >{u.lastLogin}</td>
+            <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">{u.name}</td>
+              <td className="px-4 py-3 text-xs text-blue-600 dark:text-blue-400">{u.email}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{u.phone}</td>
+              <td className="px-4 py-3 text-xs text-slate-500 dark:text-slate-400">{u.lastLogin}</td>
               <td className="px-4 py-3">
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: u.access === "Granted" ? "#f0fdf4" : "#fef2f2", color: u.access === "Granted" ? "#16a34a" : "#dc2626" }}>{u.access}</span>
+                <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${u.access === "Granted" ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400"}`}>{u.access}</span>
               </td>
-              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>Edit</button></td>
+              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors">Edit</button></td>
             </tr>
           ))
         )}
@@ -1258,61 +1236,59 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
 
   return (
-    <div className="flex-1 overflow-y-auto" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
-      {/* Hero banner */}
-      <div className="relative overflow-hidden px-6 pt-6 pb-0"
-        style={{ background: "linear-gradient(135deg,#0f1729 0%,#1a2f5a 55%,#1e3a6e 100%)" }}>
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
-          style={{ background: "radial-gradient(circle,#3b82f6,transparent 70%)" }} />
-
-        <button onClick={onBack}
-          className="flex items-center gap-1.5 mb-4 text-sm font-semibold"
-          style={{ color: "rgba(255,255,255,0.7)" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}>
-          <ChevronLeft className="w-4 h-4" />Back to Clients & Sites
-        </button>
-
-        <div className="flex items-end gap-5 pb-4">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold text-white shrink-0"
-            style={{ background: `linear-gradient(135deg,${bgColor},${bgColor}cc)`, boxShadow: `0 4px 20px ${bgColor}66`, border: "3px solid rgba(255,255,255,0.2)" }}>
-            {initials}
+    <div className="flex flex-col h-full bg-slate-50 dark:bg-[#000000] overflow-hidden">
+      <PageHeader
+        title={site.companyName}
+        subtitle={`${site.city}, ${site.state} · ${site.accountType}`}
+        action={{ label: "Back to Clients & Sites", onClick: onBack }}
+        rightContent={
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+              {site.uid}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold border border-slate-200 dark:border-slate-800" style={{ background: sss.bg, color: sss.color }}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: sss.color }} />
+              {site.status}
+            </span>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0"
+              style={{ background: `linear-gradient(135deg,${bgColor},${bgColor}cc)`, boxShadow: `0 4px 12px ${bgColor}44` }}>
+              {initials}
+            </div>
           </div>
-          <div className="flex-1 min-w-0 pb-1">
-            <div className="flex items-center gap-3 flex-wrap">
-              <h2 className="text-xl font-bold text-white">{site.companyName}</h2>
-              <span className="text-xs font-mono px-2.5 py-1 rounded-lg" style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.8)" }}>{site.uid}</span>
-              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold" style={{ background: sss.bg, color: sss.color }}>
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: sss.color }} />{site.status}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <span className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>{site.accountType}</span>
-              <span style={{ color: "rgba(255,255,255,0.3)" }}>·</span>
-              <span className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>{site.city}, {site.state}</span>
-              <span style={{ color: "rgba(255,255,255,0.3)" }}>·</span>
-              <span className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>{site.contactEmail}</span>
-            </div>
+        }
+      />
+      
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Sidebar for Tabs */}
+        <div className={`${isSidebarOpen ? 'w-64' : 'w-16'} shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 overflow-y-auto transition-all duration-300 relative`} style={{ scrollbarWidth: "none" }}>
+          <div className="p-3 space-y-1 flex flex-col">
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className={`w-full flex items-center py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-all mb-4 ${isSidebarOpen ? 'px-3 justify-between' : 'justify-center'}`}>
+              {isSidebarOpen ? (
+                <>
+                  <span className="text-xs uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold">Navigation</span>
+                  <ChevronLeft className="w-4 h-4" />
+                </>
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+            {TABS.map((t) => (
+              <button key={t.id} onClick={() => setActiveTab(t.id)} title={t.label}
+                className={`w-full flex items-center py-2.5 rounded-xl text-sm font-semibold transition-all ${isSidebarOpen ? 'px-3 gap-3 text-left' : 'justify-center'} ${activeTab === t.id ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}`}>
+                {isSidebarOpen ? t.label : <span className="font-bold">{t.label.charAt(0)}</span>}
+              </button>
+            ))}
           </div>
         </div>
-
-        {/* Tab bar */}
-        <div className="flex gap-0 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-          {TABS.map((t) => (
-            <button key={t.id} onClick={() => setActiveTab(t.id)}
-              className="shrink-0 px-4 py-3 text-xs font-semibold transition-all whitespace-nowrap"
-              style={{
-                color: activeTab === t.id ? "#fff" : "rgba(255,255,255,0.5)",
-                borderBottom: activeTab === t.id ? "2.5px solid #60a5fa" : "2.5px solid transparent",
-                background: "transparent",
-              }}>
-              {t.label}
-            </button>
-          ))}
+        
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-[#000000]">
+          <div className="max-w-6xl mx-auto pb-12">
+            {renderTabContent()}
+          </div>
         </div>
       </div>
-
-      <div style={{ minHeight: 400 }}>{renderTabContent()}</div>
     </div>
   );
 }
@@ -1325,7 +1301,7 @@ export function ClientsPage() {
   const [page, setPage] = useState(1);
   const [showCreate, setShowCreate] = useState(false);
   const [selectedSite, setSelectedSite] = useState<SiteClient | null>(null);
-  const PAGE_SIZE = 8;
+  const PAGE_SIZE = 12;
 
   const filtered = useMemo(() => {
     return MOCK_SITES.filter((s) => {
@@ -1364,54 +1340,36 @@ export function ClientsPage() {
   if (selectedSite) return <SiteProfilePage site={selectedSite} onBack={() => setSelectedSite(null)} />;
 
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
+    <div className="flex-1 overflow-y-auto flex flex-col bg-slate-50 dark:bg-[#000000]" style={{ scrollbarWidth: "none" }}>
 
-      {/* ── Hero banner ── */}
-      <div className="relative overflow-hidden px-6 pt-6 pb-5 shrink-0"
-        style={{ background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)" }}>
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
-          style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }} />
-        <div className="absolute bottom-0 left-1/2 w-72 h-20 opacity-5 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, #60a5fa, transparent 70%)" }} />
-
-        <div className="relative flex items-start justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2.5 mb-1">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(6px)" }}>
-                <Building2 className="w-4 h-4 text-white" />
-              </div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Clients & Sites</h2>
-            </div>
-            <p className="text-sm ml-10" style={{ color: "rgba(255,255,255,0.55)" }}>
-              {MOCK_SITES.length} total accounts · {MOCK_SITES.filter((s) => s.status === "Active").length} active
-            </p>
-          </div>
+      <PageHeader
+        title="Clients & Sites"
+        subtitle={`${MOCK_SITES.length} total accounts · ${MOCK_SITES.filter((s) => s.status === "Active").length} active`}
+        icon={<Building2 className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+        actions={
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold shrink-0 transition-all"
-            style={{ background: "#ffffff", color: "#1e3a6e", boxShadow: "0 4px 16px rgba(0,0,0,0.25)" }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#f0f5ff"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; }}>
-            <Plus className="w-4 h-4" />Create Site / Client
+            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold text-white transition-all shadow-sm hover:opacity-90"
+            style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}
+          >
+            <Plus className="w-4 h-4" /> Create Site / Client
           </button>
-        </div>
-
-        {/* Stat chips */}
-        <div className="flex gap-3 mt-4 flex-wrap">
-          {STAT_CARDS.map((sc) => (
-            <div key={sc.label} className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(6px)" }}>
-              <span className="w-2 h-2 rounded-full" style={{ background: sc.color }} />
-              <span className="text-xs font-semibold text-white">{sc.value}</span>
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>{sc.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+        }
+        bottomContent={
+          <div className="flex gap-3 flex-wrap">
+            {STAT_CARDS.map((sc) => (
+              <div key={sc.label} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+                style={{ background: sc.bg }}>
+                <div className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color }} />
+                <span className="text-xs font-bold" style={{ color: sc.color }}>{sc.value} {sc.label}</span>
+              </div>
+            ))}
+          </div>
+        }
+      />
 
       {/* ── Table card ── */}
-      <div className="flex-1 mx-4 my-4 rounded-2xl overflow-hidden flex flex-col glass-card"
+      <div className="shrink-0 mx-4 my-4 rounded-2xl overflow-hidden flex flex-col glass-card bg-white dark:bg-[#1a1f2e] border border-slate-200 dark:border-slate-800"
         style={{ boxShadow: "0 4px 24px rgba(15,23,41,0.06)" }}>
 
         {/* Toolbar */}
@@ -1488,7 +1446,7 @@ export function ClientsPage() {
                   <input type="checkbox" checked={allSelected} onChange={toggleAll}
                     className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
                 </th>
-                {["UID", "Company Name", "Account Type", "Main Contact", "Email", "City / State", "Status", "Account Rep", "Added On", "Action"].map((col) => (
+                {["UID", "Company Name", "City / State", "Status", "Account Rep", "Added On", "Action"].map((col) => (
                   <th key={col} className="px-3 py-3.5 text-left whitespace-nowrap text-slate-500 dark:text-slate-300"
                     style={{ borderBottom: "1.5px solid #e8edf4", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
                     {col}
@@ -1520,9 +1478,7 @@ export function ClientsPage() {
                 const bgColor = avatarColor(initials);
                 return (
                   <tr key={site.uid}
-                    style={{ background: isSelected ? "#f0f5ff" : "#fff", borderBottom: "1px solid #f1f5f9", cursor: "pointer", transition: "background 0.12s" }}
-                    onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = "#fafbfd"; }}
-                    onMouseLeave={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = "#fff"; }}>
+                    className={`cursor-pointer transition-colors border-b border-slate-100 dark:border-slate-800 ${isSelected ? "bg-blue-50 dark:bg-blue-900/20" : "bg-white dark:bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50"}`}>
 
                     <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
                       <input type="checkbox" checked={isSelected} onChange={() => toggleOne(site.uid)}
@@ -1547,19 +1503,6 @@ export function ClientsPage() {
                       </div>
                     </td>
 
-                    <td className="px-3 py-3.5">
-                      <span className="inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold whitespace-nowrap"
-                        style={{ background: ats.bg, color: ats.color }}>{site.accountType}</span>
-                    </td>
-
-                    <td className="px-3 py-3.5">
-                      <div className="text-sm font-medium whitespace-nowrap text-slate-900 dark:text-slate-100" >{site.contactName}</div>
-                      <div className="text-xs text-slate-400 dark:text-slate-300" >{site.contactPhone}</div>
-                    </td>
-
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap">
-                      <a href={`mailto:${site.contactEmail}`} style={{ color: "#2563eb" }} className="hover:underline">{site.contactEmail}</a>
-                    </td>
 
                     <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-600 dark:text-slate-300" >
                       {site.city}, {site.state}

@@ -4,6 +4,7 @@ import {
     CheckCircle2, Clock, Upload, GraduationCap, FileQuestion, ChevronLeft,
     Copy, Trash2, GripVertical, PlayCircle
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 // ─── MOCK DATA ─────────────────────────────────────────────────────────────
 const MOCK_QUIZZES = [
@@ -37,7 +38,24 @@ export function TrainingPage() {
     };
 
     return (
-        <div className="w-full h-full flex flex-col animate-in fade-in bg-transparent min-w-0 overflow-hidden">
+        <div className="w-full h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
+            <PageHeader 
+                title="Training"
+                subtitle="Manage quizzes and RFI Academy training resources for employees."
+                icon={<GraduationCap className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+                bottomContent={
+                    view === "list" && (
+                        <div className="flex space-x-6 shrink-0 w-full overflow-x-auto hide-scrollbar mt-2">
+                            <button onClick={() => setActiveListTab("quizzes")} className={`pb-3 shrink-0 text-sm font-semibold transition-colors flex items-center gap-2 ${activeListTab === "quizzes" ? 'text-blue-600 border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500' : 'text-slate-500 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 dark:hover:text-slate-300'}`}>
+                                <FileQuestion className="w-4 h-4" /> Quizzes
+                            </button>
+                            <button onClick={() => setActiveListTab("academy")} className={`pb-3 shrink-0 text-sm font-semibold transition-colors flex items-center gap-2 ${activeListTab === "academy" ? 'text-blue-600 border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500' : 'text-slate-500 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 dark:hover:text-slate-300'}`}>
+                                <GraduationCap className="w-4 h-4" /> RFI Academy
+                            </button>
+                        </div>
+                    )
+                }
+            />
             {view === "list" && <TrainingListManager activeTab={activeListTab} setActiveTab={setActiveListTab} onNavigate={handleNavigate} />}
             {view === "quiz-create" && <QuizCreate onNavigate={handleNavigate} />}
             {view === "quiz-detail" && <QuizDetail id={selectedId!} onNavigate={handleNavigate} />}
@@ -59,25 +77,7 @@ function TrainingListManager({ activeTab, setActiveTab, onNavigate }: { activeTa
     const createViewTarget = activeTab === "quizzes" ? "quiz-create" : "academy-create";
 
     return (
-        <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
-
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-6 w-full shrink-0">
-                <div>
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Training</h1>
-                    <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Manage quizzes and RFI Academy training resources for employees.</p>
-                </div>
-            </div>
-
-            {/* Root Tabs */}
-            <div className="flex space-x-6 border-b border-slate-200 dark:border-slate-800 mb-6 shrink-0 w-full overflow-x-auto hide-scrollbar">
-                <button onClick={() => setActiveTab("quizzes")} className={`pb-3 shrink-0 text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === "quizzes" ? 'text-[#1e3a6e] border-b-[3px] border-[#1e3a6e] dark:text-[#3b82f6] dark:border-[#3b82f6]' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
-                    <FileQuestion className="w-4 h-4" /> Quizzes
-                </button>
-                <button onClick={() => setActiveTab("academy")} className={`pb-3 shrink-0 text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === "academy" ? 'text-[#1e3a6e] border-b-[3px] border-[#1e3a6e] dark:text-[#3b82f6] dark:border-[#3b82f6]' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
-                    <GraduationCap className="w-4 h-4" /> RFI Academy
-                </button>
-            </div>
+        <div className="p-4 md:p-6 w-full max-w-[1600px] mx-auto h-full flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
 
             {/* Workspace Inner Header */}
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 w-full shrink-0">

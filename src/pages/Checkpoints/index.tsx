@@ -22,6 +22,7 @@ import { MOCK_USER, MOCK_KPI, MOCK_ACTIVITY, MOCK_TOURS, MOCK_TASKS, MOCK_ATTEND
 import { NAV_GROUPS } from '../../data/navConfig';
 import { StatusBadge } from '../../components/StatusBadge';
 import { ActivityIcon } from '../../components/ActivityIcon';
+import { PageHeader } from '../../components/PageHeader';
 import { LoginPage } from '../LoginPage';
 import { Sidebar } from '../../components/Sidebar';
 import { TopHeader } from '../../components/TopHeader';
@@ -145,6 +146,7 @@ export function CheckpointsPage() {
   const [cpId, setCpId] = useState("");
   const [cpGPS, setCpGPS] = useState("10");
   const [cpManual, setCpManual] = useState<CpManual>("yes");
+  const [cpLocation, setCpLocation] = useState("");
 
   // Create Tour Route form state
   const [tourDesc, setTourDesc] = useState("");
@@ -181,7 +183,7 @@ export function CheckpointsPage() {
           {options.map((o) => (
             <label key={o.value} className="flex items-center gap-2 cursor-pointer">
               <div className="w-4 h-4 rounded-full border-2 flex items-center justify-center"
-                style={{ borderColor: value === o.value ? "#2563eb" : "#cbd5e1", background: value === o.value ? "#2563eb" : "white" }}
+                style={{ borderColor: value === o.value ? "#2563eb" : "#cbd5e1", background: value === o.value ? "#2563eb" : "transparent" }}
                 onClick={() => onChange(o.value)}>
                 {value === o.value && <div className="w-1.5 h-1.5 rounded-full bg-white dark:bg-slate-900" />}
               </div>
@@ -208,16 +210,15 @@ export function CheckpointsPage() {
     return (
       <input type={type} value={value} onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-        style={{ border: "1.5px solid #e2e8f0", color: "#0f172a" }} />
+        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none border border-slate-200 focus:border-blue-500 bg-white text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 transition-colors" />
     );
   }
 
-  function renderSelect(options: string[], value: string, onChange: (v: string) => void) {
+  function renderSelect(options: string[], value: string, onChange: (v: string) => void, placeholder?: string) {
     return (
       <select value={value} onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none appearance-none"
-        style={{ border: "1.5px solid #e2e8f0", color: "#0f172a" }}>
+        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none border border-slate-200 focus:border-blue-500 bg-white text-slate-900 appearance-none cursor-pointer dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 transition-colors">
+        {placeholder && <option value="" disabled>{placeholder}</option>}
         {options.map((o) => <option key={o} value={o}>{o}</option>)}
       </select>
     );
@@ -225,28 +226,26 @@ export function CheckpointsPage() {
 
   function renderModalFooter(onCancel: () => void, submitLabel: string) {
     return (
-      <div className="flex justify-end gap-3 pt-4 mt-2" style={{ borderTop: "1px solid #f1f5f9" }}>
-        <button onClick={onCancel} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300"
-          style={{ border: "1.5px solid #e2e8f0"}}>Cancel</button>
-        <button className="px-5 py-2.5 rounded-xl text-sm font-bold text-white"
-          style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>{submitLabel}</button>
+      <div className="flex justify-end gap-3 pt-5 mt-2 border-t border-slate-100 dark:border-slate-800">
+        <button onClick={onCancel} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 bg-slate-50 border border-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-700 transition-colors">
+          Cancel
+        </button>
+        <button className="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm shadow-blue-500/20">
+          {submitLabel}
+        </button>
       </div>
     );
   }
 
   function renderModal(title: string, onClose: () => void, children: React.ReactNode, wide = false) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{ background: "rgba(15,23,41,0.55)", backdropFilter: "blur(4px)" }}>
-        <div className="rounded-2xl overflow-hidden flex flex-col max-h-[90vh] w-full"
-          style={{ maxWidth: wide ? 780 : 580, background: "#fff", boxShadow: "0 20px 60px rgba(15,23,41,0.25)" }}>
-          <div className="flex items-center justify-between px-6 py-4 shrink-0"
-            style={{ background: "linear-gradient(135deg,#0f1729,#1e3a6e)" }}>
+      <div className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+        style={{ background: "rgba(15,23,41,0.65)", backdropFilter: "blur(6px)" }}>
+        <div className="rounded-2xl overflow-hidden flex flex-col max-h-[90vh] w-full bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800"
+          style={{ maxWidth: wide ? 780 : 580 }}>
+          <div className="flex items-center justify-between px-6 py-4 shrink-0 bg-slate-900 dark:bg-slate-950 border-b border-slate-800">
             <h3 className="text-base font-bold text-white">{title}</h3>
-            <button onClick={onClose} className="p-1.5 rounded-lg transition-all"
-              style={{ color: "rgba(255,255,255,0.6)" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+            <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -262,12 +261,12 @@ export function CheckpointsPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {renderField("Checkpoint Name", renderInput("e.g. North Gate", cpName, setCpName), true)}
           {renderField("Checkpoint ID", renderInput("NFC tag ID or barcode value", cpId, setCpId))}
+          {renderField("Checkpoint Location", renderSelect(CP_LOCATIONS.map(loc => loc.name), cpLocation, setCpLocation, "Select location..."), true)}
         </div>
         {renderField("Special Instructions", (
           <textarea value={cpInstructions} onChange={(e) => setCpInstructions(e.target.value)}
             placeholder="Special instructions for this checkpoint..."
-            className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" rows={2}
-            style={{ border: "1.5px solid #e2e8f0" }} />
+            className="w-full px-3 py-2.5 rounded-xl text-sm outline-none border border-slate-200 focus:border-blue-500 bg-white text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 transition-colors" rows={2} />
         ))}
 
         {renderRadioGroup("Checkpoint Type", [
@@ -346,16 +345,14 @@ export function CheckpointsPage() {
           Drag to reorder. Toggle required for each stop.
         </div>
         {["Main Entrance Gate", "North Perimeter Fence", "Loading Dock A", "Reception Lobby"].map((cp, i) => (
-          <div key={i} className="flex items-center gap-3 rounded-xl px-4 py-3"
-            style={{ border: "1.5px solid #e2e8f0", background: "#fafbfd" }}>
-            <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-              style={{ background: "#1e3a6e" }}>{i + 1}</div>
-            <span className="flex-1 text-sm font-medium text-slate-900 dark:text-slate-100" >{cp}</span>
-            <label className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300" >
-              <input type="checkbox" defaultChecked className="rounded" />
+          <div key={i} className="flex items-center gap-3 rounded-xl px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 shadow-sm">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white bg-blue-600 dark:bg-blue-500">{i + 1}</div>
+            <span className="flex-1 text-sm font-medium text-slate-900 dark:text-slate-100">{cp}</span>
+            <label className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+              <input type="checkbox" defaultChecked className="rounded accent-blue-600" />
               Required
             </label>
-            <MoreHorizontal className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
+            <MoreHorizontal className="w-4 h-4 text-slate-400 cursor-pointer hover:text-slate-200 transition-colors" />
           </div>
         ))}
         <button className="flex items-center gap-2 text-sm font-semibold" style={{ color: "#2563eb" }}>
@@ -397,67 +394,68 @@ export function CheckpointsPage() {
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: "Total Checkpoints", value: CP_CHECKPOINTS.length, color: "#1e3a6e", bg: "#eff6ff" },
-            { label: "Active", value: CP_CHECKPOINTS.filter((c) => c.status === "Active").length, color: "#16a34a", bg: "#f0fdf4" },
-            { label: "NFC Tags", value: CP_CHECKPOINTS.filter((c) => c.type === "NFC").length, color: "#7c3aed", bg: "#f5f3ff" },
-            { label: "Barcodes", value: CP_CHECKPOINTS.filter((c) => c.type === "Barcode").length, color: "#d97706", bg: "#fffbeb" },
+            { label: "Total Checkpoints", value: CP_CHECKPOINTS.length, color: "#60a5fa", bg: "rgba(96,165,250,0.12)" },
+            { label: "Active", value: CP_CHECKPOINTS.filter((c) => c.status === "Active").length, color: "#4ade80", bg: "rgba(74,222,128,0.12)" },
+            { label: "NFC Tags", value: CP_CHECKPOINTS.filter((c) => c.type === "NFC").length, color: "#a855f7", bg: "rgba(168,85,247,0.12)" },
+            { label: "Barcodes", value: CP_CHECKPOINTS.filter((c) => c.type === "Barcode").length, color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
           ].map((s) => (
-            <div key={s.label} className="rounded-2xl p-4 flex flex-col gap-1" style={{ background: s.bg, border: "1px solid transparent" }}>
+            <div key={s.label} className="rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-1 backdrop-blur-md" style={{ background: s.bg, border: `1px solid ${s.color}22` }}>
               <div className="text-2xl font-black" style={{ color: s.color }}>{s.value}</div>
-              <div className="text-xs font-semibold" style={{ color: s.color + "cc" }}>{s.label}</div>
+              <div className="text-xs font-semibold" style={{ color: s.color }}>{s.label}</div>
             </div>
           ))}
         </div>
 
         {/* Table */}
-        <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
+        <div className="overflow-x-auto rounded-2xl flex flex-col bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-sm">
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
                 {["Checkpoint Name", "Type", "Site / Account", "Monitoring", "Assigned", "Last Scan", "Status", "Actions"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300"
-                    style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-4 py-3.5 text-left whitespace-nowrap text-slate-400 text-[11px] font-bold tracking-wider uppercase">
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filtered.map((cp, i) => (
-                <tr key={cp.id} style={{ borderBottom: "1px solid #f1f5f9", background: i % 2 === 0 ? "#fff" : "#fafbfd" }}>
-                  <td className="px-4 py-3">
-                    <div className="font-semibold text-sm text-slate-900 dark:text-slate-100" >{cp.name}</div>
-                    <div className="text-xs font-mono text-slate-400 dark:text-slate-300" >{cp.id}</div>
+                <tr key={cp.id} className="cursor-pointer transition-colors border-b border-slate-800/50 hover:bg-slate-800/60">
+                  <td className="px-4 py-3.5">
+                    <div className="font-semibold text-sm text-slate-100">{cp.name}</div>
+                    <div className="text-xs font-mono text-slate-400">{cp.id}</div>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full"
                       style={{ background: cp.type === "NFC" ? "#eff6ff" : "#fef9c3", color: cp.type === "NFC" ? "#1d4ed8" : "#92400e" }}>
                       {cp.type === "NFC" ? <Zap className="w-3 h-3" /> : <FileText className="w-3 h-3" />}
                       {cp.type}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{cp.site}</td>
-                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{cp.monitoring}</td>
-                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{cp.assigned}</td>
-                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{cp.lastScan}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5 text-sm text-slate-300">{cp.site}</td>
+                  <td className="px-4 py-3.5 text-sm text-slate-300">{cp.monitoring}</td>
+                  <td className="px-4 py-3.5 text-sm text-slate-300">{cp.assigned}</td>
+                  <td className="px-4 py-3.5 text-sm text-slate-300">{cp.lastScan}</td>
+                  <td className="px-4 py-3.5">
                     <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full"
                       style={{ background: cp.status === "Active" ? "#f0fdf4" : "#fef2f2", color: cp.status === "Active" ? "#16a34a" : "#dc2626" }}>
                       <span className="w-1.5 h-1.5 rounded-full" style={{ background: cp.status === "Active" ? "#16a34a" : "#dc2626" }} />
                       {cp.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2">
-                      <button className="w-7 h-7 rounded-lg flex items-center justify-center transition-all text-slate-600 dark:text-slate-300"
-                         title="View on Map"
+                      <button className="w-8 h-8 rounded-xl flex items-center justify-center transition-all text-slate-400"
+                        title="View on Map"
                         onMouseEnter={(e) => { e.currentTarget.style.background = "#eff6ff"; e.currentTarget.style.color = "#2563eb"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#475569"; }}>
-                        <MapPin className="w-3.5 h-3.5" />
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }}>
+                        <MapPin className="w-4 h-4" />
                       </button>
-                      <button className="w-7 h-7 rounded-lg flex items-center justify-center transition-all text-slate-600 dark:text-slate-300"
-                         title="Edit"
+                      <button className="w-8 h-8 rounded-xl flex items-center justify-center transition-all text-slate-400"
+                        title="Edit"
                         onMouseEnter={(e) => { e.currentTarget.style.background = "#eff6ff"; e.currentTarget.style.color = "#2563eb"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#475569"; }}>
-                        <Settings className="w-3.5 h-3.5" />
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }}>
+                        <Settings className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
@@ -499,88 +497,71 @@ export function CheckpointsPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: "Total Tours", value: CP_TOURS.length, color: "#1e3a6e", bg: "#eff6ff" },
-            { label: "Active", value: CP_TOURS.filter((t) => t.status === "Active").length, color: "#16a34a", bg: "#f0fdf4" },
-            { label: "Weekly", value: CP_TOURS.filter((t) => t.recurrence === "Weekly").length, color: "#7c3aed", bg: "#f5f3ff" },
-            { label: "Total Checkpoints", value: CP_TOURS.reduce((a, t) => a + t.checkpointCount, 0), color: "#d97706", bg: "#fffbeb" },
+            { label: "Total Tours", value: CP_TOURS.length, color: "#60a5fa", bg: "rgba(96,165,250,0.12)" },
+            { label: "Active", value: CP_TOURS.filter((t) => t.status === "Active").length, color: "#4ade80", bg: "rgba(74,222,128,0.12)" },
+            { label: "Weekly", value: CP_TOURS.filter((t) => t.recurrence === "Weekly").length, color: "#a855f7", bg: "rgba(168,85,247,0.12)" },
+            { label: "Total Checkpoints", value: CP_TOURS.reduce((a, t) => a + t.checkpointCount, 0), color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
           ].map((s) => (
-            <div key={s.label} className="rounded-2xl p-4 flex flex-col gap-1" style={{ background: s.bg }}>
+            <div key={s.label} className="rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-1 backdrop-blur-md" style={{ background: s.bg, border: `1px solid ${s.color}22` }}>
               <div className="text-2xl font-black" style={{ color: s.color }}>{s.value}</div>
-              <div className="text-xs font-semibold" style={{ color: s.color + "cc" }}>{s.label}</div>
+              <div className="text-xs font-semibold" style={{ color: s.color }}>{s.label}</div>
             </div>
           ))}
         </div>
 
         {/* Cards */}
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {filtered.map((tour) => (
-            <div key={tour.id} className="rounded-2xl p-5" style={{ border: "1.5px solid #e2e8f0", background: "#fff" }}>
-              <div className="flex items-start justify-between gap-4 flex-wrap">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 flex-wrap mb-2">
-                    <span className="font-bold text-sm text-slate-900 dark:text-slate-100" >{tour.description}</span>
-                    <span className="text-xs font-mono px-2 py-0.5 rounded-lg text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-slate-800" >{tour.id}</span>
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full"
-                      style={{ background: tour.status === "Active" ? "#f0fdf4" : "#fef2f2", color: tour.status === "Active" ? "#16a34a" : "#dc2626" }}>
-                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: tour.status === "Active" ? "#16a34a" : "#dc2626" }} />
-                      {tour.status}
-                    </span>
+            <div key={tour.id} className="rounded-2xl p-5 bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-sm transition-all hover:bg-slate-900/60 flex flex-col justify-between h-full">
+              <div>
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex-1 min-w-0">
+                    <span className="font-bold text-lg text-slate-100 block mb-2">{tour.description}</span>
+                    <span className="text-xs font-mono px-2.5 py-1 rounded-md text-slate-400 bg-slate-800/50 border border-slate-700/50">{tour.id}</span>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-2">
-                    {[
-                      { label: "Site", value: tour.site },
-                      { label: "Assigned To", value: tour.assignedTo },
-                      { label: "Duration", value: tour.duration },
-                      { label: "Grace Period", value: tour.gracePeriod },
-                      { label: "Recurrence", value: tour.recurrence },
-                      { label: "Schedule", value: tour.schedule },
-                      { label: "Checkpoints", value: `${tour.checkpointCount} stops` },
-                    ].map((item) => (
-                      <div key={item.label}>
-                        <div className="text-xs text-slate-400 dark:text-slate-300" >{item.label}</div>
-                        <div className="text-sm font-semibold text-slate-700 dark:text-slate-200" >{item.value}</div>
+                  <span className="inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-full"
+                    style={{ background: tour.status === "Active" ? "rgba(74,222,128,0.12)" : "rgba(248,113,113,0.12)", color: tour.status === "Active" ? "#4ade80" : "#f87171", border: `1px solid ${tour.status === 'Active' ? 'rgba(74,222,128,0.2)' : 'rgba(248,113,113,0.2)'}` }}>
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: tour.status === "Active" ? "#4ade80" : "#f87171" }} />
+                    {tour.status}
+                  </span>
+                </div>
+                
+                <div className="flex flex-col mt-6 bg-slate-800/20 rounded-xl border border-slate-700/30 p-1">
+                  {[
+                    { label: "Site", value: tour.site, icon: <Building2 className="w-3.5 h-3.5" /> },
+                    { label: "Assigned", value: tour.assignedTo, icon: <Users className="w-3.5 h-3.5" /> },
+                    { label: "Duration", value: tour.duration, icon: <Clock className="w-3.5 h-3.5" /> },
+                    { label: "Grace", value: tour.gracePeriod, icon: <AlertCircle className="w-3.5 h-3.5" /> },
+                    { label: "Recurrence", value: tour.recurrence, icon: <RefreshCw className="w-3.5 h-3.5" /> },
+                    { label: "Schedule", value: tour.schedule, icon: <Calendar className="w-3.5 h-3.5" /> },
+                    { label: "Checkpoints", value: `${tour.checkpointCount} stops`, icon: <MapPin className="w-3.5 h-3.5" /> },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-center justify-between py-2.5 px-3 border-b border-slate-700/30 last:border-0 hover:bg-slate-800/40 rounded-lg transition-colors">
+                      <div className="flex items-center gap-2 text-slate-400">
+                        {item.icon}
+                        <span className="text-[10px] uppercase font-bold tracking-wider">{item.label}</span>
                       </div>
-                    ))}
-                  </div>
+                      <div className="text-sm font-semibold text-slate-200">{item.value}</div>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex flex-col gap-2 shrink-0">
-                  <button className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all text-slate-600 dark:text-slate-300"
-                    style={{ border: "1.5px solid #e2e8f0"}}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#bfdbfe"; e.currentTarget.style.color = "#1d4ed8"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.color = "#475569"; }}>
-                    <Settings className="w-3.5 h-3.5" /> Edit Settings
-                  </button>
-                  <button onClick={() => { setSelectedTour(tour); setShowManage(true); }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
-                    style={{ border: "1.5px solid #e2e8f0", color: "#475569" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#bfdbfe"; e.currentTarget.style.color = "#1d4ed8"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.color = "#475569"; }}>
-                    <ListChecks className="w-3.5 h-3.5" /> Manage Checkpoints
-                  </button>
-                </div>
+              </div>
+
+              <div className="flex items-center gap-3 mt-6 pt-5 border-t border-slate-800">
+                <button onClick={() => { setSelectedTour(tour); setShowCreateTour(true); }}
+                  className="flex-1 flex justify-center items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-800/50 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+                  <Settings className="w-4 h-4" /> Update
+                </button>
+                <button onClick={() => { setSelectedTour(tour); setShowManage(true); }}
+                  className="flex-1 flex justify-center items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 border border-blue-500/30">
+                  <ListChecks className="w-4 h-4" /> Manage
+                </button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Issue Reporting info panel */}
-        <div className="rounded-2xl p-5" style={{ background: "#fff7ed", border: "1.5px solid #fed7aa" }}>
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-4 h-4" style={{ color: "#d97706" }} />
-            <span className="text-sm font-bold" style={{ color: "#92400e" }}>Checkpoint Issue Reporting</span>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {["Damaged NFC Tag", "Missing Barcode", "Inaccessible Checkpoint", "Unsafe Location", "GPS Inaccuracy"].map((issue) => (
-              <div key={issue} className="flex items-center gap-2 text-xs" style={{ color: "#78350f" }}>
-                <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#d97706" }} />
-                {issue}
-              </div>
-            ))}
-          </div>
-          <div className="text-xs mt-3" style={{ color: "#92400e" }}>
-            Issue reports may trigger notifications, maintenance tasks, or system exceptions through configured Automations.
-          </div>
-        </div>
+
       </div>
     );
   }
@@ -606,24 +587,25 @@ export function CheckpointsPage() {
             <Download className="w-3.5 h-3.5" /> Export
           </button>
         </div>
-        <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
+        <div className="overflow-x-auto rounded-2xl flex flex-col bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-sm">
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
                 {["Time", "Employee", "Account / Site", "Checkpoint", "Tour"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300"
-                    style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-4 py-3.5 text-left whitespace-nowrap text-slate-400 text-[11px] font-bold tracking-wider uppercase">
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filtered.map((log, i) => (
-                <tr key={i} style={{ borderBottom: "1px solid #f1f5f9", background: i % 2 === 0 ? "#fff" : "#fafbfd" }}>
-                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{log.time}</td>
-                  <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100" >{log.employee}</td>
-                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{log.account}</td>
-                  <td className="px-4 py-3 text-sm text-slate-900 dark:text-slate-100" >{log.checkpoint}</td>
-                  <td className="px-4 py-3 text-sm" style={{ color: log.tour === "—" ? "#94a3b8" : "#475569" }}>{log.tour}</td>
+                <tr key={i} className="cursor-pointer transition-colors border-b border-slate-800/50 hover:bg-slate-800/60">
+                  <td className="px-4 py-3.5 text-sm text-slate-300">{log.time}</td>
+                  <td className="px-4 py-3.5 text-sm font-semibold text-slate-100">{log.employee}</td>
+                  <td className="px-4 py-3.5 text-sm text-slate-300">{log.account}</td>
+                  <td className="px-4 py-3.5 text-sm text-slate-100">{log.checkpoint}</td>
+                  <td className="px-4 py-3.5 text-sm text-slate-400">{log.tour}</td>
                 </tr>
               ))}
             </tbody>
@@ -673,32 +655,33 @@ export function CheckpointsPage() {
             </button>
           </div>
         </div>
-        <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1.5px solid #e2e8f0" }}>
+        <div className="overflow-x-auto rounded-2xl flex flex-col bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-sm">
           <table className="w-full text-left" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
                 {["Location Name", "Site / Account", "Status", "Added By"].map((h) => (
-                  <th key={h} className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300"
-                    style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400">
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filtered.map((loc, i) => (
-                <tr key={loc.id} className="hover:bg-slate-50 transition-colors dark:hover:bg-slate-800" style={{ borderBottom: i === filtered.length -1 ? "none" : "1px solid #f1f5f9", background: "#fff" }}>
-                  <td className="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-slate-100" >{loc.name}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-300" >{loc.site}</td>
+                <tr key={loc.id} className="hover:bg-slate-800/60 transition-colors border-b border-slate-800/50">
+                  <td className="px-6 py-4 text-sm font-semibold text-slate-100">{loc.name}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-slate-300">{loc.site}</td>
                   <td className="px-6 py-4">
-                    <span className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-md border border-green-200 shadow-sm">
+                    <span className="px-2.5 py-1 bg-green-500/10 text-green-400 text-xs font-bold rounded-md border border-green-500/20 shadow-sm">
                       {loc.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-400 dark:text-slate-300" >{loc.addedBy}</td>
+                  <td className="px-6 py-4 text-sm text-slate-400">{loc.addedBy}</td>
                 </tr>
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="p-10 text-center text-sm text-slate-500 dark:text-slate-400">
+                  <td colSpan={4} className="p-10 text-center text-sm text-slate-500">
                     No locations match your filters.
                   </td>
                 </tr>
@@ -796,45 +779,27 @@ export function CheckpointsPage() {
 
   // ── Main render ────────────────────────────────────────────────────────────
   return (
-    <div className="flex-1 overflow-y-auto" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
-      {/* Hero banner */}
-      <div className="px-6 pt-6 pb-0 shrink-0 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)" }}>
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
-          style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }} />
-        <div className="flex items-end gap-4 pb-4">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-            style={{ background: "rgba(255,255,255,0.12)", border: "1.5px solid rgba(255,255,255,0.18)" }}>
-            <Route className="w-6 h-6 text-white" />
+    <div className="flex-1 overflow-y-auto bg-slate-50 dark:bg-[#000000]" style={{ scrollbarWidth: "none" }}>
+      <PageHeader
+        title="Checkpoints & Tour Routes"
+        subtitle="Manage NFC/barcode checkpoints, configure patrol routes and review scan logs"
+        icon={<Route className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+        bottomContent={
+          <div className="flex gap-4 mt-4 pt-4 border-t border-slate-800">
+            {([
+              { id: "checkpoints", label: "Checkpoints", icon: <MapPin className="w-3.5 h-3.5" /> },
+              { id: "tours", label: "Tour Routes", icon: <Route className="w-3.5 h-3.5" /> },
+              { id: "logs", label: "Scan Logs", icon: <ClipboardList className="w-3.5 h-3.5" /> },
+              { id: "locations", label: "Site Locations", icon: <Building2 className="w-3.5 h-3.5" /> },
+            ] as { id: CpSection; label: string; icon: React.ReactNode }[]).map((tab) => (
+              <button key={tab.id} onClick={() => setSection(tab.id)}
+                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all rounded-lg shrink-0 ${section === tab.id ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}`}>
+                {tab.icon}{tab.label}
+              </button>
+            ))}
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">Checkpoints & Tour Routes</h1>
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
-              Manage NFC/barcode checkpoints, configure patrol routes and review scan logs
-            </p>
-          </div>
-        </div>
-
-        {/* Section tabs */}
-        <div className="flex gap-0">
-          {([
-            { id: "checkpoints", label: "Checkpoints", icon: <MapPin className="w-3.5 h-3.5" /> },
-            { id: "tours", label: "Tour Routes", icon: <Route className="w-3.5 h-3.5" /> },
-            { id: "logs", label: "Scan Logs", icon: <ClipboardList className="w-3.5 h-3.5" /> },
-            { id: "locations", label: "Site Locations", icon: <Building2 className="w-3.5 h-3.5" /> },
-          ] as { id: CpSection; label: string; icon: React.ReactNode }[]).map((tab) => (
-            <button key={tab.id} onClick={() => setSection(tab.id)}
-              className="flex items-center gap-2 px-5 py-3 text-xs font-semibold transition-all shrink-0"
-              style={{
-                color: section === tab.id ? "#fff" : "rgba(255,255,255,0.5)",
-                borderBottom: section === tab.id ? "2.5px solid #60a5fa" : "2.5px solid transparent",
-                background: "transparent",
-              }}>
-              {tab.icon}{tab.label}
-            </button>
-          ))}
-        </div>
-      </div>
+        }
+      />
 
       {/* Content */}
       <div className="p-6">
@@ -846,7 +811,7 @@ export function CheckpointsPage() {
 
       {/* Modals */}
       {showCreateCp && renderCreateCheckpointModal()}
-      {showCreateTour && <CreateTourWizard onClose={() => setShowCreateTour(false)} />}
+      {showCreateTour && <CreateTourWizard onClose={() => { setShowCreateTour(false); setSelectedTour(null); }} tourToEdit={selectedTour} />}
       {showImport && renderImportModal()}
       {showManage && renderManageCheckpointsModal()}
       {showAddLocation && renderAddLocationModal()}

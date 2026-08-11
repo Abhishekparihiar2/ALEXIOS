@@ -18,6 +18,7 @@ import {
   History
 } from 'lucide-react';
 import { Page } from '../../types';
+import { PageHeader } from '../../components/PageHeader';
 import { 
   SkillDef, 
   SkillCategory, 
@@ -77,36 +78,21 @@ export function SkillsPage({ onNavigate }: SkillsPageProps) {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
-      {/* Hero Banner */}
-      <div className="relative overflow-hidden px-6 pt-6 pb-5 shrink-0"
-        style={{ background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)" }}>
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
-          style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }} />
-        
-        <div className="relative flex items-center justify-between">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2.5 mb-1">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(6px)" }}>
-                <BadgeCheck className="w-4 h-4 text-white" />
-              </div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Skills & Certifications</h2>
-            </div>
-            <p className="text-sm ml-10" style={{ color: "rgba(255,255,255,0.55)" }}>
-              Manage employee skills, certifications, licenses, training credentials, and qualification requirements.
-            </p>
-          </div>
-
+    <div className="flex-1 overflow-y-auto flex flex-col bg-transparent" style={{ scrollbarWidth: "none" }}>
+      <PageHeader
+        title="Skills & Certifications"
+        subtitle="Manage employee skills, certifications, licenses, training credentials, and qualification requirements."
+        icon={<BadgeCheck className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
+        actions={
           <button
             onClick={() => setIsAddDrawerOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-blue-900/20"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition-opacity"
+            style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}
           >
-            <Plus className="w-4 h-4" />
-            Add Skill / Certification
+            <Plus className="w-4 h-4" /> Add Skill / Certification
           </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Main Content Area */}
       <div className="p-6 space-y-6">

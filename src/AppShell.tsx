@@ -54,10 +54,10 @@ import { App } from './app/App';
 
 export function AppShell({ onSignOut }: { onSignOut: () => void }) {
   const [activePage, setActivePage] = useState<Page>("dashboard");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
   return (
-    <div className="glass-container" style={{ position: "fixed", inset: 0, display: "flex", overflow: "hidden" }}>
+    <div className="glass-container bg-black text-white" style={{ position: "fixed", inset: 0, display: "flex", overflow: "hidden" }}>
       <Sidebar
         activePage={activePage}
         onNavigate={setActivePage}
@@ -66,7 +66,7 @@ export function AppShell({ onSignOut }: { onSignOut: () => void }) {
         onSignOut={onSignOut}
       />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <TopHeader activePage={activePage} onSignOut={onSignOut} notifCount={7} onNavigate={setActivePage} />
+        <TopHeader activePage={activePage} onSignOut={onSignOut} notifCount={7} onNavigate={setActivePage} onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
         {activePage === "timeclock" || activePage === "clocked-in" ? <TimeClockPage onNavigate={setActivePage} /> : activePage.startsWith("submodule-exceptions") ? <TicketsPage onNavigate={setActivePage} initialCategory={activePage.includes(":") ? activePage.split(":")[1] : undefined} /> : activePage === "submodule-journal" ? <ActivityJournalPage /> : activePage.startsWith("report-settings") || activePage === "reports" ? <ReportSettingsPage onNavigate={setActivePage} initialView={activePage} /> : activePage.startsWith("reports-submissions") ? <CompletedReportsPage initialTab={(activePage.split(":")[1] as any) || "reports"} initialFilter={activePage.split(":")[2]} /> : activePage === "dashboard" || activePage.startsWith("submodule-") ? <Dashboard onNavigate={setActivePage} initialDrawer={activePage.startsWith("submodule-") ? activePage : undefined} /> : activePage.startsWith("employees") ? <EmployeesPage /> : activePage.startsWith("sites") ? <ClientsPage /> : activePage.startsWith("checkpoints") ? <CheckpointsPage /> : activePage.startsWith("scheduling") ? <SchedulingPage /> : activePage.startsWith("skills") ? <SkillsPage onNavigate={setActivePage} /> : activePage.startsWith("payroll") ? <PayrollPage /> : activePage.startsWith("groups") ? <GroupsPage /> : activePage.startsWith("helpdesk") ? <HelpDeskPage /> : activePage.startsWith("help") ? <HelpPage /> : activePage.startsWith("forms") ? <FormsPage /> : activePage.startsWith("tasks") ? <TasksPage /> : activePage.startsWith("communications") ? <CommunicationsPage /> : activePage.startsWith("documents") ? <DocumentsPage /> : activePage.startsWith("training") ? <TrainingPage /> : activePage.startsWith("vehicles") ? <VehiclesPage /> : activePage.startsWith("automations") ? <AutomationsPage /> : <PlaceholderPage page={activePage} />}
       </div>
     </div>

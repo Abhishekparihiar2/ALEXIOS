@@ -3,6 +3,7 @@ import {
     Search, Filter, Plus, MoreHorizontal, ChevronLeft, Download,
     Car, FileText, Upload, Settings, Calendar, Hash, Eye, AlertCircle
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 
 // ─── MOCK DATA ─────────────────────────────────────────────────────────────
 const MOCK_VEHICLES = [
@@ -62,23 +63,20 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
     };
 
     return (
-        <div className="p-[22px] md:px-[28px] md:py-[24px] w-full max-w-[1600px] mx-auto h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
-
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-[26px] w-full shrink-0">
-                <div>
-                    <h1 className="text-[32px] font-bold text-slate-900 dark:text-white tracking-tight leading-tight">Vehicles</h1>
-                    <p className="text-[15px] text-slate-500 mt-1 dark:text-slate-400">Manage company vehicle records, ownership, status, assignments, and documentation.</p>
-                </div>
-                <div className="flex items-center gap-3">
+        <div className="w-full h-full flex flex-col animate-in fade-in min-w-0 min-h-0 overflow-hidden">
+            <PageHeader
+                title="Vehicles"
+                subtitle="Manage company vehicle records, ownership, status, assignments, and documentation."
+                actions={
                     <button
                         onClick={() => onNavigate("create")}
                         className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white bg-[#1e3a8a] hover:bg-[#1e40af] transition-colors shadow-sm"
                     >
                         <Plus className="w-4 h-4" /> Create Vehicle
                     </button>
-                </div>
-            </div>
+                }
+            />
+            <div className="p-[22px] md:px-[28px] md:py-[24px] w-full max-w-[1600px] mx-auto flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
 
             {/* Summary Metrics */}
             <div className="flex w-full gap-4 mb-5 overflow-x-auto hide-scrollbar shrink-0 pb-1">
@@ -226,6 +224,7 @@ function VehicleListManager({ onNavigate }: { onNavigate: (v: any, id?: string) 
                 )}
             </div>
 
+        </div>
         </div>
     );
 }

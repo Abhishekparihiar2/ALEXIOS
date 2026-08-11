@@ -2,12 +2,14 @@ import { useState, useMemo } from "react";
 import {
   AlertCircle, Settings, AlertTriangle, RefreshCw, Send, Plus, Search, CheckCircle2, X, Route
 } from "lucide-react";
+import { PageHeader } from "../../components/PageHeader";
 import { useSiteContext } from "../../context/SiteContext";
 import { MOCK_SCHED_JOBS, MOCK_SCHED_SHIFTS, MOCK_SWAP_REQUESTS, MOCK_SCHED_TOURS } from "../../data/mockData";
 import { ShiftDrawer } from "./ShiftDrawer";
 import { ConflictsDrawer } from "./ConflictsDrawer";
 import { TourDrawer } from "./TourDrawer";
 import { RequestsDrawer } from "./RequestsDrawer";
+import { PublishDrawer } from "./PublishDrawer";
 
 export function SchedulingPage() {
   const [shifts, setShifts] = useState(MOCK_SCHED_SHIFTS);
@@ -31,6 +33,7 @@ export function SchedulingPage() {
 
   const [showConflicts, setShowConflicts] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
+  const [showPublishDrawer, setShowPublishDrawer] = useState(false);
 
   const DAYS = [
     { date: "2026-08-03", dayLabel: "Mon", shortLabel: "Aug 3" },
@@ -81,6 +84,11 @@ export function SchedulingPage() {
     } else {
       triggerToast("No draft shifts to publish.", "info");
     }
+  };
+
+  const publishSingleDraft = (id: string) => {
+    setShifts(prev => prev.map(s => s.id === id ? { ...s, status: "Published" as const } : s));
+    triggerToast("Shift published. App notification pushed to staff.", "success");
   };
 
   const filteredShifts = useMemo(() => {
@@ -224,7 +232,7 @@ export function SchedulingPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-5 space-y-5 relative" style={{ scrollbarWidth: "none" }}>
+    <div className="flex-1 flex flex-col overflow-hidden relative">
       {toast && (
         <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-xl transition-all animate-bounce"
           style={{
@@ -237,36 +245,36 @@ export function SchedulingPage() {
         </div>
       )}
 
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div>
-          <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">Operational Security Schedule</h3>
-          <p className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">Advanced timeline schedule matrix</p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <button onClick={() => setShowRequests(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 rounded-xl cursor-pointer dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-800">
-            Requests
-            <span className="bg-blue-600 text-white rounded px-1.5 py-0.5 text-[10px]">7</span>
-          </button>
-          <button onClick={() => setShowConflicts(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-red-50 text-red-700 hover:bg-red-100 rounded-xl cursor-pointer">
-            <AlertTriangle className="w-3.5 h-3.5 animate-pulse" />Conflicts ({activeConflicts.length})
-          </button>
-          <button onClick={publishDrafts}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-green-600 hover:bg-green-700 rounded-xl cursor-pointer transition-colors">
-            <Send className="w-3.5 h-3.5" />Publish Drafts
-          </button>
-          <button onClick={() => openDrawer()}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-blue-800 hover:bg-blue-900 rounded-xl cursor-pointer transition-colors">
-            <Plus className="w-3.5 h-3.5" />Create Shift
-          </button>
-        </div>
-      </div>
-
+      <PageHeader
+        title="Operational Security Schedule"
+        subtitle="Advanced timeline schedule matrix"
+        actions={
+          <>
+            <button onClick={() => setShowRequests(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 rounded-xl cursor-pointer dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-800">
+              Requests
+              <span className="bg-blue-600 text-white rounded px-1.5 py-0.5 text-[10px]">7</span>
+            </button>
+            <button onClick={() => setShowConflicts(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-red-50 text-red-700 hover:bg-red-100 rounded-xl cursor-pointer">
+              <AlertTriangle className="w-3.5 h-3.5 animate-pulse" />Conflicts ({activeConflicts.length})
+            </button>
+            <button onClick={() => setShowPublishDrawer(true)}
+              className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-green-600 hover:bg-green-700 rounded-xl cursor-pointer transition-colors">
+              <Send className="w-3.5 h-3.5" />Publish Drafts
+            </button>
+            <button onClick={() => openDrawer()}
+              className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-blue-800 hover:bg-blue-900 rounded-xl cursor-pointer transition-colors">
+              <Plus className="w-3.5 h-3.5" />Create Shift
+            </button>
+          </>
+        }
+      />
+      
+      <div className="flex-1 overflow-y-auto p-5 space-y-5 relative" style={{ scrollbarWidth: "none" }}>
       {/* Filter bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 p-4 rounded-xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl">
-        <div className="flex items-center gap-1 p-0.5 rounded-lg bg-slate-800/40 backdrop-blur-md border border-slate-700/50 self-start">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 p-4 rounded-xl border border-slate-800 bg-slate-900">
+        <div className="flex items-center gap-1 p-0.5 rounded-lg bg-slate-800 border border-slate-700/50 self-start">
           {[
             { id: "user", label: "User View" },
             { id: "job", label: "Job View" },
@@ -302,12 +310,12 @@ export function SchedulingPage() {
       </div>
 
       {/* Matrix Grid */}
-      <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 backdrop-blur-xl overflow-x-auto relative min-h-[500px]">
+      <div className="p-4 rounded-xl border border-slate-800 bg-slate-900 overflow-x-auto relative min-h-[500px]">
         {activeView === "user" && (
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b text-slate-500 text-xs dark:text-slate-400">
-                <th className="px-4 py-3 text-left font-bold min-w-[180px] bg-slate-900/80 backdrop-blur-md sticky left-0 z-20 border-r border-slate-800 text-slate-300">Employee</th>
+                <th className="px-4 py-3 text-left font-bold min-w-[180px] bg-slate-900 sticky left-0 z-20 border-r border-slate-800 text-slate-300">Employee</th>
                 {DAYS.map((d) => (
                   <th key={d.date} className="px-4 py-3 text-center min-w-[120px] font-bold">
                     <span className="block text-slate-400 font-normal uppercase tracking-wider">{d.dayLabel}</span>
@@ -319,7 +327,7 @@ export function SchedulingPage() {
             <tbody className="divide-y divide-slate-800/50 text-slate-300">
               {EMPLOYEES.map((emp) => (
                 <tr key={emp} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="px-4 py-3 font-semibold text-slate-100 bg-slate-900/80 backdrop-blur-md sticky left-0 z-10 border-r border-slate-800 flex items-center gap-2">
+                  <td className="px-4 py-3 font-semibold text-slate-100 bg-slate-900 sticky left-0 z-10 border-r border-slate-800 flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
                       {emp.split(" ").map(w => w[0]).join("")}
                     </div>
@@ -346,7 +354,7 @@ export function SchedulingPage() {
                             <div onClick={() => openDrawer(shift.id)}
                               draggable
                               onDragStart={(e) => handleDragStart(e, 'shift', shift.id)}
-                              className={`relative p-2.5 rounded-lg text-left text-xs cursor-grab active:cursor-grabbing shadow-xs border hover:shadow-md transition-all flex flex-col justify-between ${shift.status === "Draft" ? "bg-slate-800/40 backdrop-blur-sm border-slate-700 border-dashed" : "bg-slate-800/80 backdrop-blur-sm border-slate-700/50"}`}
+                              className={`relative p-2.5 rounded-lg text-left text-xs cursor-grab active:cursor-grabbing shadow-xs border hover:shadow-md transition-all flex flex-col justify-between ${shift.status === "Draft" ? "bg-slate-800 border-slate-700 border-dashed" : "bg-slate-800 border-slate-700/50"}`}
                               style={{
                                 borderColor: shift.conflict ? "#ef4444" : shift.status === "Draft" ? "var(--border)" : "transparent",
                                 borderLeftWidth: "4.5px",
@@ -356,15 +364,14 @@ export function SchedulingPage() {
                               
                               {matchedTour && (
                                 <div 
-                                  className="absolute top-1.5 right-1.5 text-blue-600 bg-blue-50 p-1 rounded-md group/tooltip hover:bg-blue-100 transition-colors z-10"
+                                  className="absolute top-1.5 right-1.5 text-blue-600 bg-blue-50 dark:bg-blue-500/20 dark:text-blue-400 p-1 rounded-md group/tooltip hover:bg-blue-100 dark:hover:bg-blue-500/30 transition-colors z-20"
                                   onClick={(e) => { e.stopPropagation(); openTourDrawer(matchedTour.id); }}
                                 >
                                   <Route className="w-3.5 h-3.5" />
-                                  <div className="absolute top-full right-0 mt-1.5 w-48 bg-slate-900 text-white text-[10px] rounded-lg p-2 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity shadow-xl">
-                                    <p className="font-bold mb-1 border-b border-slate-700 pb-1">{matchedTour.name}</p>
-                                    <p>{matchedTour.startTime} - {matchedTour.endTime}</p>
-                                    <p className="truncate text-slate-300 mt-0.5">{matchedTour.site}</p>
-                                    <div className="absolute bottom-full right-2 border-4 border-transparent border-b-slate-900"></div>
+                                  <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-slate-200 dark:bg-slate-800 dark:border-slate-600 text-slate-800 dark:text-white text-[10px] rounded-lg p-2.5 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity shadow-2xl z-50">
+                                    <p className="font-bold mb-1 border-b border-slate-100 dark:border-slate-700 pb-1">{matchedTour.name}</p>
+                                    <p className="text-slate-600 dark:text-slate-300 mt-1">{matchedTour.startTime} - {matchedTour.endTime}</p>
+                                    <p className="truncate text-slate-500 dark:text-slate-400 mt-0.5">{matchedTour.site}</p>
                                   </div>
                                 </div>
                               )}
@@ -447,7 +454,7 @@ export function SchedulingPage() {
         {activeView === "list" && (
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-900/80 backdrop-blur-md text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800 sticky top-0 z-10 shadow-sm">
+              <tr className="bg-slate-900 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800 sticky top-0 z-10 shadow-sm">
                 <th className="px-4 py-2.5">Date</th>
                 <th className="px-4 py-2.5">Time</th>
                 <th className="px-4 py-2.5">Job / Role</th>
@@ -492,8 +499,8 @@ export function SchedulingPage() {
                             {shift.status}
                           </span>
                           {shift.conflict && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-red-100 text-red-700">
-                              <AlertTriangle className="w-3 h-3" /> Conflict
+                            <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-red-100 text-red-700" title="Conflict">
+                              <AlertTriangle className="w-3.5 h-3.5" />
                             </span>
                           )}
                         </div>
@@ -692,6 +699,16 @@ export function SchedulingPage() {
           onDelete={deleteTour}
         />
       )}
+
+      <PublishDrawer
+        isOpen={showPublishDrawer}
+        onClose={() => setShowPublishDrawer(false)}
+        shifts={shifts}
+        onPublish={publishDrafts}
+        onPublishSingle={publishSingleDraft}
+        onEdit={(id) => openDrawer(id)}
+      />
+    </div>
     </div>
   );
 }
