@@ -374,16 +374,20 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { icon: <Users className="w-4 h-4" />, count: "10", title: "Users", sub: "Accounts", color: "text-white" },
-              { icon: <Building2 className="w-4 h-4" />, count: "4", title: "Sites", sub: "Locations", color: "text-white" },
-              { icon: <Users className="w-4 h-4" />, count: "6", title: "Groups", sub: "Teams", color: "text-white" },
-              { icon: <Zap className="w-4 h-4" />, count: "6", title: "Automations", sub: "Rules", color: "text-amber-400" },
-              { icon: <FileText className="w-4 h-4" />, count: "8", title: "Documents", sub: "Files", color: "text-white" },
-              { icon: <ClipboardList className="w-4 h-4" />, count: "6", title: "Forms", sub: "Custom", color: "text-white" },
-              { icon: <HelpCircle className="w-4 h-4" />, count: "6", title: "Quizzes", sub: "Assessments", color: "text-white" },
-              { icon: <Settings className="w-4 h-4" />, count: "", title: "Settings", sub: "Config", color: "text-neutral-300" }
+              { icon: <Users className="w-4 h-4" />, count: "10", title: "Users", sub: "Accounts", color: "text-white", onClick: () => onNavigate("employees" as Page) },
+              { icon: <Building2 className="w-4 h-4" />, count: "4", title: "Sites", sub: "Locations", color: "text-white", onClick: () => onNavigate("clients" as Page) },
+              { icon: <Users className="w-4 h-4" />, count: "6", title: "Groups", sub: "Teams", color: "text-white", onClick: () => onNavigate("groups" as Page) },
+              { icon: <Zap className="w-4 h-4" />, count: "6", title: "Automations", sub: "Rules", color: "text-amber-400", onClick: () => onNavigate("automations" as Page) },
+              { icon: <FileText className="w-4 h-4" />, count: "8", title: "Documents", sub: "Files", color: "text-white", onClick: () => onNavigate("documents" as Page) },
+              { icon: <ClipboardList className="w-4 h-4" />, count: "6", title: "Forms", sub: "Custom", color: "text-white", onClick: () => onNavigate("forms" as Page) },
+              { icon: <HelpCircle className="w-4 h-4" />, count: "6", title: "Quizzes", sub: "Assessments", color: "text-white", onClick: () => onNavigate("training" as Page) },
+              { icon: <Settings className="w-4 h-4" />, count: "", title: "Settings", sub: "Config", color: "text-neutral-300", onClick: () => {} }
             ].map(card => (
-              <div key={card.title} className="bg-neutral-900 border border-neutral-700 rounded-xl p-3 flex flex-col justify-between hover:bg-slate-800 hover:border-blue-500/30 transition-all cursor-pointer h-24">
+              <div 
+                key={card.title} 
+                onClick={card.onClick}
+                className="bg-neutral-900 border border-neutral-700 rounded-xl p-3 flex flex-col justify-between hover:bg-slate-800 hover:border-blue-500/30 transition-all cursor-pointer h-24"
+              >
                 <div className="flex items-start justify-between">
                   <div className={card.color}>{card.icon}</div>
                   {card.count && <span className="text-base font-bold text-white">{card.count}</span>}
