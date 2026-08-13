@@ -158,7 +158,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
 
   function renderModalFooter(onClose: () => void, submitLabel = "Save") {
     return (
-      <div className="flex justify-end gap-3 pt-4 border-t bg-slate-100 dark:bg-slate-800" style={{ border }}>
+      <div className="flex justify-end gap-3 pt-4 border-t bg-slate-100 dark:bg-slate-800" >
         <button onClick={onClose}
           className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800"
           >Cancel</button>
@@ -661,7 +661,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
 
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 p-6">
-        <h3 className="text-lg font-bold text-slate-800 border-b pb-3 bg-slate-200 dark:bg-slate-700 dark:text-slate-200" style={{ border }}>Employment Info & Policies</h3>
+        <h3 className="text-lg font-bold text-slate-800 border-b pb-3 bg-slate-200 dark:bg-slate-700 dark:text-slate-200" >Employment Info & Policies</h3>
         
         <div className="grid grid-cols-2 gap-6">
           <div className="p-4 rounded-xl border shadow-sm backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
@@ -1377,13 +1377,11 @@ export function AddEmployeePage({
 
   // helpers used inline — defined as plain functions (not components) to avoid remount
   const renderToggle = (on: boolean, onChange: () => void, label: string) => (
-    <div className="flex items-center justify-between py-3 px-4 rounded-xl transition-all"
-      style={{ background: on ? "#eff6ff" : "#f8fafc", border: `1.5px solid ${on ? "#bfdbfe" : "#e8edf4"}` }}>
-      <span className="text-sm font-medium" style={{ color: on ? "#1e3a6e" : "#475569" }}>{label}</span>
+    <div className={`flex items-center justify-between py-3 px-4 rounded-xl transition-all border-[1.5px] ${on ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/50' : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700'}`}>
+      <span className={`text-sm font-medium ${on ? 'text-blue-800 dark:text-blue-300' : 'text-slate-700 dark:text-slate-300'}`}>{label}</span>
       <button onClick={onChange}
-        className="relative w-11 h-6 rounded-full transition-all shrink-0"
-        style={{ background: on ? "#1e3a6e" : "#cbd5e1" }}>
-        <span className="absolute top-0.5 transition-all w-5 h-5 rounded-full bg-white shadow dark:bg-slate-900"
+        className={`relative w-11 h-6 rounded-full transition-all shrink-0 ${on ? 'bg-blue-800 dark:bg-blue-600' : 'bg-slate-300 dark:bg-slate-600'}`}>
+        <span className="absolute top-0.5 transition-all w-5 h-5 rounded-full bg-white shadow dark:bg-slate-200"
           style={{ left: on ? "calc(100% - 22px)" : "2px" }} />
       </button>
     </div>
@@ -1400,31 +1398,21 @@ export function AddEmployeePage({
 
   const renderInput = (placeholder?: string, type = "text", value?: string, readOnly?: boolean, prefix?: string) => (
     <div className="relative flex items-center">
-      {prefix && <span className="absolute left-3.5 text-sm select-none text-slate-400 dark:text-slate-300" >{prefix}</span>}
+      {prefix && <span className="absolute left-3.5 text-sm select-none text-slate-400 dark:text-slate-500" >{prefix}</span>}
       <input type={type} placeholder={placeholder} defaultValue={value} readOnly={readOnly}
-        className="w-full rounded-xl py-2.5 text-sm outline-none transition-all"
-        style={{
-          paddingLeft: prefix ? "2.5rem" : "0.875rem", paddingRight: "0.875rem",
-          background: readOnly ? "#f1f5f9" : "#f8fafc",
-          border: "1.5px solid #e2e8f0",
-          color: readOnly ? "#94a3b8" : "#0f172a",
-        }}
-        onFocus={(e) => { if (!readOnly) { e.currentTarget.style.borderColor = "#1e3a6e"; e.currentTarget.style.background = "#fff"; } }}
-        onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = readOnly ? "#f1f5f9" : "#f8fafc"; }}
+        className={`w-full rounded-xl py-2.5 text-sm outline-none transition-all border-[1.5px] ${readOnly ? 'bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500' : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:border-blue-800 dark:focus:border-blue-500'}`}
+        style={{ paddingLeft: prefix ? "2.5rem" : "0.875rem", paddingRight: "0.875rem" }}
       />
     </div>
   );
 
   const renderSelect = (opts: string[], placeholder?: string) => (
     <div className="relative">
-      <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none cursor-pointer text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900"
-        style={{border: "1.5px solid #e2e8f0"}}
-        onFocus={(e) => { e.currentTarget.style.borderColor = "#1e3a6e"; e.currentTarget.style.background = "#fff"; }}
-        onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#f8fafc"; }}>
+      <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none cursor-pointer transition-all border-[1.5px] bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:border-blue-800 dark:focus:border-blue-500">
         {placeholder && <option value="">{placeholder}</option>}
         {opts.map((o) => <option key={o}>{o}</option>)}
       </select>
-      <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
+      <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"  />
     </div>
   );
 
@@ -1440,14 +1428,11 @@ export function AddEmployeePage({
       {renderField("Employee Type", true,
         <div className="space-y-2">
           <div className="relative">
-            <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none cursor-pointer text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900"
-              style={{border: "1.5px solid #e2e8f0"}}
-              onFocus={(e) => { e.currentTarget.style.borderColor = "#1e3a6e"; e.currentTarget.style.background = "#fff"; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#f8fafc"; }}>
+            <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none cursor-pointer transition-all border-[1.5px] bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:border-blue-800 dark:focus:border-blue-500">
               <option value="">Select type…</option>
               {allTypes.map((t) => <option key={t}>{t}</option>)}
             </select>
-            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
+            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"  />
           </div>
           {showCustomType ? (
             <div className="flex gap-2">
@@ -1472,14 +1457,11 @@ export function AddEmployeePage({
       {renderField("Department", true,
         <div className="space-y-2">
           <div className="relative">
-            <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none cursor-pointer text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900"
-              style={{border: "1.5px solid #e2e8f0"}}
-              onFocus={(e) => { e.currentTarget.style.borderColor = "#1e3a6e"; e.currentTarget.style.background = "#fff"; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#f8fafc"; }}>
+            <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none cursor-pointer transition-all border-[1.5px] bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:border-blue-800 dark:focus:border-blue-500">
               <option value="">Select department…</option>
               {allDepartments.map((d) => <option key={d}>{d}</option>)}
             </select>
-            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
+            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"  />
           </div>
           {showCustomDepartment ? (
             <div className="flex gap-2">
@@ -1505,15 +1487,15 @@ export function AddEmployeePage({
       {renderField("Username", true, renderInput("e.g. jsmith", "text", undefined, false, "@"))}
       {renderField("Phone (Main)", false, renderInput("+1 (555) 000-0000", "tel"))}
       {renderField("SMS Consent — Main Phone", false,
-        <div className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-          <input type="checkbox" id="sms1" className="w-4 h-4 cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
+        <div className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-slate-200 dark:border-slate-700">
+          <input type="checkbox" id="sms1" className="w-4 h-4 cursor-pointer accent-blue-800 dark:accent-blue-500" />
           <label htmlFor="sms1" className="text-sm cursor-pointer text-slate-600 dark:text-slate-300" >Employee consents to SMS notifications</label>
         </div>
       )}
       {renderField("Phone (Other)", false, renderInput("+1 (555) 000-0000", "tel"))}
       {renderField("SMS Consent — Other Phone", false,
-        <div className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-          <input type="checkbox" id="sms2" className="w-4 h-4 cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
+        <div className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-slate-200 dark:border-slate-700">
+          <input type="checkbox" id="sms2" className="w-4 h-4 cursor-pointer accent-blue-800 dark:accent-blue-500" />
           <label htmlFor="sms2" className="text-sm cursor-pointer text-slate-600 dark:text-slate-300" >Employee consents to SMS notifications</label>
         </div>
       )}
@@ -1522,10 +1504,7 @@ export function AddEmployeePage({
       {renderField("Create Password", true,
         <div className="relative">
           <input type={showPassword ? "text" : "password"} placeholder="Min. 8 characters"
-            className="w-full rounded-xl px-3.5 py-2.5 pr-10 text-sm outline-none transition-all text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-slate-900"
-            style={{border: "1.5px solid #e2e8f0"}}
-            onFocus={(e) => { e.currentTarget.style.borderColor = "#1e3a6e"; e.currentTarget.style.background = "#fff"; }}
-            onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#f8fafc"; }} />
+            className="w-full rounded-xl px-3.5 py-2.5 pr-10 text-sm outline-none transition-all border-[1.5px] bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:border-blue-800 dark:focus:border-blue-500" />
           <button type="button" onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#94a3b8" }}>
             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -1535,10 +1514,7 @@ export function AddEmployeePage({
       {renderField("Confirm Password", true,
         <div className="relative">
           <input type={showConfirm ? "text" : "password"} placeholder="Re-enter password"
-            className="w-full rounded-xl px-3.5 py-2.5 pr-10 text-sm outline-none transition-all text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-slate-900"
-            style={{border: "1.5px solid #e2e8f0"}}
-            onFocus={(e) => { e.currentTarget.style.borderColor = "#1e3a6e"; e.currentTarget.style.background = "#fff"; }}
-            onBlur={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#f8fafc"; }} />
+            className="w-full rounded-xl px-3.5 py-2.5 pr-10 text-sm outline-none transition-all border-[1.5px] bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:border-blue-800 dark:focus:border-blue-500" />
           <button type="button" onClick={() => setShowConfirm(!showConfirm)}
             className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#94a3b8" }}>
             {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -1577,10 +1553,8 @@ export function AddEmployeePage({
         <div className="grid grid-cols-2 gap-2">
           {Object.entries(permissions).map(([mod, on]) => (
             <button key={mod} onClick={() => setPermissions(p => ({ ...p, [mod]: !p[mod] }))}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-left transition-all"
-              style={{ background: on ? "#eff6ff" : "#f8fafc", border: `1.5px solid ${on ? "#bfdbfe" : "#e8edf4"}`, color: on ? "#1e3a6e" : "#64748b" }}>
-              <div className="w-4 h-4 rounded flex items-center justify-center shrink-0"
-                style={{ background: on ? "#1e3a6e" : "#e2e8f0", border: on ? "none" : "1.5px solid #cbd5e1" }}>
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-left transition-all border-[1.5px] ${on ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/50 text-blue-800 dark:text-blue-300' : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'}`}>
+              <div className={`w-4 h-4 rounded flex items-center justify-center shrink-0 border-[1.5px] ${on ? 'bg-blue-800 dark:bg-blue-600 border-transparent' : 'bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-600'}`}>
                 {on && <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 10"><path d="M1.5 5L4 7.5 8.5 2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
               </div>
               {mod}
@@ -1591,8 +1565,7 @@ export function AddEmployeePage({
       <div>
         <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Site Restriction</p>
         <div className="relative">
-          <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900"
-            style={{border: "1.5px solid #e2e8f0"}}>
+          <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-slate-200 dark:border-slate-700">
             <option>No restriction — all sites</option>
             <option>Downtown Financial Center</option>
             <option>Westfield Mall</option>
@@ -1607,9 +1580,8 @@ export function AddEmployeePage({
         <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Financial Visibility</p>
         <div className="grid grid-cols-2 gap-2">
           {["View Payroll", "View Invoices", "View Budget Reports", "Manage Billing"].map((f) => (
-            <label key={f} className="flex items-center gap-3 rounded-xl px-4 py-3 cursor-pointer bg-slate-50 dark:bg-slate-900"
-              style={{border: "1.5px solid #e8edf4" }}>
-              <input type="checkbox" className="w-4 h-4" style={{ accentColor: "#1e3a6e" }} />
+            <label key={f} className="flex items-center gap-3 rounded-xl px-4 py-3 cursor-pointer bg-slate-50 dark:bg-slate-900 border-[1.5px] border-slate-200 dark:border-slate-700">
+              <input type="checkbox" className="w-4 h-4 cursor-pointer accent-blue-800 dark:accent-blue-500" />
               <span className="text-sm text-slate-600 dark:text-slate-300" >{f}</span>
             </label>
           ))}
@@ -1639,7 +1611,7 @@ export function AddEmployeePage({
           <div className="relative">
             <div 
               className="w-full min-h-[44px] rounded-xl px-3 py-2 text-sm border flex flex-wrap gap-2 items-center cursor-pointer bg-slate-50 bg-slate-200 dark:bg-slate-700"
-              style={{ border }}
+              
               onClick={() => setShowSiteDropdown(!showSiteDropdown)}
             >
               {empInfoSites.length === 0 && <span  className="text-slate-400 dark:text-slate-300">Select Sites...</span>}
@@ -1658,7 +1630,7 @@ export function AddEmployeePage({
             </div>
 
             {showSiteDropdown && (
-              <div className="absolute z-10 w-full mt-2 rounded-xl border shadow-lg bg-white overflow-hidden bg-slate-200 dark:bg-slate-700" style={{ border }}>
+              <div className="absolute z-10 w-full mt-2 rounded-xl border shadow-lg bg-white overflow-hidden bg-slate-200 dark:bg-slate-700" >
                 <div className="max-h-48 overflow-y-auto p-2 space-y-1">
                   {MOCK_SITES.map((site) => (
                     <label key={site.uid} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors dark:hover:bg-slate-800">
@@ -1682,7 +1654,7 @@ export function AddEmployeePage({
         )}
       </div>
 
-      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" style={{ border }}>
+      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" >
         <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Regular Working Hour</p>
         <div className="flex gap-3 mb-4">
           <button onClick={() => setWorkingHourMode("Policy")}
@@ -1695,7 +1667,7 @@ export function AddEmployeePage({
           </button>
         </div>
         {workingHourMode === "Policy" ? (
-          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 bg-slate-200 dark:bg-slate-700" style={{ border }}>
+          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 bg-slate-200 dark:bg-slate-700" >
             <option>Standard Full-Time (9 to 5)</option>
             <option>Night Shift (10 PM to 6 AM)</option>
           </select>
@@ -1770,7 +1742,7 @@ export function AddEmployeePage({
         )}
       </div>
 
-      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" style={{ border }}>
+      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" >
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300" >Pay Rules</p>
           {!showRuleBuilder && (
@@ -1824,9 +1796,9 @@ export function AddEmployeePage({
         {/* Rule Builder Panel */}
         {showRuleBuilder && editingPayRule && (
           <div className="p-5 rounded-xl border shadow-sm backdrop-blur-md animate-in fade-in zoom-in-95 text-slate-300 dark:text-slate-400" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-            <div className="flex items-center justify-between mb-4 border-b pb-3 bg-slate-200 dark:bg-slate-700" style={{ border }}>
+            <div className="flex items-center justify-between mb-4 border-b pb-3 bg-slate-200 dark:bg-slate-700" >
               <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">Rule Builder</h4>
-              <div className="flex items-center gap-2 bg-slate-100/50 p-1 rounded-lg border bg-slate-200 dark:bg-slate-700" style={{ border }}>
+              <div className="flex items-center gap-2 bg-slate-100/50 p-1 rounded-lg border bg-slate-200 dark:bg-slate-700" >
                 <button onClick={() => setEditingPayRule(prev => prev ? ({...prev, isPolicy: true}) : prev)} className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${editingPayRule.isPolicy ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}>Choose Policy</button>
                 <button onClick={() => setEditingPayRule(prev => prev ? ({...prev, isPolicy: false}) : prev)} className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${!editingPayRule.isPolicy ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}>Custom Rule</button>
               </div>
@@ -1898,7 +1870,7 @@ export function AddEmployeePage({
               </div>
             )}
 
-            <div className="flex justify-end gap-3 mt-5 pt-4 border-t bg-slate-200 dark:bg-slate-700" style={{ border }}>
+            <div className="flex justify-end gap-3 mt-5 pt-4 border-t bg-slate-200 dark:bg-slate-700" >
               <button onClick={() => setShowRuleBuilder(false)} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
               <button 
                 onClick={() => {
@@ -1921,14 +1893,14 @@ export function AddEmployeePage({
         )}
       </div>
 
-      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" style={{ border }}>
+      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" >
         <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Scheduling Rules</p>
         <div className="flex gap-3 mb-4">
           <button onClick={() => setSchedRuleMode("Policy")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${schedRuleMode === "Policy" ? "bg-blue-800 text-white" : "bg-slate-100 text-slate-500"}`}>Choose Policy</button>
           <button onClick={() => setSchedRuleMode("Custom")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${schedRuleMode === "Custom" ? "bg-blue-800 text-white" : "bg-slate-100 text-slate-500"}`}>Create Custom Rules</button>
         </div>
         {schedRuleMode === "Policy" ? (
-          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 bg-slate-200 dark:bg-slate-700" style={{ border }}><option>Standard Union Scheduling</option><option>Part-Time Scheduling limits</option></select>
+          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 bg-slate-200 dark:bg-slate-700" ><option>Standard Union Scheduling</option><option>Part-Time Scheduling limits</option></select>
         ) : (
           <div className="grid grid-cols-3 gap-4">
             {renderField("Max Hrs / Wk", false, <input type="number" value={schedMaxHrsWeek} onChange={(e) => setSchedMaxHrsWeek(e.target.value)} className="w-full rounded-xl px-3 py-2 border text-sm" style={{ borderColor: "#e2e8f0" }} />)}
@@ -1942,7 +1914,7 @@ export function AddEmployeePage({
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-6 border-t pt-5 bg-slate-200 dark:bg-slate-700" style={{ border }}>
+      <div className="grid grid-cols-2 gap-6 border-t pt-5 bg-slate-200 dark:bg-slate-700" >
         <div>
           <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Time Off</p>
           <select value={timeOffPolicy} onChange={(e) => setTimeOffPolicy(e.target.value)} className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 dark:bg-slate-900" style={{ borderColor: "#e2e8f0" }}>
@@ -2024,24 +1996,19 @@ export function AddEmployeePage({
   useEffect(() => { scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }); }, [step]);
 
   return (
-    <div ref={scrollRef} className="flex-1 overflow-y-auto" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
+    <div ref={scrollRef} className="flex-1 overflow-y-auto bg-slate-50 dark:bg-[#0a0a0a]" style={{ scrollbarWidth: "none" }}>
       {/* Header banner */}
-      <div className="relative overflow-hidden px-6 pt-6 pb-5"
-        style={{ background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)" }}>
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
-          style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }} />
+      <div className="relative px-6 pt-6 pb-5 bg-white dark:bg-[#000000] border-b border-slate-200 dark:border-slate-800 shrink-0 z-40 transition-colors shadow-sm">
         <div className="relative flex items-center gap-4">
           <button onClick={onBack}
-            className="flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition-all shrink-0"
-            style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}>
+            className="flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition-all shrink-0 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800"
+          >
             <ChevronLeft className="w-4 h-4" />Back
           </button>
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Add New Employee</h2>
-            <p className="text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>
-              Auto-assigned ID: <span className="font-mono font-bold" style={{ color: "#93c5fd" }}>{EMP_ID}</span>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Add New Employee</h2>
+            <p className="text-sm mt-0.5 text-slate-500 dark:text-slate-400">
+              Auto-assigned ID: <span className="font-mono font-bold text-blue-600 dark:text-blue-400">{EMP_ID}</span>
             </p>
           </div>
         </div>
@@ -2054,22 +2021,21 @@ export function AddEmployeePage({
             return (
               <div key={s} className="flex items-center flex-1 last:flex-none">
                 <button onClick={() => setStep(i)} className="flex items-center gap-2.5 group">
-                  <div className="relative flex items-center justify-center w-8 h-8 rounded-full transition-all font-bold text-sm"
-                    style={{
-                      background: done ? "#22c55e" : active ? "#fff" : "rgba(255,255,255,0.15)",
-                      color: done ? "#fff" : active ? "#1e3a6e" : "rgba(255,255,255,0.5)",
-                      boxShadow: active ? "0 0 0 4px rgba(255,255,255,0.15)" : "none",
-                    }}>
+                  <div className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all font-bold text-sm ${
+                      done ? 'bg-green-500 text-white' : active ? 'bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)] dark:shadow-[0_0_0_4px_rgba(59,130,246,0.2)]' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                    }`}>
                     {done ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
                   </div>
-                  <span className="text-sm font-semibold hidden sm:block"
-                    style={{ color: active ? "#fff" : done ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)" }}>
+                  <span className={`text-sm font-semibold hidden sm:block ${
+                      active ? 'text-blue-600 dark:text-blue-400' : done ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'
+                    }`}>
                     {s}
                   </span>
                 </button>
                 {i < STEPS.length - 1 && (
-                  <div className="flex-1 h-px mx-3 transition-all"
-                    style={{ background: done ? "rgba(34,197,94,0.5)" : "rgba(255,255,255,0.12)" }} />
+                  <div className={`flex-1 h-px mx-3 transition-all ${
+                      done ? 'bg-green-500/50' : 'bg-slate-200 dark:bg-slate-800'
+                    }`} />
                 )}
               </div>
             );
@@ -2078,11 +2044,10 @@ export function AddEmployeePage({
       </div>
 
       {/* Form card */}
-      <div className="mx-5 my-5 rounded-2xl"
-        style={{ background: "#fff", boxShadow: "0 4px 24px rgba(15,23,41,0.10)", border: "1px solid rgba(226,232,240,0.8)" }}>
+      <div className="mx-5 my-5 rounded-2xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800">
 
         {/* Section label */}
-        <div className="px-6 py-4" style={{ borderBottom: "1px solid #f1f5f9", background: "#fafbfc" }}>
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/50 rounded-t-2xl">
           <h3 className="text-base font-bold text-slate-900 dark:text-slate-100" >{STEPS[step]}</h3>
           <p className="text-xs mt-0.5 text-slate-400 dark:text-slate-300" >
             {["Fill in the employee's basic details and credentials.", "Provide the employee's physical address.", "Configure portal access, roles, and module permissions.", "Upload a photo and add additional profile details."][step]}
@@ -2092,7 +2057,7 @@ export function AddEmployeePage({
         <div className="px-6 py-6">{sectionContent[step]}</div>
 
         {/* Footer navigation */}
-        <div className="flex items-center justify-between px-6 py-4" style={{ borderTop: "1px solid #f1f5f9", background: "#fafbfc" }}>
+        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/50 rounded-b-2xl">
           <button onClick={() => step > 0 ? setStep(step - 1) : onBack()}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all"
             style={{ background: "#f1f5f9", color: "#475569" }}
@@ -2137,12 +2102,15 @@ export function EmployeesPage() {
   const [search, setSearch] = useState("");
   const [deptFilter, setDeptFilter] = useState("All Departments");
   const [statusFilter, setStatusFilter] = useState("All Status");
+  const [showFilters, setShowFilters] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   
   const [customTypes, setCustomTypes] = useState<string[]>([]);
   const [customDepartments, setCustomDepartments] = useState<string[]>([]);
+  const [deletedBaseTypes, setDeletedBaseTypes] = useState<string[]>([]);
+  const [deletedBaseDeps, setDeletedBaseDeps] = useState<string[]>([]);
 
   const [page, setPage] = useState(1);
   const [openMenuUid, setOpenMenuUid] = useState<string | null>(null);
@@ -2211,9 +2179,10 @@ export function EmployeesPage() {
 
   const renderManagementView = () => {
     const isTypes = tab === "types";
-    const baseList = isTypes ? ["Guard", "Employee", "Supervisor", "Admin", "Contractor", "Part-Time"] : DEPARTMENTS.slice(1);
+    const baseList = isTypes ? ["Guard", "Employee", "Supervisor", "Admin", "Contractor", "Part-Time"].filter(t => !deletedBaseTypes.includes(t)) : DEPARTMENTS.slice(1).filter(d => !deletedBaseDeps.includes(d));
     const customList = isTypes ? customTypes : customDepartments;
     const setCustomList = isTypes ? setCustomTypes : setCustomDepartments;
+    const setDeletedBaseList = isTypes ? setDeletedBaseTypes : setDeletedBaseDeps;
     
     return (
       <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900" >
@@ -2272,17 +2241,19 @@ export function EmployeesPage() {
                       <span className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-md border border-green-200">Active</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {item.isCustom ? (
-                        <button 
-                          onClick={() => setCustomList(customList.filter(c => c !== item.name))}
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      ) : (
-                        <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2.5 py-1 rounded-md dark:bg-slate-800">System Default</span>
-                      )}
+                      <button 
+                        onClick={() => {
+                          if (item.isCustom) {
+                            setCustomList(customList.filter(c => c !== item.name));
+                          } else {
+                            setDeletedBaseList(prev => [...prev, item.name]);
+                          }
+                        }}
+                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors dark:hover:bg-red-900/20"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -2300,7 +2271,6 @@ export function EmployeesPage() {
       <PageHeader
         title="Employee Management"
         icon={<Users className="w-4 h-4 text-slate-900 dark:text-slate-100" />}
-        subtitle={`${MOCK_EMPLOYEES.length} total employees · ${MOCK_EMPLOYEES.filter(e => e.status === "Active").length} active now`}
         actions={
           <button
             onClick={() => setShowAddForm(true)}
@@ -2309,23 +2279,6 @@ export function EmployeesPage() {
           >
             <Plus className="w-4 h-4" />Add Employee
           </button>
-        }
-        bottomContent={
-          <div className="relative flex items-center gap-3">
-            {[
-              { label: "Active", value: MOCK_EMPLOYEES.filter(e => e.status === "Active").length, color: "#4ade80", bg: "rgba(74,222,128,0.12)" },
-              { label: "On Leave", value: MOCK_EMPLOYEES.filter(e => e.status === "On Leave").length, color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
-              { label: "Inactive", value: MOCK_EMPLOYEES.filter(e => e.status === "Inactive").length, color: "#94a3b8", bg: "rgba(148,163,184,0.12)" },
-              { label: "Terminated", value: MOCK_EMPLOYEES.filter(e => e.status === "Terminated").length, color: "#f87171", bg: "rgba(248,113,113,0.12)" },
-            ].map((s) => (
-              <div key={s.label} className="flex items-center gap-2 rounded-lg px-3.5 py-1.5"
-                style={{ background: s.bg, border: `1px solid ${s.color}22` }}>
-                <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
-                <span className="text-xs font-semibold" style={{ color: s.color }}>{s.value}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">{s.label}</span>
-              </div>
-            ))}
-          </div>
         }
       />
 
@@ -2375,24 +2328,32 @@ export function EmployeesPage() {
           </div>
 
           {/* Department */}
-          <div className="relative">
-            <select value={deptFilter} onChange={(e) => { setDeptFilter(e.target.value); setPage(1); }}
-              className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
-              {DEPARTMENTS.map((d) => <option key={d}>{d}</option>)}
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
-          </div>
+          {showFilters && (
+            <div className="relative">
+              <select value={deptFilter} onChange={(e) => { setDeptFilter(e.target.value); setPage(1); }}
+                className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
+                {DEPARTMENTS.map((d) => <option key={d}>{d}</option>)}
+              </select>
+              <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
+            </div>
+          )}
 
           {/* Status */}
-          <div className="relative">
-            <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-              className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
-              {["All Status", "Active", "Inactive", "On Leave", "Terminated"].map((s) => <option key={s}>{s}</option>)}
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
-          </div>
+          {showFilters && (
+            <div className="relative">
+              <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+                className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
+                {["All Status", "Active", "Inactive", "On Leave", "Terminated"].map((s) => <option key={s}>{s}</option>)}
+              </select>
+              <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
+            </div>
+          )}
 
           <div className="flex-1" />
+
+          <button onClick={() => setShowFilters(!showFilters)} className={`p-2.5 rounded-xl border transition-colors ${showFilters ? 'bg-blue-900/50 border-blue-500/50 text-blue-400' : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:text-slate-300'}`}>
+            <Filter className="w-4 h-4" />
+          </button>
 
           {/* Export group */}
           <div className="flex items-center rounded-xl overflow-hidden border border-slate-700">

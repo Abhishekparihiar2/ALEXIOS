@@ -21,11 +21,11 @@ export function NotificationsTab() {
 
   const getIconBg = (type: string) => {
     switch(type) {
-      case "Schedule": return "bg-purple-100";
-      case "Tasks": return "bg-blue-100";
-      case "Reports": return "bg-emerald-100";
-      case "Compliance": return "bg-amber-100";
-      default: return "bg-slate-100";
+      case "Schedule": return "bg-purple-100 dark:bg-purple-900/30";
+      case "Tasks": return "bg-blue-100 dark:bg-blue-900/30";
+      case "Reports": return "bg-emerald-100 dark:bg-emerald-900/30";
+      case "Compliance": return "bg-amber-100 dark:bg-amber-900/30";
+      default: return "bg-slate-100 dark:bg-slate-800";
     }
   };
 
@@ -33,7 +33,7 @@ export function NotificationsTab() {
     <div className="flex w-full h-full bg-white dark:bg-slate-900">
       
       {/* ─── FILTERS SIDEBAR (240px) ────────────────────── */}
-      <div className="w-[240px] border-r border-slate-200 flex flex-col shrink-0 bg-slate-50/50 p-4 dark:border-slate-700">
+      <div className="w-[240px] border-r border-slate-200 flex flex-col shrink-0 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-900/50">
         <h2 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2 dark:text-slate-200">
           <BellRing className="w-5 h-5 text-blue-600" /> Notifications
         </h2>
@@ -45,8 +45,8 @@ export function NotificationsTab() {
               onClick={() => setFilter(f)}
               className={`w-full text-left px-3 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center justify-between ${
                 filter === f 
-                  ? "bg-blue-50 text-blue-700" 
-                  : "text-slate-600 hover:bg-slate-100"
+                  ? "bg-blue-50 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400" 
+                  : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
               }`}
             >
               {f}
@@ -61,7 +61,7 @@ export function NotificationsTab() {
       </div>
 
       {/* ─── NOTIFICATIONS LIST ──────────────────────────── */}
-      <div className="flex-1 flex flex-col bg-[#f8fafc] relative">
+      <div className="flex-1 flex flex-col bg-[#f8fafc] dark:bg-slate-900/80 relative">
         <div className="h-16 px-6 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-sm z-10 dark:border-slate-700 dark:bg-slate-900">
           <div className="relative w-72">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -84,8 +84,8 @@ export function NotificationsTab() {
           }).map(notif => (
             <div key={notif.id} className={`flex items-start gap-4 p-4 rounded-xl border transition-all ${
               notif.isRead 
-                ? 'bg-white border-slate-200 shadow-sm' 
-                : 'bg-blue-50/30 border-blue-200 shadow shadow-blue-500/5'
+                ? 'bg-white border-slate-200 shadow-sm dark:bg-slate-800 dark:border-slate-700' 
+                : 'bg-blue-50/30 border-blue-200 shadow shadow-blue-500/5 dark:bg-blue-900/10 dark:border-blue-800/50'
             }`}>
               <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${getIconBg(notif.type)}`}>
                 {getIcon(notif.type)}
@@ -93,26 +93,25 @@ export function NotificationsTab() {
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-0.5">
-                  <h3 className={`text-sm truncate pr-4 ${notif.isRead ? 'font-semibold text-slate-800' : 'font-bold text-slate-900'}`}>
+                  <h3 className={`text-sm truncate pr-4 ${notif.isRead ? 'font-semibold text-slate-800 dark:text-slate-300' : 'font-bold text-slate-900 dark:text-white'}`}>
                     {notif.title}
                   </h3>
                   <span className="text-xs font-medium text-slate-400 shrink-0">
                     {new Date(notif.timestamp).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
                   </span>
+                  {!notif.isRead && (
+                    <div className="w-2 h-2 rounded-full bg-blue-600 ml-2 shrink-0"></div>
+                  )}
                 </div>
-                <p className={`text-sm ${notif.isRead ? 'text-slate-500' : 'text-slate-700 font-medium'}`}>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                   {notif.description}
                 </p>
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded dark:bg-slate-800 dark:text-slate-400">
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="px-2 py-0.5 bg-slate-800 text-white dark:bg-slate-700 text-[10px] font-bold rounded uppercase tracking-wider">
                     {notif.type}
                   </span>
                 </div>
               </div>
-
-              {!notif.isRead && (
-                <div className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0 mt-2" />
-              )}
             </div>
           ))}
           

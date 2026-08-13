@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Rss, Search, Filter, Plus, CheckCircle2 } from 'lucide-react';
 import { MOCK_UPDATES } from '../mockCommunications';
+import { NewUpdateDrawer } from '../Drawers/NewUpdateDrawer';
 
 export function UpdatesTab() {
+  const [isNewUpdateOpen, setIsNewUpdateOpen] = useState(false);
+
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-slate-50 p-6 dark:bg-slate-900">
       
@@ -23,7 +26,10 @@ export function UpdatesTab() {
           <button className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-sm font-semibold rounded-lg transition-colors shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
             <Filter className="w-4 h-4 text-slate-400" /> Filter
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
+          <button 
+            onClick={() => setIsNewUpdateOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+          >
             <Plus className="w-4 h-4" /> Create Update
           </button>
         </div>
@@ -31,7 +37,7 @@ export function UpdatesTab() {
 
       <div className="flex-1 overflow-auto bg-white border border-slate-200 shadow-sm rounded-xl flex flex-col dark:bg-slate-900 dark:border-slate-700">
         <table className="w-full text-left text-sm whitespace-nowrap min-w-[900px]">
-          <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 sticky top-0 z-10 dark:border-slate-700 dark:text-slate-400">
+          <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 sticky top-0 z-10 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400">
             <tr>
               <th className="px-5 py-3 font-semibold">Update Title</th>
               <th className="px-5 py-3 font-semibold">Audience</th>
@@ -46,7 +52,7 @@ export function UpdatesTab() {
               const ackPercentage = update.ackTotal > 0 ? (update.ackRead / update.ackTotal) * 100 : 0;
               
               return (
-                <tr key={update.id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer">
+                <tr key={update.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors group cursor-pointer">
                   <td className="px-5 py-4">
                     <div className="font-bold text-slate-800 dark:text-slate-200">{update.title}</div>
                   </td>
@@ -69,8 +75,8 @@ export function UpdatesTab() {
                   </td>
                   <td className="px-5 py-4 text-right">
                     <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold ${
-                      update.status === "Active" ? "bg-emerald-50 text-emerald-700" :
-                      "bg-slate-100 text-slate-600"
+                      update.status === "Active" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400" :
+                      "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
                     }`}>
                       {update.status}
                     </span>
@@ -82,6 +88,7 @@ export function UpdatesTab() {
         </table>
       </div>
 
+      <NewUpdateDrawer isOpen={isNewUpdateOpen} onClose={() => setIsNewUpdateOpen(false)} />
     </div>
   );
 }

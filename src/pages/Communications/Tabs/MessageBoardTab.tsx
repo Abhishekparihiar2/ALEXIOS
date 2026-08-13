@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ClipboardList, Search, Filter, Plus, Pin, Paperclip } from 'lucide-react';
 import { MOCK_POSTS } from '../mockCommunications';
+import { NewPostDrawer } from '../Drawers/NewPostDrawer';
 
 export function MessageBoardTab() {
+  const [isNewPostOpen, setIsNewPostOpen] = useState(false);
+
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-slate-50 p-6 dark:bg-slate-900">
       
@@ -23,7 +26,10 @@ export function MessageBoardTab() {
           <button className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-sm font-semibold rounded-lg transition-colors shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
             <Filter className="w-4 h-4 text-slate-400" /> Filter
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
+          <button 
+            onClick={() => setIsNewPostOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+          >
             <Plus className="w-4 h-4" /> New Post
           </button>
         </div>
@@ -75,6 +81,7 @@ export function MessageBoardTab() {
         </div>
       </div>
 
+      <NewPostDrawer isOpen={isNewPostOpen} onClose={() => setIsNewPostOpen(false)} />
     </div>
   );
 }

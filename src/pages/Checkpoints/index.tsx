@@ -12,7 +12,7 @@ import {
   UserCheck, UserX, Clock3, Route, ListChecks, Send,
   Plus, FileSpreadsheet, FileDown,
   ChevronFirst, ChevronLast, Archive, ShieldCheck,
-  Trash2, Briefcase
+  Trash2, Briefcase, Edit2
 } from "lucide-react";
 import alexiosLogo from "../imports/AlexiosAppLogos-white.png";
 
@@ -127,6 +127,8 @@ export function CheckpointsPage() {
   const [tourSearch, setTourSearch] = useState("");
   const [logSearch, setLogSearch] = useState("");
   const [showCreateCp, setShowCreateCp] = useState(false);
+  const [checkpoints, setCheckpoints] = useState<Checkpoint[]>(CP_CHECKPOINTS);
+  const [editCpId, setEditCpId] = useState<string | null>(null);
   const [showAddLocation, setShowAddLocation] = useState(false);
   const [showCreateTour, setShowCreateTour] = useState(false);
   const [showImport, setShowImport] = useState(false);
@@ -256,7 +258,7 @@ export function CheckpointsPage() {
   }
 
   function renderCreateCheckpointModal() {
-    return renderModal("Create Checkpoint", () => setShowCreateCp(false), (
+    return renderModal(editCpId ? "Edit Checkpoint" : "Create Checkpoint", () => setShowCreateCp(false), (
       <div className="space-y-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {renderField("Checkpoint Name", renderInput("e.g. North Gate", cpName, setCpName), true)}
@@ -311,7 +313,14 @@ export function CheckpointsPage() {
           {renderField("Allow Manual Scanning", renderSelect(["Yes", "No", "Yes with Reason"], cpManual, (v) => setCpManual(v as CpManual)))}
         </div>
 
-        {renderModalFooter(() => setShowCreateCp(false), "Create Checkpoint")}
+        {renderModalFooter(() => setShowCreateCp(false), editCpId ? "Update Checkpoint" : "Create Checkpoint", () => {
+          if (editCpId) {
+            setCheckpoints(checkpoints.map(c => c.id === editCpId ? { ...c, name: cpName, id: cpId, site: cpLocation, type: cpType, monitoring: cpMonitoring } : c));
+          } else {
+            setCheckpoints([...checkpoints, { id: cpId || "NEW", name: cpName, site: cpLocation, type: cpType, status: "Active", assigned: "All Positions", lastScan: "-", monitoring: cpMonitoring }]);
+          }
+          setShowCreateCp(false);
+        })}
       </div>
     ), true);
   }
@@ -364,10 +373,26 @@ export function CheckpointsPage() {
   }
 
   function renderCheckpointsSection() {
-    const filtered = CP_CHECKPOINTS.filter((cp) =>
+    const filtered = checkpoints.filter((cp) =>
       cp.name.toLowerCase().includes(search.toLowerCase()) ||
+      cp.id.toLowerCase().includes(search.toLowerCase()) ||
       cp.site.toLowerCase().includes(search.toLowerCase())
     );
+
+    const handleEditCheckpoint = (cp: any) => {
+      setEditCpId(cp.id);
+      setCpName(cp.name);
+      setCpId(cp.id);
+      setCpLocation(cp.site);
+      setCpType(cp.type);
+      setCpMonitoring(cp.monitoring as CpMonitoring || "tour");
+      setShowCreateCp(true);
+    };
+
+    const handleDeleteCheckpoint = (id: string) => {
+      setCheckpoints(checkpoints.filter(cp => cp.id !== id));
+    };
+
     return (
       <div className="space-y-5">
         {/* Toolbar */}
@@ -384,7 +409,7 @@ export function CheckpointsPage() {
             style={{ border: "1.5px solid #e2e8f0", color: "#475569" }}>
             <FileSpreadsheet className="w-3.5 h-3.5" /> Import Excel
           </button>
-          <button onClick={() => setShowCreateCp(true)}
+          <button onClick={() => { setEditCpId(null); setCpName(""); setCpId(""); setCpLocation(""); setShowCreateCp(true); }}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white"
             style={{ background: "linear-gradient(135deg,#1e3a6e,#2563eb)" }}>
             <Plus className="w-4 h-4" /> Create Checkpoint
@@ -394,10 +419,10 @@ export function CheckpointsPage() {
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: "Total Checkpoints", value: CP_CHECKPOINTS.length, color: "#60a5fa", bg: "rgba(96,165,250,0.12)" },
-            { label: "Active", value: CP_CHECKPOINTS.filter((c) => c.status === "Active").length, color: "#4ade80", bg: "rgba(74,222,128,0.12)" },
-            { label: "NFC Tags", value: CP_CHECKPOINTS.filter((c) => c.type === "NFC").length, color: "#a855f7", bg: "rgba(168,85,247,0.12)" },
-            { label: "Barcodes", value: CP_CHECKPOINTS.filter((c) => c.type === "Barcode").length, color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
+            { label: "Total Checkpoints", value: checkpoints.length, color: "#60a5fa", bg: "rgba(96,165,250,0.12)" },
+            { label: "Active", value: checkpoints.filter((c) => c.status === "Active").length, color: "#4ade80", bg: "rgba(74,222,128,0.12)" },
+            { label: "NFC Tags", value: checkpoints.filter((c) => c.type === "NFC").length, color: "#a855f7", bg: "rgba(168,85,247,0.12)" },
+            { label: "Barcodes", value: checkpoints.filter((c) => c.type === "Barcode").length, color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-1 backdrop-blur-md" style={{ background: s.bg, border: `1px solid ${s.color}22` }}>
               <div className="text-2xl font-black" style={{ color: s.color }}>{s.value}</div>
@@ -451,11 +476,11 @@ export function CheckpointsPage() {
                         onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }}>
                         <MapPin className="w-4 h-4" />
                       </button>
-                      <button className="w-8 h-8 rounded-xl flex items-center justify-center transition-all text-slate-400"
-                        title="Edit"
-                        onMouseEnter={(e) => { e.currentTarget.style.background = "#eff6ff"; e.currentTarget.style.color = "#2563eb"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }}>
-                        <Settings className="w-4 h-4" />
+                      <button onClick={() => handleEditCheckpoint(cp)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400 hover:text-blue-600 transition-colors dark:hover:bg-slate-700" title="Edit Checkpoint">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => handleDeleteCheckpoint(cp.id)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors dark:hover:bg-red-900/20" title="Delete Checkpoint">
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </td>

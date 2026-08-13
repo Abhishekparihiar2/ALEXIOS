@@ -12,7 +12,7 @@ import {
   UserCheck, UserX, Clock3, Route, ListChecks, Send,
   Plus, FileSpreadsheet, FileDown,
   ChevronFirst, ChevronLast, Archive, ShieldCheck,
-  Trash2, Briefcase
+  Trash2, Briefcase, Edit2
 } from "lucide-react";
 import alexiosLogo from "../imports/AlexiosAppLogos-white.png";
 
@@ -408,6 +408,38 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   const [portalSearch, setPortalSearch] = useState("");
   const [liveFilter, setLiveFilter] = useState("All");
 
+  const [positions, setPositions] = useState([
+    { uid: "POS-001", title: "Day Shift Guard", tpt: "8h", bill: "$28.00", holiday: "$42.00", temp: "No" },
+    { uid: "POS-002", title: "Night Patrol Officer", tpt: "8h", bill: "$30.00", holiday: "$45.00", temp: "No" },
+    { uid: "POS-003", title: "Weekend Supervisor", tpt: "12h", bill: "$35.00", holiday: "$52.50", temp: "Yes" },
+  ]);
+
+  const [emps, setEmps] = useState([
+    { name: "Marcus Johnson", start: "01/15/2024", rate: "$22.00/hr", unassign: "-", primary: true },
+    { name: "Sarah Chen", start: "03/01/2024", rate: "$24.00/hr", unassign: "-", primary: false },
+    { name: "Derek Wilson", start: "06/10/2024", rate: "$20.00/hr", unassign: "-", primary: false },
+  ]);
+
+  const [users, setUsers] = useState([
+    { name: "Sandra Kim", email: "s.kim@westfield.com", phone: "+1 (555) 202-0002", lastLogin: "Today, 9:15 AM", access: "Granted" },
+    { name: "Robert Hayes", email: "r.hayes@dfc.com", phone: "+1 (555) 201-0001", lastLogin: "Yesterday, 4:30 PM", access: "Revoked" },
+  ]);
+
+  const [banned, setBanned] = useState([
+    { name: "Carlos Mendez", uid: "EMP-009", reason: "Conduct violation", bannedOn: "Aug 14, 2025" },
+    { name: "Darnell Scott", uid: "EMP-015", reason: "Attendance issues", bannedOn: "May 31, 2025" },
+  ]);
+
+  const [contacts, setContacts] = useState([
+    { name: "Gregory Nash", title: "Facility Director", phone: "+1 (555) 301-0001", email: "g.nash@site.com" },
+    { name: "Patricia Lane", title: "Security Liaison", phone: "+1 (555) 301-0002", email: "p.lane@site.com" },
+  ]);
+
+  const [posts, setPosts] = useState([
+    { author: "James Morrison", time: "Jul 30, 2025 · 8:45 AM", text: "All guards please ensure Gate 3 is locked before end of shift. Audit tomorrow morning.", pinned: true },
+    { author: "Sarah Chen", time: "Jul 28, 2025 · 2:30 PM", text: "Reminder: submit patrol reports by 10 PM. Late submissions will be flagged.", pinned: false },
+  ]);
+
   const TABS: { id: SiteProfileTab; label: string }[] = [
     { id: "overview", label: "Overview" },
     { id: "positions", label: "Positions / Job Types" },
@@ -462,11 +494,11 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   function sel(opts: string[]) {
     return <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none text-slate-900 dark:text-slate-100" style={{ border: "1.5px solid #e2e8f0"}}>{opts.map((o) => <option key={o}>{o}</option>)}</select>;
   }
-  function foot(onClose: () => void, label = "Save") {
+  function foot(onClose: () => void, label = "Save", onSubmit?: () => void) {
     return (
       <div className="flex justify-end gap-3 pt-4 border-t bg-slate-100 dark:bg-slate-800" style={{ border }}>
         <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800" >Cancel</button>
-        <button onClick={onClose} className="px-5 py-2 rounded-xl text-sm font-bold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>{label}</button>
+        <button onClick={() => { if(onSubmit) onSubmit(); onClose(); }} className="px-5 py-2 rounded-xl text-sm font-bold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>{label}</button>
       </div>
     );
   }
@@ -539,6 +571,9 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               </span>
             </div>
           </div>
+          <button className="p-2 ml-auto text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
+            <Edit2 className="w-5 h-5" />
+          </button>
         </div>
 
         {infoCard([
@@ -593,11 +628,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
 
   function renderPositions() {
-    const positions = [
-      { uid: "POS-001", title: "Day Shift Guard", tpt: "8h", bill: "$28.00", holiday: "$42.00", temp: "No" },
-      { uid: "POS-002", title: "Night Patrol Officer", tpt: "8h", bill: "$30.00", holiday: "$45.00", temp: "No" },
-      { uid: "POS-003", title: "Weekend Supervisor", tpt: "12h", bill: "$35.00", holiday: "$52.50", temp: "Yes" },
-    ];
+
     const filteredPos = positions.filter((p) => !posSearch || p.title.toLowerCase().includes(posSearch.toLowerCase()));
     return (
       <div className="p-6 space-y-5">
@@ -624,7 +655,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-1.5">
-                  {["Duplicate", "Edit", "History", "Remove"].map((a) => (
+                  {["Edit", "Remove"].map((a) => (
                     <button key={a} className={`text-xs font-semibold px-2 py-1 rounded-lg transition-colors ${a === "Remove" ? "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/30" : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"}`}>{a}</button>
                   ))}
                 </div>
@@ -658,7 +689,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             {fld("Hard Requirements", inp("e.g. CPR Cert, License"))}
             {fld("Conditional Requirements", inp("e.g. Background Check"))}
             {fld("Soft Requirements", inp("e.g. Bilingual preferred"))}
-            {foot(() => setShowCreatePos(false), "Create Position")}
+            {foot(() => setShowCreatePos(false), "Create Position", () => setPositions([...positions, { uid: `POS-00${positions.length + 1}`, title: "New Position", tpt: "8h", bill: "$30.00", holiday: "$45.00", temp: "No" }]))}
           </div>
         ))}
       </div>
@@ -666,11 +697,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
 
   function renderEmployees() {
-    const emps = [
-      { name: "Marcus Johnson", start: "01/15/2024", rate: "$22.00/hr", unassign: "—", primary: true },
-      { name: "Sarah Chen", start: "03/01/2024", rate: "$24.00/hr", unassign: "—", primary: false },
-      { name: "Derek Wilson", start: "06/10/2024", rate: "$20.00/hr", unassign: "—", primary: false },
-    ];
+
     const filteredEmps = emps.filter((e) => !empSearch || e.name.toLowerCase().includes(empSearch.toLowerCase()));
     return (
       <div className="p-6 space-y-5">
@@ -720,7 +747,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               {fld("Effective Date", inp("", "date"))}
               {fld("Hourly Rate", inp("$0.00"))}
             </div>
-            {foot(() => setShowAssignEmp(false), "Assign Employee")}
+            {foot(() => setShowAssignEmp(false), "Assign Employee", () => setEmps([...emps, { name: "New Employee", start: new Date().toLocaleDateString(), rate: "$20.00/hr", unassign: "—", primary: false }]))}
           </div>
         ))}
       </div>
@@ -728,10 +755,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
 
   function renderPortal() {
-    const users = [
-      { name: "Sandra Kim", email: "s.kim@westfield.com", phone: "+1 (555) 202-0002", lastLogin: "Today, 9:15 AM", access: "Granted" },
-      { name: "Robert Hayes", email: "r.hayes@dfc.com", phone: "+1 (555) 201-0001", lastLogin: "Yesterday, 4:30 PM", access: "Revoked" },
-    ];
+
     const filtered = users.filter((u) => !portalSearch || u.name.toLowerCase().includes(portalSearch.toLowerCase()));
     return (
       <div className="p-6 space-y-5">
@@ -786,7 +810,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               </button>
             </div>
             {fld("Status", sel(["Grant Access", "Revoke Access"]))}
-            {foot(() => setShowAddPortal(false), "Create Access")}
+            {foot(() => setShowAddPortal(false), "Create Access", () => setUsers([...users, { name: "New User", email: "new@site.com", phone: "+1 (555) 000-0000", lastLogin: "Never", access: "Granted" }]))}
           </div>
         ))}
       </div>
@@ -794,10 +818,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
 
   function renderBanned() {
-    const banned = [
-      { name: "Carlos Mendez", uid: "EMP-009", reason: "Conduct violation", bannedOn: "Aug 14, 2025" },
-      { name: "Darnell Scott", uid: "EMP-015", reason: "Attendance issues", bannedOn: "May 31, 2025" },
-    ];
+
     return (
       <div className="p-6 space-y-5">
         <div className="flex items-center justify-between">
@@ -827,7 +848,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             {fld("Select Employee", sel(["Choose employee...", "Marcus Johnson", "Sarah Chen", "Derek Wilson", "Priya Patel"]))}
             {fld("Reason", <textarea className="w-full px-3 py-2.5 rounded-xl text-sm border outline-none" rows={3} style={{ border: "1.5px solid #e2e8f0" }} placeholder="Reason for ban..." />)}
             {fld("Effective Date", inp("", "date"))}
-            {foot(() => setShowBanEmp(false), "Add Ban")}
+            {foot(() => setShowBanEmp(false), "Add Ban", () => setBanned([...banned, { name: "Banned Employee", uid: "EMP-999", reason: "Policy violation", bannedOn: new Date().toLocaleDateString() }]))}
           </div>
         ))}
       </div>
@@ -835,10 +856,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
 
   function renderContacts() {
-    const contacts = [
-      { name: "Gregory Nash", title: "Facility Director", phone: "+1 (555) 301-0001", email: "g.nash@site.com" },
-      { name: "Patricia Lane", title: "Security Liaison", phone: "+1 (555) 301-0002", email: "p.lane@site.com" },
-    ];
+
     return (
       <div className="p-6 space-y-5">
         <div className="flex justify-end">
@@ -891,7 +909,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               <input type="checkbox" className="w-4 h-4" style={{ accentColor: "#1e3a6e" }} />
               <span className="text-sm text-slate-900 dark:text-slate-100" >Use this address as Bill-To Address</span>
             </div>
-            {foot(() => setShowAddContact(false), "Add Contact")}
+            {foot(() => setShowAddContact(false), "Add Contact", () => setContacts([...contacts, { name: "New Contact", title: "Site Contact", phone: "+1 (555) 000-0000", email: "contact@site.com" }]))}
           </div>
         ))}
       </div>
@@ -902,27 +920,23 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     return (
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-2 gap-4">
-          <button className="p-5 rounded-2xl text-left transition-all" style={{ background: "#eff6ff", border: "1.5px solid #bfdbfe" }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 16px #1e3a6e22"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "#fff", color: "#1e3a6e" }}><FileText className="w-5 h-5" /></div>
-            <div className="text-sm font-bold" style={{ color: "#1e3a6e" }}>Edit Site</div>
-            <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >Update site info using the same creation fields</div>
+          <button className="p-5 rounded-2xl text-left transition-all bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 hover:shadow-lg hover:shadow-blue-500/10">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-white dark:bg-blue-900/50 text-blue-800 dark:text-blue-400"><FileText className="w-5 h-5" /></div>
+            <div className="text-sm font-bold text-blue-800 dark:text-blue-400">Edit Site</div>
+            <div className="text-xs mt-1 text-slate-500 dark:text-slate-400" >Update site info using the same creation fields</div>
           </button>
-          <button onClick={() => setShowCloseAccount(true)} className="p-5 rounded-2xl text-left transition-all" style={{ background: "#fef2f2", border: "1.5px solid #fecaca" }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 16px #dc262622"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "#fff", color: "#dc2626" }}><Archive className="w-5 h-5" /></div>
-            <div className="text-sm font-bold" style={{ color: "#dc2626" }}>Close Account</div>
-            <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >Terminate site and all associated contracts</div>
+          <button onClick={() => setShowCloseAccount(true)} className="p-5 rounded-2xl text-left transition-all bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 hover:shadow-lg hover:shadow-red-500/10">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-white dark:bg-red-900/50 text-red-600 dark:text-red-400"><Archive className="w-5 h-5" /></div>
+            <div className="text-sm font-bold text-red-600 dark:text-red-400">Close Account</div>
+            <div className="text-xs mt-1 text-slate-500 dark:text-slate-400" >Terminate site and all associated contracts</div>
           </button>
         </div>
 
         {showCloseAccount && modal("Close Site Account", () => setShowCloseAccount(false), (
           <div className="space-y-4">
-            <div className="p-4 rounded-xl" style={{ background: "#fef2f2", border: "1px solid #fecaca" }}>
-              <div className="flex items-center gap-2 mb-2"><AlertTriangle className="w-4 h-4" style={{ color: "#dc2626" }} /><span className="text-sm font-bold" style={{ color: "#dc2626" }}>This action will:</span></div>
-              <ul className="text-xs space-y-1" style={{ color: "#7f1d1d" }}>
+            <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+              <div className="flex items-center gap-2 mb-2"><AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" /><span className="text-sm font-bold text-red-600 dark:text-red-400">This action will:</span></div>
+              <ul className="text-xs space-y-1 text-red-800 dark:text-red-300">
                 {["Terminate site and all contracts", "Terminate one or more positions", "Mark all future shifts as uncovered", "Detailed consequences pending discussion"].map((item) => (
                   <li key={item} className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3" />{item}</li>
                 ))}
@@ -930,8 +944,8 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             </div>
             {fld("Close Option", sel(["Terminate Site and All Contracts", "Terminate One or More Positions"]))}
             {fld("Termination Date", inp("", "date"))}
-            <div className="p-3 rounded-xl" style={{ background: "#fffbeb", border: "1px solid #fde68a" }}>
-              <p className="text-xs font-semibold" style={{ color: "#92400e" }}>Type CONFIRM to proceed</p>
+            <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">Type CONFIRM to proceed</p>
               {inp("Type CONFIRM")}
             </div>
             {foot(() => setShowCloseAccount(false), "Close Account")}
@@ -946,19 +960,15 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
       <div className="p-6 space-y-5">
         {sectionHead("Dispatch Settings")}
         <div className="grid grid-cols-2 gap-4">
-          <div className="p-5 rounded-2xl cursor-pointer transition-all" style={{ background: "#f0fdf4", border: "1.5px solid #86efac" }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 12px #16a34a22"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "#fff", color: "#16a34a" }}><Calendar className="w-5 h-5" /></div>
-            <div className="text-sm font-bold" style={{ color: "#16a34a" }}>Prepare Schedule</div>
-            <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >Build and manage dispatch schedules for this site</div>
+          <div className="p-5 rounded-2xl cursor-pointer transition-all bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 hover:shadow-lg hover:shadow-green-500/10">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-white dark:bg-green-900/50 text-green-600 dark:text-green-400"><Calendar className="w-5 h-5" /></div>
+            <div className="text-sm font-bold text-green-600 dark:text-green-400">Prepare Schedule</div>
+            <div className="text-xs mt-1 text-slate-500 dark:text-slate-400" >Build and manage dispatch schedules for this site</div>
           </div>
-          <div className="p-5 rounded-2xl cursor-pointer transition-all" style={{ background: "#eff6ff", border: "1.5px solid #bfdbfe" }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 12px #1e3a6e22"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "#fff", color: "#1e3a6e" }}><ListChecks className="w-5 h-5" /></div>
-            <div className="text-sm font-bold" style={{ color: "#1e3a6e" }}>Confirmed Schedule</div>
-            <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >View and manage the confirmed dispatch schedule module</div>
+          <div className="p-5 rounded-2xl cursor-pointer transition-all bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 hover:shadow-lg hover:shadow-blue-500/10">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-white dark:bg-blue-900/50 text-blue-800 dark:text-blue-400"><ListChecks className="w-5 h-5" /></div>
+            <div className="text-sm font-bold text-blue-800 dark:text-blue-400">Confirmed Schedule</div>
+            <div className="text-xs mt-1 text-slate-500 dark:text-slate-400" >View and manage the confirmed dispatch schedule module</div>
           </div>
         </div>
       </div>
@@ -982,19 +992,23 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
         <div className="flex gap-2 flex-wrap">
           {ACTIVITY_CATS.map((f) => (
             <button key={f} onClick={() => setActFilter(f)}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold"
-              style={{ background: actFilter === f ? "#1e3a6e" : "#f1f5f9", color: actFilter === f ? "#fff" : "#475569" }}>
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${actFilter === f ? "bg-blue-800 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"}`}>
               {f}
             </button>
           ))}
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {[["Operation Reports", "Reports filed at this site", "#1e3a6e", "#eff6ff"], ["Patrol Tours", "Tour sessions completed", "#16a34a", "#f0fdf4"], ["Incident Analytics", "Flagged incident records", "#dc2626", "#fef2f2"], ["Post Orders", "Active post order documents", "#d97706", "#fffbeb"]].map(([label, sub, color, bg]) => (
-            <div key={label} className="p-4 rounded-xl" style={{ background: bg, border: `1px solid ${color}22` }}>
-              <div className="text-sm font-bold mb-1" style={{ color }}>{label}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-300" >{sub}</div>
-              <div className="text-2xl font-bold mt-2" style={{ color }}>
+          {[
+            { label: "Operation Reports", sub: "Reports filed at this site", className: "bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 border-blue-200 dark:border-blue-800" },
+            { label: "Patrol Tours", sub: "Tour sessions completed", className: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800" },
+            { label: "Incident Analytics", sub: "Flagged incident records", className: "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800" },
+            { label: "Post Orders", sub: "Active post order documents", className: "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800" }
+          ].map(({ label, sub, className }) => (
+            <div key={label} className={`p-4 rounded-xl border ${className}`}>
+              <div className="text-sm font-bold mb-1">{label}</div>
+              <div className="text-xs opacity-80" >{sub}</div>
+              <div className="text-2xl font-bold mt-2">
                 {label === "Operation Reports" ? "47" : label === "Patrol Tours" ? "128" : label === "Incident Analytics" ? "3" : "12"}
               </div>
             </div>
@@ -1011,14 +1025,14 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
                 <td className="px-4 py-3 text-sm text-slate-900 dark:text-slate-100" >{r.type}</td>
                 <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{r.date}</td>
                 <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{r.by}</td>
-                <td className="px-4 py-3"><span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: sc.bg, color: sc.color }}>{r.status}</span></td>
+                <td className="px-4 py-3"><span className={`text-xs font-bold px-2.5 py-1 rounded-full ${r.status === "Approved" ? "bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400" : r.status === "Verification" ? "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>{r.status}</span></td>
                 <td className="px-4 py-3 text-center">
-                  {r.flags > 0 ? <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "#fef2f2", color: "#dc2626" }}>{r.flags}</span> : <span  className="text-slate-300 dark:text-slate-400">—</span>}
+                  {r.flags > 0 ? <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400">{r.flags}</span> : <span className="text-slate-300 dark:text-slate-400">—</span>}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1">
                     {["View", "PDF", "Delete"].map((a) => (
-                      <button key={a} className="text-xs font-semibold px-2 py-1 rounded-lg" style={{ background: a === "Delete" ? "#fef2f2" : "#f1f5f9", color: a === "Delete" ? "#dc2626" : "#475569" }}>{a}</button>
+                      <button key={a} className={`text-xs font-semibold px-2 py-1 rounded-lg ${a === "Delete" ? "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>{a}</button>
                     ))}
                   </div>
                 </td>
@@ -1155,10 +1169,6 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
 
   function renderMessages() {
-    const posts = [
-      { author: "James Morrison", time: "Jul 30, 2025 · 8:45 AM", text: "All guards please ensure Gate 3 is locked before end of shift. Audit tomorrow morning.", pinned: true },
-      { author: "Sarah Chen", time: "Jul 28, 2025 · 2:30 PM", text: "Reminder: submit patrol reports by 10 PM. Late submissions will be flagged.", pinned: false },
-    ];
     return (
       <div className="p-6 space-y-5">
         <div className="flex justify-end gap-2">
@@ -1171,10 +1181,10 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
         </div>
         <div className="space-y-4">
           {posts.map((p, i) => (
-            <div key={i} className="p-5 rounded-2xl" style={{ background: "#f8fafc", border: `1.5px solid ${p.pinned ? "#bfdbfe" : "#e2e8f0"}` }}>
-              {p.pinned && <span className="text-xs font-bold px-2 py-0.5 rounded-full mb-2 inline-block" style={{ background: "#eff6ff", color: "#1e3a6e" }}>📌 Pinned</span>}
+            <div key={i} className={`p-5 rounded-2xl border ${p.pinned ? "bg-blue-50/50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800" : "bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800"}`}>
+              {p.pinned && <span className="text-xs font-bold px-2 py-0.5 rounded-full mb-2 inline-block bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-400">📌 Pinned</span>}
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-bold" style={{ color: "#1e3a6e" }}>{p.author}</span>
+                <span className="text-sm font-bold text-blue-900 dark:text-blue-300">{p.author}</span>
                 <span className="text-xs text-slate-400 dark:text-slate-300" >{p.time}</span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-300" style={{lineHeight: 1.6 }}>{p.text}</p>
@@ -1189,7 +1199,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               <input type="checkbox" className="w-4 h-4" style={{ accentColor: "#1e3a6e" }} />
               <span className="text-sm text-slate-900 dark:text-slate-100" >Pin this message</span>
             </div>
-            {foot(() => setShowPostMsg(false), "Post Message")}
+            {foot(() => setShowPostMsg(false), "Post Message", () => setPosts([{ author: "Current Admin", time: new Date().toLocaleString(), text: "New broadcast message", pinned: false }, ...posts]))}
           </div>
         ))}
       </div>
@@ -1301,10 +1311,12 @@ export function ClientsPage() {
   const [page, setPage] = useState(1);
   const [showCreate, setShowCreate] = useState(false);
   const [selectedSite, setSelectedSite] = useState<SiteClient | null>(null);
+  const [sites, setSites] = useState<SiteClient[]>(MOCK_SITES);
+  const [openMenuUid, setOpenMenuUid] = useState<string | null>(null);
   const PAGE_SIZE = 12;
 
   const filtered = useMemo(() => {
-    return MOCK_SITES.filter((s) => {
+    return sites.filter((s) => {
       const q = search.toLowerCase();
       const matchSearch = !q || [s.companyName, s.uid, s.contactName, s.contactEmail, s.city, s.state]
         .some((v) => v.toLowerCase().includes(q));
@@ -1329,12 +1341,7 @@ export function ClientsPage() {
     setSelected(next);
   };
 
-  const STAT_CARDS = [
-    { label: "Total Accounts", value: MOCK_SITES.length, color: "#1e3a6e", bg: "rgba(30,58,110,0.12)" },
-    { label: "Active", value: MOCK_SITES.filter((s) => s.status === "Active").length, color: "#16a34a", bg: "rgba(22,163,74,0.12)" },
-    { label: "Pending", value: MOCK_SITES.filter((s) => s.status === "Pending").length, color: "#d97706", bg: "rgba(217,119,6,0.12)" },
-    { label: "Inactive / Closed", value: MOCK_SITES.filter((s) => s.status === "Inactive" || s.status === "Closed").length, color: "#dc2626", bg: "rgba(220,38,38,0.12)" },
-  ];
+
 
   if (showCreate) return <CreateSitePage onBack={() => setShowCreate(false)} />;
   if (selectedSite) return <SiteProfilePage site={selectedSite} onBack={() => setSelectedSite(null)} />;
@@ -1344,7 +1351,6 @@ export function ClientsPage() {
 
       <PageHeader
         title="Clients & Sites"
-        subtitle={`${MOCK_SITES.length} total accounts · ${MOCK_SITES.filter((s) => s.status === "Active").length} active`}
         icon={<Building2 className="w-5 h-5 text-slate-900 dark:text-slate-100" />}
         actions={
           <button
@@ -1354,17 +1360,6 @@ export function ClientsPage() {
           >
             <Plus className="w-4 h-4" /> Create Site / Client
           </button>
-        }
-        bottomContent={
-          <div className="flex gap-3 flex-wrap">
-            {STAT_CARDS.map((sc) => (
-              <div key={sc.label} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
-                style={{ background: sc.bg }}>
-                <div className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color }} />
-                <span className="text-xs font-bold" style={{ color: sc.color }}>{sc.value} {sc.label}</span>
-              </div>
-            ))}
-          </div>
         }
       />
 
@@ -1384,15 +1379,7 @@ export function ClientsPage() {
             {search && <button onClick={() => setSearch("")}><X className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300"  /></button>}
           </div>
 
-          <select value={acctTypeFilter}
-            onChange={(e) => { setAcctTypeFilter(e.target.value); setPage(1); }}
-            className="rounded-xl px-3 py-2.5 text-sm outline-none"
-            style={{ border: "1.5px solid #e8edf4", color: "#475569", background: "#f8fafc", minWidth: 140 }}>
-            <option>All Types</option>
-            {(["Regular Client", "Multi-Site Client", "Site Account", "Custom Account Type"] as AccountType[]).map((t) => (
-              <option key={t}>{t}</option>
-            ))}
-          </select>
+
 
           <select value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
@@ -1403,10 +1390,7 @@ export function ClientsPage() {
           </select>
 
           <div className="flex items-center gap-2 ml-auto">
-            <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900"
-              style={{border: "1.5px solid #e8edf4" }}>
-              <RefreshCw className="w-3.5 h-3.5" />Refresh
-            </button>
+
             <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900"
               style={{border: "1.5px solid #e8edf4" }}>
               <Download className="w-3.5 h-3.5" />Export
@@ -1520,17 +1504,20 @@ export function ClientsPage() {
 
                     <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-400 dark:text-slate-300" >{site.addedOn}</td>
 
-                    <td className="px-3 py-3.5" onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center gap-1.5">
-                        <button onClick={() => setSelectedSite(site)} className="text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all"
-                          style={{ background: "#eff6ff", color: "#1e3a6e" }}>View</button>
-                        <button className="w-7 h-7 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-300"
-                          
-                          onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f5f9"; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                          <MoreHorizontal className="w-4 h-4" />
-                        </button>
-                      </div>
+                    <td className="px-3 py-3.5 relative" onClick={(e) => e.stopPropagation()}>
+                      <button onClick={() => setOpenMenuUid(openMenuUid === site.uid ? null : site.uid)} className="w-7 h-7 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-auto">
+                        <MoreHorizontal className="w-4 h-4" />
+                      </button>
+                      {openMenuUid === site.uid && (
+                        <div className="absolute right-8 top-10 mt-1 w-32 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 z-50 py-1 flex flex-col">
+                          <button onClick={() => { setSelectedSite(site); setOpenMenuUid(null); }} className="px-4 py-2 text-sm text-left text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 flex items-center gap-2">
+                            <Edit2 className="w-4 h-4" /> Edit
+                          </button>
+                          <button onClick={() => { setSites(sites.filter(s => s.uid !== site.uid)); setOpenMenuUid(null); }} className="px-4 py-2 text-sm text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2">
+                            <Trash2 className="w-4 h-4" /> Delete
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );

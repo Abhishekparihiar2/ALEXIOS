@@ -46,7 +46,7 @@ export function ChatTab() {
     <div className="flex w-full h-full bg-white dark:bg-slate-900">
       
       {/* ─── LEFT COLUMN: CONVERSATIONS (310px) ────────────────────── */}
-      <div className="w-[310px] border-r border-slate-200 flex flex-col shrink-0 bg-slate-50/50 dark:border-slate-700">
+      <div className="w-[310px] border-r border-slate-200 flex flex-col shrink-0 bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-700">
         <div className="p-4 border-b border-slate-200 space-y-4 bg-white dark:border-slate-700 dark:bg-slate-900">
           <div className="flex items-center justify-between">
             <h2 className="font-bold text-slate-800 text-lg dark:text-slate-200">Conversations</h2>
@@ -60,7 +60,7 @@ export function ChatTab() {
               </button>
               <button 
                 onClick={() => setIsNewChatOpen(true)}
-                className="p-1.5 text-blue-600 hover:bg-blue-50 bg-blue-50/50 rounded-md transition-colors"
+                className="p-1.5 text-blue-600 hover:bg-blue-50 bg-blue-50/50 dark:bg-blue-500/20 dark:hover:bg-blue-500/30 dark:text-blue-400 rounded-md transition-colors"
                 title="New Chat"
               >
                 <MessageSquarePlus className="w-4 h-4" />
@@ -100,14 +100,14 @@ export function ChatTab() {
               <button
                 key={conv.id}
                 onClick={() => setSelectedConvId(conv.id)}
-                className={`w-full text-left p-4 border-b border-slate-100 transition-colors flex gap-3 items-start relative ${
-                  isSelected ? "bg-blue-50/50" : "hover:bg-white bg-transparent"
+                className={`w-full text-left p-4 border-b border-slate-100 dark:border-slate-800/60 transition-colors flex gap-3 items-start relative ${
+                  isSelected ? "bg-blue-50/80 dark:bg-slate-800/80" : "hover:bg-white dark:hover:bg-slate-800/40 bg-transparent"
                 }`}
               >
                 {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500" />}
                 
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm ${
-                  conv.type === "Group" ? "bg-indigo-100 text-indigo-700" : "bg-slate-200 text-slate-700"
+                  conv.type === "Group" ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400" : "bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300"
                 }`}>
                   {conv.avatarInitials}
                 </div>
@@ -144,7 +144,7 @@ export function ChatTab() {
       </div>
 
       {/* ─── CENTER COLUMN: CONVERSATION ──────────────────────────── */}
-      <div className="flex-1 flex flex-col bg-[#f8fafc] relative">
+      <div className="flex-1 flex flex-col bg-[#f8fafc] dark:bg-slate-900/80 relative">
         {selectedConv ? (
           <>
             {/* Chat Header */}
@@ -197,7 +197,7 @@ export function ChatTab() {
                         <div className={`px-4 py-2.5 rounded-2xl text-sm ${
                           isMe 
                             ? 'bg-blue-600 text-white rounded-br-sm' 
-                            : 'bg-white text-slate-800 rounded-bl-sm border border-slate-200 shadow-sm'
+                            : 'bg-white text-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 rounded-bl-sm border border-slate-200 shadow-sm'
                         }`}>
                           {msg.content}
                         </div>
@@ -244,10 +244,10 @@ export function ChatTab() {
 
       {/* ─── RIGHT COLUMN: DETAILS (280px) ────────────────────────── */}
       {selectedConv && (
-        <div className="w-[280px] border-l border-slate-200 bg-white flex flex-col shrink-0 dark:border-slate-700 dark:bg-slate-900">
+        <div className="w-[280px] border-l border-slate-200 bg-white flex flex-col shrink-0 dark:border-slate-700 dark:bg-[#1a1f2e]">
           <div className="p-6 border-b border-slate-200 flex flex-col items-center text-center dark:border-slate-700">
             <div className={`w-20 h-20 rounded-full flex items-center justify-center font-bold text-2xl mb-3 shadow-sm ${
-              selectedConv.type === "Group" ? "bg-indigo-100 text-indigo-700" : "bg-slate-100 text-slate-700"
+              selectedConv.type === "Group" ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400" : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
             }`}>
               {selectedConv.avatarInitials}
             </div>

@@ -103,7 +103,7 @@ export function TopHeader({
         </button>
         {siteDropdownOpen && (
           <div className="absolute top-full right-0 sm:left-0 sm:right-auto mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-50 py-1 animate-in fade-in slide-in-from-top-2">
-            <button 
+            <button
               onClick={() => { setGlobalSite("All Sites"); setSiteDropdownOpen(false); }}
               className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors ${globalSite === "All Sites" ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'}`}
             >
@@ -112,7 +112,7 @@ export function TopHeader({
             <div className="h-px bg-slate-100 dark:bg-slate-800 my-1"></div>
             <div className="max-h-60 overflow-y-auto">
               {MOCK_SITES.map(site => (
-                <button 
+                <button
                   key={site.uid}
                   onClick={() => { setGlobalSite(site.companyName); setSiteDropdownOpen(false); }}
                   className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors ${globalSite === site.companyName ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'}`}
@@ -126,7 +126,7 @@ export function TopHeader({
       </div>
 
       {/* Notifications */}
-      <button 
+      <button
         onClick={() => onNavigate && onNavigate("communications")}
         className="relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-300"
       >
@@ -139,7 +139,7 @@ export function TopHeader({
       </button>
 
       {/* Chat */}
-      <button 
+      <button
         onClick={() => onNavigate && onNavigate("communications")}
         className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-300"
       >
@@ -157,7 +157,7 @@ export function TopHeader({
             {MOCK_USER.initials}
           </div>
           <span className="text-sm font-medium hidden md:block text-slate-700 dark:text-slate-200" >{MOCK_USER.name}</span>
-          <ChevronDown className="w-3.5 h-3.5 hidden md:block text-slate-400 dark:text-slate-300"  />
+          <ChevronDown className="w-3.5 h-3.5 hidden md:block text-slate-400 dark:text-slate-300" />
         </button>
         {profileOpen && (
           <div
@@ -192,11 +192,11 @@ export function TopHeader({
             style={{ background: "#fff", boxShadow: "0 24px 48px rgba(0,0,0,0.2)" }}
             onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: "1px solid #f1f5f9" }}>
-              <Search className="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-300"  />
+              <Search className="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-300" />
               <input autoFocus value={searchQ} onChange={(e) => setSearchQ(e.target.value)}
                 placeholder="Search employees, sites, reports, tasks…"
                 className="flex-1 text-sm outline-none bg-transparent" style={{ color: "#0f172a" }} />
-              <button onClick={() => setSearchOpen(false)}><X className="w-4 h-4 text-slate-400 dark:text-slate-300"  /></button>
+              <button onClick={() => setSearchOpen(false)}><X className="w-4 h-4 text-slate-400 dark:text-slate-300" /></button>
             </div>
             <div className="px-4 py-3">
               {searchQ === "" ? (

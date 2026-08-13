@@ -29,9 +29,9 @@ export function ReportBuilder({ reportId, onBack }: Props) {
   };
 
   return (
-    <div className="flex-1 overflow-hidden flex flex-col bg-slate-50 dark:bg-slate-900">
+    <div className="flex-1 overflow-hidden flex flex-col bg-slate-50 dark:bg-[#000000]">
       {/* ── Header ── */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 dark:bg-slate-900 dark:border-slate-700">
+      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 dark:bg-[#0a0a0a] dark:border-slate-800">
         <div className="flex items-center gap-5">
           <button onClick={onBack} className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">
             <ArrowLeft className="w-4 h-4" />
@@ -43,10 +43,10 @@ export function ReportBuilder({ reportId, onBack }: Props) {
             <div className="flex items-center gap-5 mt-2">
               {steps.map(s => (
                 <button key={s.id} onClick={() => setActiveStep(s.id)}
-                  className={`relative text-[11px] font-bold uppercase tracking-wider transition-colors pb-1 ${activeStep === s.id ? 'text-blue-700' : 'text-slate-400 hover:text-slate-600'}`}>
+                  className={`relative text-[11px] font-bold uppercase tracking-wider transition-colors pb-1 ${activeStep === s.id ? 'text-blue-700 dark:text-blue-400' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}>
                   {s.label}
                   {activeStep === s.id && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 rounded-t-sm bg-blue-700" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 rounded-t-sm bg-blue-700 dark:bg-blue-400" />
                   )}
                 </button>
               ))}
@@ -54,11 +54,14 @@ export function ReportBuilder({ reportId, onBack }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={onBack} className="px-4 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors dark:text-slate-300 dark:bg-slate-900 dark:border-slate-700 dark:hover:bg-slate-800">
+          <button onClick={onBack} className="px-4 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors dark:text-slate-300 dark:bg-[#0a0a0a] dark:border-slate-700 dark:hover:bg-slate-900">
             Cancel
           </button>
-          <button onClick={handleSave} className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-blue-800 hover:bg-blue-900 rounded-xl transition-colors shadow-sm">
+          <button onClick={handleSave} className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700">
             <Save className="w-4 h-4" /> Save
+          </button>
+          <button onClick={handleSave} className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors shadow-sm">
+            <CheckCircle2 className="w-4 h-4" /> Publish
           </button>
         </div>
       </div>
@@ -81,9 +84,15 @@ function OverviewStep() {
     <div className="h-full overflow-y-auto p-8 flex justify-center">
       <div className="w-full max-w-3xl space-y-6">
         <div className="glass-card rounded-2xl p-6 bg-white border border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
-          <h3 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-100 pb-3 dark:text-slate-200 dark:border-slate-800">
-            <Settings className="w-4 h-4 text-blue-600" /> Basic Information
-          </h3>
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-6 dark:border-slate-800">
+            <h3 className="text-base font-bold text-slate-800 flex items-center gap-2 dark:text-slate-200">
+              <Settings className="w-4 h-4 text-blue-600" /> Basic Information
+            </h3>
+            <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer dark:border-slate-600 dark:bg-slate-800" />
+              Save as Template
+            </label>
+          </div>
           
           <div className="space-y-5">
             <div>
@@ -277,7 +286,7 @@ function FormBuilderStep() {
           </div>
           
           <div 
-            className="space-y-3 bg-slate-100/50 p-4 border border-slate-200 shadow-inner rounded-b-2xl min-h-[300px] dark:border-slate-700"
+            className="space-y-3 bg-slate-100/50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-700 shadow-inner rounded-b-2xl min-h-[300px]"
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleCanvasDrop}
           >
@@ -295,7 +304,7 @@ function FormBuilderStep() {
                   handleDrop(idx);
                 }}
                 onClick={() => setSelectedField(f.id)}
-                className={`flex items-center gap-4 p-4 rounded-xl bg-white border cursor-pointer transition-all shadow-sm ${selectedField === f.id ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200 hover:border-slate-300'} ${draggedIdx === idx ? 'opacity-50' : 'opacity-100'}`}
+                className={`flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 border cursor-pointer transition-all shadow-sm ${selectedField === f.id ? 'border-blue-500 ring-2 ring-blue-100 dark:ring-blue-500/30' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'} ${draggedIdx === idx ? 'opacity-50' : 'opacity-100'}`}
               >
                 <div className="cursor-grab active:cursor-grabbing p-1 -ml-2 text-slate-300 hover:text-slate-500 transition-colors">
                   <GripVertical className="w-4 h-4" />
@@ -314,7 +323,7 @@ function FormBuilderStep() {
               </div>
             ))}
             
-            <div className="border-2 border-dashed border-blue-200 bg-blue-50/30 rounded-xl p-8 flex flex-col items-center justify-center text-blue-500 pointer-events-none">
+            <div className="border-2 border-dashed border-blue-200 dark:border-blue-500/30 bg-blue-50/30 dark:bg-blue-500/5 rounded-xl p-8 flex flex-col items-center justify-center text-blue-500 dark:text-blue-400 pointer-events-none">
               <Plus className="w-6 h-6 mb-2 opacity-50" />
               <span className="text-sm font-semibold opacity-80">Drag and drop fields here</span>
             </div>

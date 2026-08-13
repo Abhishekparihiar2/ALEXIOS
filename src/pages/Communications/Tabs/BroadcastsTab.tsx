@@ -40,7 +40,7 @@ export function BroadcastsTab() {
 
       <div className="flex-1 overflow-auto bg-white border border-slate-200 shadow-sm rounded-xl flex flex-col dark:bg-slate-900 dark:border-slate-700">
         <table className="w-full text-left text-sm whitespace-nowrap min-w-[800px]">
-          <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 sticky top-0 dark:border-slate-700 dark:text-slate-400">
+          <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 sticky top-0 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400">
             <tr>
               <th className="px-5 py-3 font-semibold">Broadcast Title</th>
               <th className="px-5 py-3 font-semibold">Audience</th>
@@ -54,7 +54,7 @@ export function BroadcastsTab() {
             {MOCK_BROADCASTS.map(broadcast => (
               <tr 
                 key={broadcast.id} 
-                className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
+                className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors group cursor-pointer"
                 onClick={() => setSelectedBroadcast(broadcast)}
               >
                 <td className="px-5 py-3 font-bold text-slate-800 dark:text-slate-200">{broadcast.title}</td>
@@ -64,9 +64,9 @@ export function BroadcastsTab() {
                 <td className="px-5 py-3 font-semibold text-slate-700 dark:text-slate-300">{broadcast.delivery}</td>
                 <td className="px-5 py-3 text-right">
                   <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold ${
-                    broadcast.status === "Sent" ? "bg-emerald-50 text-emerald-700" :
-                    broadcast.status === "Scheduled" ? "bg-amber-50 text-amber-700" :
-                    "bg-slate-100 text-slate-600"
+                    broadcast.status === "Sent" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400" :
+                    broadcast.status === "Scheduled" ? "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400" :
+                    "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
                   }`}>
                     {broadcast.status}
                   </span>

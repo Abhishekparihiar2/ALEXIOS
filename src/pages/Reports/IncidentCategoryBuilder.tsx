@@ -22,9 +22,9 @@ export function IncidentCategoryBuilder({ incidentId, onBack }: Props) {
   ];
 
   return (
-    <div className="flex-1 overflow-hidden flex flex-col bg-slate-50 dark:bg-slate-900">
+    <div className="flex-1 overflow-hidden flex flex-col bg-slate-50 dark:bg-[#0a0a0a]">
       {/* ── Header ── */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 dark:bg-slate-900 dark:border-slate-700">
+      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 dark:bg-[#0a0a0a] dark:border-slate-800">
         <div className="flex items-center gap-5">
           <button onClick={onBack} className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">
             <ArrowLeft className="w-4 h-4" />
@@ -234,7 +234,7 @@ function FormBuilderStep() {
   return (
     <div className="h-full flex">
       {/* LEFT: Library */}
-      <div className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 dark:bg-slate-900 dark:border-slate-700">
+      <div className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 dark:bg-[#0a0a0a] dark:border-slate-800">
         <div className="p-4 border-b border-slate-100 dark:border-slate-800">
           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Fields Library</h3>
         </div>
@@ -261,15 +261,15 @@ function FormBuilderStep() {
       </div>
 
       {/* CENTER: Canvas */}
-      <div className="flex-1 overflow-y-auto bg-slate-50 p-8 flex flex-col items-center dark:bg-slate-900">
+      <div className="flex-1 overflow-y-auto bg-slate-50 p-8 flex flex-col items-center dark:bg-[#000000]">
         <div className="w-full max-w-xl">
-          <div className="bg-white rounded-t-2xl border border-slate-200 border-b-0 p-5 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+          <div className="bg-white rounded-t-2xl border border-slate-200 border-b-0 p-5 shadow-sm dark:bg-[#0a0a0a] dark:border-slate-800">
             <h3 className="text-lg font-bold text-slate-800 text-center uppercase tracking-wide dark:text-slate-200">Incident Data Capture</h3>
             <p className="text-xs text-slate-500 text-center mt-1 dark:text-slate-400">Form Preview & Ordering</p>
           </div>
           
           <div 
-            className="space-y-3 bg-slate-100/50 p-4 border border-slate-200 shadow-inner rounded-b-2xl min-h-[300px] dark:border-slate-700"
+            className="space-y-3 bg-slate-100/50 p-4 border border-slate-200 shadow-inner rounded-b-2xl min-h-[300px] dark:bg-[#050505] dark:border-slate-800"
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleCanvasDrop}
           >
@@ -287,7 +287,7 @@ function FormBuilderStep() {
                   handleDrop(idx);
                 }}
                 onClick={() => setSelectedField(f.id)}
-                className={`flex items-center gap-4 p-4 rounded-xl bg-white border cursor-pointer transition-all shadow-sm ${selectedField === f.id ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200 hover:border-slate-300'} ${draggedIdx === idx ? 'opacity-50' : 'opacity-100'}`}
+                className={`flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 border cursor-pointer transition-all shadow-sm ${selectedField === f.id ? 'border-blue-500 ring-2 ring-blue-100 dark:ring-blue-900/50' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'} ${draggedIdx === idx ? 'opacity-50' : 'opacity-100'}`}
               >
                 <div className="cursor-grab active:cursor-grabbing p-1 -ml-2 text-slate-300 hover:text-slate-500 transition-colors">
                   <GripVertical className="w-4 h-4" />
@@ -296,7 +296,7 @@ function FormBuilderStep() {
                   <p className="text-sm font-bold text-slate-800 flex items-center gap-1 dark:text-slate-200">
                     {f.label} {f.required && <span className="text-red-500">*</span>}
                   </p>
-                  <div className="mt-2 px-3 py-2 text-xs text-slate-400 bg-slate-50 border border-dashed border-slate-200 rounded-lg dark:bg-slate-900 dark:border-slate-700">
+                  <div className="mt-2 px-3 py-2 text-xs text-slate-400 bg-slate-50 border border-dashed border-slate-200 rounded-lg dark:bg-[#0a0a0a] dark:border-slate-700 dark:text-slate-500">
                     [ Input Area ]
                   </div>
                 </div>
@@ -306,7 +306,7 @@ function FormBuilderStep() {
               </div>
             ))}
             
-            <div className="border-2 border-dashed border-blue-200 bg-blue-50/30 rounded-xl p-8 flex flex-col items-center justify-center text-blue-500 pointer-events-none">
+            <div className="border-2 border-dashed border-blue-200 bg-blue-50/30 dark:border-blue-500/30 dark:bg-blue-500/5 rounded-xl p-8 flex flex-col items-center justify-center text-blue-500 dark:text-blue-400 pointer-events-none">
               <Plus className="w-6 h-6 mb-2 opacity-50" />
               <span className="text-sm font-semibold opacity-80">Drag and drop fields here</span>
             </div>
@@ -315,7 +315,7 @@ function FormBuilderStep() {
       </div>
 
       {/* RIGHT: Properties */}
-      <div className="w-80 bg-white border-l border-slate-200 flex flex-col shrink-0 dark:bg-slate-900 dark:border-slate-700">
+      <div className="w-80 bg-white border-l border-slate-200 flex flex-col shrink-0 dark:bg-[#0a0a0a] dark:border-slate-800">
         <div className="p-4 border-b border-slate-100 dark:border-slate-800">
           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Field Settings</h3>
         </div>
