@@ -30,6 +30,12 @@ export function ChatTab() {
   
   const [isNewChatOpen, setIsNewChatOpen] = useState(false);
   const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [messages, setMessages] = useState(MOCK_MESSAGES);
+  
+  const handleDeleteMessage = (msgId: string) => {
+    setMessages(prev => prev.filter(m => m.id !== msgId));
+  };
 
   const selectedConv = MOCK_CONVERSATIONS.find(c => c.id === selectedConvId);
 
@@ -167,71 +173,97 @@ export function ChatTab() {
                   </span>
                 </div>
               </div>
-              <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors dark:hover:bg-slate-800">
-                <MoreHorizontal className="w-5 h-5" />
-              </button>
+              <div className="relative">
+                <button 
+                  onClick={() => setShowMenu(!showMenu)} 
+                  className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors dark:hover:bg-slate-800">
+                  <MoreHorizontal className="w-5 h-5" />
+                </button>
+                {showMenu && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
+                    <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                      <Download className="w-4 h-4" /> Export Conversation
+                    </button>
+                    <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                      <Trash2 className="w-4 h-4" /> Delete Conversation
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
-              <div className="flex items-center justify-center">
-                <span className="px-3 py-1 bg-slate-200/50 text-slate-500 text-xs font-medium rounded-full dark:text-slate-400">
-                  Today
-                </span>
-              </div>
-              
-              {MOCK_MESSAGES.map((msg, i) => {
-                const isMe = msg.senderId === "me";
-                return (
-                  <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                    <div className="flex items-end gap-2 max-w-[70%]">
-                      {!isMe && (
-                        <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0 mb-1 dark:bg-slate-700 dark:text-slate-300">
-                          {msg.senderName.charAt(0)}
-                        </div>
-                      )}
-                      
-                      <div className="flex flex-col gap-1">
-                        {!isMe && <span className="text-xs font-semibold text-slate-500 ml-1 dark:text-slate-400">{msg.senderName}</span>}
+            {/* Chat Messages & Composer Container */}
+            <div className="flex-1 overflow-y-auto flex flex-col no-scrollbar">
+              <div className="p-6 space-y-6">
+                <div className="flex items-center justify-center">
+                  <span className="px-3 py-1 bg-slate-200/50 text-slate-500 text-xs font-medium rounded-full dark:text-slate-400">
+                    Today
+                  </span>
+                </div>
+                
+                {messages.map((msg, i) => {
+                  const isMe = msg.senderId === "me";
+                  return (
+                    <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} group`}>
+                      <div className="flex items-end gap-2 max-w-[70%] relative">
+                        {!isMe && (
+                          <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0 mb-1 dark:bg-slate-700 dark:text-slate-300">
+                            {msg.senderName.charAt(0)}
+                          </div>
+                        )}
                         
-                        <div className={`px-4 py-2.5 rounded-2xl text-sm ${
-                          isMe 
-                            ? 'bg-blue-600 text-white rounded-br-sm' 
-                            : 'bg-white text-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 rounded-bl-sm border border-slate-200 shadow-sm'
-                        }`}>
-                          {msg.content}
-                        </div>
-                        
-                        <div className={`flex items-center gap-1 text-[10px] font-medium text-slate-400 ${isMe ? 'justify-end mr-1' : 'ml-1'}`}>
-                          {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          {isMe && (
-                            <Clock className="w-3 h-3 text-slate-300" />
-                          )}
+                        <div className="flex flex-col gap-1">
+                          {!isMe && <span className="text-xs font-semibold text-slate-500 ml-1 dark:text-slate-400">{msg.senderName}</span>}
+                          
+                          <div className={`px-4 py-2.5 rounded-2xl text-sm ${
+                            isMe 
+                              ? 'bg-blue-600 text-white rounded-br-sm' 
+                              : 'bg-white text-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 rounded-bl-sm border border-slate-200 shadow-sm'
+                          }`}>
+                            {msg.content}
+                          </div>
+                          
+                          <div className={`flex items-center gap-1 text-[10px] font-medium text-slate-400 ${isMe ? 'justify-end mr-1' : 'ml-1'}`}>
+                            {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {isMe && (
+                              <Clock className="w-3 h-3 text-slate-300" />
+                            )}
+                            <button 
+                              onClick={() => handleDeleteMessage(msg.id)}
+                              title="Delete message"
+                              className="ml-2 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-all opacity-0 group-hover:opacity-100 dark:hover:bg-red-900/30"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Chat Composer */}
-            <div className="p-4 bg-white border-t border-slate-200 shrink-0 dark:bg-slate-900 dark:border-slate-700">
-              <div className="flex items-center gap-2">
-                <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors shrink-0 dark:hover:bg-slate-800">
-                  <Paperclip className="w-5 h-5" />
-                </button>
-                <div className="flex-1 bg-slate-50 border border-slate-200 rounded-full flex items-center px-4 py-1.5 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all dark:bg-slate-900 dark:border-slate-700">
-                  <input 
-                    type="text" 
-                    placeholder="Type a message..." 
-                    className="w-full bg-transparent text-sm focus:outline-none py-1"
-                  />
-                </div>
-                <button className="p-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-colors shrink-0 shadow-sm">
-                  <Send className="w-4 h-4 ml-0.5" />
-                </button>
+                  );
+                })}
               </div>
+
+              {/* Chat Composer */}
+              <div className="p-4 bg-white border-t border-slate-200 shrink-0 dark:bg-slate-900 dark:border-slate-700">
+                <div className="flex items-center gap-2">
+                  <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors shrink-0 dark:hover:bg-slate-800">
+                    <Paperclip className="w-5 h-5" />
+                  </button>
+                  <div className="flex-1 bg-slate-50 border border-slate-200 rounded-full flex items-center px-4 py-1.5 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all dark:bg-slate-900 dark:border-slate-700">
+                    <input 
+                      type="text" 
+                      placeholder="Type a message..." 
+                      className="w-full bg-transparent text-sm focus:outline-none py-1"
+                    />
+                  </div>
+                  <button className="p-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-colors shrink-0 shadow-sm">
+                    <Send className="w-4 h-4 ml-0.5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Spacer to push everything up if few messages */}
+              <div className="flex-1 bg-[#f8fafc] dark:bg-slate-900/80" />
             </div>
           </>
         ) : (
@@ -242,55 +274,7 @@ export function ChatTab() {
         )}
       </div>
 
-      {/* ─── RIGHT COLUMN: DETAILS (280px) ────────────────────────── */}
-      {selectedConv && (
-        <div className="w-[280px] border-l border-slate-200 bg-white flex flex-col shrink-0 dark:border-slate-700 dark:bg-[#1a1f2e]">
-          <div className="p-6 border-b border-slate-200 flex flex-col items-center text-center dark:border-slate-700">
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center font-bold text-2xl mb-3 shadow-sm ${
-              selectedConv.type === "Group" ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400" : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-            }`}>
-              {selectedConv.avatarInitials}
-            </div>
-            <h3 className="font-bold text-slate-800 text-lg leading-tight dark:text-slate-200">{selectedConv.name}</h3>
-            {selectedConv.type === "Direct" ? (
-              <>
-                <p className="text-sm font-semibold text-blue-600 mt-1">{selectedConv.role}</p>
-                <p className="text-xs font-medium text-slate-500 mt-1 dark:text-slate-400">{selectedConv.site}</p>
-              </>
-            ) : (
-              <>
-                <p className="text-sm font-semibold text-blue-600 mt-1">{selectedConv.memberCount} Members</p>
-                <p className="text-xs font-medium text-slate-500 mt-1 dark:text-slate-400">{selectedConv.site}</p>
-              </>
-            )}
-          </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
-            {selectedConv.type === "Group" && (
-              <>
-                <button className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 rounded-lg text-sm font-semibold text-slate-700 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
-                  <Users className="w-4 h-4 text-slate-400" /> View Members
-                </button>
-                <div className="h-px bg-slate-100 my-2 dark:bg-slate-800" />
-              </>
-            )}
-            
-            <button className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 rounded-lg text-sm font-semibold text-slate-700 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
-              <FileText className="w-4 h-4 text-slate-400" /> Shared Files
-            </button>
-            
-            <button className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 rounded-lg text-sm font-semibold text-slate-700 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
-              <Download className="w-4 h-4 text-slate-400" /> Export Conversation
-            </button>
-            
-            <div className="h-px bg-slate-100 my-2 dark:bg-slate-800" />
-            
-            <button className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-red-50 rounded-lg text-sm font-semibold text-red-600 transition-colors">
-              <Trash2 className="w-4 h-4" /> Delete Conversation
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Drawers */}
       <NewChatDrawer isOpen={isNewChatOpen} onClose={() => setIsNewChatOpen(false)} />

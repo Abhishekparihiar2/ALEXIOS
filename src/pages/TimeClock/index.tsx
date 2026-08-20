@@ -9,6 +9,7 @@ import { useSiteContext } from "../../context/SiteContext";
 import { MOCK_TIMESHEETS, ClockStatus, TimesheetException } from "./mockData";
 import { TimesheetsTab } from "./TimesheetsTab";
 import { Page } from "../../types";
+import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 
 export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }) {
   const HoverMapPin = ({ status, siteName }: { status: "inside" | "outside", siteName: string }) => (
@@ -118,63 +119,75 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
         title="Time Clock"
         badge="Security Ops"
         subtitle="Manage live attendance, exceptions, and timesheets."
-        actions={
-          <>
-            <div className="relative">
-              <button 
-                onClick={() => setIsPositionListOpen(!isPositionListOpen)}
-                className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm hover:bg-slate-800 flex items-center gap-2 backdrop-blur-sm"
-              >
-                <Users className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-                Select Position
-              </button>
-              {isPositionListOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 dark:bg-slate-900 dark:border-slate-700">
-                  {availablePositions.map(pos => (
-                    <label key={pos} className="flex items-center gap-2 p-2 hover:bg-slate-50 cursor-pointer rounded dark:hover:bg-slate-800">
-                      <input 
-                        type="checkbox" 
-                        checked={selectedPositions.has(pos)}
-                        onChange={() => {
-                          const next = new Set(selectedPositions);
-                          if (next.has(pos)) next.delete(pos);
-                          else next.add(pos);
-                          setSelectedPositions(next);
-                        }}
-                        className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600"
-                      />
-                      <span className="text-sm text-slate-700 dark:text-slate-300">{pos}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-            <button 
-              onClick={() => setIsSettingsOpen(true)}
-              className="p-2 bg-white border border-slate-300 rounded-lg text-slate-500 shadow-sm hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-800"
-            >
-              <Settings className="w-5 h-5" />
-            </button>
-          </>
-        }
         bottomContent={
-          <div className="flex items-center gap-6 mt-2">
-            {(["Today", "Timesheets", "Live Map"] as const).map(tab => (
-              <button 
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
-                  activeTab === tab 
-                    ? "border-blue-600 text-blue-700" 
-                    : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
-                }`}
+          <div className="flex items-center justify-between w-full mt-2 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-6">
+              {(["Today", "Timesheets", "Live Map"] as const).map(tab => (
+                <button 
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 -mb-[1px] ${
+                    activeTab === tab 
+                      ? "border-blue-600 text-blue-700 dark:text-blue-500 dark:border-blue-500" 
+                      : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:hover:text-slate-300"
+                  }`}
+                >
+                  {tab === "Today" && <Clock className="w-4 h-4" />}
+                  {tab === "Timesheets" && <FileText className="w-4 h-4" />}
+                  {tab === "Live Map" && <Map className="w-4 h-4" />}
+                  {tab}
+                </button>
+              ))}
+            </div>
+            
+            <div className="flex items-center gap-2 pb-2">
+              <select 
+                value={globalSite} 
+                onChange={(e) => { setGlobalSite(e.target.value); setPage(1); }}
+                className="px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm outline-none hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
-                {tab === "Today" && <Clock className="w-4 h-4" />}
-                {tab === "Timesheets" && <FileText className="w-4 h-4" />}
-                {tab === "Live Map" && <Map className="w-4 h-4" />}
-                {tab}
+                <option>All Sites</option>
+                <option>Downtown Financial Center</option>
+                <option>Westfield Mall</option>
+                <option>Harbor District</option>
+                <option>City Hall Security Post</option>
+              </select>
+              <div className="relative">
+                <button 
+                  onClick={() => setIsPositionListOpen(!isPositionListOpen)}
+                  className="px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors"
+                >
+                  <Users className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  Select Position
+                </button>
+                {isPositionListOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 dark:bg-slate-900 dark:border-slate-700">
+                    {availablePositions.map(pos => (
+                      <label key={pos} className="flex items-center gap-2 p-2 hover:bg-slate-50 cursor-pointer rounded dark:hover:bg-slate-800">
+                        <input 
+                          type="checkbox" 
+                          checked={selectedPositions.has(pos)}
+                          onChange={() => {
+                            const next = new Set(selectedPositions);
+                            if (next.has(pos)) next.delete(pos);
+                            else next.add(pos);
+                            setSelectedPositions(next);
+                          }}
+                          className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 bg-white dark:bg-slate-800"
+                        />
+                        <span className="text-sm text-slate-700 dark:text-slate-300">{pos}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <button 
+                onClick={() => setIsSettingsOpen(true)}
+                className="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-500 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
+              >
+                <Settings className="w-4 h-4" />
               </button>
-            ))}
+            </div>
           </div>
         }
       />
@@ -277,17 +290,6 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                 <option value="Need to Clock Out">Missed Clock-Out</option>
                 <option value="On Time Off">On Time Off</option>
               </select>
-              <select 
-                value={globalSite} 
-                onChange={(e) => { setGlobalSite(e.target.value); setPage(1); }}
-                className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-sm font-semibold text-slate-300 shadow-sm outline-none backdrop-blur-sm"
-              >
-                <option>All Sites</option>
-                <option>Downtown Financial Center</option>
-                <option>Westfield Mall</option>
-                <option>Harbor District</option>
-                <option>City Hall Security Post</option>
-              </select>
             </div>
             
             <div className="flex items-center bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg shadow-sm p-0.5 relative">
@@ -299,8 +301,8 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                 <Calendar className="w-4 h-4 text-slate-400" />
                 <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
                   {dateRange.start.getTime() === dateRange.end.getTime() 
-                    ? `${(dateRange.start.getMonth() + 1).toString().padStart(2, '0')}/${dateRange.start.getDate().toString().padStart(2, '0')}` 
-                    : `${(dateRange.start.getMonth() + 1).toString().padStart(2, '0')}/${dateRange.start.getDate().toString().padStart(2, '0')} - ${(dateRange.end.getMonth() + 1).toString().padStart(2, '0')}/${dateRange.end.getDate().toString().padStart(2, '0')}`
+                    ? formatDateMMDDYYYY(dateRange.start) 
+                    : `${formatDateMMDDYYYY(dateRange.start)} - ${formatDateMMDDYYYY(dateRange.end)}`
                   }
                 </span>
               </div>
@@ -392,7 +394,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                           {dateRange.start.getTime() !== dateRange.end.getTime() && (
                             <td className="px-4 py-3 align-middle">
                               <span className="font-semibold text-slate-800 dark:text-slate-200">
-                                {dateRange.start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                {formatDateMMDDYYYY(dateRange.start)}
                               </span>
                             </td>
                           )}
@@ -570,11 +572,11 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
 
       {/* Settings Modal */}
       {isSettingsOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
               <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">Time Clock Settings</h3>
-              <button onClick={() => setIsSettingsOpen(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+              <button onClick={() => setIsSettingsOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
               </button>
             </div>
@@ -582,7 +584,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1 dark:text-slate-300">Grace Period (Minutes)</label>
                 <p className="text-xs text-slate-500 mb-2 dark:text-slate-400">Time allowed before a punch is marked as late.</p>
-                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold outline-none focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600">
+                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold outline-none focus:border-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                   <option>5 Minutes</option>
                   <option selected>15 Minutes</option>
                   <option>30 Minutes</option>
@@ -591,7 +593,7 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1 dark:text-slate-300">Auto Clock-Out</label>
                 <p className="text-xs text-slate-500 mb-2 dark:text-slate-400">Automatically clock out guards who miss their punch.</p>
-                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold outline-none focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600">
+                <select className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold outline-none focus:border-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                   <option>Disabled (Flag as Missing Punch)</option>
                   <option>At shift scheduled end time</option>
                   <option>1 hour after shift ends</option>
@@ -612,9 +614,9 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
                 </div>
               </div>
             </div>
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3 dark:border-slate-700 dark:bg-slate-900">
-              <button onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
-              <button onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors">Save Settings</button>
+            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3 dark:border-slate-800 dark:bg-slate-900">
+              <button onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors">Cancel</button>
+              <button onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm">Save Settings</button>
             </div>
           </div>
         </div>
@@ -628,24 +630,28 @@ export function TimeClockPage({ onNavigate }: { onNavigate?: (p: Page) => void }
 
 function KpiCard({ label, value, active, onClick, color }: { label: string, value: number, active: boolean, onClick: () => void, color: "blue" | "green" | "red" | "orange" | "purple" }) {
   const colors = {
-    blue: { bg: "bg-blue-900/30", border: "border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.15)]", text: "text-blue-400", ring: "ring-blue-500" },
-    green: { bg: "bg-emerald-900/30", border: "border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]", text: "text-emerald-400", ring: "ring-emerald-500" },
-    red: { bg: "bg-red-900/30", border: "border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.15)]", text: "text-red-400", ring: "ring-red-500" },
-    orange: { bg: "bg-amber-900/30", border: "border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)]", text: "text-amber-400", ring: "ring-amber-500" },
-    purple: { bg: "bg-purple-900/30", border: "border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.15)]", text: "text-purple-400", ring: "ring-purple-500" },
+    blue: { badge: "bg-blue-100/80 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400", activeBorder: "border-blue-400/50 dark:border-blue-500/50 ring-1 ring-blue-400/20 dark:ring-blue-500/20" },
+    green: { badge: "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400", activeBorder: "border-emerald-400/50 dark:border-emerald-500/50 ring-1 ring-emerald-400/20 dark:ring-emerald-500/20" },
+    red: { badge: "bg-red-100/80 text-red-700 dark:bg-red-500/20 dark:text-red-400", activeBorder: "border-red-400/50 dark:border-red-500/50 ring-1 ring-red-400/20 dark:ring-red-500/20" },
+    orange: { badge: "bg-amber-100/80 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400", activeBorder: "border-amber-400/50 dark:border-amber-500/50 ring-1 ring-amber-400/20 dark:ring-amber-500/20" },
+    purple: { badge: "bg-purple-100/80 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400", activeBorder: "border-purple-400/50 dark:border-purple-500/50 ring-1 ring-purple-400/20 dark:ring-purple-500/20" },
   };
   const theme = colors[color];
   
   return (
     <div 
       onClick={onClick}
-      className={`rounded-xl p-3 cursor-pointer transition-all border backdrop-blur-md ${active ? `ring-1 ring-offset-1 ring-offset-slate-900 ${theme.ring} border-transparent bg-slate-800/80 shadow-[0_0_20px_rgba(255,255,255,0.05)]` : `bg-slate-900/40 border-slate-800 hover:border-slate-700 hover:bg-slate-800/60`}`}
+      className={`rounded-xl px-3 py-2 cursor-pointer transition-all border backdrop-blur-xl flex items-center justify-between gap-3 ${
+        active 
+          ? `bg-white/60 dark:bg-slate-800/80 shadow-md ${theme.activeBorder}` 
+          : `bg-slate-50/40 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800/50 hover:bg-slate-100/60 dark:hover:bg-slate-800/60 shadow-sm`
+      }`}
     >
-      <p className="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider dark:text-slate-400">{label}</p>
-      <div className="flex items-center gap-2">
-        <div className={`w-8 h-8 rounded-lg ${theme.bg} ${theme.text} ${theme.border} border flex items-center justify-center font-bold text-lg backdrop-blur-sm`}>
-          {value}
-        </div>
+      <span className={`text-[11px] font-bold uppercase tracking-wider leading-tight ${active ? 'text-slate-800 dark:text-slate-200' : 'text-slate-500 dark:text-slate-400'}`}>
+        {label}
+      </span>
+      <div className={`h-7 px-2.5 rounded-lg shrink-0 flex items-center justify-center font-bold text-sm ${theme.badge}`}>
+        {value}
       </div>
     </div>
   );

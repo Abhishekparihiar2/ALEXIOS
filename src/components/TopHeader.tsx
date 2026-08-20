@@ -55,7 +55,7 @@ export function TopHeader({
   const [siteDropdownOpen, setSiteDropdownOpen] = useState(false);
   const { globalSite, setGlobalSite } = useSiteContext();
 
-  const pageLabels: Record<Page, string> = {
+  const pageLabels: Record<string, string> = {
     dashboard: "Dashboard", employees: "Employee Management", sites: "Clients & Sites",
     checkpoints: "Checkpoints & Tour Routes", scheduling: "Scheduling", timeclock: "Time Clock",
     reports: "Reports & Incidents", forms: "Forms", tasks: "Tasks & Dispatch",
@@ -63,6 +63,28 @@ export function TopHeader({
     documents: "Documents & Policies", training: "Training", vehicles: "Vehicles",
     automations: "Automations", payroll: "Payroll & Back Office", settings: "Settings",
     groups: "Groups & Segments", help: "Help", helpdesk: "Help Desk",
+    "clocked-in": "Time Clock",
+  };
+
+  const getPageTitle = (page: string) => {
+    // If exact match
+    if (pageLabels[page]) return pageLabels[page];
+    
+    // Handle submodules and split routes
+    if (page.startsWith('submodule-')) {
+      const key = page.replace('submodule-', '');
+      if (pageLabels[key]) return pageLabels[key];
+      // Special mappings
+      if (key === 'exceptions') return 'Tickets & Exceptions';
+      if (key === 'journal') return 'Activity Journal';
+      if (key === 'metrics') return 'Dashboard'; // Fallback for metrics
+    }
+    
+    if (page.startsWith('report-settings') || page.startsWith('reports-submissions')) return "Reports & Incidents";
+    if (page.startsWith('employees:')) return "Employee Management";
+    if (page.startsWith('sites:')) return "Clients & Sites";
+    
+    return "Dashboard";
   };
 
   return (
@@ -78,7 +100,7 @@ export function TopHeader({
         <Menu className="w-5 h-5" />
       </button>
       <h2 className="text-base font-bold flex-1 truncate text-slate-100 uppercase tracking-widest">
-        {pageLabels[activePage] || "Dashboard"}
+        {getPageTitle(activePage)}
       </h2>
 
       {/* Global Search */}

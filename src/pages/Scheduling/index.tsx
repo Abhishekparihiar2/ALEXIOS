@@ -10,6 +10,7 @@ import { ConflictsDrawer } from "./ConflictsDrawer";
 import { TourDrawer } from "./TourDrawer";
 import { RequestsDrawer } from "./RequestsDrawer";
 import { PublishDrawer } from "./PublishDrawer";
+import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 
 export function SchedulingPage() {
   const [shifts, setShifts] = useState(MOCK_SCHED_SHIFTS);
@@ -36,14 +37,14 @@ export function SchedulingPage() {
   const [showPublishDrawer, setShowPublishDrawer] = useState(false);
 
   const DAYS = [
-    { date: "2026-08-03", dayLabel: "Mon", shortLabel: "Aug 3" },
-    { date: "2026-08-04", dayLabel: "Tue", shortLabel: "Aug 4" },
-    { date: "2026-08-05", dayLabel: "Wed", shortLabel: "Aug 5" },
-    { date: "2026-08-06", dayLabel: "Thu", shortLabel: "Aug 6" },
-    { date: "2026-08-07", dayLabel: "Fri", shortLabel: "Aug 7" },
-    { date: "2026-08-08", dayLabel: "Sat", shortLabel: "Aug 8" },
-    { date: "2026-08-09", dayLabel: "Sun", shortLabel: "Aug 9" }
-  ];
+    { date: "2026-08-03", dayLabel: "Mon" },
+    { date: "2026-08-04", dayLabel: "Tue" },
+    { date: "2026-08-05", dayLabel: "Wed" },
+    { date: "2026-08-06", dayLabel: "Thu" },
+    { date: "2026-08-07", dayLabel: "Fri" },
+    { date: "2026-08-08", dayLabel: "Sat" },
+    { date: "2026-08-09", dayLabel: "Sun" }
+  ].map(d => ({ ...d, shortLabel: formatDateMMDDYYYY(d.date) }));
 
   const EMPLOYEES = [
     "Marcus Johnson",

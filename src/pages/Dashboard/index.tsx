@@ -199,7 +199,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
 
           {/* Progress Rings */}
           <div className="flex justify-around items-center shrink-0 mb-4 px-4">
-            <div className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105" onClick={() => document.getElementById('tours-quadrant')?.scrollIntoView({ behavior: 'smooth' })}>
+            <div className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105" onClick={() => onNavigate("checkpoints" as Page)}>
               <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-black">
                 <svg className="absolute inset-0 w-full h-full -rotate-90">
                   <circle cx="45" cy="45" r="38" className="stroke-slate-800/80 fill-none" strokeWidth="6" />
@@ -213,7 +213,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               <span className="text-[10px] font-bold text-white mt-3 tracking-widest uppercase">Tours</span>
             </div>
 
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105" onClick={() => onNavigate("reports" as Page)}>
               <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-black">
                 <svg className="absolute inset-0 w-full h-full -rotate-90">
                   <circle cx="45" cy="45" r="38" className="stroke-slate-800/80 fill-none" strokeWidth="6" />
@@ -227,7 +227,7 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               <span className="text-[10px] font-bold text-white mt-3 tracking-widest uppercase">Reports</span>
             </div>
 
-            <div className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105" onClick={() => document.getElementById('tasks-quadrant')?.scrollIntoView({ behavior: 'smooth' })}>
+            <div className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105" onClick={() => onNavigate("tasks" as Page)}>
               <div className="relative w-[90px] h-[90px] flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(59,130,246,0.25)] bg-black">
                 <svg className="absolute inset-0 w-full h-full -rotate-90">
                   <circle cx="45" cy="45" r="38" className="stroke-slate-800/80 fill-none" strokeWidth="6" />
@@ -381,10 +381,10 @@ export function Dashboard({ onNavigate, initialDrawer }: { onNavigate: (page: Pa
               { icon: <FileText className="w-4 h-4" />, count: "8", title: "Documents", sub: "Files", color: "text-white", onClick: () => onNavigate("documents" as Page) },
               { icon: <ClipboardList className="w-4 h-4" />, count: "6", title: "Forms", sub: "Custom", color: "text-white", onClick: () => onNavigate("forms" as Page) },
               { icon: <HelpCircle className="w-4 h-4" />, count: "6", title: "Quizzes", sub: "Assessments", color: "text-white", onClick: () => onNavigate("training" as Page) },
-              { icon: <Settings className="w-4 h-4" />, count: "", title: "Settings", sub: "Config", color: "text-neutral-300", onClick: () => {} }
+              { icon: <Settings className="w-4 h-4" />, count: "", title: "Settings", sub: "Config", color: "text-neutral-300", onClick: () => { } }
             ].map(card => (
-              <div 
-                key={card.title} 
+              <div
+                key={card.title}
                 onClick={card.onClick}
                 className="bg-neutral-900 border border-neutral-700 rounded-xl p-3 flex flex-col justify-between hover:bg-slate-800 hover:border-blue-500/30 transition-all cursor-pointer h-24"
               >

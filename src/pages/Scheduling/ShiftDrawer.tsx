@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, Check, Paperclip, ChevronDown, Calendar, Clock, MapPin, Users, Hash, Briefcase } from "lucide-react";
 import { MOCK_SCHED_JOBS } from "../../data/mockData";
+import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 
 export function ShiftDrawer({ isOpen, onClose, editingShiftId, shifts, prefillDate, prefillEmp, prefillJob, onSave, onDelete }: any) {
   const [activeTab, setActiveTab] = useState<"details" | "tasks" | "templates">("details");
@@ -78,7 +79,7 @@ export function ShiftDrawer({ isOpen, onClose, editingShiftId, shifts, prefillDa
               <X className="w-5 h-5" />
             </button>
             <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-              {editingShiftId ? "Edit Shift" : "Create Shift"} · {date}
+              {editingShiftId ? "Edit Shift" : "Create Shift"} · {formatDateMMDDYYYY(date)}
             </h3>
           </div>
         </div>
@@ -87,8 +88,7 @@ export function ShiftDrawer({ isOpen, onClose, editingShiftId, shifts, prefillDa
         <div className="flex items-center border-b border-slate-200 px-5 dark:border-slate-700">
           {[
             { id: "details", label: "Shift details" },
-            { id: "tasks", label: "Shift tasks" },
-            { id: "templates", label: "Templates" }
+            { id: "tasks", label: "Shift tasks" }
           ].map(tab => (
             <button
               key={tab.id}
@@ -217,13 +217,6 @@ export function ShiftDrawer({ isOpen, onClose, editingShiftId, shifts, prefillDa
             </div>
           )}
 
-          {activeTab === "templates" && (
-            <div className="text-center py-10">
-              <Briefcase className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-              <p className="text-sm text-slate-500 dark:text-slate-400">Select a pre-built shift template to auto-fill these details.</p>
-              <button className="mt-4 px-4 py-2 border border-slate-300 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-800">Create Template</button>
-            </div>
-          )}
         </div>
 
         {/* Footer Actions */}

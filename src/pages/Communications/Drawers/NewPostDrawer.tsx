@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Upload, Globe, Building2, MapPin, Users, Pin } from 'lucide-react';
+import { X, Upload, Globe, Building2, MapPin, Users, Pin, User } from 'lucide-react';
 
 interface NewPostDrawerProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export function NewPostDrawer({ isOpen, onClose }: NewPostDrawerProps) {
     <>
       <div className="fixed inset-0 z-40 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="fixed top-0 right-0 bottom-0 w-full max-w-[600px] bg-slate-50 shadow-2xl z-40 flex flex-col animate-in slide-in-from-right duration-300 dark:bg-slate-900">
+      <div className="fixed top-0 right-0 bottom-0 w-full max-w-[600px] bg-slate-50 border-l border-slate-200 shadow-2xl z-40 flex flex-col animate-in slide-in-from-right duration-300 dark:bg-slate-900 dark:border-slate-700 dark:shadow-[-8px_0_30px_-5px_rgba(0,0,0,0.5)]">
         <div className="px-6 py-5 bg-white border-b border-slate-200 flex items-center justify-between shrink-0 dark:bg-slate-900 dark:border-slate-700">
           <div className="flex flex-col gap-1">
             <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">New Message Board Post</h2>
@@ -98,7 +98,8 @@ export function NewPostDrawer({ isOpen, onClose }: NewPostDrawerProps) {
                 { id: "Client", icon: Building2 },
                 { id: "Site", icon: MapPin },
                 { id: "Department", icon: Users },
-                { id: "Group", icon: Users }
+                { id: "Group", icon: Users },
+                { id: "Employee", icon: User }
               ].map(opt => (
                 <label key={opt.id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${audience === opt.id ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-900/20 dark:border-blue-500' : 'border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800'}`}>
                   <input type="radio" name="audience" className="hidden" checked={audience === opt.id} onChange={() => setAudience(opt.id)} />

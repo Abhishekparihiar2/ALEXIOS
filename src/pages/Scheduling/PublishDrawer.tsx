@@ -1,5 +1,6 @@
 import { X, Send, Clock, MapPin, CalendarDays, CheckCircle2, Edit2 } from "lucide-react";
 import { MOCK_SCHED_JOBS } from "../../data/mockData";
+import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 
 interface PublishDrawerProps {
   isOpen: boolean;
@@ -63,7 +64,7 @@ export function PublishDrawer({ isOpen, onClose, shifts, onPublish, onPublishSin
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
                       <CalendarDays className="w-3.5 h-3.5" />
-                      <span>{new Date(shift.date).toLocaleDateString()}</span>
+                      <span>{formatDateMMDDYYYY(shift.date)}</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
                       <Clock className="w-3.5 h-3.5" />

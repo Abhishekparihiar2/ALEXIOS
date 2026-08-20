@@ -9,6 +9,9 @@ import {
   MOCK_REPORT_FORMS, MOCK_REPORT_CATEGORIES, MOCK_INCIDENT_CATEGORIES, 
   MOCK_REPORT_FOOTERS, MOCK_REPORT_TEMPLATES, ReportFormDef 
 } from '../../data/mockReports';
+import { useSiteContext } from "../../context/SiteContext";
+import { formatTime } from "../../utils/dateHelper";
+import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 import { ReportBuilder } from './ReportBuilder';
 import { IncidentCategoryBuilder } from './IncidentCategoryBuilder';
 
@@ -296,7 +299,7 @@ function ReportCategoriesTab() {
       description: formData.get('description') as string,
       status: formData.get('status') as "Active" | "Archived",
       reportCount: 0,
-      lastUpdated: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      lastUpdated: formatDateMMDDYYYY(new Date())
     };
     setCategories([newCategory, ...categories]);
     setIsModalOpen(false);

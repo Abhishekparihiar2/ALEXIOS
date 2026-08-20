@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Search, Filter, ChevronLeft, ChevronRight, Download, CheckSquare, MessageSquare, AlertCircle, AlertTriangle, X, Check, CheckCircle, Flame, Clock, Calendar, Edit2, Lock, Unlock } from "lucide-react";
 import { MOCK_WEEKLY_TIMESHEETS, PayPeriodSummary, TimesheetEntry, TimesheetIssue } from "./timesheetMockData";
+import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 
 export function TimesheetsTab() {
   const [search, setSearch] = useState("");
@@ -53,7 +54,7 @@ export function TimesheetsTab() {
     curr.setDate(curr.getDate() + 1);
   }
 
-  const formatShortDate = (d: Date) => `${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getDate().toString().padStart(2, '0')}`;
+  const formatShortDate = (d: Date) => formatDateMMDDYYYY(d);
   
   const formatDateISO = (d: Date) => {
     const y = d.getFullYear();

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import alexiosLogo from "../imports/AlexiosAppLogos-white.png";
 import { PageHeader } from "../../components/PageHeader";
+import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 import { Page, AuthScreen, FormErrors, NavItem, NavGroup } from '../../types/index';
 import { MOCK_USER, MOCK_KPI, MOCK_ACTIVITY, MOCK_TOURS, MOCK_TASKS, MOCK_ATTENDANCE, MOCK_CLOCKED_IN_DETAILS, MOCK_INACTIVE_TICKETS, MOCK_EXPIRING_SKILLS, MOCK_MESSAGES, MOCK_VEHICLES_DETAILED, MOCK_ACTIVITY_JOURNAL, MOCK_SCHED_JOBS, MOCK_SCHED_SHIFTS, MOCK_SWAP_REQUESTS } from '../../data/mockData';
 import { NAV_GROUPS } from '../../data/navConfig';
@@ -36,8 +37,7 @@ import { App } from '../../app/App';
 
 export type ProfileTab =
   | "overview" | "sites" | "bans" | "contacts" | "notes-on" | "notes-by"
-  | "availability" | "exceptions" | "actions" | "skills" | "reports"
-  | "summary" | "tours" | "schedules" | "timeoff" | "employment-policies";
+  | "availability" | "actions" | "skills" | "timeoff" | "employment-policies";
 
 export const AVAIL_CYCLE = ["available", "maybe", "unavailable"] as const;
 export type AvailState = typeof AVAIL_CYCLE[number];
@@ -57,6 +57,7 @@ export function buildInitialAvail(): Record<string, AvailState> {
 
 export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; onBack: () => void }) {
   const [activeTab, setActiveTab] = useState<ProfileTab>("overview");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [avail, setAvail] = useState<Record<string, AvailState>>(buildInitialAvail);
   const cycleAvail = (key: string) => {
     setAvail((prev) => {
@@ -95,14 +96,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
     { id: "notes-on", label: "Notes on Employee" },
     { id: "notes-by", label: "Notes by Employee" },
     { id: "availability", label: "Availability" },
-    { id: "exceptions", label: "Work Exceptions" },
     { id: "employment-policies", label: "Employment & Policies" },
     { id: "actions", label: "Actions" },
     { id: "skills", label: "Skills & Attributes" },
-    { id: "reports", label: "Security Reports" },
-    { id: "summary", label: "Summary Reports" },
-    { id: "tours", label: "Tours" },
-    { id: "schedules", label: "Schedules" },
     { id: "timeoff", label: "Time Off" },
   ];
 
@@ -116,11 +112,10 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
         style={{ background: "rgba(15,23,41,0.6)", backdropFilter: "blur(4px)" }}
         onClick={onClose}>
-        <div className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
-          style={{ background: "#fff" }}
+        <div className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden bg-white dark:bg-[#020617] border border-transparent dark:border-slate-800"
           onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between px-6 py-4"
-            style={{ background: "linear-gradient(135deg, #0f1729, #1a2f5a)", borderBottom: "1px solid #e2e8f0" }}>
+            style={{ background: "linear-gradient(135deg, #0f1729, #1a2f5a)" }}>
             <h3 className="text-base font-bold text-white">{title}</h3>
             <button onClick={onClose} className="text-white/60 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
           </div>
@@ -142,15 +137,13 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
   function renderInput(placeholder: string, type = "text") {
     return (
       <input type={type} placeholder={placeholder}
-        className="w-full px-3 py-2.5 rounded-xl text-sm border outline-none text-slate-900 dark:text-slate-100"
-        style={{ border: "1.5px solid #e2e8f0"}} />
+        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors border border-slate-200 dark:border-slate-800 bg-white dark:bg-black text-slate-900 dark:text-slate-100 focus:border-blue-500" />
     );
   }
 
   function renderSelect(options: string[]) {
     return (
-      <select className="w-full px-3 py-2.5 rounded-xl text-sm border outline-none text-slate-900 dark:text-slate-100"
-        style={{ border: "1.5px solid #e2e8f0"}}>
+      <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors border border-slate-200 dark:border-slate-800 bg-white dark:bg-black text-slate-900 dark:text-slate-100 focus:border-blue-500">
         {options.map((o) => <option key={o}>{o}</option>)}
       </select>
     );
@@ -158,11 +151,11 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
 
   function renderModalFooter(onClose: () => void, submitLabel = "Save") {
     return (
-      <div className="flex justify-end gap-3 pt-4 border-t bg-slate-100 dark:bg-slate-800" >
+      <div className="flex justify-end gap-3 px-6 py-4 -mx-6 -mb-6 mt-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-black" >
         <button onClick={onClose}
-          className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800"
-          >Cancel</button>
-        <button className="px-5 py-2 rounded-xl text-sm font-bold text-white"
+          className="px-4 py-2 rounded-xl text-sm font-semibold transition-colors text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800"
+        >Cancel</button>
+        <button className="px-5 py-2 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
           style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}
           onClick={onClose}>{submitLabel}</button>
       </div>
@@ -191,10 +184,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
     return (
       <div className="p-6 space-y-6">
         {/* Profile card */}
-        <div className="flex items-center gap-5 p-5 rounded-2xl"
-          style={{ background: "linear-gradient(135deg,#f0f5ff,#e8f0fe)", border: "1.5px solid #bfdbfe" }}>
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold text-white shrink-0"
-            style={{ background: `linear-gradient(135deg,${ac},${ac}cc)`, boxShadow: `0 4px 16px ${ac}44` }}>
+        <div className="flex items-center gap-5 p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-800 dark:to-slate-900 border border-blue-200 dark:border-slate-700">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold text-white shrink-0 shadow-lg"
+            style={{ background: `linear-gradient(135deg,${ac},${ac}cc)` }}>
             {employee.avatar}
           </div>
           <div>
@@ -202,8 +194,8 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
               {employee.firstName} {employee.middleName} {employee.lastName}
             </div>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <span className="text-sm text-slate-600 dark:text-slate-300" >{employee.title}</span>
-              <span className="w-1 h-1 rounded-full text-slate-300 dark:text-slate-400"  />
+              <span className="text-sm text-slate-600 dark:text-slate-400" >{employee.title}</span>
+              <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600" />
               <span className="inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-xs font-semibold"
                 style={{ background: ut.bg, color: ut.color }}>{employee.userType}</span>
               <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold"
@@ -217,20 +209,20 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         {/* Fields grid */}
         <div className="grid grid-cols-2 gap-4">
           {fields.map(([label, value]) => (
-            <div key={label} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
-              <div className="text-xs font-semibold uppercase tracking-wide mb-1 text-slate-400 dark:text-slate-300" >{label}</div>
+            <div key={label} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800" >
+              <div className="text-xs font-semibold uppercase tracking-wide mb-1 text-slate-400 dark:text-slate-400" >{label}</div>
               <div className="text-sm font-medium text-slate-900 dark:text-slate-100" >{value}</div>
             </div>
           ))}
         </div>
 
         {/* Portal access */}
-        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:bg-slate-700 dark:border-slate-700" >
-          <div className="text-xs font-semibold uppercase tracking-wide mb-3 text-slate-400 dark:text-slate-300" >Portal Access</div>
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800" >
+          <div className="text-xs font-semibold uppercase tracking-wide mb-3 text-slate-400 dark:text-slate-400" >Portal Access</div>
           <div className="flex gap-4 flex-wrap">
             {[["Admin Portal", true], ["Guard Mobile App", employee.userType === "Guard"], ["Supervisor View", employee.userType === "Supervisor" || employee.userType === "Admin"]].map(([label, enabled]) => (
               <div key={String(label)} className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full" style={{ background: enabled ? "#16a34a" : "#e2e8f0" }} />
+                <div className="w-2 h-2 rounded-full" style={{ background: enabled ? "#16a34a" : "#475569" }} />
                 <span className="text-sm" style={{ color: enabled ? "#16a34a" : "#94a3b8" }}>{String(label)}</span>
               </div>
             ))}
@@ -245,9 +237,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
             { label: "Shifts Worked", value: "312" },
             { label: "Skills Verified", value: "5" },
           ].map((s) => (
-            <div key={s.label} className="p-4 rounded-xl text-center border-slate-200 dark:bg-slate-700 dark:border-slate-700" style={{ background: "#fff"}}>
-              <div className="text-2xl font-bold" style={{ color: "#1e3a6e" }}>{s.value}</div>
-              <div className="text-xs mt-1 text-slate-400 dark:text-slate-300" >{s.label}</div>
+            <div key={s.label} className="p-4 rounded-xl text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <div className="text-2xl font-bold text-blue-900 dark:text-blue-400">{s.value}</div>
+              <div className="text-xs mt-1 text-slate-400 dark:text-slate-400" >{s.label}</div>
             </div>
           ))}
         </div>
@@ -270,18 +262,18 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
             <Plus className="w-4 h-4" />Assign Site
           </button>
         </div>
-        <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
-          <table className="w-full" style={{ borderCollapse: "collapse" }}>
+        <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800/50">
+          <table className="w-full border-collapse">
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-800/50">
                 {["Site", "Start Date", "Eff. Rate Date", "Rate", "End Date", "Primary", "", "Action"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800/50">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {sites.map((s, i) => (
-                <tr key={i} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                <tr key={i} className="border-b border-slate-100 dark:border-slate-800/30">
                   <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-slate-100" >{s.name}</td>
                   <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{s.start}</td>
                   <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300" >{s.rateDate}</td>
@@ -290,7 +282,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
                   <td className="px-4 py-3">
                     {s.primary
                       ? <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: "#f0fdf4", color: "#16a34a" }}>Primary</span>
-                      : <span style={{fontSize: 13 }} className="text-slate-300 dark:text-slate-400">—</span>}
+                      : <span style={{ fontSize: 13 }} className="text-slate-300 dark:text-slate-400">—</span>}
                   </td>
                   <td className="px-4 py-3">
                     {!s.primary && (
@@ -342,9 +334,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 {["Site Name", "Banned On", "Status", "Action"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -411,7 +403,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         </div>
         <div className="space-y-3">
           {shown.map((c, i) => (
-            <div key={i} className="p-4 rounded-2xl flex items-center gap-4 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
+            <div key={i} className="p-4 rounded-2xl flex items-center gap-4 bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0" }}>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shrink-0"
                 style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>
                 {c.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
@@ -463,12 +455,12 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         </div>
         <div className="space-y-4">
           {notes.map((n, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
+            <div key={i} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0" }}>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-semibold" style={{ color: "#1e3a6e" }}>{n.author}</span>
                 <span className="text-xs text-slate-400 dark:text-slate-300" >{n.date}</span>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-300" style={{lineHeight: 1.6 }}>{n.text}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300" style={{ lineHeight: 1.6 }}>{n.text}</p>
             </div>
           ))}
         </div>
@@ -519,7 +511,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         </div>
         <div className="space-y-4">
           {shown.map((n, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
+            <div key={i} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0" }}>
               <div className="flex items-center justify-between mb-2 gap-2">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-lg"
                   style={{ background: "#eff6ff", color: "#1e3a6e" }}>{n.type}</span>
@@ -554,8 +546,8 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         <div className="overflow-x-auto rounded-2xl" style={{ border: "1.5px solid #e2e8f0" }}>
           <table style={{ borderCollapse: "collapse", minWidth: 600 }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
-                <th className="px-3 py-2.5 text-left text-xs font-bold text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0", minWidth: 64 }}>Time</th>
+              <tr className="bg-slate-50 dark:bg-slate-900">
+                <th className="px-3 py-2.5 text-left text-xs font-bold text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0", minWidth: 64 }}>Time</th>
                 {DAYS_SHORT.map((d) => (
                   <th key={d} className="px-3 py-2.5 text-center text-xs font-bold" style={{ color: "#1e3a6e", borderBottom: "1.5px solid #e2e8f0", minWidth: 72 }}>{d}</th>
                 ))}
@@ -564,7 +556,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
             <tbody>
               {HOURS_LIST.map((h, hi) => (
                 <tr key={h} style={{ background: hi % 2 === 0 ? "#fff" : "#fafbfd" }}>
-                  <td className="px-3 py-1.5 text-xs font-mono font-semibold text-slate-400 dark:text-slate-300" style={{borderRight: "1.5px solid #e2e8f0" }}>{h}</td>
+                  <td className="px-3 py-1.5 text-xs font-mono font-semibold text-slate-400 dark:text-slate-300" style={{ borderRight: "1.5px solid #e2e8f0" }}>{h}</td>
                   {DAYS_SHORT.map((d) => {
                     const key = `${d}-${h}`;
                     const state = avail[key];
@@ -598,23 +590,23 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
     return (
       <div className="p-6">
         <div className="flex items-center gap-3 mb-5 flex-wrap">
-          <div className="flex items-center gap-2 flex-1 min-w-48 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
+          <div className="flex items-center gap-2 flex-1 min-w-48 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0" }}>
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300" />
             <input value={exceptSearch} onChange={(e) => setExceptSearch(e.target.value)}
               placeholder="Search exceptions..." className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
           </div>
           <input type="date" className="rounded-xl px-3 py-2.5 text-sm border outline-none" style={{ border: "1.5px solid #e2e8f0" }} />
-          <select className="rounded-xl px-3 py-2.5 text-sm border outline-none text-slate-600 dark:text-slate-300" style={{ border: "1.5px solid #e2e8f0"}}>
+          <select className="rounded-xl px-3 py-2.5 text-sm border outline-none text-slate-600 dark:text-slate-300" style={{ border: "1.5px solid #e2e8f0" }}>
             <option>All Status</option><option>Exception</option><option>Normal</option>
           </select>
         </div>
         <div className="overflow-x-auto rounded-2xl" style={{ border: "1.5px solid #e2e8f0" }}>
           <table className="w-full" style={{ borderCollapse: "collapse", minWidth: 900 }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 {["Shift Start", "Shift End", "Region", "Account", "Meal Exc.", "Meal Sched", "Meal Actual", "Rest Exc.", "Rest Sched", "Rest Actual"].map((h) => (
                   <th key={h} className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300"
-                    style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                    style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -662,7 +654,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 p-6">
         <h3 className="text-lg font-bold text-slate-800 border-b pb-3 bg-slate-200 dark:bg-slate-700 dark:text-slate-200" >Employment Info & Policies</h3>
-        
+
         <div className="grid grid-cols-2 gap-6">
           <div className="p-4 rounded-xl border shadow-sm backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
             <h4 className="text-xs font-bold uppercase tracking-wider mb-2 text-slate-400 dark:text-slate-300" >Direct Manager</h4>
@@ -686,18 +678,18 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         </div>
 
         <div className="p-4 rounded-xl border shadow-sm space-y-4 backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{border }}>Regular Working Hour</h4>
+          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{ border }}>Regular Working Hour</h4>
           <div className="rounded-xl border overflow-hidden shadow-sm backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.4)" }}>
             {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day, idx) => {
               const schedule = mockWeeklySchedule[day];
               return (
-                <div key={day} className={`flex items-center px-4 py-3 ${idx !== 6 ? 'border-b' : ''} transition-colors`} 
+                <div key={day} className={`flex items-center px-4 py-3 ${idx !== 6 ? 'border-b' : ''} transition-colors`}
                   style={{ borderColor: "rgba(226, 232, 240, 0.6)", background: schedule.active ? "rgba(255,255,255,0.7)" : "rgba(241, 245, 249, 0.5)" }}>
                   <div className="flex items-center gap-3 w-36">
                     <div className={`w-2 h-2 rounded-full ${schedule.active ? 'bg-green-500' : 'bg-slate-300'}`} />
                     <span className={`text-sm font-semibold ${schedule.active ? 'text-slate-800' : 'text-slate-400'}`}>{day}</span>
                   </div>
-                  
+
                   {schedule.active ? (
                     <div className="flex items-center gap-3 flex-1">
                       <span className="text-sm font-medium text-slate-800 dark:text-slate-200">{schedule.start}</span>
@@ -714,7 +706,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         </div>
 
         <div className="p-4 rounded-xl border shadow-sm space-y-4 backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{border }}>Pay Rules</h4>
+          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{ border }}>Pay Rules</h4>
           <div className="space-y-3">
             {mockPayRules.map((rule) => (
               <div key={rule.id} className="p-4 rounded-xl border shadow-sm flex items-center justify-between transition-all backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
@@ -724,11 +716,11 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
                     <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold" style={{ background: "rgba(30,58,110,0.1)", color: "#1e3a6e" }}>{rule.payType}</span>
                   </h4>
                   <p className="text-xs font-medium text-slate-500 mt-1 flex items-center gap-1.5 dark:text-slate-400">
-                    If works {rule.triggerType === "After Hours/Week" ? `more than ${rule.triggerValue} hrs/week` : 
-                               rule.triggerType === "After Hours/Day" ? `more than ${rule.triggerValue} hrs/day` :
-                               rule.triggerType === "Specific Day" ? `on ${rule.triggerValue}` :
-                               rule.triggerType === "Holiday" ? `on Company Holiday` : rule.triggerValue}
-                    <span className="text-slate-300">→</span> 
+                    If works {rule.triggerType === "After Hours/Week" ? `more than ${rule.triggerValue} hrs/week` :
+                      rule.triggerType === "After Hours/Day" ? `more than ${rule.triggerValue} hrs/day` :
+                        rule.triggerType === "Specific Day" ? `on ${rule.triggerValue}` :
+                          rule.triggerType === "Holiday" ? `on Company Holiday` : rule.triggerValue}
+                    <span className="text-slate-300">→</span>
                     <span className="text-slate-700 font-semibold dark:text-slate-300">Pay {rule.multiplier}</span>
                   </p>
                 </div>
@@ -738,7 +730,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         </div>
 
         <div className="p-4 rounded-xl border shadow-sm space-y-4 backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{border }}>Scheduling & Other Policies</h4>
+          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{ border }}>Scheduling & Other Policies</h4>
           <div className="grid grid-cols-3 gap-6">
             <div className="space-y-1">
               <span className="block text-xs font-bold uppercase tracking-wider text-slate-400">Scheduling Rule</span>
@@ -832,6 +824,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
             {renderField("Department", renderSelect(["Operations", "Security", "Administration", "Field Services", "Training", "Payroll"]))}
             {renderField("Address", renderInput("Street address"))}
             {renderField("Roles & Permissions", renderSelect(["Guard", "Employee", "Supervisor", "Admin"]))}
+            {renderField("Terminated Date", <input type="text" disabled value={employee.terminationDate || "N/A"} className="w-full px-3 py-2.5 rounded-xl text-sm border outline-none bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-200 dark:border-slate-700" />)}
             {renderModalFooter(() => setShowEditEmployee(false), "Save Changes")}
           </div>
         ))}
@@ -862,8 +855,8 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
     return (
       <div className="p-6">
         <div className="flex items-center gap-3 mb-5 flex-wrap">
-          <div className="flex items-center gap-2 flex-1 min-w-48 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
+          <div className="flex items-center gap-2 flex-1 min-w-48 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0" }}>
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300" />
             <input value={skillSearch} onChange={(e) => setSkillSearch(e.target.value)}
               placeholder="Search skills..." className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
           </div>
@@ -875,9 +868,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 {["Skill", "Category", "Information", "Status"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -930,9 +923,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 {["ID", "Type", "Flags", "Date", "Reported By", "Account", "Status", "PDF", "Email", "View", "Remove"].map((h) => (
-                  <th key={h} className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -946,7 +939,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
                     <td className="px-3 py-3 text-center">
                       {r.flags > 0
                         ? <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "#fef2f2", color: "#dc2626" }}>{r.flags}</span>
-                        : <span  className="text-slate-300 dark:text-slate-400">—</span>}
+                        : <span className="text-slate-300 dark:text-slate-400">—</span>}
                     </td>
                     <td className="px-3 py-3 text-sm whitespace-nowrap text-slate-600 dark:text-slate-300" >{r.date}</td>
                     <td className="px-3 py-3 text-sm whitespace-nowrap text-slate-600 dark:text-slate-300" >{r.by}</td>
@@ -977,17 +970,17 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
       <div className="p-6">
         <div className="flex items-center gap-3 mb-5 flex-wrap">
           <input type="date" className="rounded-xl px-3 py-2.5 text-sm border outline-none" style={{ border: "1.5px solid #e2e8f0" }} />
-          <div className="flex items-center gap-2 flex-1 min-w-48 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
-            <input placeholder="Search..." className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100"  />
+          <div className="flex items-center gap-2 flex-1 min-w-48 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0" }}>
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300" />
+            <input placeholder="Search..." className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100" />
           </div>
         </div>
         <div className="overflow-x-auto rounded-2xl" style={{ border: "1.5px solid #e2e8f0" }}>
           <table className="w-full" style={{ borderCollapse: "collapse", minWidth: 900 }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 {["Employee", "Location", "Reports", "Videos", "Checkpoints", "Start", "End", "Tracks", "PDF", "View", "Options"].map((h) => (
-                  <th key={h} className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -1033,9 +1026,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
       <div className="p-6">
         <div className="flex items-center gap-3 mb-5 flex-wrap">
           <input type="date" className="rounded-xl px-3 py-2.5 text-sm border outline-none" style={{ border: "1.5px solid #e2e8f0" }} />
-          <div className="flex items-center gap-2 flex-1 min-w-48 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
-            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300"  />
-            <input placeholder="Search tours..." className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100"  />
+          <div className="flex items-center gap-2 flex-1 min-w-48 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0" }}>
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-300" />
+            <input placeholder="Search tours..." className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100" />
           </div>
           <div className="flex items-center gap-2">
             {[["CSV", "#16a34a", "#f0fdf4"], ["PDF", "#1e3a6e", "#eff6ff"], ["Excel", "#0891b2", "#ecfeff"]].map(([label, color, bg]) => (
@@ -1046,9 +1039,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         <div className="overflow-x-auto rounded-2xl" style={{ border: "1.5px solid #e2e8f0" }}>
           <table className="w-full" style={{ borderCollapse: "collapse", minWidth: 800 }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 {["Tour Name", "Account", "Employee", "Result", "Start Time", "End Time", "Duration (min)", "PDF", "Email", "View", "Delete"].map((h) => (
-                  <th key={h} className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -1100,9 +1093,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 {["Note", "Name", "Day", "Start Date", "Time", "Clocked Shifts", "Sched. Break", "Actual Break"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -1134,7 +1127,7 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
     return (
       <div className="p-6 space-y-6">
         {/* Entitlement */}
-        <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}>
+        <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0" }}>
           <div>
             <div className="text-xs font-semibold uppercase tracking-wide mb-1 text-slate-400 dark:text-slate-300" >Annual Entitlement</div>
             <div className="flex items-center gap-3">
@@ -1162,9 +1155,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
         <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 {["ID", "From", "To", "Description"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -1212,14 +1205,9 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
       case "notes-on": return renderNotesOn();
       case "notes-by": return renderNotesBy();
       case "availability": return renderAvailability();
-      case "exceptions": return renderExceptions();
       case "employment-policies": return renderEmploymentPolicies();
       case "actions": return renderActions();
       case "skills": return renderSkills();
-      case "reports": return renderReports();
-      case "summary": return renderSummaryReports();
-      case "tours": return renderTours();
-      case "schedules": return renderSchedules();
       case "timeoff": return renderTimeOff();
       default: return null;
     }
@@ -1227,11 +1215,10 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
 
   // ── Main render ─────────────────────────────────────────────────────────────
   return (
-    <div className="flex-1 overflow-y-auto" style={{ background: "#f0f2f8", scrollbarWidth: "none" }}>
+    <div className="flex-1 overflow-y-auto bg-slate-50 dark:bg-black" style={{ scrollbarWidth: "none" }}>
 
       {/* Hero banner */}
-      <div className="relative overflow-hidden px-6 pt-6 pb-0 shrink-0"
-        style={{ background: "linear-gradient(135deg, #0f1729 0%, #1a2f5a 55%, #1e3a6e 100%)" }}>
+      <div className="relative overflow-hidden px-6 pt-6 pb-0 shrink-0 bg-gradient-to-br from-[#0f1729] via-[#1a2f5a] to-[#1e3a6e] dark:from-black dark:via-black dark:to-black dark:border-b dark:border-slate-800">
         <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-10 pointer-events-none"
           style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }} />
 
@@ -1269,26 +1256,36 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
             </div>
           </div>
         </div>
-
-        {/* Horizontal tab bar */}
-        <div className="flex gap-0 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-          {PROFILE_TABS.map((t) => (
-            <button key={t.id} onClick={() => setActiveTab(t.id)}
-              className="shrink-0 px-4 py-3 text-xs font-semibold transition-all whitespace-nowrap"
-              style={{
-                color: activeTab === t.id ? "#fff" : "rgba(255,255,255,0.5)",
-                borderBottom: activeTab === t.id ? "2.5px solid #60a5fa" : "2.5px solid transparent",
-                background: "transparent",
-              }}>
-              {t.label}
-            </button>
-          ))}
-        </div>
       </div>
 
-      {/* Tab content */}
-      <div style={{ minHeight: 400 }}>
-        {renderTabContent()}
+      {/* Main Layout: Sidebar + Content */}
+      <div className="flex flex-1 overflow-hidden" style={{ minHeight: 400 }}>
+        {/* Collapsible Sidebar */}
+        <div className={`shrink-0 flex flex-col bg-white dark:bg-black border-r border-slate-200 dark:border-slate-800 transition-all duration-300 overflow-y-auto ${isSidebarOpen ? 'w-64' : 'w-16'}`} style={{ scrollbarWidth: "none" }}>
+          <div className="flex items-center justify-end p-2 border-b border-slate-200 dark:border-slate-700">
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+              {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </button>
+          </div>
+          <div className="flex flex-col py-2">
+            {PROFILE_TABS.map((t) => (
+              <button key={t.id} onClick={() => setActiveTab(t.id)}
+                title={!isSidebarOpen ? t.label : undefined}
+                className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-all whitespace-nowrap outline-none ${activeTab === t.id ? 'bg-blue-50 dark:bg-slate-900 text-blue-600 dark:text-blue-400 border-r-2 border-blue-600' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 border-r-2 border-transparent'}`}>
+                {/* Generic dot indicator */}
+                <span className="shrink-0 w-5 h-5 flex items-center justify-center">
+                  <div className={`w-2 h-2 rounded-full ${activeTab === t.id ? 'bg-blue-600 dark:bg-blue-400' : 'bg-slate-300 dark:bg-slate-600'}`} />
+                </span>
+                {isSidebarOpen && <span className="overflow-hidden text-ellipsis">{t.label}</span>}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tab content */}
+        <div className="flex-1 overflow-y-auto" style={{ minHeight: 400 }}>
+          {renderTabContent()}
+        </div>
       </div>
     </div>
   );
@@ -1307,11 +1304,11 @@ export interface PayRule {
   isPolicy?: boolean;
 }
 
-export function AddEmployeePage({ 
-  onBack, 
-  customTypes = [], setCustomTypes, 
-  customDepartments = [], setCustomDepartments 
-}: { 
+export function AddEmployeePage({
+  onBack,
+  customTypes = [], setCustomTypes,
+  customDepartments = [], setCustomDepartments
+}: {
   onBack: () => void;
   customTypes?: string[]; setCustomTypes?: (v: string[]) => void;
   customDepartments?: string[]; setCustomDepartments?: (v: string[]) => void;
@@ -1330,9 +1327,8 @@ export function AddEmployeePage({
     adminPortal: false, adminRole: false, guardApp: false,
   });
   const [permissions, setPermissions] = useState<Record<string, boolean>>({
-    Dashboard: true, Employees: false, Scheduling: false, "Time Clock": false,
-    Reports: false, Forms: false, Tasks: false, Communications: false,
-    Documents: false, Training: false, Vehicles: false, Payroll: false, Settings: false,
+    Dashboard: true, Scheduling: false, "Time Clock": false, Employees: false,
+    "Clients & Sites": false, "Checkpoints & Tours": false, "Reports & Incidents": false, Forms: false
   });
 
   // New Employment Info States
@@ -1412,7 +1408,7 @@ export function AddEmployeePage({
         {placeholder && <option value="">{placeholder}</option>}
         {opts.map((o) => <option key={o}>{o}</option>)}
       </select>
-      <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"  />
+      <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
     </div>
   );
 
@@ -1432,7 +1428,7 @@ export function AddEmployeePage({
               <option value="">Select type…</option>
               {allTypes.map((t) => <option key={t}>{t}</option>)}
             </select>
-            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"  />
+            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           </div>
           {showCustomType ? (
             <div className="flex gap-2">
@@ -1461,7 +1457,7 @@ export function AddEmployeePage({
               <option value="">Select department…</option>
               {allDepartments.map((d) => <option key={d}>{d}</option>)}
             </select>
-            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"  />
+            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           </div>
           {showCustomDepartment ? (
             <div className="flex gap-2">
@@ -1539,7 +1535,7 @@ export function AddEmployeePage({
         <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Portal Access</p>
         <div className="space-y-2.5">
           {renderToggle(portalToggles.adminPortal, () => setPortalToggles(p => ({ ...p, adminPortal: !p.adminPortal })), "Administration Portal")}
-          {renderToggle(portalToggles.guardApp, () => setPortalToggles(p => ({ ...p, guardApp: !p.guardApp })), "Employee Portal / Guard Mobile App")}
+          {renderToggle(portalToggles.guardApp, () => setPortalToggles(p => ({ ...p, guardApp: !p.guardApp })), "Guard Mobile App")}
         </div>
       </div>
       <div>
@@ -1564,25 +1560,11 @@ export function AddEmployeePage({
       </div>
       <div>
         <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Site Restriction</p>
-        <div className="relative">
-          <select className="w-full appearance-none rounded-xl px-3.5 py-2.5 pr-9 text-sm outline-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-slate-200 dark:border-slate-700">
-            <option>No restriction — all sites</option>
-            <option>Downtown Financial Center</option>
-            <option>Westfield Mall</option>
-            <option>Harbor District</option>
-            <option>Airport Terminal C</option>
-            <option>City Hall Security Post</option>
-          </select>
-          <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
-        </div>
-      </div>
-      <div>
-        <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Financial Visibility</p>
         <div className="grid grid-cols-2 gap-2">
-          {["View Payroll", "View Invoices", "View Budget Reports", "Manage Billing"].map((f) => (
-            <label key={f} className="flex items-center gap-3 rounded-xl px-4 py-3 cursor-pointer bg-slate-50 dark:bg-slate-900 border-[1.5px] border-slate-200 dark:border-slate-700">
+          {["All Sites", "Downtown Financial Center", "Westfield Mall", "Harbor District", "Airport Terminal C", "City Hall Security Post"].map((site) => (
+            <label key={site} className="flex items-center gap-3 rounded-xl px-4 py-3 cursor-pointer bg-slate-50 dark:bg-slate-900 border-[1.5px] border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <input type="checkbox" className="w-4 h-4 cursor-pointer accent-blue-800 dark:accent-blue-500" />
-              <span className="text-sm text-slate-600 dark:text-slate-300" >{f}</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300" >{site}</span>
             </label>
           ))}
         </div>
@@ -1604,21 +1586,20 @@ export function AddEmployeePage({
                 </option>
               ))}
             </select>
-            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
+            <ChevronDown className="w-4 h-4 pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300" />
           </div>
         )}
         {renderField("Assign Site", false,
           <div className="relative">
-            <div 
-              className="w-full min-h-[44px] rounded-xl px-3 py-2 text-sm border flex flex-wrap gap-2 items-center cursor-pointer bg-slate-50 bg-slate-200 dark:bg-slate-700"
-              
+            <div
+              className="w-full min-h-[44px] rounded-xl px-3 py-2 text-sm border flex flex-wrap gap-2 items-center cursor-pointer bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
               onClick={() => setShowSiteDropdown(!showSiteDropdown)}
             >
-              {empInfoSites.length === 0 && <span  className="text-slate-400 dark:text-slate-300">Select Sites...</span>}
+              {empInfoSites.length === 0 && <span className="text-slate-400 dark:text-slate-300">Select Sites...</span>}
               {empInfoSites.map(site => (
                 <span key={site} className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
                   {site}
-                  <button 
+                  <button
                     onClick={(e) => { e.stopPropagation(); setEmpInfoSites(empInfoSites.filter(s => s !== site)); }}
                     className="hover:text-blue-900"
                   >
@@ -1626,23 +1607,23 @@ export function AddEmployeePage({
                   </button>
                 </span>
               ))}
-              <ChevronDown className="w-4 h-4 ml-auto text-slate-400 dark:text-slate-300"  />
+              <ChevronDown className="w-4 h-4 ml-auto text-slate-400 dark:text-slate-300" />
             </div>
 
             {showSiteDropdown && (
-              <div className="absolute z-10 w-full mt-2 rounded-xl border shadow-lg bg-white overflow-hidden bg-slate-200 dark:bg-slate-700" >
+              <div className="absolute z-10 w-full mt-2 rounded-xl border shadow-lg overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                 <div className="max-h-48 overflow-y-auto p-2 space-y-1">
                   {MOCK_SITES.map((site) => (
                     <label key={site.uid} className="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors dark:hover:bg-slate-800">
-                      <input 
-                        type="checkbox" 
-                        className="w-4 h-4 cursor-pointer" 
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 cursor-pointer"
                         style={{ accentColor: "#1e3a6e" }}
                         checked={empInfoSites.includes(site.companyName)}
                         onChange={(e) => {
                           if (e.target.checked) setEmpInfoSites([...empInfoSites, site.companyName]);
                           else setEmpInfoSites(empInfoSites.filter(s => s !== site.companyName));
-                        }} 
+                        }}
                       />
                       <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{site.companyName}</span>
                     </label>
@@ -1654,7 +1635,7 @@ export function AddEmployeePage({
         )}
       </div>
 
-      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" >
+      <div className="border-t pt-5 border-slate-200 dark:border-slate-700" >
         <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Regular Working Hour</p>
         <div className="flex gap-3 mb-4">
           <button onClick={() => setWorkingHourMode("Policy")}
@@ -1667,14 +1648,14 @@ export function AddEmployeePage({
           </button>
         </div>
         {workingHourMode === "Policy" ? (
-          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 bg-slate-200 dark:bg-slate-700" >
+          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300" >
             <option>Standard Full-Time (9 to 5)</option>
             <option>Night Shift (10 PM to 6 AM)</option>
           </select>
         ) : (
           <div className="space-y-3">
             <div className="flex justify-end mb-1">
-              <button 
+              <button
                 onClick={() => {
                   const mon = weeklySchedule["Monday"];
                   setWeeklySchedule(prev => ({
@@ -1691,41 +1672,40 @@ export function AddEmployeePage({
                 Apply Monday's hours to weekdays
               </button>
             </div>
-            
-            <div className="rounded-xl border overflow-hidden shadow-sm backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.4)" }}>
+
+            <div className="rounded-xl border overflow-hidden shadow-sm backdrop-blur-md bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700">
               {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day, idx) => {
                 const schedule = weeklySchedule[day];
                 return (
-                  <div key={day} className={`flex items-center px-4 py-3 ${idx !== 6 ? 'border-b' : ''} transition-colors`} 
-                    style={{ borderColor: "rgba(226, 232, 240, 0.6)", background: schedule.active ? "rgba(255,255,255,0.7)" : "rgba(241, 245, 249, 0.5)" }}>
+                  <div key={day} className={`flex items-center px-4 py-3 ${idx !== 6 ? 'border-b border-slate-200 dark:border-slate-700' : ''} transition-colors ${schedule.active ? 'bg-white dark:bg-slate-800' : 'bg-slate-50 dark:bg-slate-900'}`}>
                     <label className="flex items-center gap-3 w-36 cursor-pointer">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={schedule.active}
                         onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], active: e.target.checked } }))}
-                        className="w-4 h-4 rounded cursor-pointer" 
-                        style={{ accentColor: "#1e3a6e" }} 
+                        className="w-4 h-4 rounded cursor-pointer"
+                        style={{ accentColor: "#1e3a6e" }}
                       />
                       <span className={`text-sm font-semibold ${schedule.active ? 'text-slate-800' : 'text-slate-400'}`}>{day}</span>
                     </label>
-                    
+
                     {schedule.active ? (
                       <div className="flex items-center gap-3 flex-1">
-                        <input 
-                          type="time" 
+                        <input
+                          type="time"
                           value={schedule.start}
                           onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], start: e.target.value } }))}
-                          className="rounded-lg px-3 py-1.5 border text-sm outline-none transition-all shadow-sm" 
+                          className="rounded-lg px-3 py-1.5 border text-sm outline-none transition-all shadow-sm"
                           style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }}
                           onFocus={(e) => e.target.style.borderColor = "#60a5fa"}
                           onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}
                         />
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">to</span>
-                        <input 
-                          type="time" 
+                        <input
+                          type="time"
                           value={schedule.end}
                           onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], end: e.target.value } }))}
-                          className="rounded-lg px-3 py-1.5 border text-sm outline-none transition-all shadow-sm" 
+                          className="rounded-lg px-3 py-1.5 border text-sm outline-none transition-all shadow-sm"
                           style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }}
                           onFocus={(e) => e.target.style.borderColor = "#60a5fa"}
                           onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}
@@ -1742,7 +1722,7 @@ export function AddEmployeePage({
         )}
       </div>
 
-      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" >
+      <div className="border-t pt-5 border-slate-200 dark:border-slate-700" >
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300" >Pay Rules</p>
           {!showRuleBuilder && (
@@ -1759,23 +1739,23 @@ export function AddEmployeePage({
         {!showRuleBuilder && payRules.length > 0 && (
           <div className="space-y-3 mb-4">
             {payRules.map((rule) => (
-              <div key={rule.id} className="p-4 rounded-xl border shadow-sm flex items-center justify-between transition-all backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
+              <div key={rule.id} className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between transition-all backdrop-blur-md bg-white dark:bg-slate-800">
                 <div>
                   <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2 dark:text-slate-200">
                     {rule.name}
                     <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold" style={{ background: "rgba(30,58,110,0.1)", color: "#1e3a6e" }}>{rule.payType}</span>
                   </h4>
                   <p className="text-xs font-medium text-slate-500 mt-1 flex items-center gap-1.5 dark:text-slate-400">
-                    If works {rule.triggerType === "After Hours/Week" ? `more than ${rule.triggerValue} hrs/week` : 
-                               rule.triggerType === "After Hours/Day" ? `more than ${rule.triggerValue} hrs/day` :
-                               rule.triggerType === "Specific Day" ? `on ${rule.triggerValue}` :
-                               rule.triggerType === "Holiday" ? `on Company Holiday` : rule.triggerValue}
-                    <span className="text-slate-300">→</span> 
+                    If works {rule.triggerType === "After Hours/Week" ? `more than ${rule.triggerValue} hrs/week` :
+                      rule.triggerType === "After Hours/Day" ? `more than ${rule.triggerValue} hrs/day` :
+                        rule.triggerType === "Specific Day" ? `on ${rule.triggerValue}` :
+                          rule.triggerType === "Holiday" ? (rule.triggerValue && rule.triggerValue !== "Any" ? `on ${formatDateMMDDYYYY(rule.triggerValue)}` : `on Company Holiday`) : rule.triggerValue}
+                    <span className="text-slate-300">→</span>
                     <span className="text-slate-700 font-semibold dark:text-slate-300">Pay {rule.multiplier}</span>
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => { setEditingPayRule({...rule}); setShowRuleBuilder(true); }} className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 transition-colors">
+                  <button onClick={() => { setEditingPayRule({ ...rule }); setShowRuleBuilder(true); }} className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 transition-colors">
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button onClick={() => setPayRules(r => r.filter(x => x.id !== rule.id))} className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 transition-colors">
@@ -1788,32 +1768,32 @@ export function AddEmployeePage({
         )}
 
         {!showRuleBuilder && payRules.length === 0 && (
-          <div className="p-6 text-center border border-dashed rounded-xl text-slate-300 dark:text-slate-400" style={{ background: "rgba(248, 250, 252, 0.5)" }}>
+          <div className="p-6 text-center border border-dashed rounded-xl border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
             <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No pay rules configured.</p>
           </div>
         )}
 
         {/* Rule Builder Panel */}
         {showRuleBuilder && editingPayRule && (
-          <div className="p-5 rounded-xl border shadow-sm backdrop-blur-md animate-in fade-in zoom-in-95 text-slate-300 dark:text-slate-400" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-            <div className="flex items-center justify-between mb-4 border-b pb-3 bg-slate-200 dark:bg-slate-700" >
+          <div className="p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm backdrop-blur-md animate-in fade-in zoom-in-95 bg-white dark:bg-slate-800">
+            <div className="flex items-center justify-between mb-4 border-b border-slate-200 dark:border-slate-700 pb-3" >
               <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">Rule Builder</h4>
-              <div className="flex items-center gap-2 bg-slate-100/50 p-1 rounded-lg border bg-slate-200 dark:bg-slate-700" >
-                <button onClick={() => setEditingPayRule(prev => prev ? ({...prev, isPolicy: true}) : prev)} className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${editingPayRule.isPolicy ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}>Choose Policy</button>
-                <button onClick={() => setEditingPayRule(prev => prev ? ({...prev, isPolicy: false}) : prev)} className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${!editingPayRule.isPolicy ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}>Custom Rule</button>
+              <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-900/50 p-1 rounded-lg border border-slate-200 dark:border-slate-700" >
+                <button onClick={() => setEditingPayRule(prev => prev ? ({ ...prev, isPolicy: true }) : prev)} className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${editingPayRule.isPolicy ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-800 dark:text-slate-200' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Choose Policy</button>
+                <button onClick={() => setEditingPayRule(prev => prev ? ({ ...prev, isPolicy: false }) : prev)} className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${!editingPayRule.isPolicy ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-800 dark:text-slate-200' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Custom Rule</button>
               </div>
             </div>
 
             {editingPayRule.isPolicy ? (
               <div className="space-y-4">
-                {renderField("Select Existing Policy", false, 
-                  <select 
-                    className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border transition-all text-slate-800 dark:text-slate-100 text-slate-300 dark:text-slate-400" style={{ background: "rgba(255,255,255,0.9)"}}
+                {renderField("Select Existing Policy", false,
+                  <select
+                    className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border transition-all text-slate-800 dark:text-slate-100 text-slate-300 dark:text-slate-400" style={{ background: "rgba(255,255,255,0.9)" }}
                     onFocus={(e) => e.target.style.borderColor = "#60a5fa"}
                     onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}
                     onChange={(e) => {
-                      if(e.target.value === "Standard Overtime") setEditingPayRule({...editingPayRule, name: "Standard Overtime", payType: "Overtime", multiplier: "x1.5", triggerType: "After Hours/Week", triggerValue: "40"});
-                      if(e.target.value === "Holiday Premium") setEditingPayRule({...editingPayRule, name: "Holiday Premium", payType: "Holiday", multiplier: "x2.0", triggerType: "Holiday", triggerValue: "Any"});
+                      if (e.target.value === "Standard Overtime") setEditingPayRule({ ...editingPayRule, name: "Standard Overtime", payType: "Overtime", multiplier: "x1.5", triggerType: "After Hours/Week", triggerValue: "40" });
+                      if (e.target.value === "Holiday Premium") setEditingPayRule({ ...editingPayRule, name: "Holiday Premium", payType: "Holiday", multiplier: "x2.0", triggerType: "Holiday", triggerValue: "Any" });
                     }}
                   >
                     <option value="">Select a policy...</option>
@@ -1825,20 +1805,20 @@ export function AddEmployeePage({
             ) : (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  {renderField("Rule Name", true, <input type="text" value={editingPayRule.name} onChange={e => setEditingPayRule({...editingPayRule, name: e.target.value})} placeholder="e.g. Overtime After 40 Hours" className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"} />)}
-                  {renderField("Pay Type", true, 
-                    <select value={editingPayRule.payType} onChange={e => setEditingPayRule({...editingPayRule, payType: e.target.value as PayType})} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}>
+                  {renderField("Rule Name", true, <input type="text" value={editingPayRule.name} onChange={e => setEditingPayRule({ ...editingPayRule, name: e.target.value })} placeholder="e.g. Overtime After 40 Hours" className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"} />)}
+                  {renderField("Pay Type", true,
+                    <select value={editingPayRule.payType} onChange={e => setEditingPayRule({ ...editingPayRule, payType: e.target.value as PayType })} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}>
                       <option>Regular</option><option>Overtime</option><option>Double Time</option><option>Holiday</option><option>Premium Pay</option><option>Custom</option>
                     </select>
                   )}
                 </div>
-                
-                <div className="p-4 rounded-xl border backdrop-blur-sm" style={{ borderColor: "rgba(226, 232, 240, 0.6)", background: "rgba(241, 245, 249, 0.4)" }}>
+
+                <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 backdrop-blur-sm bg-slate-50 dark:bg-slate-900/50">
                   <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-500 dark:text-slate-400">Condition & Rate</p>
                   <div className="flex items-end gap-3">
                     <div className="flex-1">
-                      {renderField("Trigger / Applies When", false, 
-                        <select value={editingPayRule.triggerType} onChange={e => setEditingPayRule({...editingPayRule, triggerType: e.target.value as PayRuleTriggerType, triggerValue: ""})} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}>
+                      {renderField("Trigger / Applies When", false,
+                        <select value={editingPayRule.triggerType} onChange={e => setEditingPayRule({ ...editingPayRule, triggerType: e.target.value as PayRuleTriggerType, triggerValue: "" })} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}>
                           <option value="After Hours/Day">After X hours / day</option>
                           <option value="After Hours/Week">After X hours / week</option>
                           <option value="Specific Day">Specific Day</option>
@@ -1847,37 +1827,37 @@ export function AddEmployeePage({
                         </select>
                       )}
                     </div>
-                    {editingPayRule.triggerType !== "Holiday" && (
-                      <div className="w-32">
-                        {renderField("Value", false, 
-                           editingPayRule.triggerType === "Specific Day" ? (
-                             <select value={editingPayRule.triggerValue} onChange={e => setEditingPayRule({...editingPayRule, triggerValue: e.target.value})} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}>
-                               <option value="">Select...</option>
-                               <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-                             </select>
-                           ) : (
-                             <input type="text" value={editingPayRule.triggerValue} onChange={e => setEditingPayRule({...editingPayRule, triggerValue: e.target.value})} placeholder={editingPayRule.triggerType.includes("Hours") ? "e.g. 40" : "..."} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"} />
-                           )
-                        )}
-                      </div>
-                    )}
+                    <div className="w-32">
+                      {renderField("Value", false,
+                        editingPayRule.triggerType === "Specific Day" ? (
+                          <select value={editingPayRule.triggerValue} onChange={e => setEditingPayRule({ ...editingPayRule, triggerValue: e.target.value })} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"}>
+                            <option value="">Select...</option>
+                            <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+                          </select>
+                        ) : editingPayRule.triggerType === "Holiday" ? (
+                          <input type="date" value={editingPayRule.triggerValue === "Any" ? "" : editingPayRule.triggerValue} onChange={e => setEditingPayRule({ ...editingPayRule, triggerValue: e.target.value })} onClick={(e) => { try { (e.target as HTMLInputElement).showPicker(); } catch (err) { } }} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm cursor-pointer" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"} />
+                        ) : (
+                          <input type="text" value={editingPayRule.triggerValue} onChange={e => setEditingPayRule({ ...editingPayRule, triggerValue: e.target.value })} placeholder={editingPayRule.triggerType.includes("Hours") ? "e.g. 40" : "..."} className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"} />
+                        )
+                      )}
+                    </div>
                     <div className="w-8 flex items-center justify-center pb-2 text-slate-300">→</div>
                     <div className="w-32">
-                      {renderField("Multiplier", true, <input type="text" value={editingPayRule.multiplier} onChange={e => setEditingPayRule({...editingPayRule, multiplier: e.target.value})} placeholder="e.g. x1.5" className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"} />)}
+                      {renderField("Multiplier", true, <input type="text" value={editingPayRule.multiplier} onChange={e => setEditingPayRule({ ...editingPayRule, multiplier: e.target.value })} placeholder="e.g. x1.5" className="w-full rounded-xl px-3 py-2 border text-sm outline-none transition-all shadow-sm" style={{ borderColor: "#cbd5e1", background: "rgba(255,255,255,0.9)", color: "#1e293b" }} onFocus={(e) => e.target.style.borderColor = "#60a5fa"} onBlur={(e) => e.target.style.borderColor = "#cbd5e1"} />)}
                     </div>
                   </div>
                 </div>
               </div>
             )}
 
-            <div className="flex justify-end gap-3 mt-5 pt-4 border-t bg-slate-200 dark:bg-slate-700" >
-              <button onClick={() => setShowRuleBuilder(false)} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
-              <button 
+            <div className="flex justify-end gap-3 mt-5 pt-4 border-t border-slate-200 dark:border-slate-700" >
+              <button onClick={() => setShowRuleBuilder(false)} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors dark:text-slate-300 dark:hover:bg-slate-700">Cancel</button>
+              <button
                 onClick={() => {
-                  if(!editingPayRule.name || !editingPayRule.multiplier) { alert("Please fill out the rule name and multiplier."); return; }
+                  if (!editingPayRule.name || !editingPayRule.multiplier) { alert("Please fill out the rule name and multiplier."); return; }
                   const hasOverlap = payRules.some(r => r.id !== editingPayRule.id && r.triggerType === editingPayRule.triggerType && r.triggerValue === editingPayRule.triggerValue);
-                  if(hasOverlap) { alert("Conflict: A rule with this exact trigger condition already exists."); return; }
-                  
+                  if (hasOverlap) { alert("Conflict: A rule with this exact trigger condition already exists."); return; }
+
                   setPayRules(prev => {
                     const idx = prev.findIndex(r => r.id === editingPayRule.id);
                     if (idx >= 0) { const copy = [...prev]; copy[idx] = editingPayRule; return copy; }
@@ -1893,14 +1873,14 @@ export function AddEmployeePage({
         )}
       </div>
 
-      <div className="border-t pt-5 bg-slate-200 dark:bg-slate-700" >
+      <div className="border-t pt-5 border-slate-200 dark:border-slate-700" >
         <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Scheduling Rules</p>
         <div className="flex gap-3 mb-4">
           <button onClick={() => setSchedRuleMode("Policy")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${schedRuleMode === "Policy" ? "bg-blue-800 text-white" : "bg-slate-100 text-slate-500"}`}>Choose Policy</button>
           <button onClick={() => setSchedRuleMode("Custom")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${schedRuleMode === "Custom" ? "bg-blue-800 text-white" : "bg-slate-100 text-slate-500"}`}>Create Custom Rules</button>
         </div>
         {schedRuleMode === "Policy" ? (
-          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 bg-slate-200 dark:bg-slate-700" ><option>Standard Union Scheduling</option><option>Part-Time Scheduling limits</option></select>
+          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300" ><option>Standard Union Scheduling</option><option>Part-Time Scheduling limits</option></select>
         ) : (
           <div className="grid grid-cols-3 gap-4">
             {renderField("Max Hrs / Wk", false, <input type="number" value={schedMaxHrsWeek} onChange={(e) => setSchedMaxHrsWeek(e.target.value)} className="w-full rounded-xl px-3 py-2 border text-sm" style={{ borderColor: "#e2e8f0" }} />)}
@@ -1914,7 +1894,7 @@ export function AddEmployeePage({
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-6 border-t pt-5 bg-slate-200 dark:bg-slate-700" >
+      <div className="grid grid-cols-2 gap-6 border-t pt-5 border-slate-200 dark:border-slate-700" >
         <div>
           <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400 dark:text-slate-300" >Time Off</p>
           <select value={timeOffPolicy} onChange={(e) => setTimeOffPolicy(e.target.value)} className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-slate-50 dark:bg-slate-900" style={{ borderColor: "#e2e8f0" }}>
@@ -1940,7 +1920,7 @@ export function AddEmployeePage({
               style={{ background: photoPreview ? "transparent" : "#f1f5f9", border: "2px dashed #e2e8f0" }}>
               {photoPreview
                 ? <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
-                : <User className="w-8 h-8 text-slate-300 dark:text-slate-400"  />}
+                : <User className="w-8 h-8 text-slate-300 dark:text-slate-400" />}
             </div>
             <div className="space-y-2">
               <label className="flex items-center gap-2 cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold"
@@ -1962,7 +1942,6 @@ export function AddEmployeePage({
       </div>
       {renderField("Employment Date", false, renderInput(undefined, "date"))}
       {renderField("Birthday", false, renderInput(undefined, "date"))}
-      {renderField("Terminated Date", false, renderInput(undefined, "date"))}
       {renderField("Business Registration Number", false, renderInput("BRN / EIN / tax ID"))}
       {renderField("Fax", false, renderInput("+1 (555) 000-0000", "tel"))}
       <div />
@@ -1970,7 +1949,7 @@ export function AddEmployeePage({
         {renderField("Tags", false,
           <div>
             <div className="rounded-xl p-3 min-h-12 flex flex-wrap gap-2 bg-slate-50 dark:bg-slate-900"
-              style={{border: "1.5px solid #e2e8f0" }}
+              style={{ border: "1.5px solid #e2e8f0" }}
               onClick={(e) => (e.currentTarget.querySelector("input") as HTMLInputElement)?.focus()}>
               {tags.map((t) => (
                 <span key={t} className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold"
@@ -2021,20 +2000,17 @@ export function AddEmployeePage({
             return (
               <div key={s} className="flex items-center flex-1 last:flex-none">
                 <button onClick={() => setStep(i)} className="flex items-center gap-2.5 group">
-                  <div className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all font-bold text-sm ${
-                      done ? 'bg-green-500 text-white' : active ? 'bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)] dark:shadow-[0_0_0_4px_rgba(59,130,246,0.2)]' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                  <div className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all font-bold text-sm ${done ? 'bg-green-500 text-white' : active ? 'bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)] dark:shadow-[0_0_0_4px_rgba(59,130,246,0.2)]' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
                     }`}>
                     {done ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
                   </div>
-                  <span className={`text-sm font-semibold hidden sm:block ${
-                      active ? 'text-blue-600 dark:text-blue-400' : done ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'
+                  <span className={`text-sm font-semibold hidden sm:block ${active ? 'text-blue-600 dark:text-blue-400' : done ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'
                     }`}>
                     {s}
                   </span>
                 </button>
                 {i < STEPS.length - 1 && (
-                  <div className={`flex-1 h-px mx-3 transition-all ${
-                      done ? 'bg-green-500/50' : 'bg-slate-200 dark:bg-slate-800'
+                  <div className={`flex-1 h-px mx-3 transition-all ${done ? 'bg-green-500/50' : 'bg-slate-200 dark:bg-slate-800'
                     }`} />
                 )}
               </div>
@@ -2106,7 +2082,7 @@ export function EmployeesPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  
+
   const [customTypes, setCustomTypes] = useState<string[]>([]);
   const [customDepartments, setCustomDepartments] = useState<string[]>([]);
   const [deletedBaseTypes, setDeletedBaseTypes] = useState<string[]>([]);
@@ -2170,8 +2146,8 @@ export function EmployeesPage() {
 
   const COLS = ["UID", "Name", "Last Name", "Title", "Email", "User Type", "Department", "Status"];
 
-  if (showAddForm) return <AddEmployeePage 
-    onBack={() => setShowAddForm(false)} 
+  if (showAddForm) return <AddEmployeePage
+    onBack={() => setShowAddForm(false)}
     customTypes={customTypes} setCustomTypes={setCustomTypes}
     customDepartments={customDepartments} setCustomDepartments={setCustomDepartments}
   />;
@@ -2183,7 +2159,7 @@ export function EmployeesPage() {
     const customList = isTypes ? customTypes : customDepartments;
     const setCustomList = isTypes ? setCustomTypes : setCustomDepartments;
     const setDeletedBaseList = isTypes ? setDeletedBaseTypes : setDeletedBaseDeps;
-    
+
     return (
       <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900" >
         <div className="max-w-4xl mx-auto">
@@ -2193,38 +2169,38 @@ export function EmployeesPage() {
               Manage the options available in the {isTypes ? "Employee Type" : "Department"} dropdown when creating or editing an employee.
             </p>
           </div>
-          
+
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden dark:bg-slate-900 dark:border-slate-700">
             <div className="flex items-center gap-3 p-4 bg-slate-50 border-b border-slate-200 dark:bg-slate-900 dark:border-slate-700">
-               <input 
-                 id="newItemInput"
-                 placeholder={`New ${isTypes ? "employee type" : "department"} name...`}
-                 className="flex-1 rounded-xl px-4 py-2.5 text-sm border border-slate-300 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all dark:border-slate-600"
-                 onKeyDown={(e) => {
-                   if (e.key === "Enter") {
-                     const val = (e.currentTarget.value || "").trim();
-                     if (val && !baseList.includes(val) && !customList.includes(val)) {
-                       setCustomList([...customList, val]);
-                       e.currentTarget.value = "";
-                     }
-                   }
-                 }}
-               />
-               <button 
-                 onClick={() => {
-                   const input = document.getElementById("newItemInput") as HTMLInputElement;
-                   const val = (input.value || "").trim();
-                   if (val && !baseList.includes(val) && !customList.includes(val)) {
-                     setCustomList([...customList, val]);
-                     input.value = "";
-                   }
-                 }}
-                 className="px-5 py-2.5 bg-[#1e3a6e] text-white text-sm font-semibold rounded-xl shadow-sm hover:bg-[#16305c] transition-colors"
-               >
-                 Add New
-               </button>
+              <input
+                id="newItemInput"
+                placeholder={`New ${isTypes ? "employee type" : "department"} name...`}
+                className="flex-1 rounded-xl px-4 py-2.5 text-sm border border-slate-300 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all dark:border-slate-600"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const val = (e.currentTarget.value || "").trim();
+                    if (val && !baseList.includes(val) && !customList.includes(val)) {
+                      setCustomList([...customList, val]);
+                      e.currentTarget.value = "";
+                    }
+                  }
+                }}
+              />
+              <button
+                onClick={() => {
+                  const input = document.getElementById("newItemInput") as HTMLInputElement;
+                  const val = (input.value || "").trim();
+                  if (val && !baseList.includes(val) && !customList.includes(val)) {
+                    setCustomList([...customList, val]);
+                    input.value = "";
+                  }
+                }}
+                className="px-5 py-2.5 bg-[#1e3a6e] text-white text-sm font-semibold rounded-xl shadow-sm hover:bg-[#16305c] transition-colors"
+              >
+                Add New
+              </button>
             </div>
-            
+
             <table className="w-full text-sm text-left">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold text-xs tracking-wider uppercase dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
@@ -2241,7 +2217,7 @@ export function EmployeesPage() {
                       <span className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-md border border-green-200">Active</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button 
+                      <button
                         onClick={() => {
                           if (item.isCustom) {
                             setCustomList(customList.filter(c => c !== item.name));
@@ -2313,283 +2289,283 @@ export function EmployeesPage() {
             {/* ── Toolbar ── */}
             <div className="flex flex-wrap items-center gap-2 px-5 py-3.5 border-b border-slate-800">
               {/* Search */}
-          <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 flex-1 min-w-52 transition-all bg-slate-800/50 border border-slate-700">
-            <Search className="w-3.5 h-3.5 shrink-0 text-slate-400 dark:text-slate-300"  />
-            <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Search name, email, username, UID…"
-              className="text-sm outline-none bg-transparent flex-1 min-w-0 text-slate-200 placeholder-slate-500" />
-            {search && (
-              <button onClick={() => setSearch("")}
-                className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
-                style={{ background: "#cbd5e1", color: "#fff" }}>
-                <X className="w-2.5 h-2.5" />
-              </button>
-            )}
-          </div>
-
-          {/* Department */}
-          {showFilters && (
-            <div className="relative">
-              <select value={deptFilter} onChange={(e) => { setDeptFilter(e.target.value); setPage(1); }}
-                className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
-                {DEPARTMENTS.map((d) => <option key={d}>{d}</option>)}
-              </select>
-              <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
-            </div>
-          )}
-
-          {/* Status */}
-          {showFilters && (
-            <div className="relative">
-              <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-                className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
-                {["All Status", "Active", "Inactive", "On Leave", "Terminated"].map((s) => <option key={s}>{s}</option>)}
-              </select>
-              <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300"  />
-            </div>
-          )}
-
-          <div className="flex-1" />
-
-          <button onClick={() => setShowFilters(!showFilters)} className={`p-2.5 rounded-xl border transition-colors ${showFilters ? 'bg-blue-900/50 border-blue-500/50 text-blue-400' : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:text-slate-300'}`}>
-            <Filter className="w-4 h-4" />
-          </button>
-
-          {/* Export group */}
-          <div className="flex items-center rounded-xl overflow-hidden border border-slate-700">
-            {[
-              { label: "CSV", icon: <FileDown className="w-3.5 h-3.5" />, fn: exportCSV, color: "#16a34a" },
-              { label: "PDF", icon: <FileText className="w-3.5 h-3.5" />, fn: () => { }, color: "#dc2626" },
-              { label: "Excel", icon: <FileSpreadsheet className="w-3.5 h-3.5" />, fn: () => { }, color: "#2563eb" },
-            ].map((btn, i) => (
-              <button key={btn.label} onClick={btn.fn} className={`flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold transition-all bg-slate-800/50 hover:bg-slate-700 ${i > 0 ? "border-l border-slate-700" : ""}`} style={{ color: btn.color }}>
-                {btn.icon}{btn.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Bulk selection bar ── */}
-        {selected.size > 0 && (
-          <div className="flex items-center gap-3 px-5 py-2.5 bg-blue-900/30 border-b border-blue-900/50">
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white bg-blue-600">{selected.size}</div>
-              <span className="text-sm font-semibold text-blue-400">employee{selected.size > 1 ? "s" : ""} selected</span>
-            </div>
-            <div className="flex items-center gap-2 ml-2">
-              <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all bg-red-900/40 text-red-400 border border-red-900/50 hover:bg-red-900/60">
-                <UserX className="w-3.5 h-3.5" />Deactivate
-              </button>
-              <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all bg-blue-600 text-white hover:bg-blue-700">
-                <FileDown className="w-3.5 h-3.5" />Export
-              </button>
-            </div>
-            <button onClick={() => setSelected(new Set())}
-              className="ml-auto flex items-center gap-1 text-xs font-medium" style={{ color: "#94a3b8" }}>
-              <X className="w-3.5 h-3.5" />Clear
-            </button>
-          </div>
-        )}
-
-        {/* ── Table ── */}
-        <div className="overflow-x-auto" style={{ minHeight: 200 }}>
-          <table className="w-full" style={{ borderCollapse: "collapse" }}>
-            <thead>
-              <tr className="bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
-                <th className="w-12 px-4 py-3.5">
-                  <input type="checkbox" checked={allSelected} onChange={toggleAll}
-                    className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
-                </th>
-                {COLS.map((col) => (
-                  <th key={col} className="px-3 py-3.5 text-left whitespace-nowrap text-slate-400 text-[11px] font-bold tracking-wider uppercase">
-                    {col}
-                  </th>
-                ))}
-                <th className="w-12 px-3 py-3.5" />
-              </tr>
-            </thead>
-            <tbody>
-              {paginated.length === 0 ? (
-                <tr>
-                  <td colSpan={15}>
-                    <div className="flex flex-col items-center justify-center py-20 gap-3">
-                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-slate-800/80"
-                        >
-                        <Users className="w-7 h-7 text-slate-300 dark:text-slate-400"  />
-                      </div>
-                      <p className="text-sm font-medium text-slate-400 dark:text-slate-300" >No employees match your filters</p>
-                      <button onClick={() => { setSearch(""); setDeptFilter("All Departments"); setStatusFilter("All Status"); }}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>
-                        Clear filters
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ) : paginated.map((emp, i) => {
-                const isSelected = selected.has(emp.uid);
-                const ss = STATUS_STYLES[emp.status];
-                const ut = USER_TYPE_STYLES[emp.userType];
-                const ac = avatarColor(emp.avatar);
-                return (
-                  <tr key={emp.uid} onClick={() => setSelectedEmployee(emp)} className={`cursor-pointer transition-colors border-b border-slate-800/50 ${isSelected ? "bg-blue-900/30" : "hover:bg-slate-800/60"}`}>
-                    {/* Checkbox */}
-                    <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
-                      <input type="checkbox" checked={isSelected} onChange={() => toggleOne(emp.uid)}
-                        className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
-                    </td>
-
-                    {/* UID */}
-                    <td className="px-3 py-3.5">
-                      <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-mono font-semibold text-slate-300 bg-slate-800/80"
-                        style={{letterSpacing: "0.03em" }}>
-                        {emp.uid}
-                      </span>
-                    </td>
-
-                    {/* Name (First) with Avatar */}
-                    <td className="px-3 py-3.5">
-                      <div className="flex items-center gap-3">
-                        <div className="relative shrink-0">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-white"
-                            style={{ background: `linear-gradient(135deg, ${ac}, ${ac}cc)`, boxShadow: `0 2px 8px ${ac}44` }}>
-                            {emp.avatar}
-                          </div>
-                          {emp.status === "Active" && (
-                            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white"
-                              style={{ background: "#16a34a" }} />
-                          )}
-                        </div>
-                        <span className="text-sm font-semibold whitespace-nowrap text-slate-100" >
-                          {emp.firstName}
-                        </span>
-                      </div>
-                    </td>
-
-
-
-                    {/* Last Name */}
-                    <td className="px-3 py-3.5 text-sm font-semibold whitespace-nowrap text-slate-100" >{emp.lastName}</td>
-
-                    {/* Title */}
-                    <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-300" >{emp.title}</td>
-
-
-
-                    {/* Email */}
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-300" >
-                      <a href={`mailto:${emp.email}`} style={{ color: "#2563eb" }} className="hover:underline">{emp.email}</a>
-                    </td>
-
-
-
-                    {/* User Type */}
-                    <td className="px-3 py-3.5">
-                      <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold whitespace-nowrap"
-                        style={{ background: ut.bg, color: ut.color }}>
-                        {emp.userType === "Admin" && <ShieldCheck className="w-3 h-3" />}
-                        {emp.userType === "Supervisor" && <Shield className="w-3 h-3" />}
-                        {emp.userType}
-                      </span>
-                    </td>
-
-                    {/* Department */}
-                    <td className="px-3 py-3.5 text-xs whitespace-nowrap font-medium text-slate-200" >
-                      {emp.department}
-                    </td>
-
-                    {/* Status */}
-                    <td className="px-3 py-3.5">
-                      <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap"
-                        style={{ background: ss.bg, color: ss.color, border: `1px solid ${ss.dot}22` }}>
-                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: ss.dot }} />
-                        {emp.status}
-                      </span>
-                    </td>
-
-
-
-                    {/* Actions */}
-                    <td className="px-3 py-3.5 relative" onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center gap-1">
-                        <button className="w-8 h-8 rounded-xl flex items-center justify-center transition-all text-slate-400 dark:text-slate-300"
-                          onClick={() => setOpenMenuUid(openMenuUid === emp.uid ? null : emp.uid)}
-                          onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#475569"; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }}>
-                          <MoreHorizontal className="w-4 h-4" />
-                        </button>
-                        {openMenuUid === emp.uid && (
-                          <div className="absolute right-8 top-10 w-32 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
-                            <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" onClick={() => { setSelectedEmployee(emp); setOpenMenuUid(null); }}>
-                              Edit
-                            </button>
-                            <button className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30" onClick={() => setOpenMenuUid(null)}>
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {/* ── Pagination ── */}
-        <div className="flex items-center justify-between px-5 py-4 border-t border-slate-800">
-          <p className="text-xs font-medium text-slate-400 dark:text-slate-300" >
-            {filtered.length === 0 ? "No results" : <>Showing <span  className="text-slate-200">{(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}</span> of <span  className="text-slate-200">{filtered.length}</span> employees</>}
-          </p>
-          <div className="flex items-center gap-1">
-            {[
-              { icon: <ChevronFirst className="w-3.5 h-3.5" />, fn: () => setPage(1), disabled: page === 1 },
-              { icon: <ChevronLeft className="w-3.5 h-3.5" />, fn: () => setPage((p) => Math.max(1, p - 1)), disabled: page === 1 },
-            ].map((btn, i) => (
-              <button key={i} onClick={btn.fn} disabled={btn.disabled}
-                className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 text-slate-300"
-                
-                onMouseEnter={(e) => { if (!btn.disabled) e.currentTarget.style.background = "#f1f5f9"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                {btn.icon}
-              </button>
-            ))}
-
-            {(() => {
-              const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1);
-              const withDots: (number | string)[] = [];
-              pages.forEach((p, i) => {
-                if (i > 0 && pages[i - 1] !== p - 1) withDots.push("…");
-                withDots.push(p);
-              });
-              return withDots.map((p, i) =>
-                p === "…"
-                  ? <span key={`d${i}`} className="w-6 text-center text-xs text-slate-400 dark:text-slate-300" >…</span>
-                  : <button key={p} onClick={() => setPage(p as number)}
-                    className="w-8 h-8 rounded-xl text-xs font-semibold transition-all"
-                    style={{ background: page === p ? "#1e3a6e" : "transparent", color: page === p ? "#fff" : "#475569", boxShadow: page === p ? "0 2px 8px rgba(30,58,110,0.3)" : "none" }}
-                    onMouseEnter={(e) => { if (page !== p) e.currentTarget.style.background = "#f1f5f9"; }}
-                    onMouseLeave={(e) => { if (page !== p) e.currentTarget.style.background = "transparent"; }}>
-                    {p}
+              <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 flex-1 min-w-52 transition-all bg-slate-800/50 border border-slate-700">
+                <Search className="w-3.5 h-3.5 shrink-0 text-slate-400 dark:text-slate-300" />
+                <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                  placeholder="Search name, email, username, UID…"
+                  className="text-sm outline-none bg-transparent flex-1 min-w-0 text-slate-200 placeholder-slate-500" />
+                {search && (
+                  <button onClick={() => setSearch("")}
+                    className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                    style={{ background: "#cbd5e1", color: "#fff" }}>
+                    <X className="w-2.5 h-2.5" />
                   </button>
-              );
-            })()}
+                )}
+              </div>
 
-            {[
-              { icon: <ChevronRight className="w-3.5 h-3.5" />, fn: () => setPage((p) => Math.min(totalPages, p + 1)), disabled: page === totalPages || totalPages === 0 },
-              { icon: <ChevronLast className="w-3.5 h-3.5" />, fn: () => setPage(totalPages), disabled: page === totalPages || totalPages === 0 },
-            ].map((btn, i) => (
-              <button key={i} onClick={btn.fn} disabled={btn.disabled}
-                className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 text-slate-300"
-                
-                onMouseEnter={(e) => { if (!btn.disabled) e.currentTarget.style.background = "#f1f5f9"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                {btn.icon}
+              {/* Department */}
+              {showFilters && (
+                <div className="relative">
+                  <select value={deptFilter} onChange={(e) => { setDeptFilter(e.target.value); setPage(1); }}
+                    className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
+                    {DEPARTMENTS.map((d) => <option key={d}>{d}</option>)}
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300" />
+                </div>
+              )}
+
+              {/* Status */}
+              {showFilters && (
+                <div className="relative">
+                  <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+                    className="appearance-none rounded-xl pl-3.5 pr-8 py-2.5 text-sm outline-none cursor-pointer font-medium bg-slate-800/50 border border-slate-700 text-slate-300 focus:border-blue-500 transition-colors">
+                    {["All Status", "Active", "Inactive", "On Leave", "Terminated"].map((s) => <option key={s}>{s}</option>)}
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300" />
+                </div>
+              )}
+
+              <div className="flex-1" />
+
+              <button onClick={() => setShowFilters(!showFilters)} className={`p-2.5 rounded-xl border transition-colors ${showFilters ? 'bg-blue-900/50 border-blue-500/50 text-blue-400' : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:text-slate-300'}`}>
+                <Filter className="w-4 h-4" />
               </button>
-            ))}
-          </div>
-        </div>
+
+              {/* Export group */}
+              <div className="flex items-center rounded-xl overflow-hidden border border-slate-700">
+                {[
+                  { label: "CSV", icon: <FileDown className="w-3.5 h-3.5" />, fn: exportCSV, color: "#16a34a" },
+                  { label: "PDF", icon: <FileText className="w-3.5 h-3.5" />, fn: () => { }, color: "#dc2626" },
+                  { label: "Excel", icon: <FileSpreadsheet className="w-3.5 h-3.5" />, fn: () => { }, color: "#2563eb" },
+                ].map((btn, i) => (
+                  <button key={btn.label} onClick={btn.fn} className={`flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold transition-all bg-slate-800/50 hover:bg-slate-700 ${i > 0 ? "border-l border-slate-700" : ""}`} style={{ color: btn.color }}>
+                    {btn.icon}{btn.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Bulk selection bar ── */}
+            {selected.size > 0 && (
+              <div className="flex items-center gap-3 px-5 py-2.5 bg-blue-900/30 border-b border-blue-900/50">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white bg-blue-600">{selected.size}</div>
+                  <span className="text-sm font-semibold text-blue-400">employee{selected.size > 1 ? "s" : ""} selected</span>
+                </div>
+                <div className="flex items-center gap-2 ml-2">
+                  <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all bg-red-900/40 text-red-400 border border-red-900/50 hover:bg-red-900/60">
+                    <UserX className="w-3.5 h-3.5" />Deactivate
+                  </button>
+                  <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all bg-blue-600 text-white hover:bg-blue-700">
+                    <FileDown className="w-3.5 h-3.5" />Export
+                  </button>
+                </div>
+                <button onClick={() => setSelected(new Set())}
+                  className="ml-auto flex items-center gap-1 text-xs font-medium" style={{ color: "#94a3b8" }}>
+                  <X className="w-3.5 h-3.5" />Clear
+                </button>
+              </div>
+            )}
+
+            {/* ── Table ── */}
+            <div className="overflow-x-auto" style={{ minHeight: 200 }}>
+              <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                <thead>
+                  <tr className="bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+                    <th className="w-12 px-4 py-3.5">
+                      <input type="checkbox" checked={allSelected} onChange={toggleAll}
+                        className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
+                    </th>
+                    {COLS.map((col) => (
+                      <th key={col} className="px-3 py-3.5 text-left whitespace-nowrap text-slate-400 text-[11px] font-bold tracking-wider uppercase">
+                        {col}
+                      </th>
+                    ))}
+                    <th className="w-12 px-3 py-3.5" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginated.length === 0 ? (
+                    <tr>
+                      <td colSpan={15}>
+                        <div className="flex flex-col items-center justify-center py-20 gap-3">
+                          <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-slate-800/80"
+                          >
+                            <Users className="w-7 h-7 text-slate-300 dark:text-slate-400" />
+                          </div>
+                          <p className="text-sm font-medium text-slate-400 dark:text-slate-300" >No employees match your filters</p>
+                          <button onClick={() => { setSearch(""); setDeptFilter("All Departments"); setStatusFilter("All Status"); }}
+                            className="text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ background: "#eff6ff", color: "#1e3a6e" }}>
+                            Clear filters
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : paginated.map((emp, i) => {
+                    const isSelected = selected.has(emp.uid);
+                    const ss = STATUS_STYLES[emp.status];
+                    const ut = USER_TYPE_STYLES[emp.userType];
+                    const ac = avatarColor(emp.avatar);
+                    return (
+                      <tr key={emp.uid} onClick={() => setSelectedEmployee(emp)} className={`cursor-pointer transition-colors border-b border-slate-800/50 ${isSelected ? "bg-blue-900/30" : "hover:bg-slate-800/60"}`}>
+                        {/* Checkbox */}
+                        <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
+                          <input type="checkbox" checked={isSelected} onChange={() => toggleOne(emp.uid)}
+                            className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
+                        </td>
+
+                        {/* UID */}
+                        <td className="px-3 py-3.5">
+                          <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-mono font-semibold text-slate-300 bg-slate-800/80"
+                            style={{ letterSpacing: "0.03em" }}>
+                            {emp.uid}
+                          </span>
+                        </td>
+
+                        {/* Name (First) with Avatar */}
+                        <td className="px-3 py-3.5">
+                          <div className="flex items-center gap-3">
+                            <div className="relative shrink-0">
+                              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-white"
+                                style={{ background: `linear-gradient(135deg, ${ac}, ${ac}cc)`, boxShadow: `0 2px 8px ${ac}44` }}>
+                                {emp.avatar}
+                              </div>
+                              {emp.status === "Active" && (
+                                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white"
+                                  style={{ background: "#16a34a" }} />
+                              )}
+                            </div>
+                            <span className="text-sm font-semibold whitespace-nowrap text-slate-100" >
+                              {emp.firstName}
+                            </span>
+                          </div>
+                        </td>
+
+
+
+                        {/* Last Name */}
+                        <td className="px-3 py-3.5 text-sm font-semibold whitespace-nowrap text-slate-100" >{emp.lastName}</td>
+
+                        {/* Title */}
+                        <td className="px-3 py-3.5 text-sm whitespace-nowrap text-slate-300" >{emp.title}</td>
+
+
+
+                        {/* Email */}
+                        <td className="px-3 py-3.5 text-xs whitespace-nowrap text-slate-300" >
+                          <a href={`mailto:${emp.email}`} style={{ color: "#2563eb" }} className="hover:underline">{emp.email}</a>
+                        </td>
+
+
+
+                        {/* User Type */}
+                        <td className="px-3 py-3.5">
+                          <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold whitespace-nowrap"
+                            style={{ background: ut.bg, color: ut.color }}>
+                            {emp.userType === "Admin" && <ShieldCheck className="w-3 h-3" />}
+                            {emp.userType === "Supervisor" && <Shield className="w-3 h-3" />}
+                            {emp.userType}
+                          </span>
+                        </td>
+
+                        {/* Department */}
+                        <td className="px-3 py-3.5 text-xs whitespace-nowrap font-medium text-slate-200" >
+                          {emp.department}
+                        </td>
+
+                        {/* Status */}
+                        <td className="px-3 py-3.5">
+                          <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap"
+                            style={{ background: ss.bg, color: ss.color, border: `1px solid ${ss.dot}22` }}>
+                            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: ss.dot }} />
+                            {emp.status}
+                          </span>
+                        </td>
+
+
+
+                        {/* Actions */}
+                        <td className="px-3 py-3.5 relative" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center gap-1">
+                            <button className="w-8 h-8 rounded-xl flex items-center justify-center transition-all text-slate-400 dark:text-slate-300"
+                              onClick={() => setOpenMenuUid(openMenuUid === emp.uid ? null : emp.uid)}
+                              onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#475569"; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94a3b8"; }}>
+                              <MoreHorizontal className="w-4 h-4" />
+                            </button>
+                            {openMenuUid === emp.uid && (
+                              <div className="absolute right-8 top-10 w-32 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
+                                <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" onClick={() => { setSelectedEmployee(emp); setOpenMenuUid(null); }}>
+                                  Edit
+                                </button>
+                                <button className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30" onClick={() => setOpenMenuUid(null)}>
+                                  Delete
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* ── Pagination ── */}
+            <div className="flex items-center justify-between px-5 py-4 border-t border-slate-800">
+              <p className="text-xs font-medium text-slate-400 dark:text-slate-300" >
+                {filtered.length === 0 ? "No results" : <>Showing <span className="text-slate-200">{(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}</span> of <span className="text-slate-200">{filtered.length}</span> employees</>}
+              </p>
+              <div className="flex items-center gap-1">
+                {[
+                  { icon: <ChevronFirst className="w-3.5 h-3.5" />, fn: () => setPage(1), disabled: page === 1 },
+                  { icon: <ChevronLeft className="w-3.5 h-3.5" />, fn: () => setPage((p) => Math.max(1, p - 1)), disabled: page === 1 },
+                ].map((btn, i) => (
+                  <button key={i} onClick={btn.fn} disabled={btn.disabled}
+                    className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 text-slate-300"
+
+                    onMouseEnter={(e) => { if (!btn.disabled) e.currentTarget.style.background = "#f1f5f9"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                    {btn.icon}
+                  </button>
+                ))}
+
+                {(() => {
+                  const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1);
+                  const withDots: (number | string)[] = [];
+                  pages.forEach((p, i) => {
+                    if (i > 0 && pages[i - 1] !== p - 1) withDots.push("…");
+                    withDots.push(p);
+                  });
+                  return withDots.map((p, i) =>
+                    p === "…"
+                      ? <span key={`d${i}`} className="w-6 text-center text-xs text-slate-400 dark:text-slate-300" >…</span>
+                      : <button key={p} onClick={() => setPage(p as number)}
+                        className="w-8 h-8 rounded-xl text-xs font-semibold transition-all"
+                        style={{ background: page === p ? "#1e3a6e" : "transparent", color: page === p ? "#fff" : "#475569", boxShadow: page === p ? "0 2px 8px rgba(30,58,110,0.3)" : "none" }}
+                        onMouseEnter={(e) => { if (page !== p) e.currentTarget.style.background = "#f1f5f9"; }}
+                        onMouseLeave={(e) => { if (page !== p) e.currentTarget.style.background = "transparent"; }}>
+                        {p}
+                      </button>
+                  );
+                })()}
+
+                {[
+                  { icon: <ChevronRight className="w-3.5 h-3.5" />, fn: () => setPage((p) => Math.min(totalPages, p + 1)), disabled: page === totalPages || totalPages === 0 },
+                  { icon: <ChevronLast className="w-3.5 h-3.5" />, fn: () => setPage(totalPages), disabled: page === totalPages || totalPages === 0 },
+                ].map((btn, i) => (
+                  <button key={i} onClick={btn.fn} disabled={btn.disabled}
+                    className="w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 text-slate-300"
+
+                    onMouseEnter={(e) => { if (!btn.disabled) e.currentTarget.style.background = "#f1f5f9"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                    {btn.icon}
+                  </button>
+                ))}
+              </div>
+            </div>
 
           </>
         )}

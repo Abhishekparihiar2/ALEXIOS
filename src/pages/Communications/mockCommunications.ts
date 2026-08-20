@@ -41,6 +41,7 @@ export interface NoticePost {
   publishedDate: string;
   attachments: number;
   pinned: boolean;
+  category?: string;
 }
 
 export interface UpdateLog {
@@ -130,6 +131,30 @@ export const MOCK_MESSAGES: Message[] = [
     isRead: true,
   },
   {
+    id: "msg-11-a",
+    senderId: "emp-001",
+    senderName: "John Doe",
+    content: "Great, I will let the team know.",
+    timestamp: "2026-08-07T09:10:00Z",
+    isRead: true,
+  },
+  {
+    id: "msg-11-b",
+    senderId: "emp-001",
+    senderName: "John Doe",
+    content: "Also, we need a replacement for the back gate lock.",
+    timestamp: "2026-08-07T09:12:00Z",
+    isRead: true,
+  },
+  {
+    id: "msg-11-c",
+    senderId: "me",
+    senderName: "Admin User",
+    content: "I'll submit a maintenance ticket for it today.",
+    timestamp: "2026-08-07T09:15:00Z",
+    isRead: true,
+  },
+  {
     id: "msg-12",
     senderId: "emp-001",
     senderName: "John Doe",
@@ -145,8 +170,8 @@ export const MOCK_BROADCASTS: Broadcast[] = [
 ];
 
 export const MOCK_POSTS: NoticePost[] = [
-  { id: "p-1", title: "New Breakroom Policy", preview: "Please ensure the breakroom is clean...", author: "Facility Manager", audience: "Downtown Campus", publishedDate: "2026-08-01T12:00:00Z", attachments: 1, pinned: true },
-  { id: "p-2", title: "Parking Lot Maintenance", preview: "The east lot will be closed on Friday.", author: "Security Dir", audience: "All Staff", publishedDate: "2026-08-06T14:30:00Z", attachments: 0, pinned: false }
+  { id: "p-1", title: "New Breakroom Policy", preview: "Please ensure the breakroom is clean...", author: "Facility Manager", audience: "Downtown Campus", publishedDate: "2026-08-01T12:00:00Z", attachments: 1, pinned: true, category: "Policy" },
+  { id: "p-2", title: "Parking Lot Maintenance", preview: "The east lot will be closed on Friday.", author: "Security Dir", audience: "All Staff", publishedDate: "2026-08-06T14:30:00Z", attachments: 0, pinned: false, category: "Announcement" }
 ];
 
 export const MOCK_UPDATES: UpdateLog[] = [

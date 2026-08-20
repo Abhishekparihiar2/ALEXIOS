@@ -181,11 +181,11 @@ export function SkillDetail({ skill, onBack }: SkillDetailProps) {
                 </div>
                 <div className="flex items-center justify-between py-1">
                   <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Date Created</span>
-                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{new Date(skill.createdAt).toLocaleDateString()}</span>
+                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{formatDateMMDDYYYY(skill.createdAt)}</span>
                 </div>
                 <div className="flex items-center justify-between py-1">
                   <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Last Updated</span>
-                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{new Date(skill.lastUpdated).toLocaleDateString()}</span>
+                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{formatDateMMDDYYYY(skill.lastUpdated)}</span>
                 </div>
               </div>
             </div>
@@ -228,8 +228,8 @@ export function SkillDetail({ skill, onBack }: SkillDetailProps) {
                         </div>
                       </td>
                       <td className="px-5 py-3 text-slate-600 dark:text-slate-300">{cred.licenseNumber || "—"}</td>
-                      <td className="px-5 py-3 text-slate-600 dark:text-slate-300">{cred.issueDate ? new Date(cred.issueDate).toLocaleDateString() : "—"}</td>
-                      <td className="px-5 py-3 text-slate-600 dark:text-slate-300">{cred.expirationDate ? new Date(cred.expirationDate).toLocaleDateString() : "—"}</td>
+                      <td className="px-5 py-3 text-slate-600 dark:text-slate-300">{cred.issueDate ? formatDateMMDDYYYY(cred.issueDate) : "—"}</td>
+                      <td className="px-5 py-3 text-slate-600 dark:text-slate-300">{cred.expirationDate ? formatDateMMDDYYYY(cred.expirationDate) : "—"}</td>
                       <td className="px-5 py-3">
                         <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold ${
                           cred.status === "Valid" ? "bg-emerald-50 text-emerald-700" :
@@ -354,7 +354,7 @@ export function SkillDetail({ skill, onBack }: SkillDetailProps) {
                         </div>
                       </td>
                       <td className="px-5 py-3 text-slate-600 dark:text-slate-300">{cred.licenseNumber || "—"}</td>
-                      <td className="px-5 py-3 font-medium text-slate-800 dark:text-slate-200">{cred.expirationDate ? new Date(cred.expirationDate).toLocaleDateString() : "—"}</td>
+                      <td className="px-5 py-3 font-medium text-slate-800 dark:text-slate-200">{cred.expirationDate ? formatDateMMDDYYYY(cred.expirationDate) : "—"}</td>
                       <td className="px-5 py-3">
                         <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold ${
                           cred.status === "Expiring Soon" ? "bg-amber-50 text-amber-700 border border-amber-200" :
@@ -398,7 +398,7 @@ export function SkillDetail({ skill, onBack }: SkillDetailProps) {
                   <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900 dark:border-slate-700">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-bold text-slate-800 text-sm dark:text-slate-200">{event.actor}</span>
-                      <time className="text-xs font-medium text-slate-500 dark:text-slate-400">{new Date(event.date).toLocaleDateString()}</time>
+                      <time className="text-xs font-medium text-slate-500 dark:text-slate-400">{formatDateMMDDYYYY(event.date)}</time>
                     </div>
                     <p className="text-sm text-slate-600 leading-snug dark:text-slate-300">{event.action}</p>
                   </div>

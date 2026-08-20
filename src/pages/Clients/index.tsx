@@ -26,6 +26,7 @@ import { LoginPage } from '../LoginPage';
 import { Sidebar } from '../../components/Sidebar';
 import { PageHeader } from '../../components/PageHeader';
 import { TopHeader } from '../../components/TopHeader';
+import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 import { Dashboard } from '../Dashboard/index';
 import { CpSection, CpMonitoring, CpExtraScan, CpManual, TourRecurrence, Checkpoint, TourRoute, CpLog, CP_CHECKPOINTS, CP_TOURS, CP_LOGS, CheckpointsPage, SchedulingPage, PlaceholderPage } from '../Checkpoints/index';
 import { EmpStatus, EmpUserType, Employee, DEPARTMENTS, MOCK_EMPLOYEES, STATUS_STYLES, USER_TYPE_STYLES, AVATAR_COLORS, avatarColor, EmpTab } from '../Employees/index';
@@ -747,7 +748,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
               {fld("Effective Date", inp("", "date"))}
               {fld("Hourly Rate", inp("$0.00"))}
             </div>
-            {foot(() => setShowAssignEmp(false), "Assign Employee", () => setEmps([...emps, { name: "New Employee", start: new Date().toLocaleDateString(), rate: "$20.00/hr", unassign: "—", primary: false }]))}
+            {foot(() => setShowAssignEmp(false), "Assign Employee", () => setEmps([...emps, { name: "New Employee", start: formatDateMMDDYYYY(new Date()), rate: "$20.00/hr", unassign: "—", primary: false }]))}
           </div>
         ))}
       </div>
@@ -848,7 +849,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             {fld("Select Employee", sel(["Choose employee...", "Marcus Johnson", "Sarah Chen", "Derek Wilson", "Priya Patel"]))}
             {fld("Reason", <textarea className="w-full px-3 py-2.5 rounded-xl text-sm border outline-none" rows={3} style={{ border: "1.5px solid #e2e8f0" }} placeholder="Reason for ban..." />)}
             {fld("Effective Date", inp("", "date"))}
-            {foot(() => setShowBanEmp(false), "Add Ban", () => setBanned([...banned, { name: "Banned Employee", uid: "EMP-999", reason: "Policy violation", bannedOn: new Date().toLocaleDateString() }]))}
+            {foot(() => setShowBanEmp(false), "Add Ban", () => setBanned([...banned, { name: "Banned Employee", uid: "EMP-999", reason: "Policy violation", bannedOn: formatDateMMDDYYYY(new Date()) }]))}
           </div>
         ))}
       </div>

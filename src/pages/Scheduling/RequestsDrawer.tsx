@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Search, Filter, Calendar, Clock, CheckCircle, XCircle, AlertCircle, RefreshCw, UserCheck, ShieldAlert, FileText, ChevronDown } from 'lucide-react';
 import { MOCK_TIMEOFF_REQUESTS, MOCK_OPEN_SHIFT_CLAIMS, MOCK_SHIFT_REPLACEMENTS } from '../../data/mockData';
+import { formatDateMMDDYYYY } from '../../utils/dateUtils';
 
 interface RequestsDrawerProps {
   isOpen: boolean;
@@ -112,7 +113,7 @@ export function RequestsDrawer({ isOpen, onClose }: RequestsDrawerProps) {
                         </div>
                         <div>
                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Requested Dates</p>
-                          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{new Date(req.startDate).toLocaleDateString()} - {new Date(req.endDate).toLocaleDateString()}</p>
+                          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{formatDateMMDDYYYY(req.startDate)} - {formatDateMMDDYYYY(req.endDate)}</p>
                         </div>
                         <div>
                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Duration</p>
@@ -171,7 +172,7 @@ export function RequestsDrawer({ isOpen, onClose }: RequestsDrawerProps) {
                         Open Shift: {osc.position}
                         <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-md text-xs font-bold">{osc.claims.length} Claims</span>
                       </h4>
-                      <p className="text-sm font-medium text-slate-500 mt-1 dark:text-slate-400">{osc.site} • {new Date(osc.date).toLocaleDateString()} • {osc.time}</p>
+                      <p className="text-sm font-medium text-slate-500 mt-1 dark:text-slate-400">{osc.site} • {formatDateMMDDYYYY(osc.date)} • {osc.time}</p>
                     </div>
                   </div>
                   
@@ -234,7 +235,7 @@ export function RequestsDrawer({ isOpen, onClose }: RequestsDrawerProps) {
                     <div className="grid grid-cols-2 gap-4 p-3 bg-slate-50 rounded-lg border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
                       <div>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Shift Details</p>
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{new Date(rep.shiftDate).toLocaleDateString()} • {rep.shiftTime}</p>
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{formatDateMMDDYYYY(rep.shiftDate)} • {rep.shiftTime}</p>
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reason</p>

@@ -47,7 +47,7 @@ export type TourRecurrence = "weekly" | "monthly";
 export interface Checkpoint {
   id: string;
   name: string;
-  type: "NFC" | "Barcode";
+  type: string;
   monitoring: string;
   assigned: string;
   lastScan: string;
@@ -144,7 +144,7 @@ export function CheckpointsPage() {
   const [cpIntervalUnit, setCpIntervalUnit] = useState("Minutes");
   const [cpExtraScan, setCpExtraScan] = useState<CpExtraScan>("log");
   const [cpVerify, setCpVerify] = useState<"none" | "range" | "yesno-no" | "yesno-yes" | "multi">("none");
-  const [cpType, setCpType] = useState<"NFC" | "Barcode">("NFC");
+  const [cpType, setCpType] = useState<string[]>(["NFC"]);
   const [cpId, setCpId] = useState("");
   const [cpGPS, setCpGPS] = useState("10");
   const [cpManual, setCpManual] = useState<CpManual>("yes");
@@ -192,6 +192,41 @@ export function CheckpointsPage() {
               <span className="text-sm text-slate-700 dark:text-slate-200" >{o.label}</span>
             </label>
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  function renderCheckboxGroup(
+    label: string,
+    options: { value: string; label: string }[],
+    values: string[],
+    onChange: (v: string[]) => void
+  ) {
+    return (
+      <div>
+        <div className="text-xs font-semibold mb-2 text-slate-600 dark:text-slate-300">{label}</div>
+        <div className="flex flex-wrap gap-3">
+          {options.map((o) => {
+            const isSelected = values.includes(o.value);
+            return (
+              <label key={o.value} className="flex items-center gap-2 cursor-pointer">
+                <div className="w-4 h-4 rounded border-2 flex items-center justify-center transition-colors"
+                  style={{ borderColor: isSelected ? "#2563eb" : "#cbd5e1", background: isSelected ? "#2563eb" : "transparent" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (isSelected) {
+                      onChange(values.filter(v => v !== o.value));
+                    } else {
+                      onChange([...values, o.value]);
+                    }
+                  }}>
+                  {isSelected && <CheckSquare className="w-3 h-3 text-white" />}
+                </div>
+                <span className="text-sm text-slate-700 dark:text-slate-200">{o.label}</span>
+              </label>
+            );
+          })}
         </div>
       </div>
     );
@@ -271,10 +306,11 @@ export function CheckpointsPage() {
             className="w-full px-3 py-2.5 rounded-xl text-sm outline-none border border-slate-200 focus:border-blue-500 bg-white text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 transition-colors" rows={2} />
         ))}
 
-        {renderRadioGroup("Checkpoint Type", [
+        {renderCheckboxGroup("Checkpoint Type", [
           { value: "NFC", label: "NFC Tag" },
           { value: "Barcode", label: "Barcode" },
-        ], cpType, (v) => setCpType(v as "NFC" | "Barcode"))}
+          { value: "GPS", label: "GPS" },
+        ], cpType, (v) => setCpType(v))}
 
         {renderRadioGroup("Can Be Scanned By", [
           { value: "all", label: "All Positions" },
@@ -315,9 +351,9 @@ export function CheckpointsPage() {
 
         {renderModalFooter(() => setShowCreateCp(false), editCpId ? "Update Checkpoint" : "Create Checkpoint", () => {
           if (editCpId) {
-            setCheckpoints(checkpoints.map(c => c.id === editCpId ? { ...c, name: cpName, id: cpId, site: cpLocation, type: cpType, monitoring: cpMonitoring } : c));
+            setCheckpoints(checkpoints.map(c => c.id === editCpId ? { ...c, name: cpName, id: cpId, site: cpLocation, type: cpType.join(", "), monitoring: cpMonitoring } : c));
           } else {
-            setCheckpoints([...checkpoints, { id: cpId || "NEW", name: cpName, site: cpLocation, type: cpType, status: "Active", assigned: "All Positions", lastScan: "-", monitoring: cpMonitoring }]);
+            setCheckpoints([...checkpoints, { id: cpId || "NEW", name: cpName, site: cpLocation, type: cpType.join(", "), status: "Active", assigned: "All Positions", lastScan: "-", monitoring: cpMonitoring }]);
           }
           setShowCreateCp(false);
         })}
@@ -384,7 +420,7 @@ export function CheckpointsPage() {
       setCpName(cp.name);
       setCpId(cp.id);
       setCpLocation(cp.site);
-      setCpType(cp.type);
+      setCpType(typeof cp.type === 'string' ? cp.type.split(',').map((t: string) => t.trim()) : cp.type || []);
       setCpMonitoring(cp.monitoring as CpMonitoring || "tour");
       setShowCreateCp(true);
     };

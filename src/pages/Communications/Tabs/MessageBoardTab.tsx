@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
-import { ClipboardList, Search, Filter, Plus, Pin, Paperclip } from 'lucide-react';
-import { MOCK_POSTS } from '../mockCommunications';
+import { ClipboardList, Search, Filter, Plus, Pin, Paperclip, Trash2 } from 'lucide-react';
+import { MOCK_POSTS, NoticePost } from '../mockCommunications';
+import { formatDateMMDDYYYY } from '../../../utils/dateUtils';
 import { NewPostDrawer } from '../Drawers/NewPostDrawer';
+import { ViewPostDrawer } from '../Drawers/ViewPostDrawer';
 
 export function MessageBoardTab() {
   const [isNewPostOpen, setIsNewPostOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<NoticePost | null>(null);
+  const [posts, setPosts] = useState(MOCK_POSTS);
+
+  const handleDeletePost = (e: React.MouseEvent, postId: string) => {
+    e.stopPropagation();
+    setPosts(prev => prev.filter(p => p.id !== postId));
+  };
 
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-slate-50 p-6 dark:bg-slate-900">
@@ -37,20 +46,33 @@ export function MessageBoardTab() {
 
       <div className="flex-1 overflow-auto no-scrollbar">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {MOCK_POSTS.map(post => (
-            <div key={post.id} className="bg-white border border-slate-200 shadow-sm rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col relative group dark:bg-slate-900 dark:border-slate-700">
-              {post.pinned && (
-                <div className="absolute top-5 right-5">
-                  <Pin className="w-4 h-4 text-blue-600 fill-blue-600/20" />
-                </div>
-              )}
+          {posts.map(post => (
+            <div 
+              key={post.id} 
+              onClick={() => setSelectedPost(post)}
+              className="bg-white border border-slate-200 shadow-sm rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col relative group dark:bg-slate-900 dark:border-slate-700 cursor-pointer">
+              
+              <div className="absolute top-4 right-4 flex items-center gap-1">
+                <button 
+                  onClick={(e) => handleDeletePost(e, post.id)}
+                  className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100 dark:hover:bg-red-900/30"
+                  title="Delete Post"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+                {post.pinned && (
+                  <div className="p-1.5">
+                    <Pin className="w-4 h-4 text-blue-600 fill-blue-600/20" />
+                  </div>
+                )}
+              </div>
               
               <div className="flex items-center gap-2 mb-3 pr-8">
                 <span className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-semibold dark:bg-slate-800 dark:text-slate-300">
                   {post.audience}
                 </span>
                 <span className="text-xs font-medium text-slate-400">
-                  {new Date(post.publishedDate).toLocaleDateString()}
+                  {formatDateMMDDYYYY(post.publishedDate)}
                 </span>
               </div>
               
@@ -82,6 +104,7 @@ export function MessageBoardTab() {
       </div>
 
       <NewPostDrawer isOpen={isNewPostOpen} onClose={() => setIsNewPostOpen(false)} />
+      <ViewPostDrawer post={selectedPost} onClose={() => setSelectedPost(null)} />
     </div>
   );
 }
