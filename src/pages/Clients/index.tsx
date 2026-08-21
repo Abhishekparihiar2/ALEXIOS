@@ -30,7 +30,7 @@ import { formatDateMMDDYYYY } from "../../utils/dateUtils";
 import { Dashboard } from '../Dashboard/index';
 import { CpSection, CpMonitoring, CpExtraScan, CpManual, TourRecurrence, Checkpoint, TourRoute, CpLog, CP_CHECKPOINTS, CP_TOURS, CP_LOGS, CheckpointsPage, SchedulingPage, PlaceholderPage } from '../Checkpoints/index';
 import { EmpStatus, EmpUserType, Employee, DEPARTMENTS, MOCK_EMPLOYEES, STATUS_STYLES, USER_TYPE_STYLES, AVATAR_COLORS, avatarColor, EmpTab } from '../Employees/index';
-import { ProfileTab, AVAIL_CYCLE, AvailState, AVAIL_COLORS, DAYS_SHORT, HOURS_LIST, buildInitialAvail, EmployeeProfilePage, AddEmployeePage, EmployeesPage } from '../Employees/Profile';
+import { ProfileTab, AVAIL_CYCLE, AvailState, AVAIL_COLORS, DAYS_SHORT, HOURS_LIST, buildInitialAvail, EmployeeProfilePage, AddEmployeePage, EmployeesPage, PayRule, PayType, PayRuleTriggerType } from '../Employees/Profile';
 import { AppShell } from '../../AppShell';
 import { App } from '../../app/App';
 
@@ -179,10 +179,10 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
           <label className="block text-xs font-semibold mb-2 text-slate-600 dark:text-slate-300" >Company Logo</label>
           <div className="flex items-center gap-5">
             <div className="w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800"
-              style={{border: "2px dashed #e2e8f0" }}>
+              style={{ border: "2px dashed #e2e8f0" }}>
               {logoPreview
                 ? <img src={logoPreview} className="w-full h-full object-contain" alt="logo" />
-                : <Building2 className="w-8 h-8 text-slate-300 dark:text-slate-400"  />}
+                : <Building2 className="w-8 h-8 text-slate-300 dark:text-slate-400" />}
             </div>
             <div>
               <label className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer"
@@ -382,12 +382,17 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
 
 export type SiteProfileTab =
   | "overview" | "positions" | "employees" | "portal" | "banned"
-  | "contacts" | "actions" | "dispatch" | "activity" | "notifications"
-  | "security" | "live" | "messages" | "email";
+  | "contacts" | "actions" | "notifications"
+  | "security" | "email";
 
-export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: () => void }) {
+export function SiteProfilePage({ site, onBack, onNavigateTo }: { site: SiteClient; onBack: () => void; onNavigateTo?: (page: string) => void }) {
   const [activeTab, setActiveTab] = useState<SiteProfileTab>("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [emergencyContacts, setEmergencyContacts] = useState([
+    { name: "Gregory Nash", role: "Facility Director", phone: "+1 (555) 301-0001" },
+    { name: "Patricia Lane", role: "Security Liaison", phone: "+1 (555) 301-0002" },
+  ]);
+  const [showAddEmergency, setShowAddEmergency] = useState(false);
 
   // Modal states
   const [showAssignEmp, setShowAssignEmp] = useState(false);
@@ -409,6 +414,24 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   const [portalSearch, setPortalSearch] = useState("");
   const [liveFilter, setLiveFilter] = useState("All");
 
+  const [workingHourMode, setWorkingHourMode] = useState<"Policy" | "Custom">("Policy");
+  const [weeklySchedule, setWeeklySchedule] = useState<Record<string, { active: boolean; start: string; end: string }>>({
+    Monday: { active: true, start: "09:00", end: "17:00" },
+    Tuesday: { active: true, start: "09:00", end: "17:00" },
+    Wednesday: { active: true, start: "09:00", end: "17:00" },
+    Thursday: { active: true, start: "09:00", end: "17:00" },
+    Friday: { active: true, start: "09:00", end: "17:00" },
+    Saturday: { active: false, start: "09:00", end: "17:00" },
+    Sunday: { active: false, start: "09:00", end: "17:00" },
+  });
+  const [payRules, setPayRules] = useState<PayRule[]>([]);
+  const [showPosRuleBuilder, setShowPosRuleBuilder] = useState(false);
+  const [editingPosPayRule, setEditingPosPayRule] = useState<PayRule | null>(null);
+  const [schedulingMode, setSchedulingMode] = useState<"Policy" | "Custom">("Policy");
+  const [timeOffPolicy, setTimeOffPolicy] = useState("Standard PTO");
+  const [timeOffDays, setTimeOffDays] = useState("15");
+  const [timeOffAccrualRate, setTimeOffAccrualRate] = useState("1.25");
+
   const [positions, setPositions] = useState([
     { uid: "POS-001", title: "Day Shift Guard", tpt: "8h", bill: "$28.00", holiday: "$42.00", temp: "No" },
     { uid: "POS-002", title: "Night Patrol Officer", tpt: "8h", bill: "$30.00", holiday: "$45.00", temp: "No" },
@@ -420,6 +443,10 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     { name: "Sarah Chen", start: "03/01/2024", rate: "$24.00/hr", unassign: "-", primary: false },
     { name: "Derek Wilson", start: "06/10/2024", rate: "$20.00/hr", unassign: "-", primary: false },
   ]);
+  const [showViewEmp, setShowViewEmp] = useState(false);
+  const [showEditEmp, setShowEditEmp] = useState(false);
+  const [showHistoryEmp, setShowHistoryEmp] = useState(false);
+  const [selectedEmpIdx, setSelectedEmpIdx] = useState<number | null>(null);
 
   const [users, setUsers] = useState([
     { name: "Sandra Kim", email: "s.kim@westfield.com", phone: "+1 (555) 202-0002", lastLogin: "Today, 9:15 AM", access: "Granted" },
@@ -449,12 +476,8 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     { id: "banned", label: "Banned Employees" },
     { id: "contacts", label: "Other Contacts" },
     { id: "actions", label: "Site Actions" },
-    { id: "dispatch", label: "Dispatch" },
-    { id: "activity", label: "Activity & Reports" },
     { id: "notifications", label: "Notifications" },
-    { id: "security", label: "Security & Patrol" },
-    { id: "live", label: "Live Dashboard" },
-    { id: "messages", label: "Message Board" },
+    { id: "security", label: "Geofencing" },
     { id: "email", label: "Email Settings" },
   ];
 
@@ -464,19 +487,18 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   const ats = ACCT_TYPE_STYLES[site.accountType];
 
   // ── shared helpers ──────────────────────────────────────────────────────────
-  function modal(title: string, onClose: () => void, children: React.ReactNode) {
+  function modal(title: string, onClose: () => void, children: React.ReactNode, widthClass = "max-w-lg") {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
         style={{ background: "rgba(15,23,41,0.6)", backdropFilter: "blur(4px)" }}
         onClick={onClose}>
-        <div className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden bg-white dark:bg-slate-900"
+        <div className={`w-full ${widthClass} rounded-2xl shadow-2xl overflow-hidden bg-white dark:bg-black border dark:border-slate-800`}
           onClick={(e) => e.stopPropagation()}>
-          <div className="flex items-center justify-between px-6 py-4"
-            style={{ background: "linear-gradient(135deg,#0f1729,#1a2f5a)" }}>
+          <div className="flex items-center justify-between px-6 py-4 bg-slate-900 dark:bg-black border-b border-transparent dark:border-slate-800">
             <h3 className="text-base font-bold text-white">{title}</h3>
             <button onClick={onClose} className="text-white/60 hover:text-white"><X className="w-5 h-5" /></button>
           </div>
-          <div className="p-6 overflow-y-auto" style={{ maxHeight: "70vh" }}>{children}</div>
+          <div className="p-6 overflow-y-auto bg-black" style={{ maxHeight: "70vh" }}>{children}</div>
         </div>
       </div>
     );
@@ -490,43 +512,43 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
     );
   }
   function inp(ph: string, type = "text") {
-    return <input type={type} placeholder={ph} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none text-slate-900 dark:text-slate-100" style={{ border: "1.5px solid #e2e8f0"}} />;
+    return <input type={type} placeholder={ph} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors border border-slate-700 bg-[#111] text-slate-100 focus:border-blue-500 placeholder:text-slate-500" />;
   }
   function sel(opts: string[]) {
-    return <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none text-slate-900 dark:text-slate-100" style={{ border: "1.5px solid #e2e8f0"}}>{opts.map((o) => <option key={o}>{o}</option>)}</select>;
+    return <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors border border-slate-700 bg-[#111] text-slate-100 focus:border-blue-500">{opts.map((o) => <option key={o}>{o}</option>)}</select>;
   }
   function foot(onClose: () => void, label = "Save", onSubmit?: () => void) {
     return (
-      <div className="flex justify-end gap-3 pt-4 border-t bg-slate-100 dark:bg-slate-800" style={{ border }}>
-        <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800" >Cancel</button>
-        <button onClick={() => { if(onSubmit) onSubmit(); onClose(); }} className="px-5 py-2 rounded-xl text-sm font-bold text-white" style={{ background: "linear-gradient(135deg,#1a2f5a,#1e3a6e)" }}>{label}</button>
+      <div className="flex justify-end gap-3 pt-5 mt-6 border-t border-slate-200 dark:border-slate-800">
+        <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors" >Cancel</button>
+        <button onClick={() => { if (onSubmit) onSubmit(); onClose(); }} className="px-5 py-2 rounded-xl text-sm font-bold text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors">{label}</button>
       </div>
     );
   }
   function toggle(val: boolean, set: (v: boolean) => void, label: string, sub?: string) {
     return (
-      <div className="flex items-center justify-between py-3" style={{ borderBottom: "1px solid #f1f5f9" }}>
+      <div className="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800">
         <div>
           <div className="text-sm font-medium text-slate-900 dark:text-slate-100" >{label}</div>
-          {sub && <div className="text-xs text-slate-400 dark:text-slate-300" >{sub}</div>}
+          {sub && <div className="text-xs text-slate-400 dark:text-slate-500" >{sub}</div>}
         </div>
-        <button onClick={() => set(!val)} className="w-10 h-6 rounded-full shrink-0 transition-all" style={{ background: val ? "#16a34a" : "#e2e8f0", position: "relative" }}>
-          <span className="absolute top-1 w-4 h-4 rounded-full bg-white transition-all dark:bg-slate-900" style={{ left: val ? "calc(100% - 20px)" : "4px", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
+        <button onClick={() => set(!val)} className="w-10 h-6 rounded-full shrink-0 transition-all" style={{ background: val ? "#16a34a" : "#475569", position: "relative" }}>
+          <span className="absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm" style={{ left: val ? "calc(100% - 20px)" : "4px" }} />
         </button>
       </div>
     );
   }
   function sectionHead(label: string) {
-    return <div className="text-xs font-bold uppercase tracking-wide pb-2 mb-4" style={{ color: "#1e3a6e", borderBottom: "1.5px solid #e8eef8" }}>{label}</div>;
+    return <div className="text-xs font-bold uppercase tracking-widest pb-2 mb-4 text-blue-800 dark:text-blue-400 border-b border-slate-200 dark:border-slate-800">{label}</div>;
   }
   function tableWrap(headers: string[], rows: React.ReactNode) {
     return (
       <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
         <table className="w-full" style={{ borderCollapse: "collapse" }}>
           <thead>
-            <tr  className="bg-slate-50 dark:bg-slate-900">
+            <tr className="bg-slate-50 dark:bg-slate-900">
               {headers.map((h) => (
-                <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+                <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -624,6 +646,60 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             </div>
           </div>
         )}
+
+        {/* Emergency Contacts */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            {sectionHead("Emergency Contacts")}
+            <button onClick={() => setShowAddEmergency(true)}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg text-blue-400 bg-blue-900/30 hover:bg-blue-900/50 transition-colors">
+              <Plus className="w-3.5 h-3.5" />Add Contact
+            </button>
+          </div>
+          <div className="rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800">
+            {emergencyContacts.map((c, i) => (
+              <div key={i} className="flex items-center justify-between px-4 py-3 bg-[#0d0d0d]">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0"
+                    style={{ background: `hsl(${(c.name.charCodeAt(0) * 37) % 360}, 55%, 35%)` }}>
+                    {c.name.split(" ").map(w => w[0]).join("").slice(0, 2)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-200">{c.name}</p>
+                    <p className="text-xs text-slate-500">{c.role}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-medium text-slate-400">{c.phone}</span>
+                  <button onClick={() => setEmergencyContacts(prev => prev.filter((_, idx) => idx !== i))}
+                    className="p-1 rounded-lg text-slate-600 hover:text-red-500 transition-colors">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+            {emergencyContacts.length === 0 && (
+              <div className="px-4 py-6 text-center text-sm text-slate-500 bg-[#0d0d0d]">No emergency contacts added.</div>
+            )}
+          </div>
+        </div>
+
+        {/* Add Emergency Contact Modal */}
+        {showAddEmergency && modal("Add Emergency Contact", () => setShowAddEmergency(false), (
+          <div className="space-y-4">
+            {fld("Full Name", inp("e.g. John Smith"))}
+            {fld("Role / Title", inp("e.g. Facility Director"))}
+            <div className="grid grid-cols-2 gap-4">
+              {fld("Phone", inp("+1 (555) 000-0000"))}
+              {fld("Email", inp("email@example.com"))}
+            </div>
+            {fld("Priority Level", sel(["1 — Primary", "2 — Secondary", "3 — Tertiary"]))}
+            {foot(() => setShowAddEmergency(false), "Add Contact", () => {
+              setEmergencyContacts(prev => [...prev, { name: "New Contact", role: "Emergency Contact", phone: "+1 (555) 000-0000" }]);
+              setShowAddEmergency(false);
+            })}
+          </div>
+        ))}
       </div>
     );
   }
@@ -666,91 +742,573 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
         )}
 
         {showCreatePos && modal("Create Position / Job Type", () => setShowCreatePos(false), (
-          <div className="space-y-4">
-            {sectionHead("Post Base Settings")}
-            <div className="grid grid-cols-2 gap-4">
-              {fld("Post Name", inp("e.g. Day Shift Guard"))}
-              {fld("Post ID", inp("Auto or custom ID"))}
+          <div className="space-y-6">
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-4 shadow-sm">
+              {sectionHead("Post Base Settings")}
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Post Name", inp("e.g. Day Shift Guard"))}
+                {fld("Post ID", inp("Auto or custom ID"))}
+              </div>
+              {fld("Short Description of Position", <textarea className="w-full px-3 py-2.5 rounded-xl text-sm outline-none bg-white dark:bg-[#000] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-blue-500 transition-colors" rows={2} />)}
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Status", sel(["Active", "Archived"]))}
+                {fld("Schedule Memo", inp("Internal memo"))}
+              </div>
             </div>
-            {fld("Short Description of Tasks", <textarea className="w-full px-3 py-2.5 rounded-xl text-sm outline-none bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:border-blue-700 dark:focus:border-blue-500 transition-colors" rows={2} />)}
-            {fld("Schedule Memo", inp("Internal memo"))}
-            {fld("Status", sel(["Active", "Archived"]))}
-            {sectionHead("Service Dates")}
-            {fld("Service Duration", sel(["Ongoing Service", "Temporary Service"]))}
-            {fld("Begin Date", inp("", "date"))}
-            {sectionHead("Break Rule Settings")}
-            {fld("Break Rule", sel(["No Break Rule", "California Break Rule", "Standard 30-min Break", "Custom"]))}
-            {sectionHead("Pay Settings")}
-            {fld("Pay Basis", sel(["Pay on Employee Pay Rate", "Pay on This Post Rate"]))}
-            {sectionHead("Break Payroll")}
-            {fld("Break Pay", sel(["Do Not Pay Breaks", "Pay All Breaks"]))}
-            {sectionHead("Holiday Pay")}
-            {fld("Holiday Pay", sel(["Do Not Pay Holiday Premium", "Rate Multiplier"]))}
-            {sectionHead("Compliance")}
-            {fld("Hard Requirements", inp("e.g. CPR Cert, License"))}
-            {fld("Conditional Requirements", inp("e.g. Background Check"))}
-            {fld("Soft Requirements", inp("e.g. Bilingual preferred"))}
+
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-4 shadow-sm">
+              {sectionHead("Service & Scheduling")}
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Service Duration", sel(["Regular Service", "Temporary Service"]))}
+                {fld("Begin Date", inp("", "date"))}
+              </div>
+              {fld("Break Rule", sel(["No Break Rule", "California Break Rule", "Standard 30-min Break", "Custom"]))}
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-4 shadow-sm">
+              {sectionHead("Payroll & Billing")}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {fld("Pay Basis", sel(["Pay on Employee Pay Rate", "Pay on This Post Rate"]))}
+                {fld("Break Pay", sel(["Do Not Pay Breaks", "Pay All Breaks"]))}
+                {fld("Holiday Pay", sel(["Do Not Pay Holiday Premium", "Rate Multiplier"]))}
+              </div>
+
+              <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800 space-y-6">
+
+                {/* Regular Working Hour */}
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-500 dark:text-slate-400">Regular Working Hour</p>
+                  <div className="flex gap-3 mb-4">
+                    <button onClick={() => setWorkingHourMode("Policy")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${workingHourMode === "Policy" ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}>Choose Policy</button>
+                    <button onClick={() => setWorkingHourMode("Custom")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${workingHourMode === "Custom" ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}>Set Custom Working Hour</button>
+                  </div>
+                  {workingHourMode === "Policy" ? (
+                    <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border transition-colors bg-[#111] border-slate-700 text-slate-100 focus:border-blue-500" >
+                      <option>Standard Full-Time (9 to 5)</option>
+                      <option>Night Shift (10 PM to 6 AM)</option>
+                    </select>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="rounded-xl border overflow-hidden bg-[#0d0d0d] border-slate-800">
+                        {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day, idx) => {
+                          const schedule = weeklySchedule[day];
+                          return (
+                            <div key={day} className={`flex items-center px-4 py-3 ${idx !== 6 ? 'border-b border-slate-200 dark:border-slate-700' : ''} transition-colors ${schedule.active ? 'bg-transparent dark:bg-[#1a1a1a]' : 'bg-transparent'}`}>
+                              <label className="flex items-center gap-3 w-32 cursor-pointer">
+                                <input type="checkbox" checked={schedule.active} onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], active: e.target.checked } }))} className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1d4ed8" }} />
+                                <span className={`text-sm font-semibold ${schedule.active ? 'text-slate-900 dark:text-slate-100' : 'text-slate-400'}`}>{day}</span>
+                              </label>
+                              {schedule.active ? (
+                                <div className="flex items-center gap-3 flex-1">
+                                  <input type="time" value={schedule.start} onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], start: e.target.value } }))} className="rounded-lg px-2 py-1.5 border text-sm outline-none border-slate-700 bg-[#111] text-slate-100" />
+                                  <span className="text-xs font-bold text-slate-400">to</span>
+                                  <input type="time" value={schedule.end} onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], end: e.target.value } }))} className="rounded-lg px-2 py-1.5 border text-sm outline-none border-slate-700 bg-[#111] text-slate-100" />
+                                </div>
+                              ) : (
+                                <div className="flex-1 text-sm font-semibold text-slate-400 italic">Not Working</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Scheduling Rules */}
+                <div className="border-t pt-4 border-slate-800" >
+                  <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-500 dark:text-slate-400" >Scheduling Rules</p>
+                  <div className="flex gap-3 mb-4">
+                    <button onClick={() => setSchedulingMode("Policy")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${schedulingMode === "Policy" ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}>Choose Policy</button>
+                    <button onClick={() => setSchedulingMode("Custom")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${schedulingMode === "Custom" ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}>Custom Rules</button>
+                  </div>
+                  {schedulingMode === "Policy" ? (
+                    <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border transition-colors bg-[#111] border-slate-700 text-slate-100 focus:border-blue-500" >
+                      <option>Strict Scheduling (Must adhere to hours)</option>
+                      <option>Flexible Scheduling (Core hours required)</option>
+                    </select>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-4">
+                      {fld("Max Hours Per Week", inp("e.g. 40", "number"))}
+                      {fld("Max Shifts Per Week", inp("e.g. 5", "number"))}
+                      {fld("Min Rest Between Shifts (hrs)", inp("e.g. 10", "number"))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Pay Rules */}
+                <div className="border-t pt-4 border-slate-800" >
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400" >Pay Rules</p>
+                    {!showPosRuleBuilder && (
+                      <button onClick={() => {
+                        setEditingPosPayRule({ id: Date.now().toString(), name: "", payType: "Overtime", multiplier: "x1.5", triggerType: "After Hours/Week", triggerValue: "40", isPolicy: false } as PayRule);
+                        setShowPosRuleBuilder(true);
+                      }} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg text-blue-400 bg-blue-900/30 hover:bg-blue-900/50 transition-colors">
+                        <Plus className="w-3.5 h-3.5" /> Add Rule
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Existing Rules List */}
+                  {!showPosRuleBuilder && payRules.length > 0 && (
+                    <div className="space-y-3 mb-3">
+                      {payRules.map((rule) => (
+                        <div key={rule.id} className="p-3 rounded-xl border border-slate-700 bg-[#111] flex items-center justify-between">
+                          <div>
+                            <h4 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                              {rule.name}
+                              <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold bg-blue-900/40 text-blue-400">{rule.payType}</span>
+                            </h4>
+                            <p className="text-xs text-slate-400 mt-1">
+                              If works {rule.triggerType === "After Hours/Week" ? `more than ${rule.triggerValue} hrs/week` : rule.triggerType === "After Hours/Day" ? `more than ${rule.triggerValue} hrs/day` : rule.triggerType === "Specific Day" ? `on ${rule.triggerValue}` : rule.triggerType === "Holiday" ? `on Holiday` : rule.triggerValue}
+                              <span className="text-slate-500 mx-1">→</span>
+                              <span className="text-slate-200 font-semibold">Pay {rule.multiplier}</span>
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <button onClick={() => { setEditingPosPayRule({ ...rule }); setShowPosRuleBuilder(true); }} className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 transition-colors"><Edit2 className="w-4 h-4" /></button>
+                            <button onClick={() => setPayRules(r => r.filter(x => x.id !== rule.id))} className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {!showPosRuleBuilder && payRules.length === 0 && (
+                    <div className="p-4 text-center border border-dashed rounded-xl border-slate-700">
+                      <p className="text-sm text-slate-500">No pay rules configured.</p>
+                    </div>
+                  )}
+
+                  {/* Rule Builder Panel */}
+                  {showPosRuleBuilder && editingPosPayRule && (
+                    <div className="p-4 rounded-xl border border-slate-700 bg-[#0d0d0d] space-y-4">
+                      <div className="flex items-center justify-between pb-3 border-b border-slate-700">
+                        <h4 className="text-sm font-bold text-slate-200">Rule Builder</h4>
+                        <div className="flex items-center gap-1 bg-[#1a1a1a] p-1 rounded-lg border border-slate-700">
+                          <button onClick={() => setEditingPosPayRule(prev => prev ? ({ ...prev, isPolicy: true }) : prev)} className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${(editingPosPayRule as any).isPolicy ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}>Choose Policy</button>
+                          <button onClick={() => setEditingPosPayRule(prev => prev ? ({ ...prev, isPolicy: false }) : prev)} className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${!(editingPosPayRule as any).isPolicy ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}>Custom Rule</button>
+                        </div>
+                      </div>
+
+                      {(editingPosPayRule as any).isPolicy ? (
+                        <div>
+                          <label className="block text-xs font-semibold mb-1.5 text-slate-400">Select Existing Policy</label>
+                          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border border-slate-700 bg-[#111] text-slate-100 focus:border-blue-500" onChange={(e) => {
+                            if (e.target.value === "Standard Overtime") setEditingPosPayRule({ ...editingPosPayRule, name: "Standard Overtime", payType: "Overtime", multiplier: "x1.5", triggerType: "After Hours/Week", triggerValue: "40" });
+                            if (e.target.value === "Holiday Premium") setEditingPosPayRule({ ...editingPosPayRule, name: "Holiday Premium", payType: "Holiday", multiplier: "x2.0", triggerType: "Holiday", triggerValue: "Any" });
+                          }}>
+                            <option value="">Select a policy...</option>
+                            <option value="Standard Overtime">Standard Overtime (x1.5 after 40hrs)</option>
+                            <option value="Holiday Premium">Holiday Premium (x2.0 on holidays)</option>
+                          </select>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-semibold mb-1.5 text-slate-400">Rule Name <span className="text-red-400">*</span></label>
+                              <input type="text" value={editingPosPayRule.name} onChange={e => setEditingPosPayRule({ ...editingPosPayRule, name: e.target.value })} placeholder="e.g. Overtime After 40 Hours" className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#111] text-slate-100 text-sm outline-none focus:border-blue-500 placeholder:text-slate-500" />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold mb-1.5 text-slate-400">Pay Type <span className="text-red-400">*</span></label>
+                              <select value={editingPosPayRule.payType} onChange={e => setEditingPosPayRule({ ...editingPosPayRule, payType: e.target.value as PayType })} className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#111] text-slate-100 text-sm outline-none focus:border-blue-500">
+                                <option>Regular</option><option>Overtime</option><option>Double Time</option><option>Holiday</option><option>Premium Pay</option><option>Custom</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div className="p-3 rounded-xl border border-slate-700 bg-[#111]">
+                            <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-500">Condition & Rate</p>
+                            <div className="flex items-end gap-3">
+                              <div className="flex-1">
+                                <label className="block text-xs font-semibold mb-1.5 text-slate-400">Trigger / Applies When</label>
+                                <select value={editingPosPayRule.triggerType} onChange={e => setEditingPosPayRule({ ...editingPosPayRule, triggerType: e.target.value as PayRuleTriggerType, triggerValue: "" })} className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#1a1a1a] text-slate-100 text-sm outline-none focus:border-blue-500">
+                                  <option value="After Hours/Day">After X hours / day</option>
+                                  <option value="After Hours/Week">After X hours / week</option>
+                                  <option value="Specific Day">Specific Day</option>
+                                  <option value="Holiday">Specific Holiday</option>
+                                  <option value="Custom">Custom Condition</option>
+                                </select>
+                              </div>
+                              <div className="w-28">
+                                <label className="block text-xs font-semibold mb-1.5 text-slate-400">Value</label>
+                                {editingPosPayRule.triggerType === "Specific Day" ? (
+                                  <select value={editingPosPayRule.triggerValue} onChange={e => setEditingPosPayRule({ ...editingPosPayRule, triggerValue: e.target.value })} className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#1a1a1a] text-slate-100 text-sm outline-none focus:border-blue-500">
+                                    <option value="">Select...</option>
+                                    <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+                                  </select>
+                                ) : editingPosPayRule.triggerType === "Holiday" ? (
+                                  <input type="date" value={editingPosPayRule.triggerValue === "Any" ? "" : editingPosPayRule.triggerValue} onChange={e => setEditingPosPayRule({ ...editingPosPayRule, triggerValue: e.target.value })} className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#1a1a1a] text-slate-100 text-sm outline-none focus:border-blue-500 cursor-pointer" />
+                                ) : (
+                                  <input type="text" value={editingPosPayRule.triggerValue} onChange={e => setEditingPosPayRule({ ...editingPosPayRule, triggerValue: e.target.value })} placeholder={editingPosPayRule.triggerType.includes("Hours") ? "e.g. 40" : "..."} className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#1a1a1a] text-slate-100 text-sm outline-none focus:border-blue-500 placeholder:text-slate-500" />
+                                )}
+                              </div>
+                              <div className="text-slate-500 pb-2.5">→</div>
+                              <div className="w-28">
+                                <label className="block text-xs font-semibold mb-1.5 text-slate-400">Multiplier <span className="text-red-400">*</span></label>
+                                <input type="text" value={editingPosPayRule.multiplier} onChange={e => setEditingPosPayRule({ ...editingPosPayRule, multiplier: e.target.value })} placeholder="e.g. x1.5" className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#1a1a1a] text-slate-100 text-sm outline-none focus:border-blue-500 placeholder:text-slate-500" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex justify-end gap-3 pt-3 border-t border-slate-700">
+                        <button onClick={() => { setShowPosRuleBuilder(false); setEditingPosPayRule(null); }} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800 transition-colors">Cancel</button>
+                        <button onClick={() => {
+                          if (!editingPosPayRule.name || !editingPosPayRule.multiplier) { alert("Please fill out the rule name and multiplier."); return; }
+                          const hasOverlap = payRules.some(r => r.id !== editingPosPayRule.id && r.triggerType === editingPosPayRule.triggerType && r.triggerValue === editingPosPayRule.triggerValue);
+                          if (hasOverlap) { alert("Conflict: A rule with this trigger already exists."); return; }
+                          setPayRules(prev => {
+                            const idx = prev.findIndex(r => r.id === editingPosPayRule.id);
+                            if (idx >= 0) { const copy = [...prev]; copy[idx] = editingPosPayRule; return copy; }
+                            return [...prev, editingPosPayRule];
+                          });
+                          setShowPosRuleBuilder(false);
+                          setEditingPosPayRule(null);
+                        }} className="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-blue-700 hover:bg-blue-600 transition-colors shadow-sm">Save Rule</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Time Off */}
+                <div className="border-t pt-4 border-slate-800" >
+                  <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-400">Time Off Policy</p>
+
+                  <select value={timeOffPolicy} onChange={e => {
+                    const v = e.target.value;
+                    setTimeOffPolicy(v);
+                    if (v === "Standard PTO") { setTimeOffDays("15"); setTimeOffAccrualRate("1.25"); }
+                    else if (v === "Executive Leave") { setTimeOffDays("25"); setTimeOffAccrualRate("2.08"); }
+                    else if (v === "Unlimited PTO") { setTimeOffDays("Unlimited"); setTimeOffAccrualRate("N/A"); }
+                    else { setTimeOffDays("0"); setTimeOffAccrualRate("0"); }
+                  }} className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border border-slate-700 bg-[#111] text-slate-100 focus:border-blue-500 mb-4">
+                    <option value="Standard PTO">Standard PTO</option>
+                    <option value="Executive Leave">Executive Leave</option>
+                    <option value="Unlimited PTO">Unlimited PTO</option>
+                    <option value="No Paid Time Off">No Paid Time Off</option>
+                  </select>
+
+                  {timeOffPolicy !== "No Paid Time Off" && (
+                    <div className="p-3 rounded-xl border border-slate-700 bg-[#0d0d0d] space-y-3">
+                      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Policy Details</p>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold mb-1.5 text-slate-400">Days Per Year</label>
+                          <input type="text" value={timeOffDays} onChange={e => setTimeOffDays(e.target.value)} placeholder="e.g. 15" className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#111] text-slate-100 text-sm outline-none focus:border-blue-500 placeholder:text-slate-500" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold mb-1.5 text-slate-400">Accrual Rate (days/month)</label>
+                          <input type="text" value={timeOffAccrualRate} onChange={e => setTimeOffAccrualRate(e.target.value)} placeholder="e.g. 1.25" className="w-full rounded-xl px-3 py-2.5 border border-slate-700 bg-[#111] text-slate-100 text-sm outline-none focus:border-blue-500 placeholder:text-slate-500" />
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 pt-1">
+                        <div className="flex-1 h-px bg-slate-800" />
+                        <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-widest whitespace-nowrap">
+                          {timeOffDays === "Unlimited" ? "Unlimited days · Accrual N/A" : `${timeOffDays} days/yr · ${timeOffAccrualRate} days/mo accrual`}
+                        </p>
+                        <div className="flex-1 h-px bg-slate-800" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-4 shadow-sm">
+              {sectionHead("Requirements")}
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Conditional Requirements", inp("e.g. Background Check"))}
+                {fld("Soft Requirements", inp("e.g. Bilingual preferred"))}
+              </div>
+            </div>
+
             {foot(() => setShowCreatePos(false), "Create Position", () => setPositions([...positions, { uid: `POS-00${positions.length + 1}`, title: "New Position", tpt: "8h", bill: "$30.00", holiday: "$45.00", temp: "No" }]))}
           </div>
-        ))}
+        ), "max-w-3xl")}
       </div>
     );
   }
 
   function renderEmployees() {
-
     const filteredEmps = emps.filter((e) => !empSearch || e.name.toLowerCase().includes(empSearch.toLowerCase()));
     return (
       <div className="p-6 space-y-5">
+        {/* Toolbar */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800">
+          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-white dark:bg-black border border-slate-200 dark:border-slate-800">
             <Search className="w-4 h-4 text-slate-400" />
             <input value={empSearch} onChange={(e) => setEmpSearch(e.target.value)} placeholder="Search employees…" className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100" />
           </div>
-          <button onClick={() => setShowAssignEmp(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors">
+          <button onClick={() => setShowAssignEmp(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 transition-colors shadow-sm">
             <Plus className="w-4 h-4" />Assign Employee
           </button>
         </div>
 
-        {tableWrap(["Employee", "Start Date", "Rate", "Unassignment Date", "Primary", "", "History", "Remove", "View"],
-          filteredEmps.map((e, i) => (
-            <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-              <td className="px-4 py-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0 bg-blue-800 dark:bg-blue-900">
-                    {e.name.split(" ").map((w) => w[0]).join("")}
-                  </div>
-                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">{e.name}</span>
-                </div>
-              </td>
-              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{e.start}</td>
-              <td className="px-4 py-3 text-sm font-semibold text-green-600 dark:text-green-500">{e.rate}</td>
-              <td className="px-4 py-3 text-sm text-slate-400 dark:text-slate-500">{e.unassign}</td>
-              <td className="px-4 py-3">
-                {e.primary ? <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400">Primary</span>
-                  : <button className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors">Make Primary</button>}
-              </td>
-              <td className="px-4 py-3" />
-              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-200 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors">History</button></td>
-              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/30 transition-colors">Remove</button></td>
-              <td className="px-4 py-3"><button className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors">View</button></td>
-            </tr>
-          ))
-        )}
+        {/* Table */}
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-slate-50 dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-slate-800">
+                {["Employee", "Start Date", "Rate", "Unassignment Date", "Status", "Actions"].map(h => (
+                  <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              {filteredEmps.length === 0 ? (
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500">No employees assigned to this site.</td></tr>
+              ) : filteredEmps.map((e, i) => (
+                <tr key={i} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors bg-white dark:bg-transparent">
+                  <td className="px-4 py-3.5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-white shrink-0"
+                        style={{ background: `hsl(${(e.name.charCodeAt(0) * 37) % 360}, 60%, 40%)` }}>
+                        {e.name.split(" ").map((w) => w[0]).join("").slice(0,2)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{e.name}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500">Security Officer</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3.5 text-sm text-slate-600 dark:text-slate-300">{e.start}</td>
+                  <td className="px-4 py-3.5">
+                    <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{e.rate}</span>
+                  </td>
+                  <td className="px-4 py-3.5 text-sm text-slate-400 dark:text-slate-500">{e.unassign === "-" ? "—" : e.unassign}</td>
+                  <td className="px-4 py-3.5">
+                    {e.primary
+                      ? <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />Primary</span>
+                      : <button onClick={() => setEmps(prev => prev.map((emp, idx) => ({ ...emp, primary: idx === i })))} className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors">Make Primary</button>
+                    }
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => { setSelectedEmpIdx(i); setShowHistoryEmp(true); }}
+                        title="History"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-colors"
+                      ><Clock className="w-4 h-4" /></button>
+                      <button
+                        onClick={() => { setSelectedEmpIdx(i); setShowEditEmp(true); }}
+                        title="Edit Assignment"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+                      ><Edit2 className="w-4 h-4" /></button>
+                      <button
+                        onClick={() => { setSelectedEmpIdx(i); setShowViewEmp(true); }}
+                        title="View Profile"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 transition-colors"
+                      ><Eye className="w-4 h-4" /></button>
+                      <button
+                        onClick={() => setEmps(prev => prev.filter((_, idx) => idx !== i))}
+                        title="Remove employee"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                      ><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-        {showAssignEmp && modal("Assign Employee", () => setShowAssignEmp(false), (
-          <div className="space-y-4">
-            {fld("Filter by Skills", sel(["All Skills", "First Aid / CPR", "Firearms", "CCTV Operation", "Crowd Control"]))}
-            {fld("Select Employee", sel(["Choose employee...", "Marcus Johnson", "Sarah Chen", "Derek Wilson", "Priya Patel", "Tony Griffin"]))}
-            {fld("Employee Start Date", inp("", "date"))}
-            {sectionHead("Add Rule")}
-            <div className="grid grid-cols-2 gap-4">
-              {fld("Effective Date", inp("", "date"))}
-              {fld("Hourly Rate", inp("$0.00"))}
+        {/* Assign Employee Modal */}
+        {showAssignEmp && modal("Assign Employee to Site", () => setShowAssignEmp(false), (
+          <div className="space-y-5">
+            {/* Employee Selection */}
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 pb-2 border-b border-slate-800">Select Employee</p>
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Filter by Skills / Role", sel(["All Skills", "First Aid / CPR", "Firearms", "CCTV Operation", "Crowd Control", "Patrol"]))}
+                {fld("Filter by Department", sel(["All Departments", "Security", "Operations", "Supervision"]))}
+              </div>
+              {fld("Choose Employee", sel(["Select an employee...", "Marcus Johnson – Security Officer", "Sarah Chen – Site Supervisor", "Derek Wilson – Patrol Officer", "Priya Patel – CCTV Operator", "Tony Griffin – Guard"]))}
+
+              {/* Employee Preview Card */}
+              <div className="flex items-center gap-3 p-3 rounded-xl border border-slate-700 bg-[#111]">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0 bg-blue-800">MJ</div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-slate-100">Marcus Johnson</p>
+                  <p className="text-xs text-slate-400">Security Officer · Operations Dept · EMP-001</p>
+                </div>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-900/40 text-emerald-400 border border-emerald-800">Available</span>
+              </div>
             </div>
-            {foot(() => setShowAssignEmp(false), "Assign Employee", () => setEmps([...emps, { name: "New Employee", start: formatDateMMDDYYYY(new Date()), rate: "$20.00/hr", unassign: "—", primary: false }]))}
+
+            {/* Assignment Details */}
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 pb-2 border-b border-slate-800">Assignment Details</p>
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Position / Job Type", sel(["Select position...", "Day Shift Guard – POS-001", "Night Patrol Officer – POS-002", "Weekend Supervisor – POS-003"]))}
+                {fld("Start Date", inp("", "date"))}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Hourly Pay Rate", inp("e.g. $22.00"))}
+                {fld("Bill Rate (Client)", inp("e.g. $28.00"))}
+              </div>
+              {fld("End / Unassignment Date (optional)", inp("", "date"))}
+            </div>
+
+            {/* Primary Toggle */}
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800 bg-[#0d0d0d]">
+              <div>
+                <p className="text-sm font-semibold text-slate-200">Set as Primary Employee</p>
+                <p className="text-xs text-slate-500 mt-0.5">Mark this employee as the primary contact for this site</p>
+              </div>
+              <div className="w-11 h-6 rounded-full bg-blue-600 flex items-center px-1 cursor-pointer transition-colors">
+                <div className="w-4 h-4 rounded-full bg-white shadow ml-auto" />
+              </div>
+            </div>
+
+            {foot(() => setShowAssignEmp(false), "Assign Employee", () => setEmps([...emps, { name: "Marcus Johnson", start: formatDateMMDDYYYY(new Date()), rate: "$22.00/hr", unassign: "—", primary: false }]))}
           </div>
         ))}
+
+        {/* View Employee Modal */}
+        {showViewEmp && selectedEmpIdx !== null && modal("Employee Profile", () => setShowViewEmp(false), (
+          <div className="space-y-5">
+            {/* Header Card */}
+            <div className="flex items-center gap-4 p-4 rounded-xl border border-slate-800 bg-[#0d0d0d]">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-bold text-white shrink-0"
+                style={{ background: `hsl(${(emps[selectedEmpIdx].name.charCodeAt(0) * 37) % 360}, 60%, 35%)` }}>
+                {emps[selectedEmpIdx].name.split(" ").map(w => w[0]).join("").slice(0, 2)}
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-bold text-slate-100">{emps[selectedEmpIdx].name}</h3>
+                <p className="text-xs text-slate-400 mt-0.5">Security Officer · Operations Dept</p>
+                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-900/40 text-emerald-400 border border-emerald-800 mt-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />Active
+                </span>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-slate-500">Employee ID</p>
+                <p className="text-sm font-bold text-slate-300">EMP-001</p>
+              </div>
+            </div>
+
+            {/* Assignment Info */}
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 pb-2 border-b border-slate-800">Assignment Details</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div><p className="text-xs text-slate-500 mb-1">Start Date</p><p className="text-sm font-semibold text-slate-200">{emps[selectedEmpIdx].start}</p></div>
+                <div><p className="text-xs text-slate-500 mb-1">Pay Rate</p><p className="text-sm font-semibold text-emerald-400">{emps[selectedEmpIdx].rate}</p></div>
+                <div><p className="text-xs text-slate-500 mb-1">Unassignment Date</p><p className="text-sm font-semibold text-slate-200">{emps[selectedEmpIdx].unassign === "-" ? "—" : emps[selectedEmpIdx].unassign}</p></div>
+                <div><p className="text-xs text-slate-500 mb-1">Position</p><p className="text-sm font-semibold text-slate-200">Day Shift Guard</p></div>
+              </div>
+              <div className="flex items-center justify-between pt-2 border-t border-slate-800">
+                <p className="text-xs text-slate-500">Primary Employee</p>
+                {emps[selectedEmpIdx].primary
+                  ? <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-900/40 text-emerald-400 border border-emerald-800">Yes — Primary</span>
+                  : <span className="text-xs text-slate-500">Not primary</span>
+                }
+              </div>
+            </div>
+
+            {/* Contact Info */}
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 pb-2 border-b border-slate-800">Contact Information</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div><p className="text-xs text-slate-500 mb-1">Phone</p><p className="text-sm font-semibold text-slate-200">+1 (555) 100-0001</p></div>
+                <div><p className="text-xs text-slate-500 mb-1">Email</p><p className="text-sm font-semibold text-slate-200">employee@alexios.com</p></div>
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-1">
+              <button onClick={() => setShowViewEmp(false)} className="px-5 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800 transition-colors">Close</button>
+            </div>
+          </div>
+        ))}
+
+        {/* Edit Assignment Modal */}
+        {showEditEmp && selectedEmpIdx !== null && modal("Edit Assignment", () => setShowEditEmp(false), (
+          <div className="space-y-5">
+            {/* Employee header */}
+            <div className="flex items-center gap-3 p-3 rounded-xl border border-slate-700 bg-[#111]">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0"
+                style={{ background: `hsl(${(emps[selectedEmpIdx].name.charCodeAt(0) * 37) % 360}, 60%, 35%)` }}>
+                {emps[selectedEmpIdx].name.split(" ").map(w => w[0]).join("").slice(0, 2)}
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-100">{emps[selectedEmpIdx].name}</p>
+                <p className="text-xs text-slate-400">Security Officer · EMP-001</p>
+              </div>
+            </div>
+
+            {/* Editable fields */}
+            <div className="p-4 rounded-xl border border-slate-800 bg-[#0d0d0d] space-y-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 pb-2 border-b border-slate-800">Assignment Details</p>
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Position / Job Type", sel(["Day Shift Guard – POS-001", "Night Patrol Officer – POS-002", "Weekend Supervisor – POS-003"]))}
+                {fld("Start Date", inp(emps[selectedEmpIdx].start, "date"))}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Pay Rate", inp(emps[selectedEmpIdx].rate))}
+                {fld("Bill Rate (Client)", inp("$28.00"))}
+              </div>
+              {fld("Unassignment Date (optional)", inp("", "date"))}
+            </div>
+
+            {/* Primary toggle */}
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800 bg-[#0d0d0d]">
+              <div>
+                <p className="text-sm font-semibold text-slate-200">Primary Employee</p>
+                <p className="text-xs text-slate-500 mt-0.5">Set as primary contact for this site</p>
+              </div>
+              <button onClick={() => setEmps(prev => prev.map((emp, idx) => ({ ...emp, primary: idx === selectedEmpIdx })))}
+                className={`w-11 h-6 rounded-full flex items-center px-1 cursor-pointer transition-colors ${emps[selectedEmpIdx].primary ? 'bg-blue-600' : 'bg-slate-700'}`}>
+                <div className={`w-4 h-4 rounded-full bg-white shadow transition-all ${emps[selectedEmpIdx].primary ? 'ml-auto' : 'mr-auto'}`} />
+              </button>
+            </div>
+
+            {foot(() => setShowEditEmp(false), "Save Changes", () => setShowEditEmp(false))}
+          </div>
+        ))}
+
+        {/* History Modal */}
+        {showHistoryEmp && selectedEmpIdx !== null && modal("Assignment History", () => setShowHistoryEmp(false), (
+          <div className="space-y-4">
+            {/* Employee header */}
+            <div className="flex items-center gap-3 p-3 rounded-xl border border-slate-700 bg-[#111]">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0"
+                style={{ background: `hsl(${(emps[selectedEmpIdx].name.charCodeAt(0) * 37) % 360}, 60%, 35%)` }}>
+                {emps[selectedEmpIdx].name.split(" ").map(w => w[0]).join("").slice(0, 2)}
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-100">{emps[selectedEmpIdx].name}</p>
+                <p className="text-xs text-slate-400">Assignment history for this site</p>
+              </div>
+            </div>
+
+            {/* Timeline */}
+            <div className="space-y-3">
+              {[
+                { date: "Aug 01, 2025", event: "Rate updated", detail: "Pay rate changed from $20.00/hr → $22.00/hr", icon: "💰", color: "text-emerald-400 bg-emerald-900/30 border-emerald-800" },
+                { date: "Jun 15, 2025", event: "Position changed", detail: "Moved from Night Patrol to Day Shift Guard", icon: "🔄", color: "text-blue-400 bg-blue-900/30 border-blue-800" },
+                { date: emps[selectedEmpIdx].start, event: "Assignment started", detail: "Employee assigned to this site", icon: "✅", color: "text-slate-300 bg-slate-800/50 border-slate-700" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 p-3.5 rounded-xl border bg-[#0d0d0d] border-slate-800">
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm border shrink-0 ${item.color}`}>{item.icon}</div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-bold text-slate-200">{item.event}</p>
+                      <p className="text-xs text-slate-500">{item.date}</p>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-0.5">{item.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end pt-1">
+              <button onClick={() => setShowHistoryEmp(false)} className="px-5 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800 transition-colors">Close</button>
+            </div>
+          </div>
+        ))}
+
       </div>
     );
   }
@@ -806,7 +1364,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
                 <div className="text-sm font-semibold text-slate-900 dark:text-slate-100" >Force Password Change</div>
                 <div className="text-xs text-slate-400 dark:text-slate-300" >User must reset on first login</div>
               </div>
-              <button className="w-10 h-6 rounded-full bg-slate-200 dark:bg-slate-700" style={{position: "relative" }}>
+              <button className="w-10 h-6 rounded-full bg-slate-200 dark:bg-slate-700" style={{ position: "relative" }}>
                 <span className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white dark:bg-slate-900" style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
               </button>
             </div>
@@ -1076,37 +1634,41 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   }
 
   function renderSecurity() {
-    const SECURITY_SECTIONS = [
-      { label: "Checkpoints", desc: "Manage NFC / QR checkpoint scan points", icon: <MapPin className="w-5 h-5" />, color: "#1e3a6e" },
-      { label: "Tour Routes", desc: "Define patrol tour sequences and waypoints", icon: <Route className="w-5 h-5" />, color: "#7c3aed" },
-      { label: "Site Locations & Sections", desc: "Create and import site locations", icon: <MapIcon className="w-5 h-5" />, color: "#0891b2" },
-      { label: "Emergency Contacts", desc: "Priority-ordered emergency contact list", icon: <Bell className="w-5 h-5" />, color: "#dc2626" },
-      { label: "History Tracks", desc: "View GPS history tracks for this site", icon: <Navigation className="w-5 h-5" />, color: "#16a34a" },
+    const QUICK_LINKS = [
+      { label: "Checkpoints", desc: "Manage NFC / QR checkpoint scan points", icon: <MapPin className="w-5 h-5" />, color: "#1e3a6e", nav: "checkpoints" },
+      { label: "Tour Routes", desc: "Define patrol tour sequences and waypoints", icon: <Route className="w-5 h-5" />, color: "#7c3aed", nav: "checkpoints" },
+      { label: "Site Locations & Sections", desc: "Create and import site locations", icon: <MapIcon className="w-5 h-5" />, color: "#0891b2", nav: "checkpoints" },
     ];
     return (
       <div className="p-6 space-y-6">
-        <div className="grid grid-cols-2 gap-4">
-          {SECURITY_SECTIONS.map((s) => (
-            <div key={s.label} className="p-5 rounded-2xl cursor-pointer transition-all bg-slate-50 dark:bg-slate-900" style={{border: "1.5px solid #e2e8f0" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#f0f5ff"; e.currentTarget.style.borderColor = "#1e3a6e44"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.borderColor = "#e2e8f0"; }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ color: s.color, background: `${s.color}12` }}>{s.icon}</div>
-              <div className="text-sm font-bold text-slate-900 dark:text-slate-100" >{s.label}</div>
-              <div className="text-xs mt-1 text-slate-500 dark:text-slate-300" >{s.desc}</div>
-            </div>
-          ))}
+        <div>
+          {sectionHead("Quick Links")}
+          <div className="grid grid-cols-3 gap-4">
+            {QUICK_LINKS.map((s) => (
+              <button key={s.label}
+                onClick={() => onNavigateTo?.(s.nav)}
+                className="p-4 rounded-2xl cursor-pointer transition-all text-left border border-slate-800 bg-[#0d0d0d] hover:border-slate-600 hover:bg-[#111] group">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110" style={{ color: s.color, background: `${s.color}18` }}>{s.icon}</div>
+                <div className="text-sm font-bold text-slate-200">{s.label}</div>
+                <div className="text-xs mt-1 text-slate-500">{s.desc}</div>
+                <div className="flex items-center gap-1 mt-2 text-xs font-semibold" style={{ color: s.color }}>
+                  Open <ExternalLink className="w-3 h-3" />
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {sectionHead("Geo-Fencing")}
-        <div className="rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-900" style={{ border: "1.5px solid #e2e8f0", minHeight: 120 }}>
-          <div className="flex items-center justify-center h-32 gap-3 text-slate-400 dark:text-slate-300" >
+        <div className="rounded-2xl overflow-hidden bg-[#0d0d0d] border border-slate-800" style={{ minHeight: 120 }}>
+          <div className="flex items-center justify-center h-32 gap-3 text-slate-500">
             <MapIcon className="w-6 h-6" />
             <span className="text-sm">Map view — choose boundary points to define geo-fence</span>
           </div>
         </div>
 
         {sectionHead("Mobile App Restrictions")}
-        <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
+        <div className="rounded-2xl overflow-hidden border border-slate-800">
           <div className="px-4">
             {toggle(geoClockIn, setGeoClockIn, "Geo-Fence Clock-In Restriction", "Employees must be inside geo-fence to clock in")}
             {toggle(geoClockOut, setGeoClockOut, "Geo-Fence Clock-Out Restriction", "Employees must be inside geo-fence to clock out")}
@@ -1148,7 +1710,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
           {shown.map((e, i) => (
             <div key={i} className="flex items-center gap-4 p-4 rounded-2xl" style={{ background: "#fff", border: "1.5px solid #e2e8f0" }}>
               <div className="w-2 h-2 rounded-full shrink-0" style={{ background: e.color }} />
-              <span className="text-xs font-mono text-slate-400 dark:text-slate-300" style={{minWidth: 72 }}>{e.time}</span>
+              <span className="text-xs font-mono text-slate-400 dark:text-slate-300" style={{ minWidth: 72 }}>{e.time}</span>
               <span className="text-xs font-bold px-2 py-0.5 rounded-lg shrink-0" style={{ background: `${e.color}15`, color: e.color }}>{e.type}</span>
               <div className="flex-1 min-w-0">
                 <span className="text-sm font-semibold text-slate-900 dark:text-slate-100" >{e.emp}</span>
@@ -1188,7 +1750,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
                 <span className="text-sm font-bold text-blue-900 dark:text-blue-300">{p.author}</span>
                 <span className="text-xs text-slate-400 dark:text-slate-300" >{p.time}</span>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-300" style={{lineHeight: 1.6 }}>{p.text}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300" style={{ lineHeight: 1.6 }}>{p.text}</p>
             </div>
           ))}
         </div>
@@ -1235,12 +1797,8 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
       case "banned": return renderBanned();
       case "contacts": return renderContacts();
       case "actions": return renderActions();
-      case "dispatch": return renderDispatch();
-      case "activity": return renderActivity();
       case "notifications": return renderNotifications();
       case "security": return renderSecurity();
-      case "live": return renderLive();
-      case "messages": return renderMessages();
       case "email": return renderEmail();
       default: return null;
     }
@@ -1268,7 +1826,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
           </div>
         }
       />
-      
+
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar for Tabs */}
         <div className={`${isSidebarOpen ? 'w-64' : 'w-16'} shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 overflow-y-auto transition-all duration-300 relative`} style={{ scrollbarWidth: "none" }}>
@@ -1292,7 +1850,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
             ))}
           </div>
         </div>
-        
+
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-[#000000]">
           <div className="max-w-6xl mx-auto pb-12">
@@ -1304,7 +1862,7 @@ export function SiteProfilePage({ site, onBack }: { site: SiteClient; onBack: ()
   );
 }
 
-export function ClientsPage() {
+export function ClientsPage({ onNavigate }: { onNavigate?: (page: string) => void }) {
   const [search, setSearch] = useState("");
   const [acctTypeFilter, setAcctTypeFilter] = useState("All Types");
   const [statusFilter, setStatusFilter] = useState("All Status");
@@ -1345,7 +1903,7 @@ export function ClientsPage() {
 
 
   if (showCreate) return <CreateSitePage onBack={() => setShowCreate(false)} />;
-  if (selectedSite) return <SiteProfilePage site={selectedSite} onBack={() => setSelectedSite(null)} />;
+  if (selectedSite) return <SiteProfilePage site={selectedSite} onBack={() => setSelectedSite(null)} onNavigateTo={(page) => { setSelectedSite(null); if (onNavigate) onNavigate(`${page}:${selectedSite.companyName}`); }} />;
 
   return (
     <div className="flex-1 overflow-y-auto flex flex-col bg-slate-50 dark:bg-[#000000]" style={{ scrollbarWidth: "none" }}>
@@ -1372,12 +1930,12 @@ export function ClientsPage() {
         <div className="flex items-center gap-3 px-5 py-4 flex-wrap"
           style={{ borderBottom: "1.5px solid #f1f5f9" }}>
           <div className="flex items-center gap-2 flex-1 min-w-52 rounded-xl px-3 py-2.5 bg-slate-50 dark:bg-slate-900"
-            style={{border: "1.5px solid #e8edf4" }}>
-            <Search className="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-300"  />
+            style={{ border: "1.5px solid #e8edf4" }}>
+            <Search className="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-300" />
             <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder="Search accounts, contacts, locations…"
               className="flex-1 text-sm bg-transparent outline-none" style={{ color: "#0f172a" }} />
-            {search && <button onClick={() => setSearch("")}><X className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300"  /></button>}
+            {search && <button onClick={() => setSearch("")}><X className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300" /></button>}
           </div>
 
 
@@ -1393,7 +1951,7 @@ export function ClientsPage() {
           <div className="flex items-center gap-2 ml-auto">
 
             <button className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900"
-              style={{border: "1.5px solid #e8edf4" }}>
+              style={{ border: "1.5px solid #e8edf4" }}>
               <Download className="w-3.5 h-3.5" />Export
             </button>
           </div>
@@ -1426,7 +1984,7 @@ export function ClientsPage() {
         <div className="overflow-x-auto" style={{ minHeight: 200 }}>
           <table className="w-full" style={{ borderCollapse: "collapse" }}>
             <thead>
-              <tr  className="bg-slate-50 dark:bg-slate-900">
+              <tr className="bg-slate-50 dark:bg-slate-900">
                 <th className="w-12 px-4 py-3.5" style={{ borderBottom: "1.5px solid #e8edf4" }}>
                   <input type="checkbox" checked={allSelected} onChange={toggleAll}
                     className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1e3a6e" }} />
@@ -1445,7 +2003,7 @@ export function ClientsPage() {
                   <td colSpan={11}>
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
                       <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-slate-100 dark:bg-slate-800" >
-                        <Building2 className="w-7 h-7 text-slate-300 dark:text-slate-400"  />
+                        <Building2 className="w-7 h-7 text-slate-300 dark:text-slate-400" />
                       </div>
                       <p className="text-sm font-medium text-slate-400 dark:text-slate-300" >No accounts match your filters</p>
                       <button onClick={() => { setSearch(""); setAcctTypeFilter("All Types"); setStatusFilter("All Status"); }}
@@ -1472,7 +2030,7 @@ export function ClientsPage() {
 
                     <td className="px-3 py-3.5">
                       <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-mono font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800"
-                        >{site.uid}</span>
+                      >{site.uid}</span>
                     </td>
 
                     <td className="px-3 py-3.5">
@@ -1482,7 +2040,7 @@ export function ClientsPage() {
                           {initials}
                         </div>
                         <div>
-                          <div className="text-sm font-semibold whitespace-nowrap text-slate-900 dark:text-slate-100" >{site.companyName}</div>
+                          <div onClick={() => setSelectedSite(site)} className="text-sm font-semibold whitespace-nowrap text-slate-900 dark:text-slate-100 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors" >{site.companyName}</div>
                           <div className="text-xs text-slate-400 dark:text-slate-300" >{site.website}</div>
                         </div>
                       </div>

@@ -653,11 +653,11 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
 
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 p-6">
-        <h3 className="text-lg font-bold text-slate-800 border-b pb-3 bg-slate-200 dark:bg-slate-700 dark:text-slate-200" >Employment Info & Policies</h3>
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3" >Employment Info & Policies</h3>
 
         <div className="grid grid-cols-2 gap-6">
-          <div className="p-4 rounded-xl border shadow-sm backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-            <h4 className="text-xs font-bold uppercase tracking-wider mb-2 text-slate-400 dark:text-slate-300" >Direct Manager</h4>
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <h4 className="text-xs font-bold uppercase tracking-wider mb-2 text-slate-400 dark:text-slate-500" >Direct Manager</h4>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-800">
                 JK
@@ -668,36 +668,35 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
               </div>
             </div>
           </div>
-          <div className="p-4 rounded-xl border shadow-sm backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-            <h4 className="text-xs font-bold uppercase tracking-wider mb-2 text-slate-400 dark:text-slate-300" >Assigned Sites</h4>
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <h4 className="text-xs font-bold uppercase tracking-wider mb-2 text-slate-400 dark:text-slate-500" >Assigned Sites</h4>
             <div className="flex flex-wrap gap-2">
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">Downtown Financial Center</span>
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">Westfield Mall Group</span>
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">Downtown Financial Center</span>
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">Westfield Mall Group</span>
             </div>
           </div>
         </div>
 
-        <div className="p-4 rounded-xl border shadow-sm space-y-4 backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{ border }}>Regular Working Hour</h4>
-          <div className="rounded-xl border overflow-hidden shadow-sm backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.4)" }}>
+        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white dark:bg-slate-900">
+          <h4 className="text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2 text-slate-400 dark:text-slate-500">Regular Working Hour</h4>
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-slate-950">
             {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day, idx) => {
               const schedule = mockWeeklySchedule[day];
               return (
-                <div key={day} className={`flex items-center px-4 py-3 ${idx !== 6 ? 'border-b' : ''} transition-colors`}
-                  style={{ borderColor: "rgba(226, 232, 240, 0.6)", background: schedule.active ? "rgba(255,255,255,0.7)" : "rgba(241, 245, 249, 0.5)" }}>
+                <div key={day} className={`flex items-center px-4 py-3 ${idx !== 6 ? 'border-b border-slate-200 dark:border-slate-800' : ''} transition-colors ${schedule.active ? 'bg-white dark:bg-slate-900' : 'bg-transparent'}`}>
                   <div className="flex items-center gap-3 w-36">
-                    <div className={`w-2 h-2 rounded-full ${schedule.active ? 'bg-green-500' : 'bg-slate-300'}`} />
-                    <span className={`text-sm font-semibold ${schedule.active ? 'text-slate-800' : 'text-slate-400'}`}>{day}</span>
+                    <div className={`w-2 h-2 rounded-full ${schedule.active ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-700'}`} />
+                    <span className={`text-sm font-semibold ${schedule.active ? 'text-slate-800 dark:text-slate-200' : 'text-slate-400 dark:text-slate-600'}`}>{day}</span>
                   </div>
 
                   {schedule.active ? (
                     <div className="flex items-center gap-3 flex-1">
-                      <span className="text-sm font-medium text-slate-800 dark:text-slate-200">{schedule.start}</span>
+                      <span className="text-sm font-medium text-slate-800 dark:text-slate-300">{schedule.start}</span>
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">to</span>
-                      <span className="text-sm font-medium text-slate-800 dark:text-slate-200">{schedule.end}</span>
+                      <span className="text-sm font-medium text-slate-800 dark:text-slate-300">{schedule.end}</span>
                     </div>
                   ) : (
-                    <div className="flex-1 text-sm font-semibold text-slate-400 italic">Not Working</div>
+                    <div className="flex-1 text-sm font-semibold text-slate-400 dark:text-slate-600 italic">Not Working</div>
                   )}
                 </div>
               );
@@ -705,23 +704,23 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
           </div>
         </div>
 
-        <div className="p-4 rounded-xl border shadow-sm space-y-4 backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{ border }}>Pay Rules</h4>
+        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white dark:bg-slate-900">
+          <h4 className="text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2 text-slate-400 dark:text-slate-500">Pay Rules</h4>
           <div className="space-y-3">
             {mockPayRules.map((rule) => (
-              <div key={rule.id} className="p-4 rounded-xl border shadow-sm flex items-center justify-between transition-all backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
+              <div key={rule.id} className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center justify-between transition-all">
                 <div>
-                  <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2 dark:text-slate-200">
+                  <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
                     {rule.name}
-                    <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold" style={{ background: "rgba(30,58,110,0.1)", color: "#1e3a6e" }}>{rule.payType}</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400">{rule.payType}</span>
                   </h4>
-                  <p className="text-xs font-medium text-slate-500 mt-1 flex items-center gap-1.5 dark:text-slate-400">
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
                     If works {rule.triggerType === "After Hours/Week" ? `more than ${rule.triggerValue} hrs/week` :
                       rule.triggerType === "After Hours/Day" ? `more than ${rule.triggerValue} hrs/day` :
                         rule.triggerType === "Specific Day" ? `on ${rule.triggerValue}` :
                           rule.triggerType === "Holiday" ? `on Company Holiday` : rule.triggerValue}
-                    <span className="text-slate-300">→</span>
-                    <span className="text-slate-700 font-semibold dark:text-slate-300">Pay {rule.multiplier}</span>
+                    <span className="text-slate-300 dark:text-slate-600">→</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-semibold">Pay {rule.multiplier}</span>
                   </p>
                 </div>
               </div>
@@ -729,24 +728,36 @@ export function EmployeeProfilePage({ employee, onBack }: { employee: Employee; 
           </div>
         </div>
 
-        <div className="p-4 rounded-xl border shadow-sm space-y-4 backdrop-blur-md bg-slate-200 dark:bg-slate-700" style={{ background: "rgba(255, 255, 255, 0.7)" }}>
-          <h4 className="text-xs font-bold uppercase tracking-wider border-b pb-2 text-slate-400 dark:text-slate-300 bg-slate-200 dark:bg-slate-700" style={{ border }}>Scheduling & Other Policies</h4>
-          <div className="grid grid-cols-3 gap-6">
-            <div className="space-y-1">
-              <span className="block text-xs font-bold uppercase tracking-wider text-slate-400">Scheduling Rule</span>
-              <span className="font-semibold text-sm text-slate-800 dark:text-slate-200">Standard Union Scheduling</span>
-            </div>
-            <div className="space-y-1">
-              <span className="block text-xs font-bold uppercase tracking-wider text-slate-400">Time Off Policy</span>
-              <span className="font-semibold text-sm text-slate-800 dark:text-slate-200">Standard PTO</span>
-            </div>
-            <div className="space-y-1">
-              <span className="block text-xs font-bold uppercase tracking-wider text-slate-400">Pay Rate</span>
-              <span className="font-semibold text-sm text-slate-800 flex items-center gap-1.5 dark:text-slate-200">
-                <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center text-green-700"><DollarSign className="w-3.5 h-3.5" /></div>
-                $25.00 / Hour
-              </span>
-            </div>
+        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white dark:bg-slate-900">
+          <h4 className="text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2 text-slate-400 dark:text-slate-500">Scheduling Rules</h4>
+          <div className="flex gap-3 mb-2">
+            <button className="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">Choose Policy</button>
+            <button className="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-blue-800 text-white">Create Custom Rules</button>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {renderField("Max Hrs / Wk", <input type="number" defaultValue="40" className="w-full rounded-xl px-3 py-2 border text-sm bg-transparent outline-none border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500" />)}
+            {renderField("Max Hrs / Day", <input type="number" defaultValue="8" className="w-full rounded-xl px-3 py-2 border text-sm bg-transparent outline-none border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500" />)}
+            {renderField("Min Hrs / Wk", <input type="number" defaultValue="20" className="w-full rounded-xl px-3 py-2 border text-sm bg-transparent outline-none border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500" />)}
+            {renderField("Max Shift / Day", <input type="number" defaultValue="1" className="w-full rounded-xl px-3 py-2 border text-sm bg-transparent outline-none border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500" />)}
+            {renderField("Max Shift / Wk", <input type="number" defaultValue="5" className="w-full rounded-xl px-3 py-2 border text-sm bg-transparent outline-none border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500" />)}
+            {renderField("Min Shift / Wk", <input type="number" defaultValue="2" className="w-full rounded-xl px-3 py-2 border text-sm bg-transparent outline-none border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500" />)}
+            {renderField("Gap Between Shift", <input type="number" defaultValue="12" className="w-full rounded-xl px-3 py-2 border text-sm bg-transparent outline-none border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500" />)}
+          </div>
+        </div>
+
+        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white dark:bg-slate-900">
+          <h4 className="text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2 text-slate-400 dark:text-slate-500">Time Off</h4>
+          <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border bg-transparent border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500">
+            <option>Standard PTO</option>
+            <option>Executive Leave</option>
+            <option>No Paid Time Off</option>
+          </select>
+        </div>
+
+        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white dark:bg-slate-900">
+          <h4 className="text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2 text-slate-400 dark:text-slate-500">Pay Rates</h4>
+          <div className="grid grid-cols-2 gap-6">
+            {renderField("Hourly/Salary Amount", <input type="text" defaultValue="$25.00" className="w-full rounded-xl px-3 py-2.5 border text-sm bg-transparent outline-none border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:border-blue-500" />)}
           </div>
         </div>
       </div>

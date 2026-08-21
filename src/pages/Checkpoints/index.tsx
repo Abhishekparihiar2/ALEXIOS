@@ -120,10 +120,10 @@ export const CP_LOCATIONS: CpLocation[] = [
   { id: "LOC-004", name: "Parking Garage L3", site: "Harbor View Center", status: "Active", addedBy: "James Morrison" },
 ];
 
-export function CheckpointsPage() {
+export function CheckpointsPage({ initialSearch }: { initialSearch?: string }) {
   // ── All state at top level (Rules of Hooks) ────────────────────────────────
   const [section, setSection] = useState<CpSection>("checkpoints");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(initialSearch || "");
   const [tourSearch, setTourSearch] = useState("");
   const [logSearch, setLogSearch] = useState("");
   const [showCreateCp, setShowCreateCp] = useState(false);

@@ -1,0 +1,360 @@
+  const bgColor = avatarColor(initials);
+  const sss = SITE_STATUS_STYLES[site.status];
+  const ats = ACCT_TYPE_STYLES[site.accountType];
+
+  // ── shared helpers ──────────────────────────────────────────────────────────
+  function modal(title: string, onClose: () => void, children: React.ReactNode, widthClass = "max-w-lg") {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ background: "rgba(15,23,41,0.6)", backdropFilter: "blur(4px)" }}
+        onClick={onClose}>
+        <div className={`w-full ${widthClass} rounded-2xl shadow-2xl overflow-hidden bg-white dark:bg-slate-950`}
+          onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center justify-between px-6 py-4"
+            style={{ background: "linear-gradient(135deg,#0f1729,#1a2f5a)" }}>
+            <h3 className="text-base font-bold text-white">{title}</h3>
+            <button onClick={onClose} className="text-white/60 hover:text-white"><X className="w-5 h-5" /></button>
+          </div>
+          <div className="p-6 overflow-y-auto" style={{ maxHeight: "70vh" }}>{children}</div>
+        </div>
+      </div>
+    );
+  }
+  function fld(label: string, children: React.ReactNode) {
+    return (
+      <div>
+        <label className="block text-xs font-semibold mb-1.5 text-slate-600 dark:text-slate-300" >{label}</label>
+        {children}
+      </div>
+    );
+  }
+  function inp(ph: string, type = "text") {
+    return <input type={type} placeholder={ph} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:border-blue-500" />;
+  }
+  function sel(opts: string[]) {
+    return <select className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:border-blue-500">{opts.map((o) => <option key={o}>{o}</option>)}</select>;
+  }
+  function foot(onClose: () => void, label = "Save", onSubmit?: () => void) {
+    return (
+      <div className="flex justify-end gap-3 pt-5 mt-6 border-t border-slate-200 dark:border-slate-800">
+        <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-700 transition-colors" >Cancel</button>
+        <button onClick={() => { if (onSubmit) onSubmit(); onClose(); }} className="px-5 py-2 rounded-xl text-sm font-bold text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors">{label}</button>
+      </div>
+    );
+  }
+  function toggle(val: boolean, set: (v: boolean) => void, label: string, sub?: string) {
+    return (
+      <div className="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800">
+        <div>
+          <div className="text-sm font-medium text-slate-900 dark:text-slate-100" >{label}</div>
+          {sub && <div className="text-xs text-slate-400 dark:text-slate-500" >{sub}</div>}
+        </div>
+        <button onClick={() => set(!val)} className="w-10 h-6 rounded-full shrink-0 transition-all" style={{ background: val ? "#16a34a" : "#475569", position: "relative" }}>
+          <span className="absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm" style={{ left: val ? "calc(100% - 20px)" : "4px" }} />
+        </button>
+      </div>
+    );
+  }
+  function sectionHead(label: string) {
+    return <div className="text-xs font-bold uppercase tracking-widest pb-2 mb-4 text-blue-800 dark:text-blue-400 border-b border-slate-200 dark:border-slate-800">{label}</div>;
+  }
+  function tableWrap(headers: string[], rows: React.ReactNode) {
+    return (
+      <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #e2e8f0" }}>
+        <table className="w-full" style={{ borderCollapse: "collapse" }}>
+          <thead>
+            <tr className="bg-slate-50 dark:bg-slate-950">
+              {headers.map((h) => (
+                <th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap text-slate-500 dark:text-slate-300" style={{ borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+      </div>
+    );
+  }
+  function infoCard(fields: [string, string][]) {
+    return (
+      <div className="p-5 rounded-2xl bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-6 gap-x-8">
+          {fields.map(([k, v]) => (
+            <div key={k}>
+              <div className="text-xs font-semibold uppercase tracking-wider mb-1.5 text-slate-500 dark:text-slate-400">{k}</div>
+              <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{v}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── tab panels ──────────────────────────────────────────────────────────────
+
+  function renderOverview() {
+    return (
+      <div className="p-6 space-y-6">
+        {/* identity card */}
+        <div className="flex items-center gap-5 p-5 rounded-2xl bg-blue-50 dark:bg-slate-950/50 border border-blue-200 dark:border-slate-800">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold text-white shrink-0"
+            style={{ background: `linear-gradient(135deg,${bgColor},${bgColor}cc)`, boxShadow: `0 4px 16px ${bgColor}44` }}>
+            {initials}
+          </div>
+          <div className="flex-1">
+            <div className="text-lg font-bold text-slate-900 dark:text-slate-100" >{site.companyName}</div>
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
+              <span className="text-sm text-slate-600 dark:text-slate-300" >{site.uid}</span>
+              <span className="w-1 h-1 rounded-full bg-slate-300" />
+              <span className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold" style={{ background: ats.bg, color: ats.color }}>{site.accountType}</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold" style={{ background: sss.bg, color: sss.color }}>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: sss.color }} />{site.status}
+              </span>
+            </div>
+          </div>
+          <button className="p-2 ml-auto text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
+            <Edit2 className="w-5 h-5" />
+          </button>
+        </div>
+
+        {infoCard([
+          ["Site Name", site.companyName],
+          ["Unique ID", site.uid],
+          ["Account Type", site.accountType],
+          ["Time Zone", site.timezone],
+          ["Phone", site.contactPhone],
+          ["Email", site.contactEmail],
+          ["City / State", `${site.city}, ${site.state}`],
+          ["Country", site.country],
+          ["Website", site.website],
+          ["Account Rep", site.accountRep],
+          ["Sales Rep", site.salesRep],
+          ["Added On", site.addedOn],
+        ])}
+
+        <div>
+          {sectionHead("Manager / Main Contact")}
+          {infoCard([
+            ["Manager Name", site.contactName],
+            ["Manager Position", "Operations Manager"],
+            ["Phone", site.contactPhone],
+            ["Email", site.contactEmail],
+          ])}
+        </div>
+
+        <div>
+          {sectionHead("Address")}
+          {infoCard([
+            ["Address", "1234 Main Street, Suite 100"],
+            ["Bill-To Address", "1234 Main Street, Suite 100"],
+            ["City", site.city],
+            ["State", site.state],
+            ["ZIP", "90001"],
+            ["Country", site.country],
+          ])}
+        </div>
+
+        {site.tags.length > 0 && (
+          <div>
+            {sectionHead("Tags")}
+            <div className="flex gap-2 flex-wrap">
+              {site.tags.map((t) => (
+                <span key={t} className="text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "#eff6ff", color: "#1e3a6e" }}>{t}</span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function renderPositions() {
+
+    const filteredPos = positions.filter((p) => !posSearch || p.title.toLowerCase().includes(posSearch.toLowerCase()));
+    return (
+      <div className="p-6 space-y-5">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-1 rounded-xl px-3 py-2.5 bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800">
+            <Search className="w-4 h-4 text-slate-400" />
+            <input value={posSearch} onChange={(e) => setPosSearch(e.target.value)} placeholder="Search positions…" className="flex-1 text-sm bg-transparent outline-none text-slate-900 dark:text-slate-100" />
+          </div>
+          <button onClick={() => setShowCreatePos(true)} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors">
+            <Plus className="w-4 h-4" />Create Position
+          </button>
+        </div>
+
+        {tableWrap(["UID", "Position Title", "TPT Hours", "Bill Rate", "Holiday Rate", "Temporary", "Actions"],
+          filteredPos.map((p) => (
+            <tr key={p.uid} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <td className="px-4 py-3 text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">{p.uid}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">{p.title}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{p.tpt}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-green-600 dark:text-green-500">{p.bill}</td>
+              <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{p.holiday}</td>
+              <td className="px-4 py-3">
+                <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${p.temp === "Yes" ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400" : "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"}`}>{p.temp}</span>
+              </td>
+              <td className="px-4 py-3">
+                <div className="flex items-center gap-1.5">
+                  {["Edit", "Remove"].map((a) => (
+                    <button key={a} className={`text-xs font-semibold px-2 py-1 rounded-lg transition-colors ${a === "Remove" ? "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/30" : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700"}`}>{a}</button>
+                  ))}
+                </div>
+              </td>
+            </tr>
+          ))
+        )}
+
+        {showCreatePos && modal("Create Position / Job Type", () => setShowCreatePos(false), (
+          <div className="space-y-6">
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-4 shadow-sm">
+              {sectionHead("Post Base Settings")}
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Post Name", inp("e.g. Day Shift Guard"))}
+                {fld("Post ID", inp("Auto or custom ID"))}
+              </div>
+              {fld("Short Description of Position", <textarea className="w-full px-3 py-2.5 rounded-xl text-sm outline-none bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-blue-500 transition-colors" rows={2} />)}
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Status", sel(["Active", "Archived"]))}
+                {fld("Schedule Memo", inp("Internal memo"))}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-4 shadow-sm">
+              {sectionHead("Service & Scheduling")}
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Service Duration", sel(["Regular Service", "Temporary Service"]))}
+                {fld("Begin Date", inp("", "date"))}
+              </div>
+              {fld("Break Rule", sel(["No Break Rule", "California Break Rule", "Standard 30-min Break", "Custom"]))}
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-4 shadow-sm">
+              {sectionHead("Payroll & Billing")}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {fld("Pay Basis", sel(["Pay on Employee Pay Rate", "Pay on This Post Rate"]))}
+                {fld("Break Pay", sel(["Do Not Pay Breaks", "Pay All Breaks"]))}
+                {fld("Holiday Pay", sel(["Do Not Pay Holiday Premium", "Rate Multiplier"]))}
+              </div>
+
+              <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800 space-y-6">
+
+                {/* Regular Working Hour */}
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-500 dark:text-slate-400">Regular Working Hour</p>
+                  <div className="flex gap-3 mb-4">
+                    <button onClick={() => setWorkingHourMode("Policy")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${workingHourMode === "Policy" ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}>Choose Policy</button>
+                    <button onClick={() => setWorkingHourMode("Custom")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${workingHourMode === "Custom" ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}>Set Custom Working Hour</button>
+                  </div>
+                  {workingHourMode === "Policy" ? (
+                    <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border transition-colors bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-blue-500" >
+                      <option>Standard Full-Time (9 to 5)</option>
+                      <option>Night Shift (10 PM to 6 AM)</option>
+                    </select>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="rounded-xl border overflow-hidden bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-700">
+                        {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day, idx) => {
+                          const schedule = weeklySchedule[day];
+                          return (
+                            <div key={day} className={`flex items-center px-4 py-3 ${idx !== 6 ? 'border-b border-slate-200 dark:border-slate-700' : ''} transition-colors ${schedule.active ? 'bg-blue-50/30 dark:bg-slate-900' : 'bg-transparent'}`}>
+                              <label className="flex items-center gap-3 w-32 cursor-pointer">
+                                <input type="checkbox" checked={schedule.active} onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], active: e.target.checked } }))} className="w-4 h-4 rounded cursor-pointer" style={{ accentColor: "#1d4ed8" }} />
+                                <span className={`text-sm font-semibold ${schedule.active ? 'text-slate-900 dark:text-slate-100' : 'text-slate-400'}`}>{day}</span>
+                              </label>
+                              {schedule.active ? (
+                                <div className="flex items-center gap-3 flex-1">
+                                  <input type="time" value={schedule.start} onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], start: e.target.value } }))} className="rounded-lg px-2 py-1.5 border text-sm outline-none border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100" />
+                                  <span className="text-xs font-bold text-slate-400">to</span>
+                                  <input type="time" value={schedule.end} onChange={(e) => setWeeklySchedule(prev => ({ ...prev, [day]: { ...prev[day], end: e.target.value } }))} className="rounded-lg px-2 py-1.5 border text-sm outline-none border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100" />
+                                </div>
+                              ) : (
+                                <div className="flex-1 text-sm font-semibold text-slate-400 italic">Not Working</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Scheduling Rules */}
+                <div className="border-t pt-4 border-slate-200 dark:border-slate-700" >
+                  <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-500 dark:text-slate-400" >Scheduling Rules</p>
+                  <div className="flex gap-3 mb-4">
+                    <button onClick={() => setSchedulingMode("Policy")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${schedulingMode === "Policy" ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}>Choose Policy</button>
+                    <button onClick={() => setSchedulingMode("Custom")} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${schedulingMode === "Custom" ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-900 dark:text-slate-400"}`}>Custom Rules</button>
+                  </div>
+                  {schedulingMode === "Policy" ? (
+                    <select className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border transition-colors bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-blue-500" >
+                      <option>Strict Scheduling (Must adhere to hours)</option>
+                      <option>Flexible Scheduling (Core hours required)</option>
+                    </select>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-4">
+                      {fld("Max Hours Per Week", inp("e.g. 40", "number"))}
+                      {fld("Max Shifts Per Week", inp("e.g. 5", "number"))}
+                      {fld("Min Rest Between Shifts (hrs)", inp("e.g. 10", "number"))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Pay Rules */}
+                <div className="border-t pt-4 border-slate-200 dark:border-slate-700" >
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" >Pay Rules</p>
+                    <button onClick={() => setPayRules([...payRules, { id: Date.now().toString(), name: "Standard Overtime", payType: "Overtime", multiplier: "x1.5", triggerType: "After Hours/Week", triggerValue: "40" } as any])} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors">
+                      <Plus className="w-3.5 h-3.5" /> Add Rule
+                    </button>
+                  </div>
+                  {payRules.length > 0 ? (
+                    <div className="space-y-3">
+                      {payRules.map((rule) => (
+                        <div key={rule.id} className="p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 flex justify-between items-center">
+                          <div>
+                            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">{rule.name} <span className="text-xs font-normal text-slate-500 ml-2 bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded">{rule.payType}</span></h4>
+                            <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">If works more than {rule.triggerValue} hrs/week → Pay {rule.multiplier}</p>
+                          </div>
+                          <button onClick={() => setPayRules(r => r.filter(x => x.id !== rule.id))} className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 transition-colors">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-4 text-center border border-dashed rounded-xl border-slate-300 dark:border-slate-700">
+                      <p className="text-sm text-slate-500 dark:text-slate-400">No pay rules configured.</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Time Off */}
+                <div className="border-t pt-4 border-slate-200 dark:border-slate-700" >
+                  <p className="text-xs font-bold uppercase tracking-wider mb-3 text-slate-500 dark:text-slate-400" >Time Off Policy</p>
+                  <select value={timeOffPolicy} onChange={e => setTimeOffPolicy(e.target.value)} className="w-full rounded-xl px-3.5 py-2.5 text-sm outline-none border transition-colors bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-blue-500" >
+                    <option>Standard PTO (15 Days/Year)</option>
+                    <option>Unlimited PTO</option>
+                    <option>No Paid Time Off</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-4 shadow-sm">
+              {sectionHead("Requirements")}
+              <div className="grid grid-cols-2 gap-4">
+                {fld("Conditional Requirements", inp("e.g. Background Check"))}
+                {fld("Soft Requirements", inp("e.g. Bilingual preferred"))}
+              </div>
+            </div>
+
+            {foot(() => setShowCreatePos(false), "Create Position", () => setPositions([...positions, { uid: `POS-00${positions.length + 1}`, title: "New Position", tpt: "8h", bill: "$30.00", holiday: "$45.00", temp: "No" }]))}
+          </div>
+        ), "max-w-3xl")}
+      </div>
+    );
+  }
+
+  function renderEmployees() {
+
+    const filteredEmps = emps.filter((e) => !empSearch || e.name.toLowerCase().includes(empSearch.toLowerCase()));
