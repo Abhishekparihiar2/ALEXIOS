@@ -381,7 +381,7 @@ export function CreateSitePage({ onBack }: { onBack: () => void }) {
 // ── Site Profile Page ─────────────────────────────────────────────────────────
 
 export type SiteProfileTab =
-  | "overview" | "positions" | "employees" | "portal" | "banned"
+  | "overview" | "post-orders" | "positions" | "employees" | "portal" | "banned"
   | "contacts" | "actions" | "notifications"
   | "security" | "email";
 
@@ -393,6 +393,12 @@ export function SiteProfilePage({ site, onBack, onNavigateTo }: { site: SiteClie
     { name: "Patricia Lane", role: "Security Liaison", phone: "+1 (555) 301-0002" },
   ]);
   const [showAddEmergency, setShowAddEmergency] = useState(false);
+
+  const [postOrders, setPostOrders] = useState([
+    { title: "Standard Operating Procedures v2", updatedOn: "Aug 15, 2025" },
+    { title: "Emergency Evacuation Plan", updatedOn: "Jul 22, 2025" },
+  ]);
+  const [showUploadPostOrder, setShowUploadPostOrder] = useState(false);
 
   // Modal states
   const [showAssignEmp, setShowAssignEmp] = useState(false);
@@ -470,6 +476,7 @@ export function SiteProfilePage({ site, onBack, onNavigateTo }: { site: SiteClie
 
   const TABS: { id: SiteProfileTab; label: string }[] = [
     { id: "overview", label: "Overview" },
+    { id: "post-orders", label: "Post Orders" },
     { id: "positions", label: "Positions / Job Types" },
     { id: "employees", label: "Assigned Employees" },
     { id: "portal", label: "Client Portal" },
@@ -697,6 +704,63 @@ export function SiteProfilePage({ site, onBack, onNavigateTo }: { site: SiteClie
             {foot(() => setShowAddEmergency(false), "Add Contact", () => {
               setEmergencyContacts(prev => [...prev, { name: "New Contact", role: "Emergency Contact", phone: "+1 (555) 000-0000" }]);
               setShowAddEmergency(false);
+            })}
+          </div>
+        ))}
+
+      </div>
+    );
+  }
+
+  function renderPostOrders() {
+    return (
+      <div className="p-6 space-y-6">
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Post Orders</h2>
+            <button onClick={() => setShowUploadPostOrder(true)}
+              className="flex items-center gap-1.5 text-sm font-bold px-4 py-2 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm shadow-blue-500/20">
+              <Plus className="w-4 h-4" />Upload Order
+            </button>
+          </div>
+          {tableWrap(["Title", "Updated On", "Action"],
+            postOrders.length > 0 ? postOrders.map((o, i) => (
+              <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-slate-500" />
+                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">{o.title}</span>
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{o.updatedOn}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <button className="text-xs font-semibold px-2 py-1 rounded-lg transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">Edit</button>
+                    <button onClick={() => setPostOrders(prev => prev.filter((_, idx) => idx !== i))} className="text-xs font-semibold px-2 py-1 rounded-lg transition-colors bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/30">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan={3} className="px-4 py-6 text-center text-sm text-slate-500 bg-[#0d0d0d]">No post orders uploaded.</td>
+              </tr>
+            )
+          )}
+        </div>
+
+        {/* Upload Post Order Modal */}
+        {showUploadPostOrder && modal("Upload Post Order", () => setShowUploadPostOrder(false), (
+          <div className="space-y-4">
+            {fld("Title", inp("e.g. Standard Operating Procedures"))}
+            {fld("File", (
+              <div className="border-2 border-dashed border-slate-700 rounded-xl p-6 flex flex-col items-center justify-center text-slate-500 text-sm cursor-pointer hover:border-blue-500 hover:text-blue-500 transition-colors">
+                <FileText className="w-8 h-8 mb-2" />
+                Click to browse or drag file here
+              </div>
+            ))}
+            {foot(() => setShowUploadPostOrder(false), "Upload", () => {
+              setPostOrders(prev => [...prev, { title: "New Post Order", updatedOn: "Today" }]);
+              setShowUploadPostOrder(false);
             })}
           </div>
         ))}
@@ -1067,7 +1131,7 @@ export function SiteProfilePage({ site, onBack, onNavigateTo }: { site: SiteClie
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-white shrink-0"
                         style={{ background: `hsl(${(e.name.charCodeAt(0) * 37) % 360}, 60%, 40%)` }}>
-                        {e.name.split(" ").map((w) => w[0]).join("").slice(0,2)}
+                        {e.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{e.name}</p>
@@ -1791,6 +1855,7 @@ export function SiteProfilePage({ site, onBack, onNavigateTo }: { site: SiteClie
   function renderTabContent() {
     switch (activeTab) {
       case "overview": return renderOverview();
+      case "post-orders": return renderPostOrders();
       case "positions": return renderPositions();
       case "employees": return renderEmployees();
       case "portal": return renderPortal();
