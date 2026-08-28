@@ -1,0 +1,10 @@
+.puf-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.puf-link.danger {
+  color: #f87171;
+}

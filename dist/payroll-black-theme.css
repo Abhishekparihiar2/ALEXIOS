@@ -1,0 +1,78 @@
+/* Black theme alignment for the enhanced Payroll workspace. */
+#payroll-ui-fix {
+  inset: 64px 0 0 0;
+  background: #000;
+  color: #f5f5f5;
+}
+
+#payroll-ui-fix .puf-nav {
+  background: #050505;
+  border-color: #262626;
+}
+
+#payroll-ui-fix .puf-nav button:hover {
+  background: #171717;
+  color: #e5e5e5;
+}
+
+#payroll-ui-fix .puf-nav button.active {
+  background: #0c1b33;
+  color: #60a5fa;
+}
+
+#payroll-ui-fix .puf-main {
+  background: #000;
+}
+
+#payroll-ui-fix .puf-period,
+#payroll-ui-fix .puf-panel,
+#payroll-ui-fix .puf-cards article,
+#payroll-ui-fix .puf-result > div {
+  background: #080808;
+  border-color: #292929;
+}
+
+#payroll-ui-fix .puf-panelhead,
+#payroll-ui-fix th,
+#payroll-ui-fix .puf-checks p {
+  background: #050505;
+  border-color: #292929;
+}
+
+#payroll-ui-fix td,
+#payroll-ui-fix th {
+  border-color: #242424;
+}
+
+#payroll-ui-fix tbody tr:hover {
+  background: #101010;
+}
+
+#payroll-ui-fix .puf-search,
+#payroll-ui-fix .puf-panelhead input[type="date"],
+#payroll-ui-fix .puf-grid input,
+#payroll-ui-fix .puf-grid select,
+#payroll-ui-fix .puf-grid textarea {
+  background: #050505;
+  border-color: #333;
+  color: #f5f5f5;
+}
+
+#payroll-ui-fix .puf-btn {
+  background: #101010;
+  border-color: #333;
+}
+
+#payroll-ui-fix .puf-btn.primary {
+  background: #1d4ed8;
+  border-color: #2563eb;
+}
+
+#payroll-ui-fix .puf-dialog {
+  background: #080808;
+  border-color: #292929;
+}
+
+#payroll-ui-fix .puf-note {
+  background: #071221;
+}

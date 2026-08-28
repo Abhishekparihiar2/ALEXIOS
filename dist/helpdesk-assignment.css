@@ -1,0 +1,47 @@
+#support-ui-fix .hdu-dialog.compact {
+  width: min(470px, 96vw);
+}
+
+#support-ui-fix .hdu-grid.one {
+  grid-template-columns: 1fr;
+}
+
+#support-ui-fix .hdu-unassign-check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #050505;
+  color: #d1d5db;
+  cursor: pointer;
+}
+
+#support-ui-fix .hdu-unassign-check input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+#support-ui-fix .hdu-assignment-summary {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #292929;
+  border-radius: 8px;
+  background: #050505;
+}
+
+#support-ui-fix .hdu-assignment-summary span {
+  display: block;
+  margin-bottom: 5px;
+  color: #8b98aa;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+#support-ui-fix .hdu-assignment select:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
