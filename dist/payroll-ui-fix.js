@@ -107,7 +107,9 @@
     else if(act==='lock-period'){state.periodStatus='Locked';render()}
     else if(act==='finish-calc'){delete host.dataset.calculating;render()}
     else if(act==='employee'){host.insertAdjacentHTML('beforeend',employee(Number(btn.dataset.i)))}
-    else if(act?.startsWith('add-')){const kind=act.slice(4);openEditor(host,kind==='rules'?'rule':kind==='schedules'?'schedule':kind)}
+    else if(act==='add-rules'){document.dispatchEvent(new CustomEvent('alexios:policy-editor',{detail:{mode:'add'}}))}
+    else if(act==='edit-rule'){document.dispatchEvent(new CustomEvent('alexios:policy-editor',{detail:{mode:'edit',index:Number(btn.dataset.i)}}))}
+    else if(act?.startsWith('add-')){const kind=act.slice(4);openEditor(host,kind==='schedules'?'schedule':kind)}
     else if(act?.startsWith('edit-'))openEditor(host,act.slice(5),Number(btn.dataset.i))
     else if(act?.startsWith('delete-')){
       const type=act.slice(7),index=Number(btn.dataset.i),list=type==='rule'?state.rules:type==='schedule'?state.schedules:type==='breaks'?state.breaks:state.holidays;

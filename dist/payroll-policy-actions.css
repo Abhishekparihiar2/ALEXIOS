@@ -1,0 +1,19 @@
+.pay-policy-legacy-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.pay-policy-legacy-actions button {
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: rgba(37, 99, 235, .2);
+  color: #60a5fa;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pay-policy-legacy-actions button:hover {
+  background: rgba(37, 99, 235, .35);
+  color: #bfdbfe;
+}

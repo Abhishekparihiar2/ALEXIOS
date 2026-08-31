@@ -90,10 +90,19 @@
     });
   };
 
+  const updateSkillsTableTheme = () => {
+    document.querySelectorAll(".skills-table-theme").forEach((element) => element.classList.remove("skills-table-theme"));
+    const heading = [...document.querySelectorAll("th")]
+      .find((element) => element.textContent.trim() === "Skill / Certification");
+    const tableCard = heading?.closest(".rounded-xl");
+    tableCard?.classList.add("skills-table-theme");
+  };
+
   const update = () => {
     updateSidebar();
     updateAdministrationQuadrant();
     updateVehicleTheme();
+    updateSkillsTableTheme();
   };
 
   document.addEventListener("click", (event) => {

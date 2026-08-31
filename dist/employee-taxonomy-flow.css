@@ -1,0 +1,43 @@
+.taxonomy-feedback {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 9px 16px;
+  border-bottom: 1px solid;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.taxonomy-feedback::before {
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.taxonomy-feedback--error {
+  border-color: rgba(248, 113, 113, .3);
+  background: rgba(127, 29, 29, .18);
+  color: #fca5a5;
+}
+
+.taxonomy-feedback--error::before { content: "!"; }
+
+.taxonomy-feedback--success {
+  border-color: rgba(74, 222, 128, .3);
+  background: rgba(20, 83, 45, .2);
+  color: #86efac;
+}
+
+.taxonomy-feedback--success::before { content: "✓"; }
+
+#newItemInput[aria-invalid="true"] {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, .14) !important;
+}
