@@ -98,11 +98,45 @@
     tableCard?.classList.add("skills-table-theme");
   };
 
+  const updateAssignEmployeeModal = () => {
+    [...document.querySelectorAll("label, span, div, p")].forEach((el) => {
+      if (el.childNodes.length === 1 && el.firstChild.nodeType === Node.TEXT_NODE && el.textContent.trim() === "Filter by Skills / Role") {
+        el.textContent = "Select Job Type";
+      }
+    });
+  };
+
+  const updateCreateSiteContactModal = () => {
+    [...document.querySelectorAll("span, div, p, label")].forEach((el) => {
+      if (el.childNodes.length === 1 && el.firstChild.nodeType === Node.TEXT_NODE && el.textContent.trim().includes("Use this address as Bill-To Address")) {
+        // Find the flex wrapper containing the checkbox, or the parent element
+        const wrapper = el.closest("label") || el.closest("div.flex") || el.parentElement;
+        if (wrapper && wrapper.style.display !== "none") {
+          wrapper.style.display = "none";
+        }
+      }
+    });
+  };
+
+  const updateSiteActionsNavigation = () => {
+    [...document.querySelectorAll("*")].forEach((el) => {
+      if (el.childNodes.length === 1 && el.firstChild.nodeType === Node.TEXT_NODE && el.textContent.trim() === "Site Actions") {
+        const wrapper = el.closest("button") || el.closest("a") || el.closest("div.cursor-pointer") || el;
+        if (wrapper && wrapper.style.display !== "none") {
+          wrapper.style.display = "none";
+        }
+      }
+    });
+  };
+
   const update = () => {
     updateSidebar();
     updateAdministrationQuadrant();
     updateVehicleTheme();
     updateSkillsTableTheme();
+    updateAssignEmployeeModal();
+    updateCreateSiteContactModal();
+    updateSiteActionsNavigation();
   };
 
   document.addEventListener("click", (event) => {

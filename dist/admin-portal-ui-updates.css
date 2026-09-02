@@ -316,3 +316,61 @@
 @media (max-width: 1100px) {
   .admin-nine-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Update background theme to black instead of blue (slate) */
+html, body, .dark body, .dark {
+  background-color: #000000 !important;
+}
+.bg-slate-950, .dark .bg-slate-950 {
+  background-color: #000000 !important;
+}
+.bg-slate-900, .dark .bg-slate-900 {
+  background-color: #080808 !important;
+}
+.bg-slate-800, .dark .bg-slate-800, .bg-slate-800\/50, .dark .bg-slate-800\/50 {
+  background-color: #121212 !important;
+}
+.bg-slate-800\/30, .dark .bg-slate-800\/30 {
+  background-color: rgba(18, 18, 18, 0.5) !important;
+}
+.border-slate-800, .dark .border-slate-800 {
+  border-color: #262626 !important;
+}
+.border-slate-700, .dark .border-slate-700, .border-slate-700\/50, .dark .border-slate-700\/50 {
+  border-color: #333333 !important;
+}
+
+aside, aside > div, .fixed.inset-y-0.left-0 {
+  background-color: #030303 !important;
+  border-right-color: #262626 !important;
+}
+header, .sticky.top-0 {
+  background-color: #030303 !important;
+  border-bottom-color: #262626 !important;
+}
+
+/* Modal and popover backdrops */
+.bg-slate-950\/80, .dark .bg-slate-950\/80 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+.bg-slate-900\/80, .dark .bg-slate-900\/80 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+.bg-slate-950\/50, .dark .bg-slate-950\/50 {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+.bg-slate-900\/50, .dark .bg-slate-900\/50 {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+.bg-slate-800\/80, .dark .bg-slate-800\/80 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+.bg-background\/80, .dark .bg-background\/80 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+.fixed.inset-0.backdrop-blur-sm {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+.fixed.inset-0.z-50:not(:has(.bg-slate-900)) {
+  /* Only target empty backdrops if they are separate divs */
+}
