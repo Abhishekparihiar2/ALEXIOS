@@ -165,67 +165,80 @@
             });
         }
 
+        // Remove any leftover close account buttons
+        document.querySelectorAll(".client-close-account-btn").forEach(el => el.remove());
+
+        // Re-wire the pencil edit button for edit mode
         const svgs = [...root.querySelectorAll("svg")];
-        let editSvg = svgs.find(svg => {
+        const editSvg = svgs.find(svg => {
             const path = svg.querySelector("path");
             if (!path) return false;
             const d = path.getAttribute("d") || "";
             return d.includes("M15.232") || d.includes("l3.536") || d.includes("M11 5H6") || d.includes("l.867");
         });
-        
-        let editBtn = editSvg ? editSvg.closest("button, a, div.cursor-pointer") : null;
-
-        if (!editBtn) {
-            const headerActions = [...root.querySelectorAll("div.flex.justify-between")].shift();
-            if (headerActions) {
-                const possibleButtons = [...headerActions.querySelectorAll("button")];
-                if (possibleButtons.length > 0) editBtn = possibleButtons[possibleButtons.length - 1];
-            }
-        }
-        
-        if (!root.querySelector(".client-close-account-btn")) {
-            const closeBtn = document.createElement("div");
-            closeBtn.className = "client-close-account-btn p-5 mt-8 rounded-xl border cursor-pointer transition-all";
-            closeBtn.style.borderColor = "rgba(220, 38, 38, 0.3)";
-            closeBtn.style.backgroundColor = "rgba(220, 38, 38, 0.05)";
-            
-            closeBtn.innerHTML = `
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background: rgba(220, 38, 38, 0.15); color: #ef4444;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold mb-0.5" style="color: #ef4444;">Close Account</h3>
-                        <p class="text-xs" style="color: rgba(239, 68, 68, 0.7);">Terminate site and all associated contracts</p>
-                    </div>
-                </div>
-            `;
-            
-            closeBtn.addEventListener("mouseenter", () => closeBtn.style.backgroundColor = "rgba(220, 38, 38, 0.1)");
-            closeBtn.addEventListener("mouseleave", () => closeBtn.style.backgroundColor = "rgba(220, 38, 38, 0.05)");
-            
-            closeBtn.addEventListener("click", () => {
-                if (confirm("Are you sure you want to close this account? This action cannot be undone.")) {
-                    alert("Account closure initiated.");
-                }
-            });
-            
-            root.appendChild(closeBtn);
-        }
-
+        const editBtn = editSvg ? editSvg.closest("button, a, div.cursor-pointer") : null;
         if (editBtn) {
             const clonedBtn = editBtn.cloneNode(true);
             editBtn.parentNode.replaceChild(clonedBtn, editBtn);
-            
             clonedBtn.addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 enableEditMode(root, clonedBtn);
             });
         }
+
+        // Add "Close Account" pill badge next to the "Active" badge
+        if (!root.querySelector(".close-account-pill")) {
+            const activeBadge = [...root.querySelectorAll("button, span, div, a")].find(el =>
+                el.textContent.trim() === "Active" && visible(el)
+            );
+
+            if (activeBadge) {
+                const pill = document.createElement("button");
+                pill.className = "close-account-pill";
+                pill.textContent = "Close Account";
+
+                const activeStyle = window.getComputedStyle(activeBadge);
+                pill.style.display = "inline-flex";
+                pill.style.alignItems = "center";
+                pill.style.fontSize = activeStyle.fontSize || "12px";
+                pill.style.fontWeight = "600";
+                pill.style.borderRadius = "9999px";
+                pill.style.padding = activeStyle.padding || "2px 10px";
+                pill.style.border = "1px solid rgba(239, 68, 68, 0.5)";
+                pill.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
+                pill.style.color = "#ef4444";
+                pill.style.cursor = "pointer";
+                pill.style.transition = "all 0.15s ease";
+                pill.style.marginLeft = "6px";
+
+                pill.addEventListener("mouseenter", () => { pill.style.backgroundColor = "rgba(239, 68, 68, 0.3)"; });
+                pill.addEventListener("mouseleave", () => { pill.style.backgroundColor = "rgba(239, 68, 68, 0.15)"; });
+
+                pill.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const confirmed = confirm(
+                        "Close Account\n\nThis will terminate the site and all associated contracts.\n\nAre you sure you want to proceed? This action cannot be undone."
+                    );
+                    if (confirmed) {
+                        alert("Account closure has been initiated. The site will be updated to Closed status.");
+                    }
+                });
+
+                if (activeBadge.nextSibling) {
+                    activeBadge.parentNode.insertBefore(pill, activeBadge.nextSibling);
+                } else {
+                    activeBadge.parentNode.appendChild(pill);
+                }
+            }
+        }
     };
 
     const enhanceGlobalCloseAccount = () => {
+        const existing = document.querySelector(".global-close-account-btn");
+        if (existing) existing.remove();
+        return;
         // Ensure we are inside a client view (e.g. Overview, Post Orders tab exists)
         const isClientView = [...document.querySelectorAll("button, a, div, span")].some(b => b.textContent.trim() === "Post Orders" && visible(b));
         if (!isClientView) {

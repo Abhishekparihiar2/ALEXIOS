@@ -129,6 +129,14 @@
     });
   };
 
+  const removeImportExcel = () => {
+    [...document.querySelectorAll("button")].forEach((el) => {
+      if (el.textContent.trim().includes("Import Excel")) {
+        if (el.style.display !== "none") el.style.display = "none";
+      }
+    });
+  };
+
   const update = () => {
     updateSidebar();
     updateAdministrationQuadrant();
@@ -137,6 +145,7 @@
     updateAssignEmployeeModal();
     updateCreateSiteContactModal();
     updateSiteActionsNavigation();
+    removeImportExcel();
   };
 
   document.addEventListener("click", (event) => {
