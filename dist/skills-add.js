@@ -83,18 +83,13 @@
                 </div>
             </div>
 
-            <!-- 14.4.3 & 14.4.5 Document Requirements & Visibility -->
+            <!-- 14.4.3 Document Requirements -->
             <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #262626;">
-                <h4 style="margin: 0 0 12px; color: white; font-size: 14px; font-weight: 700;">Requirements & Visibility</h4>
+                <h4 style="margin: 0 0 12px; color: white; font-size: 14px; font-weight: 700;">Requirements</h4>
                 
                 <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 14px;">
                     <input id="skill-add-req-doc" type="checkbox" style="width: 16px; height: 16px; accent-color: #2563eb;" />
                     <span style="font-size: 13px; font-weight: 600;">Require Supporting Document on Assignment</span>
-                </label>
-                
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input id="skill-add-visible" type="checkbox" checked style="width: 16px; height: 16px; accent-color: #2563eb;" />
-                    <span style="font-size: 13px; font-weight: 600;">Visible to Client Portal</span>
                 </label>
             </div>
 
@@ -186,10 +181,11 @@
 
             <!-- 14.4.6 Status -->
             <div style="margin-bottom: 24px;">
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input id="skill-add-status" type="checkbox" checked style="width: 16px; height: 16px; accent-color: #22c55e;" />
-                    <span style="font-size: 13px; font-weight: 600;">Set as Active Qualification</span>
-                </label>
+                <label style="display: block; margin-bottom: 7px; font-size: 12px; font-weight: 700;">Status <span style="color: #ef4444;">*</span></label>
+                <select id="skill-add-status" style="width: 100%; padding: 10px 12px; border: 1px solid #262626; border-radius: 9px; outline: none; background: #000000; color: #e2e8f0; font-size: 13px;">
+                    <option value="active" selected>Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
             </div>
             
             <div style="display: flex; justify-content: flex-end; gap: 9px;">
@@ -303,7 +299,7 @@
             onSave({
                 name: nameInput.value.trim(),
                 category: categorySelect.value,
-                active: document.getElementById("skill-add-status").checked
+                active: document.getElementById("skill-add-status").value === "active"
             });
         });
     };

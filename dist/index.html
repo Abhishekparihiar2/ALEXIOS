@@ -2,13 +2,12 @@
 <html lang="en" class="dark">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ALEXIOS Portal Preview</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALEXIOS Portal Preview</title>
   <style>
     /* Keep the Time Clock date-range popover above the table's stacking layers. */
-    .px-6.py-4.shrink-0.flex.flex-wrap.items-center.justify-between.gap-3
-      > .flex.items-center.bg-slate-800\/50.backdrop-blur-sm.border.border-slate-700.rounded-lg.shadow-sm.p-0\.5.relative {
+    .px-6.py-4.shrink-0.flex.flex-wrap.items-center.justify-between.gap-3>.flex.items-center.bg-slate-800\/50.backdrop-blur-sm.border.border-slate-700.rounded-lg.shadow-sm.p-0\.5.relative {
       z-index: 100;
     }
 
@@ -17,7 +16,11 @@
       padding: 16px !important;
       z-index: 1000 !important;
     }
-    .alexios-range-popover > h4 { margin-bottom: 10px; }
+
+    .alexios-range-popover>h4 {
+      margin-bottom: 10px;
+    }
+
     .alexios-range-summary {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -32,6 +35,7 @@
       font-size: 12px;
       text-align: center;
     }
+
     .alexios-range-summary small {
       display: block;
       color: #64748b;
@@ -39,6 +43,7 @@
       font-weight: 800;
       letter-spacing: .08em;
     }
+
     .alexios-calendar-header {
       display: grid;
       grid-template-columns: 32px 1fr 32px;
@@ -47,14 +52,24 @@
       color: #e2e8f0;
       text-align: center;
     }
+
     .alexios-calendar-header button {
       height: 30px;
       border-radius: 7px;
       color: #94a3b8;
       font-size: 22px;
     }
-    .alexios-calendar-header button:hover { background: #1e293b; color: white; }
-    .alexios-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+
+    .alexios-calendar-header button:hover {
+      background: #1e293b;
+      color: white;
+    }
+
+    .alexios-calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
     .alexios-calendar-weekdays span {
       padding: 5px 0;
       color: #64748b;
@@ -62,6 +77,7 @@
       font-weight: 800;
       text-align: center;
     }
+
     .alexios-calendar-days button {
       height: 34px;
       border-radius: 7px;
@@ -69,10 +85,29 @@
       font-size: 12px;
       font-weight: 600;
     }
-    .alexios-calendar-days button:hover { background: #1e293b; }
-    .alexios-calendar-days button.is-in-range { border-radius: 0; background: #172554; color: #bfdbfe; }
-    .alexios-calendar-days button.is-selected { background: #2563eb; color: white; }
-    .alexios-range-help { margin-top: 8px; color: #60a5fa; font-size: 11px; text-align: center; }
+
+    .alexios-calendar-days button:hover {
+      background: #1e293b;
+    }
+
+    .alexios-calendar-days button.is-in-range {
+      border-radius: 0;
+      background: #172554;
+      color: #bfdbfe;
+    }
+
+    .alexios-calendar-days button.is-selected {
+      background: #2563eb;
+      color: white;
+    }
+
+    .alexios-range-help {
+      margin-top: 8px;
+      color: #60a5fa;
+      font-size: 11px;
+      text-align: center;
+    }
+
     .alexios-issue-date-time {
       display: grid;
       grid-template-columns: 1fr 1.35fr;
@@ -86,6 +121,7 @@
       font-size: 12px;
       font-weight: 600;
     }
+
     .alexios-issue-date-time small {
       display: block;
       margin-bottom: 2px;
@@ -94,7 +130,11 @@
       font-weight: 800;
       letter-spacing: .08em;
     }
-    .alexios-approve-issue { width: 100%; }
+
+    .alexios-approve-issue {
+      width: 100%;
+    }
+
     .alexios-issue-approval-modal {
       position: fixed;
       inset: 0;
@@ -106,6 +146,7 @@
       background: rgba(0, 0, 0, .72);
       backdrop-filter: blur(4px);
     }
+
     .alexios-issue-approval-dialog {
       width: min(440px, 100%);
       padding: 22px;
@@ -115,10 +156,32 @@
       box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
       color: #e2e8f0;
     }
-    .alexios-issue-approval-dialog h3 { margin: 0 0 5px; color: white; font-size: 18px; font-weight: 800; }
-    .alexios-issue-approval-dialog > p { margin-bottom: 18px; color: #94a3b8; font-size: 13px; }
-    .alexios-issue-approval-dialog label { display: block; margin-bottom: 7px; font-size: 12px; font-weight: 700; }
-    .alexios-issue-approval-dialog label span { color: #64748b; font-weight: 500; }
+
+    .alexios-issue-approval-dialog h3 {
+      margin: 0 0 5px;
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .alexios-issue-approval-dialog>p {
+      margin-bottom: 18px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    .alexios-issue-approval-dialog label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .alexios-issue-approval-dialog label span {
+      color: #64748b;
+      font-weight: 500;
+    }
+
     .alexios-issue-approval-dialog textarea {
       width: 100%;
       resize: vertical;
@@ -130,22 +193,61 @@
       color: #e2e8f0;
       font-size: 13px;
     }
-    .alexios-issue-approval-dialog textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
-    .alexios-issue-approval-dialog > div { display: flex; justify-content: flex-end; gap: 9px; margin-top: 18px; }
-    .alexios-issue-approval-dialog button { padding: 9px 14px; border: 1px solid #475569; border-radius: 8px; font-size: 12px; font-weight: 700; }
-    .alexios-issue-approval-dialog button[data-action="approve"] { border-color: #2563eb; background: #2563eb; color: white; }
-    .alexios-admin-note { margin-top: 10px; padding: 8px 10px; border: 1px solid #1e3a5f; border-radius: 8px; background: rgba(30, 58, 95, .35); color: #bfdbfe; font-size: 11px; }
-    .alexios-resolved-label { margin-left: auto; color: #22c55e; font-size: 11px; font-weight: 800; }
+
+    .alexios-issue-approval-dialog textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, .15);
+    }
+
+    .alexios-issue-approval-dialog>div {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .alexios-issue-approval-dialog button {
+      padding: 9px 14px;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .alexios-issue-approval-dialog button[data-action="approve"] {
+      border-color: #2563eb;
+      background: #2563eb;
+      color: white;
+    }
+
+    .alexios-admin-note {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      background: rgba(30, 58, 95, .35);
+      color: #bfdbfe;
+      font-size: 11px;
+    }
+
+    .alexios-resolved-label {
+      margin-left: auto;
+      color: #22c55e;
+      font-size: 11px;
+      font-weight: 800;
+    }
 
     /* Keep the Time Clock toolbar menus above Timesheets' sticky filters/table. */
     .flex.items-center.justify-between.w-full.mt-2.border-b.border-slate-200.dark\:border-slate-800 {
       position: relative;
       z-index: 500;
     }
-    .flex.items-center.gap-2.pb-2 > .relative[style*="isolation"] {
+
+    .flex.items-center.gap-2.pb-2>.relative[style*="isolation"] {
       z-index: 501;
     }
-    .flex.items-center.gap-2.pb-2 > .relative[style*="isolation"] > .absolute {
+
+    .flex.items-center.gap-2.pb-2>.relative[style*="isolation"]>.absolute {
       z-index: 502 !important;
     }
   </style>
@@ -159,7 +261,7 @@
   <link rel="stylesheet" href="/payroll-black-theme.css">
   <link rel="stylesheet" href="/payroll-adjustments.css">
   <link rel="stylesheet" href="/payroll-legacy-actions.css">
-  <script defer src="/payroll-ui-fix.js?v=2"></script>
+  <script defer src="/payroll-ui-fix.js?v=3"></script>
   <script defer src="/payroll-legacy-actions.js"></script>
   <link rel="stylesheet" href="/admin-portal-ui-updates.css?v=7">
   <script defer src="/admin-portal-ui-updates.js?v=8"></script>
@@ -176,9 +278,9 @@
   <script defer src="/employee-manager-field.js?v=1"></script>
   <link rel="stylesheet" href="/position-view.css?v=3">
   <script defer src="/position-view.js?v=3"></script>
-  <link rel="stylesheet" href="/payroll-policy-flow.css?v=1">
+  <link rel="stylesheet" href="/payroll-policy-flow.css?v=2">
   <link rel="stylesheet" href="/payroll-policy-actions.css?v=1">
-  <script defer src="/payroll-policy-flow.js?v=2"></script>
+  <script defer src="/payroll-policy-flow.js?v=4"></script>
   <link rel="stylesheet" href="/employee-overview-edit.css?v=2">
   <script defer src="/employee-overview-edit.js?v=23"></script>
   <script defer src="/employment-policies-edit.js?v=5"></script>
@@ -189,13 +291,16 @@
   <script defer src="/geofencing-map-ui.js?v=4"></script>
   <script defer src="/location-map-picker.js?v=3"></script>
   <script defer src="/create-task-recurrence.js?v=6"></script>
-  <script defer src="/skills-edit.js?v=10"></script>
-  <script defer src="/skills-add.js?v=5"></script>
-  <script defer src="/checkpoints-add.js?v=3"></script>
+  <script defer src="/skills-edit.js?v=23"></script>
+  <script defer src="/skills-add.js?v=6"></script>
+  <script defer src="/checkpoints-add.js?v=4"></script>
+  <script defer src="/automations-add.js?v=7"></script>
+  <script defer src="/automation-actions.js?v=1"></script>
+  <script defer src="/automations-row-actions.js?v=4"></script>
 </head>
 
 <body>
-    <div id="root" style="width:100%;height:100vh;"></div>
+  <div id="root" style="width:100%;height:100vh;"></div>
 </body>
 
 </html>

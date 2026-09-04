@@ -1,4 +1,4 @@
-(function() {
+(function () {
     const createFullPageUI = (onClose) => {
         const page = document.createElement("div");
         page.style.position = "fixed";
@@ -246,12 +246,12 @@
             barcode: page.querySelector('#cp-method-barcode'),
             gps: page.querySelector('#cp-method-gps')
         };
-        
+
         scanRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 Object.values(methods).forEach(div => div.style.display = 'none');
                 methods[e.target.value].style.display = 'block';
-                
+
                 // Update styling of labels
                 page.querySelectorAll('input[name="cp-scan-type"]').forEach(r => {
                     const l = r.closest('label');
@@ -300,12 +300,12 @@
             page.style.opacity = "0";
             page.style.transition = "opacity 0.2s ease";
             setTimeout(() => {
-                if(page.parentNode) page.parentNode.removeChild(page);
+                if (page.parentNode) page.parentNode.removeChild(page);
                 document.body.style.overflow = "";
-                if(onClose) onClose();
+                if (onClose) onClose();
             }, 200);
         };
-        
+
         page.querySelector('#cp-back-btn').addEventListener('click', close);
         page.querySelector('#cp-cancel-btn').addEventListener('click', close);
         page.querySelector('#cp-save-btn').addEventListener('click', () => {
@@ -317,7 +317,7 @@
     const enhance = () => {
         // Find "Create Checkpoint" or "Add Checkpoint" buttons on the page
         const addButtons = [...document.querySelectorAll("button")].filter(btn =>
-            (btn.textContent.includes("Add Checkpoint") || btn.textContent.includes("Create Checkpoint") || btn.textContent.includes("New Checkpoint")) && 
+            (btn.textContent.includes("Add Checkpoint") || btn.textContent.includes("Create Checkpoint") || btn.textContent.includes("New Checkpoint")) &&
             !btn.dataset.cpAddWired &&
             btn.offsetParent !== null
         );

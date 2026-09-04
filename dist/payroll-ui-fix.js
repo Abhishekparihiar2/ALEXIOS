@@ -93,10 +93,23 @@
   function render(){const host=document.getElementById('payroll-ui-fix');if(!host)return;let content=state.page==='overview'?(state.calcStep>=0&&host.dataset.calculating==='1'?calculator():overview()):state.page==='rules'?rules():state.page==='schedules'?schedules():state.page==='breaks'?breaks():state.page==='holidays'?holidays():state.page==='audit'?audit():settings();host.innerHTML=shell(content);}
   function mount(){let host=document.getElementById('payroll-ui-fix');if(host)return render();const app=document.querySelector('#root > div > div.flex.flex-col.flex-1')||document.querySelector('#root');if(!app)return;host=document.createElement('div');host.id='payroll-ui-fix';app.style.position='relative';app.appendChild(host);render();}
   function unmount(){document.getElementById('payroll-ui-fix')?.remove()}
+  const PAYROLL_MODULE='PAYROLL & BACK OFFICE';
+  function currentModule(){const h=document.querySelector('header h2');return h?h.textContent.replace(/\s+/g,' ').trim().toUpperCase():null}
   document.addEventListener('click',e=>{
     const btn=e.target.closest('button'); if(!btn)return; const text=btn.textContent.replace(/\s+/g,' ').trim();
     if(text==='Payroll & Back Office'){setTimeout(mount,20);return}
-    if(!btn.closest('#payroll-ui-fix')&&btn.closest('aside')&&text!=='Payroll & Back Office'){unmount();return}
+    if(!btn.closest('#payroll-ui-fix')&&btn.closest('aside')){
+      // The sidebar holds chrome as well as navigation: the collapse toggle
+      // navigates nowhere, and once collapsed every nav button loses its label.
+      // So decide from the module the app actually lands on, not the button.
+      setTimeout(()=>{
+        const mod=currentModule();
+        if(mod===null)return;                 // cannot tell; leave as-is
+        if(mod===PAYROLL_MODULE){if(!document.getElementById('payroll-ui-fix'))mount()}
+        else unmount();
+      },80);
+      return;
+    }
     const host=btn.closest('#payroll-ui-fix');if(!host)return;
     const page=btn.dataset.page;if(page){state.page=page;delete host.dataset.calculating;render();return}
     const act=btn.dataset.act;
