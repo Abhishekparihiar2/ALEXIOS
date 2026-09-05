@@ -1,6 +1,6 @@
 (() => {
   const state = {
-    page: "overview", periodStatus: "Draft", calcStep: 0,
+    page: "overview", periodStatus: "Draft", calcStep: 0, scheduleIndex: 0,
     rules: [
       {name:"Standard Full-Time Policy",type:"Payroll Policy",scope:"Full-Time Employees",effective:"01/01/2026",summary:"40 hrs/week; overtime after 40 hrs",status:"Active"},
       {name:"Double Time Sunday",type:"Pay Rule",scope:"All Guards",effective:"01/01/2026",summary:"Sunday worked hours at 2.0x",status:"Active"},
@@ -25,16 +25,80 @@
   const esc=s=>String(s??"").replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const badge=v=>`<span class="puf-badge ${String(v).toLowerCase().replace(/\s/g,"-")}">${esc(v)}</span>`;
   const button=(label,action,kind="")=>`<button class="puf-btn ${kind}" data-act="${action}">${label}</button>`;
-  function shell(content){return `<div class="puf-shell"><aside class="puf-nav"><div class="puf-brand">Payroll & Back Office<small>Configuration and processing</small></div>${[["overview","Overview"],["rules","Policies & Pay Rules"],["schedules","Payroll Schedules"],["breaks","Break Management"],["holidays","Holidays"],["audit","Audit History"],["settings","Settings"]].map(([id,l])=>`<button data-page="${id}" class="${state.page===id?'active':''}">${l}</button>`).join('')}</aside><main class="puf-main">${content}</main></div>`}
+  function shell(content){return `<div class="puf-shell"><aside class="puf-nav"><div class="puf-brand">Payroll & Back Office<small>Configuration and processing</small></div>${[["overview","Overview"],["rules","Policies & Pay Rules"],["schedules","Payroll Schedules"],["breaks","Break Management"],["holidays","Holidays"],["audit","Audit History"],["settings","Settings"]].map(([id,l])=>`<button data-page="${id}" class="${(state.page==='period'?'audit':state.page)===id?'active':''}">${l}</button>`).join('')}</aside><main class="puf-main">${content}</main></div>`}
+  const exportControl=()=>`<div class="puf-export"><button class="puf-btn" data-act="export-menu" aria-haspopup="true" aria-expanded="false">Export</button><div class="puf-export-menu" hidden><button data-act="export-csv">CSV (.csv)</button><button data-act="export-xls">Excel (.xls)</button><button data-act="export-pdf">PDF</button></div></div>`;
+
+  const payrollRows=()=>[["Employee","Class","Regular","Overtime","Holiday","Base Rate","Gross","Validation"]]
+    .concat(employees.map(e=>[e.name,e.cls,e.reg,e.ot,e.hol,`${e.rate}/hr`,e.gross,e.status]));
+
+  // A payroll opened from Audit History is a completed record: it cannot be
+  // adjusted, and every employee validated clean or the run would not have
+  // finished. Overview keeps its live, still-editable figures.
+  const isFinalized=()=>state.page==='period';
+
+  // The Overview period follows the schedule picked with "Change Payroll";
+  // schedules created in the editor may have no dated period yet.
+  const activeSchedule=()=>state.schedules[state.scheduleIndex]||state.schedules[0]||null;
+  const periodTitle=s=>!s?"—":/\d/.test(s.current)?`${s.current}, 2026`:s.current;
+  const periodLabel=()=>state.page==='period'&&state.periodRecord?`${state.periodRecord.record}, 2026`:periodTitle(activeSchedule());
+
+  const scheduleControl=()=>{
+    const options=state.schedules.length
+      ? state.schedules.map((s,i)=>`<button data-act="pick-schedule" data-i="${i}" class="${i===state.scheduleIndex?'is-active':''}"><b>${esc(s.name)}</b><small>${esc(s.frequency)} · ${esc(s.current)} · Pay date ${esc(s.payDate)}</small></button>`).join('')
+      : `<p class="puf-schedule-empty">No payroll schedules configured.</p><button data-page="schedules">Go to Payroll Schedules</button>`;
+    return `<div class="puf-schedule-picker"><button class="puf-btn" data-act="schedule-menu" aria-haspopup="true" aria-expanded="false">Change Payroll</button><div class="puf-schedule-menu" hidden><p class="puf-schedule-title">Payroll Schedules</p>${options}</div></div>`;
+  };
+
+  function download(filename,type,content){
+    const url=URL.createObjectURL(new Blob([content],{type}));
+    const link=document.createElement('a');
+    link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+
+  function exportPayroll(kind){
+    const rows=payrollRows(),period=periodLabel(),slug=period.replace(/[^\w]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase(),file=slug?`payroll-${slug}`:'payroll';
+    if(kind==='csv'){
+      const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+      download(`${file}.csv`,'text/csv;charset=utf-8;','\ufeff'+csv);
+      return;
+    }
+    const table=`<table border="1" cellspacing="0" cellpadding="6">${rows.map((r,i)=>`<tr>${r.map(c=>`<${i?'td':'th'}>${esc(c)}</${i?'td':'th'}>`).join('')}</tr>`).join('')}</table>`;
+    if(kind==='xls'){
+      download(`${file}.xls`,'application/vnd.ms-excel',`<html><head><meta charset="utf-8"></head><body><h3>Payroll ${esc(period)}</h3>${table}</body></html>`);
+      return;
+    }
+    // PDF via the browser's own print-to-PDF, in a hidden frame so pop-up
+    // blocking cannot break it.
+    const frame=document.createElement('iframe');
+    frame.setAttribute('style','position:fixed;right:0;bottom:0;width:0;height:0;border:0');
+    document.body.appendChild(frame);
+    const doc=frame.contentDocument;
+    doc.write(`<html><head><meta charset="utf-8"><title>Payroll ${esc(period)}</title><style>body{font:12px system-ui,sans-serif;padding:24px;color:#111}h1{font-size:17px;margin:0 0 4px}p{color:#555;margin:0 0 18px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#f2f4f7}</style></head><body><h1>Payroll ${esc(period)}</h1><p>Employee Payroll Review</p>${table}</body></html>`);
+    doc.close();
+    frame.contentWindow.focus();
+    frame.contentWindow.print();
+    setTimeout(()=>frame.remove(),1000);
+  }
+
   const head=(title,desc,actions="")=>`<header class="puf-head"><div><h1>${title}</h1><p>${desc}</p></div><div class="puf-actions">${actions}</div></header>`;
-  function overview(){return head("Payroll Overview","Validate, calculate, approve and lock the selected payroll period.",button("Start Payroll","start-calc","primary"))+`
-    <section class="puf-period"><div><span>Current payroll period</span><strong>Aug 1–Aug 14, 2026</strong><small>Default Bi-Weekly · Pay date Aug 21</small></div>${badge(state.periodStatus)}</section>
-    <section class="puf-cards">${[["Eligible Employees","142"],["Timesheets Approved","138 / 142"],["Blocking Exceptions","4"],["Estimated Gross","$84,204.50"]].map(x=>`<article><span>${x[0]}</span><strong>${x[1]}</strong></article>`).join('')}</section>
-    <section class="puf-panel"><div class="puf-panelhead"><div><h2>Employee Payroll Review</h2><p>Every amount links back to approved time and an applied pay rule.</p></div><input class="puf-search" placeholder="Search employee..."></div>
-    <table><thead><tr><th>Employee</th><th>Class</th><th>Regular</th><th>Overtime</th><th>Holiday</th><th>Base Rate</th><th>Gross</th><th>Validation</th><th></th></tr></thead><tbody>${employees.map((e,i)=>`<tr><td><b>${e.name}</b></td><td>${e.cls}</td><td>${e.reg}</td><td>${e.ot}</td><td>${e.hol}</td><td>${e.rate}/hr</td><td><b>${e.gross}</b></td><td>${badge(e.status)}${e.issues?` <small>${e.issues} issue${e.issues>1?'s':''}</small>`:''}</td><td><button class="puf-link" data-act="employee" data-i="${i}">Review</button></td></tr>`).join('')}</tbody></table></section>`}
+  const summaryCards=()=>`<section class="puf-cards">${[["Eligible Employees","142"],["Timesheets Approved","138 / 142"],["Blocking Exceptions","4"],["Estimated Gross","$84,204.50"]].map(x=>`<article><span>${x[0]}</span><strong>${x[1]}</strong></article>`).join('')}</section>`;
+  const employeeReview=()=>`<section class="puf-panel"><div class="puf-panelhead"><div><h2>Employee Payroll Review</h2><p>Every amount links back to approved time and an applied pay rule.</p></div><input class="puf-search" placeholder="Search employee..."></div>
+    <table><thead><tr><th>Employee</th><th>Class</th><th>Regular</th><th>Overtime</th><th>Holiday</th><th>Base Rate</th><th>Gross</th><th>Validation</th><th></th></tr></thead><tbody>${employees.map((e,i)=>`<tr><td><b>${e.name}</b></td><td>${e.cls}</td><td>${e.reg}</td><td>${e.ot}</td><td>${e.hol}</td><td>${e.rate}/hr</td><td><b>${e.gross}</b></td><td>${isFinalized()?badge('Ready'):`${badge(e.status)}${e.issues?` <small>${e.issues} issue${e.issues>1?'s':''}</small>`:''}`}</td><td><button class="puf-link" data-act="employee" data-i="${i}">Review</button></td></tr>`).join('')}</tbody></table></section>`;
+  function overview(){const s=activeSchedule();return head("Payroll Overview","Validate, calculate, approve and lock the selected payroll period.",exportControl()+button("Start Payroll","start-calc","primary"))+`
+    <section class="puf-period"><div><span>Current payroll period</span><strong>${esc(periodTitle(s))}</strong><small>${s?`${esc(s.name)} · Pay date ${esc(s.payDate)}`:'Select a payroll schedule to begin'}</small></div><div class="puf-period-actions">${scheduleControl()}${state.periodStatus==='Draft'?'':badge(state.periodStatus)}</div></section>
+    ${summaryCards()}
+    ${employeeReview()}`}
+  function periodView(){
+    const record=state.periodRecord||{},schedule=state.schedules[0];
+    return head("Payroll Period",`Calculated by ${record.admin||'—'} on ${record.time||'—'}. Read-only record.`,exportControl()+button("Back to Audit History","back-audit"))+`
+    <section class="puf-period"><div><span>Payroll period</span><strong>${record.record||'—'}, 2026</strong><small>${schedule?`${schedule.name} · Pay date ${schedule.payDate}`:'Bi-Weekly'}</small></div>${badge(record.result||'Completed')}</section>
+    ${summaryCards()}
+    ${employeeReview()}`;
+  }
   function calculator(){const steps=["Scope","Validation","Exceptions","Calculation","Approval"]; return head("Run Payroll","Complete each stage before approving and locking the period.",button("Exit","exit-calc"))+`<div class="puf-steps">${steps.map((s,i)=>`<div class="${i===state.calcStep?'active':i<state.calcStep?'done':''}"><i>${i<state.calcStep?'✓':i+1}</i><span>${s}</span></div>`).join('')}</div><section class="puf-panel puf-form">${calcBody()}</section>`}
   function calcBody(){
-    if(state.calcStep===0)return `<h2>Select payroll scope</h2><div class="puf-grid"><label>Payroll Schedule<select><option>Default Bi-Weekly</option><option>Monthly Admin</option></select></label><label>Payroll Period<select><option>Aug 1–Aug 14, 2026</option><option>Jul 15–Jul 31, 2026</option></select></label><label>Employee/Class Filter<select><option>All Employees</option><option>Full-Time Security</option><option>Supervisor</option></select></label><label>Site/Client Scope<select><option>All Assigned Sites</option><option>Downtown Financial Center</option></select></label></div><div class="puf-foot">${button("Validate Payroll","calc-next","primary")}</div>`;
+    if(state.calcStep===0)return `<h2>Select payroll scope</h2><div class="puf-grid"><label>Payroll Schedule<select>${state.schedules.map((s,i)=>`<option${i===state.scheduleIndex?' selected':''}>${esc(s.name)}</option>`).join('')||'<option>No schedules configured</option>'}</select></label><label>Payroll Period<select><option>${esc(periodTitle(activeSchedule()))}</option><option>Jul 15–Jul 31, 2026</option></select></label><label>Employee/Class Filter<select><option>All Employees</option><option>Full-Time Security</option><option>Supervisor</option></select></label><label>Site/Client Scope<select><option>All Assigned Sites</option><option>Downtown Financial Center</option></select></label></div><div class="puf-foot">${button("Validate Payroll","calc-next","primary")}</div>`;
     if(state.calcStep===1)return `<h2>Pre-calculation validation</h2><div class="puf-checks"><p class="ok">✓ 142 employees have an assigned payroll schedule</p><p class="ok">✓ 142 employees have active compensation</p><p class="warn">! 4 timesheets require review</p><p class="warn">! 2 unresolved missing-punch issues</p><p class="ok">✓ Pay rules and holiday calendar loaded</p></div><div class="puf-foot">${button("Back","calc-back")}${button("Review Exceptions","calc-next","primary")}</div>`;
     if(state.calcStep===2)return `<h2>Resolve payroll exceptions</h2><table><thead><tr><th>Severity</th><th>Employee</th><th>Source</th><th>Issue</th><th>Status</th><th>Action</th></tr></thead><tbody><tr><td>${badge('Blocking')}</td><td>Derek Wilson</td><td>Timesheet · Aug 8</td><td>Missing clock-out</td><td>Open</td><td><button class="puf-link" data-act="resolve">Resolve</button></td></tr><tr><td>${badge('Warning')}</td><td>Sarah Chen</td><td>Timesheet · Aug 6</td><td>Unapproved edit</td><td>Open</td><td><button class="puf-link" data-act="resolve">Review</button></td></tr></tbody></table><p class="puf-note">Prototype option: acknowledge remaining exceptions to continue the UI flow.</p><div class="puf-foot">${button("Back","calc-back")}${button("Acknowledge & Calculate","calc-next","primary")}</div>`;
     if(state.calcStep===3)return `<h2>Calculation results</h2><div class="puf-result"><div><span>Employees</span><b>142</b></div><div><span>Regular Hours</span><b>8,742.5</b></div><div><span>Overtime Hours</span><b>284.75</b></div><div><span>Estimated Gross</span><b>$84,204.50</b></div></div><p class="puf-note">Review individual employee calculations before approval. Recalculation remains available until the period is locked.</p><div class="puf-foot">${button("Back","calc-back")}${button("Approve Payroll","calc-next","primary")}</div>`;
@@ -42,11 +106,11 @@
   }
   function listing(title,desc,cols,rows,add){return head(title,desc,button(`+ ${add}`,`add-${state.page}`,"primary"))+`<section class="puf-panel"><div class="puf-panelhead"><input class="puf-search" placeholder="Search ${title.toLowerCase()}..."><div>${button("Filters","noop")}</div></div><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th></th></tr></thead><tbody>${rows}</tbody></table></section>`}
   const rowActions=(type,i)=>`<div class="puf-row-actions"><button class="puf-link" data-act="edit-${type}" data-i="${i}">Edit</button><button class="puf-link danger" data-act="delete-${type}" data-i="${i}">Delete</button></div>`;
-  function rules(){return listing("Policies & Pay Rules","Configure eligibility, conditions, rates, priorities and effective dates.",["Rule Name","Type","Applies To","Effective","Rule Summary","Status"],state.rules.map((r,i)=>`<tr><td><b>${r.name}</b></td><td>${r.type}</td><td>${r.scope}</td><td>${r.effective}</td><td>${r.summary}</td><td>${badge(r.status)}</td><td>${rowActions('rule',i)}</td></tr>`).join(''),"Pay Rule")}
+  function rules(){return listing("Policies & Pay Rules","Configure eligibility, conditions, rates and priorities.",["Rule Name","Type","Applies To","Rule Summary","Status"],state.rules.map((r,i)=>`<tr><td><b>${r.name}</b></td><td>${r.type}</td><td>${r.scope}</td><td>${r.summary}</td><td>${badge(r.status)}</td><td>${rowActions('rule',i)}</td></tr>`).join(''),"Pay Rule")}
   function schedules(){return listing("Payroll Schedules","Define frequencies, workweeks, period boundaries, cutoffs and pay dates.",["Schedule Name","Frequency","Workweek","Current Period","Next Period","Pay Date","Status"],state.schedules.map((r,i)=>`<tr><td><b>${r.name}</b></td><td>${r.frequency}</td><td>${r.week}</td><td>${r.current}</td><td>${r.next}</td><td>${r.payDate}</td><td>${badge(r.status)}</td><td>${rowActions('schedule',i)}</td></tr>`).join(''),"Schedule")}
   function breaks(){return listing("Break Management","Configure paid or unpaid break deductions by shift length and employee scope.",["Rule Name","Minimum Shift","Duration","Type","Deduction","Applies To","Status"],state.breaks.map((r,i)=>`<tr><td><b>${r.name}</b></td><td>${r.minimum}</td><td>${r.duration}</td><td>${r.type}</td><td>${r.deduction}</td><td>${r.scope}</td><td>${badge(r.status)}</td><td>${rowActions('breaks',i)}</td></tr>`).join(''),"Break Rule")}
   function holidays(){return listing("Holidays","Manage holiday dates, observed dates, eligibility and pay treatment.",["Holiday","Date","Observed","Group","Applies To","Worked Rate","Status"],state.holidays.map((r,i)=>`<tr><td><b>${r.name}</b></td><td>${r.date}</td><td>${r.observed}</td><td>${r.group}</td><td>${r.scope}</td><td>${r.multiplier}</td><td>${badge(r.status)}</td><td>${rowActions('holidays',i)}</td></tr>`).join(''),"Holiday")}
-  function audit(){return head("Audit History","Read-only history of payroll configuration and processing changes.")+`<section class="puf-panel"><div class="puf-panelhead"><input class="puf-search" placeholder="Search audit records..."><div><input type="date"><input type="date"></div></div><table><thead><tr><th>Date / Time</th><th>Administrator</th><th>Action</th><th>Record</th><th>Result</th></tr></thead><tbody>${state.audit.map(a=>`<tr><td>${a.time}</td><td>${a.admin}</td><td>${a.action}</td><td>${a.record}</td><td>${badge(a.result)}</td></tr>`).join('')}</tbody></table></section>`}
+  function audit(){return head("Audit History","Read-only history of payroll configuration and processing changes.")+`<section class="puf-panel"><div class="puf-panelhead"><input class="puf-search" placeholder="Search audit records..."><div><input type="date"><input type="date"></div></div><table><thead><tr><th>Date / Time</th><th>Administrator</th><th>Action</th><th>Record</th><th>Result</th></tr></thead><tbody>${state.audit.map((a,i)=>`<tr class="${a.action==='Calculated payroll'?'puf-audit-open':''}"><td>${a.time}</td><td>${a.admin}</td><td>${a.action}</td><td>${a.action==='Calculated payroll'?`<button class="puf-link" data-act="view-payroll" data-i="${i}">${a.record}</button>`:a.record}</td><td>${badge(a.result)}</td></tr>`).join('')}</tbody></table></section>`}
   function settings(){return head("Payroll Settings","Set organization-wide defaults and control the payroll lifecycle.",button("Save Changes","save-settings","primary"))+`<section class="puf-panel puf-form"><div class="puf-grid"><label>Default Payroll Schedule<select><option>Default Bi-Weekly</option><option>Monthly Admin</option></select></label><label>Workweek Starts<select><option>Sunday</option><option>Monday</option></select></label><label>Payroll Time Zone<select><option>America/New_York</option><option>America/Chicago</option></select></label><label>Time Rounding<select><option>Exact minute</option><option>Nearest 5 minutes</option><option>Nearest 15 minutes</option></select></label><label>Approval Requirement<select><option>Payroll administrator approval required</option></select></label><label>Locked Period Changes<select><option>Authorized reopen required</option></select></label></div></section>`}
   function modal(type,index){
     const isRule=type==='rule', isSchedule=type==='schedule', isBreak=type==='breaks', isHoliday=type==='holidays';
@@ -89,13 +153,15 @@
     state.audit.unshift({time:new Date().toLocaleString(),admin:'James Morrison',action:approved?'Applied manual adjustment':'Submitted manual adjustment',record:`${e.name} · ${item.code} · ${amount.toLocaleString('en-US',{style:'currency',currency:'USD'})}`,result:item.status});
     document.querySelectorAll('.puf-modal').forEach(m=>m.remove());render();document.getElementById('payroll-ui-fix')?.insertAdjacentHTML('beforeend',employee(i));
   }
-  function employee(i){const e=employees[i],adjustmentRows=e.adjustments.map(a=>`<tr class="puf-adjustment-row"><td>${a.date||'—'}</td><td>Manual Adjustment<br><small>${a.reason}</small></td><td>${a.createdBy}</td><td>${a.code}</td><td>${a.hours??'—'}</td><td>${a.rate?`$${a.rate.toFixed(2)}`:'Fixed'}</td><td>${badge(a.status)}</td><td class="${a.amount<0?'puf-negative':'puf-positive'}">${a.amount.toLocaleString('en-US',{style:'currency',currency:'USD'})}</td></tr>`).join('');return `<div class="puf-modal"><div class="puf-dialog wide"><header><div><h2>${e.name}</h2><p>${e.cls} · Base rate ${e.rate}/hr</p></div><button data-act="close-modal">×</button></header><div class="puf-result"><div><span>Regular</span><b>${e.reg}</b></div><div><span>Overtime</span><b>${e.ot}</b></div><div><span>Gross</span><b>${e.gross}</b></div><div><span>Validation</span>${badge(e.status)}</div></div><table><thead><tr><th>Date</th><th>Site / Position</th><th>Source</th><th>Pay Type</th><th>Hours</th><th>Rate</th><th>Rule / Status</th><th>Subtotal</th></tr></thead><tbody><tr><td>Aug 3</td><td>Downtown Financial<br><small>Security Guard</small></td><td>Approved Timesheet</td><td>REG</td><td>8:00</td><td>${e.rate}</td><td>Standard Policy</td><td>$148.00</td></tr><tr><td>Aug 7</td><td>Downtown Financial<br><small>Security Guard</small></td><td>Approved Timesheet</td><td>OT</td><td>4:30</td><td>1.5x</td><td>Weekly OT</td><td>$124.88</td></tr>${adjustmentRows}</tbody></table><footer><button class="puf-btn" data-act="adjust" data-i="${i}">Add Manual Adjustment</button>${button("Close","close-modal","primary")}</footer></div></div>`}
-  function render(){const host=document.getElementById('payroll-ui-fix');if(!host)return;let content=state.page==='overview'?(state.calcStep>=0&&host.dataset.calculating==='1'?calculator():overview()):state.page==='rules'?rules():state.page==='schedules'?schedules():state.page==='breaks'?breaks():state.page==='holidays'?holidays():state.page==='audit'?audit():settings();host.innerHTML=shell(content);}
+  function employee(i){const e=employees[i],adjustmentRows=e.adjustments.map(a=>`<tr class="puf-adjustment-row"><td>${a.date||'—'}</td><td>Manual Adjustment<br><small>${a.reason}</small></td><td>${a.createdBy}</td><td>${a.code}</td><td>${a.hours??'—'}</td><td>${a.rate?`$${a.rate.toFixed(2)}`:'Fixed'}</td><td>${badge(a.status)}</td><td class="${a.amount<0?'puf-negative':'puf-positive'}">${a.amount.toLocaleString('en-US',{style:'currency',currency:'USD'})}</td></tr>`).join('');return `<div class="puf-modal"><div class="puf-dialog wide"><header><div><h2>${e.name}</h2><p>${e.cls} · Base rate ${e.rate}/hr</p></div><button data-act="close-modal">×</button></header><div class="puf-result"><div><span>Regular</span><b>${e.reg}</b></div><div><span>Overtime</span><b>${e.ot}</b></div><div><span>Gross</span><b>${e.gross}</b></div><div><span>Validation</span>${badge(isFinalized()?'Ready':e.status)}</div></div><table><thead><tr><th>Date</th><th>Site / Position</th><th>Source</th><th>Pay Type</th><th>Hours</th><th>Rate</th><th>Rule / Status</th><th>Subtotal</th></tr></thead><tbody><tr><td>Aug 3</td><td>Downtown Financial<br><small>Security Guard</small></td><td>Approved Timesheet</td><td>REG</td><td>8:00</td><td>${e.rate}</td><td>Standard Policy</td><td>$148.00</td></tr><tr><td>Aug 7</td><td>Downtown Financial<br><small>Security Guard</small></td><td>Approved Timesheet</td><td>OT</td><td>4:30</td><td>1.5x</td><td>Weekly OT</td><td>$124.88</td></tr>${adjustmentRows}</tbody></table><footer>${isFinalized()?'':`<button class="puf-btn" data-act="adjust" data-i="${i}">Add Manual Adjustment</button>`}${button("Close","close-modal","primary")}</footer></div></div>`}
+  function render(){const host=document.getElementById('payroll-ui-fix');if(!host)return;let content=state.page==='overview'?(state.calcStep>=0&&host.dataset.calculating==='1'?calculator():overview()):state.page==='rules'?rules():state.page==='schedules'?schedules():state.page==='breaks'?breaks():state.page==='holidays'?holidays():state.page==='period'?periodView():state.page==='audit'?audit():settings();host.innerHTML=shell(content);}
   function mount(){let host=document.getElementById('payroll-ui-fix');if(host)return render();const app=document.querySelector('#root > div > div.flex.flex-col.flex-1')||document.querySelector('#root');if(!app)return;host=document.createElement('div');host.id='payroll-ui-fix';app.style.position='relative';app.appendChild(host);render();}
   function unmount(){document.getElementById('payroll-ui-fix')?.remove()}
   const PAYROLL_MODULE='PAYROLL & BACK OFFICE';
   function currentModule(){const h=document.querySelector('header h2');return h?h.textContent.replace(/\s+/g,' ').trim().toUpperCase():null}
   document.addEventListener('click',e=>{
+    if(!e.target.closest('.puf-export'))document.querySelectorAll('.puf-export-menu').forEach(m=>m.hidden=true);
+    if(!e.target.closest('.puf-schedule-picker'))document.querySelectorAll('.puf-schedule-menu').forEach(m=>m.hidden=true);
     const btn=e.target.closest('button'); if(!btn)return; const text=btn.textContent.replace(/\s+/g,' ').trim();
     if(text==='Payroll & Back Office'){setTimeout(mount,20);return}
     if(!btn.closest('#payroll-ui-fix')&&btn.closest('aside')){
@@ -113,7 +179,13 @@
     const host=btn.closest('#payroll-ui-fix');if(!host)return;
     const page=btn.dataset.page;if(page){state.page=page;delete host.dataset.calculating;render();return}
     const act=btn.dataset.act;
-    if(act==='start-calc'){host.dataset.calculating='1';state.calcStep=0;render()}
+    if(act==='export-menu'){const m=btn.parentElement.querySelector('.puf-export-menu');m.hidden=!m.hidden;btn.setAttribute('aria-expanded',String(!m.hidden))}
+    else if(act==='export-csv'||act==='export-xls'||act==='export-pdf'){const menu=btn.closest('.puf-export-menu');if(menu){menu.hidden=true;menu.parentElement.querySelector('[data-act="export-menu"]')?.setAttribute('aria-expanded','false')}exportPayroll(act.slice(7))}
+    else if(act==='schedule-menu'){const m=btn.parentElement.querySelector('.puf-schedule-menu');m.hidden=!m.hidden;btn.setAttribute('aria-expanded',String(!m.hidden))}
+    else if(act==='pick-schedule'){state.scheduleIndex=Number(btn.dataset.i);render()}
+    else if(act==='view-payroll'){state.periodRecord=state.audit[Number(btn.dataset.i)];state.page='period';render()}
+    else if(act==='back-audit'){state.page='audit';render()}
+    else if(act==='start-calc'){host.dataset.calculating='1';state.calcStep=0;render()}
     else if(act==='exit-calc'){delete host.dataset.calculating;render()}
     else if(act==='calc-next'){state.calcStep=Math.min(4,state.calcStep+1);if(state.calcStep===4){state.periodStatus='Approved'}render()}
     else if(act==='calc-back'){state.calcStep=Math.max(0,state.calcStep-1);render()}
@@ -126,11 +198,16 @@
     else if(act?.startsWith('edit-'))openEditor(host,act.slice(5),Number(btn.dataset.i))
     else if(act?.startsWith('delete-')){
       const type=act.slice(7),index=Number(btn.dataset.i),list=type==='rule'?state.rules:type==='schedule'?state.schedules:type==='breaks'?state.breaks:state.holidays;
-      if(confirm(`Delete “${list[index]?.name}”? This removes the record from the UI prototype.`)){const removed=list.splice(index,1)[0];state.audit.unshift({time:new Date().toLocaleString(),admin:'James Morrison',action:'Deleted record',record:removed?.name||'Record',result:'Deleted'});render()}
+      if(confirm(`Delete “${list[index]?.name}”? This removes the record from the UI prototype.`)){
+        const removed=list.splice(index,1)[0];
+        // Keep the Overview's selected payroll pointing at the same schedule.
+        if(type==='schedule'){if(index===state.scheduleIndex)state.scheduleIndex=0;else if(index<state.scheduleIndex)state.scheduleIndex--}
+        state.audit.unshift({time:new Date().toLocaleString(),admin:'James Morrison',action:'Deleted record',record:removed?.name||'Record',result:'Deleted'});render()
+      }
     }
     else if(act==='save-modal')saveEditor(btn.closest('.puf-modal'))
     else if(act==='close-modal')btn.closest('.puf-modal')?.remove()
-    else if(act==='adjust')host.insertAdjacentHTML('beforeend',adjustmentModal(Number(btn.dataset.i)))
+    else if(act==='adjust'){if(isFinalized())return;host.insertAdjacentHTML('beforeend',adjustmentModal(Number(btn.dataset.i)))}
     else if(act==='save-adjustment')saveAdjustment(btn.closest('.puf-adjustment'),false)
     else if(act==='apply-adjustment')saveAdjustment(btn.closest('.puf-adjustment'),true)
     else if(act==='save-settings')alert('Payroll settings saved successfully.')

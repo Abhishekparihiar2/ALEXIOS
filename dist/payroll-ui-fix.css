@@ -1,1 +1,87 @@
 #payroll-ui-fix{position:absolute;inset:0;z-index:40;background:#070b12;color:#e5e7eb;font-family:inherit;overflow:hidden}.puf-shell{display:flex;height:100%}.puf-nav{width:230px;border-right:1px solid #263142;background:#0b111b;padding:18px 12px;overflow:auto}.puf-brand{font-size:15px;font-weight:800;padding:4px 10px 20px}.puf-brand small{display:block;color:#718096;font-size:10px;margin-top:4px;font-weight:600}.puf-nav button{display:block;width:100%;padding:10px 12px;margin:3px 0;border:0;border-radius:8px;background:transparent;color:#9ca3af;text-align:left;font-weight:700}.puf-nav button:hover,.puf-nav button.active{background:#172554;color:#60a5fa}.puf-main{flex:1;overflow:auto;padding:24px}.puf-head{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:20px}.puf-head h1{font-size:25px;margin:0;color:#fff}.puf-head p,.puf-panelhead p{color:#8994a5;margin:5px 0 0;font-size:13px}.puf-actions{display:flex;gap:8px}.puf-btn{border:1px solid #334155;background:#111827;color:#d1d5db;border-radius:8px;padding:9px 14px;font-weight:800;cursor:pointer}.puf-btn.primary{background:#2563eb;border-color:#3b82f6;color:#fff}.puf-period,.puf-panel{border:1px solid #263142;background:#0e1521;border-radius:13px}.puf-period{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;margin-bottom:16px}.puf-period span,.puf-period small{display:block;color:#8290a3;font-size:11px}.puf-period strong{display:block;color:#fff;font-size:16px;margin:3px 0}.puf-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.puf-cards article{background:#0e1521;border:1px solid #263142;border-radius:12px;padding:16px}.puf-cards span,.puf-result span{display:block;color:#8592a6;font-size:11px;font-weight:700;text-transform:uppercase}.puf-cards strong{display:block;color:#fff;font-size:23px;margin-top:7px}.puf-panel{overflow:auto}.puf-panelhead{display:flex;align-items:center;justify-content:space-between;padding:15px;border-bottom:1px solid #263142}.puf-panelhead h2{margin:0;font-size:16px}.puf-search,.puf-panelhead input[type=date]{background:#080d15;border:1px solid #334155;color:#e5e7eb;border-radius:8px;padding:9px 11px}.puf-search{width:270px}#payroll-ui-fix table{border-collapse:collapse;width:100%;font-size:12px}#payroll-ui-fix th{color:#7f8da3;text-transform:uppercase;font-size:10px;text-align:left;background:#0a1019}#payroll-ui-fix th,#payroll-ui-fix td{padding:12px;border-bottom:1px solid #202b3b;vertical-align:middle}.puf-link{border:0;background:transparent;color:#60a5fa;font-weight:800;cursor:pointer}.puf-badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:800;background:#1e293b;color:#cbd5e1}.puf-badge.active,.puf-badge.ready,.puf-badge.approved,.puf-badge.completed{background:#063d2b;color:#6ee7b7}.puf-badge.warning{background:#3d2b06;color:#fcd34d}.puf-badge.blocked,.puf-badge.blocking{background:#450a0a;color:#fca5a5}.puf-badge.locked{background:#172554;color:#93c5fd}.puf-steps{display:grid;grid-template-columns:repeat(5,1fr);margin:8px 0 18px}.puf-steps div{display:flex;align-items:center;gap:8px;color:#667085}.puf-steps i{display:grid;place-items:center;width:27px;height:27px;border:1px solid #334155;border-radius:50%;font-style:normal}.puf-steps .active,.puf-steps .done{color:#60a5fa}.puf-steps .active i,.puf-steps .done i{background:#1d4ed8;color:white}.puf-form{padding:20px}.puf-form h2{margin-top:0}.puf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.puf-grid label{font-size:11px;color:#9ba7b8;font-weight:800}.puf-grid input,.puf-grid select,.puf-grid textarea{display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:10px;border-radius:8px;border:1px solid #334155;background:#080d15;color:#e5e7eb}.puf-grid .wide{grid-column:1/-1}.puf-foot,.puf-dialog footer{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}.puf-checks p{padding:12px;border-radius:8px;background:#0a1019}.puf-checks .ok{color:#6ee7b7}.puf-checks .warn{color:#fcd34d}.puf-note{padding:11px;border-left:3px solid #3b82f6;background:#111c2f;color:#a9b7ca;font-size:12px}.puf-result{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:15px 0}.puf-result>div{border:1px solid #263142;background:#0a1019;border-radius:9px;padding:13px}.puf-result b{display:block;margin-top:6px;font-size:18px}.puf-success{text-align:center;padding:35px}.puf-modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);display:flex;justify-content:flex-end}.puf-dialog{width:min(600px,95vw);height:100%;overflow:auto;background:#0e1521;border-left:1px solid #334155;padding:20px;box-sizing:border-box}.puf-dialog.wide{width:min(980px,95vw)}.puf-dialog header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}.puf-dialog header h2{margin:0;color:#fff}.puf-dialog header p{color:#8b98aa}.puf-dialog header>button{border:0;background:transparent;color:#9ca3af;font-size:26px;cursor:pointer}@media(max-width:900px){.puf-nav{width:170px}.puf-cards{grid-template-columns:repeat(2,1fr)}.puf-grid{grid-template-columns:1fr}.puf-main{padding:15px}.puf-steps span{display:none}}
+
+/* Calculated payroll rows in Audit History open the period record. */
+.puf-audit-open { cursor: pointer; }
+.puf-audit-open:hover { background: #111; }
+.puf-audit-open .puf-link { font-weight: 700; }
+
+/* Export menu on Payroll Overview. */
+.puf-export { position: relative; }
+.puf-export-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 60;
+  min-width: 172px;
+  padding: 6px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: #0e1521;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .55);
+}
+.puf-export-menu button {
+  display: block;
+  width: 100%;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #d1d5db;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+.puf-export-menu button:hover { background: #172554; color: #93c5fd; }
+
+/* "Change Payroll" picker in the Current payroll period strip. */
+.puf-period-actions { display: flex; align-items: center; gap: 12px; }
+.puf-schedule-picker { position: relative; }
+.puf-schedule-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 60;
+  width: 288px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: #0e1521;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .55);
+}
+.puf-schedule-menu .puf-schedule-title {
+  margin: 4px 8px 6px;
+  color: #7f8da3;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.puf-schedule-menu button {
+  display: block;
+  width: 100%;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #d1d5db;
+  text-align: left;
+  cursor: pointer;
+}
+.puf-schedule-menu button:hover { background: #172554; }
+.puf-schedule-menu button b { display: block; font-size: 12px; font-weight: 700; }
+.puf-schedule-menu button small {
+  display: block;
+  margin-top: 3px;
+  color: #7f8da3;
+  font-size: 10px;
+}
+.puf-schedule-menu button.is-active { background: #172554; color: #93c5fd; }
+.puf-schedule-menu button.is-active b::after { content: " ✓"; color: #60a5fa; }
+.puf-schedule-empty { margin: 6px 9px 8px; color: #8290a3; font-size: 11px; }
+@media (max-width: 900px) {
+  .puf-period { flex-wrap: wrap; gap: 12px; }
+  .puf-schedule-menu { width: 240px; }
+}

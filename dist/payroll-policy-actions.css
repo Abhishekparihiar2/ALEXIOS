@@ -17,3 +17,28 @@
   background: rgba(37, 99, 235, .35);
   color: #bfdbfe;
 }
+
+/* Delete sits alongside View / Edit on both seeded and custom policy rows.
+   Compound selectors so the destructive colour beats the shared button rule. */
+.pay-policy-legacy-actions button.pay-policy-delete,
+.pay-policy-custom-row button.pay-policy-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 7px;
+  border-radius: 7px;
+  background: rgba(220, 38, 38, .16);
+  color: #f87171;
+}
+
+.pay-policy-legacy-actions button.pay-policy-delete:hover,
+.pay-policy-custom-row button.pay-policy-delete:hover {
+  background: rgba(220, 38, 38, .32);
+  color: #fecaca;
+}
+
+.pay-policy-delete svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
