@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <div style="max-width: 800px; margin: 40px auto; padding: 0 24px; display: flex; flex-direction: column; gap: 32px;">
+            <div id="cp-form-wrap" style="max-width: 800px; margin: 40px auto; padding: 24px; background: #000000; border: 1px solid #262626; border-radius: 12px; display: flex; flex-direction: column; gap: 32px;">
                 
                 <!-- 1. Basic Information -->
                 <div style="background: #111111; border: 1px solid #262626; border-radius: 12px; padding: 24px;">
@@ -109,9 +109,23 @@
                     <div id="cp-method-barcode" style="display: none; padding: 20px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px;">
                         <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Barcode Value <span style="color: #ef4444;">*</span></label>
                         <div style="display: flex; gap: 12px;">
-                            <input type="text" placeholder="Enter alphanumeric code to generate" style="flex: 1; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;" />
+                            <input id="cp-barcode-value" type="text" placeholder="Enter alphanumeric code to generate" style="flex: 1; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;" />
                             <button style="padding: 10px 16px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; background: #334155; color: white; cursor: pointer;">Generate & Download</button>
                         </div>
+                        <!-- OR separator -->
+                        <div style="display: flex; align-items: center; gap: 12px; margin: 18px 0;">
+                            <div style="flex: 1; height: 1px; background: #262626;"></div>
+                            <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #64748b;">OR</span>
+                            <div style="flex: 1; height: 1px; background: #262626;"></div>
+                        </div>
+
+                        <!-- Update value from an already-printed barcode -->
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Use Existing Barcode</label>
+                        <div style="display: flex; gap: 12px;">
+                            <input id="cp-barcode-existing" type="text" placeholder="Scan or type the value on the existing barcode" style="flex: 1; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;" />
+                            <button id="cp-barcode-update" type="button" style="padding: 10px 16px; border: 1px solid #334155; border-radius: 8px; font-size: 13px; font-weight: 600; background: transparent; color: white; cursor: pointer;">Update Value</button>
+                        </div>
+                        <p style="margin: 6px 0 0; font-size: 12px; color: #94a3b8;">Use this when the checkpoint already has a printed barcode &mdash; capture its value instead of generating a new one.</p>
                     </div>
 
                     <!-- Dynamic GPS Setup -->
@@ -294,6 +308,25 @@
                 setTimeout(() => notice.remove(), 300);
             }, 3000);
         };
+
+        // Barcode: update the value from an already-printed barcode
+        const barcodeGenerate = page.querySelector("#cp-barcode-value");
+        const barcodeExisting = page.querySelector("#cp-barcode-existing");
+        const barcodeUpdate = page.querySelector("#cp-barcode-update");
+        barcodeUpdate.addEventListener("click", () => {
+            const value = barcodeExisting.value.trim();
+            if (!value) {
+                barcodeExisting.style.borderColor = "#ef4444";
+                barcodeExisting.focus();
+                return;
+            }
+            barcodeExisting.style.borderColor = "#262626";
+            barcodeGenerate.value = value;
+            showToast("Barcode value updated to " + value + ".");
+        });
+        barcodeExisting.addEventListener("input", () => {
+            barcodeExisting.style.borderColor = "#262626";
+        });
 
         // Close Logic
         const close = () => {

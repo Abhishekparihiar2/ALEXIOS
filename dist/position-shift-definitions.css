@@ -1,0 +1,149 @@
+/* Create Position / Job Type -> Service & Scheduling: custom shift definitions. */
+
+.psd-block {
+    margin-top: 4px;
+}
+
+.psd-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.psd-title {
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.psd-count {
+    padding: 1px 7px;
+    border: 1px solid #1e3a5f;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, .16);
+    color: #93c5fd;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.psd-add {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: 1px solid #334155;
+    border-radius: 9px;
+    background: transparent;
+    color: #93c5fd;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.psd-add:hover {
+    border-color: #2563eb;
+    background: rgba(37, 99, 235, .12);
+}
+
+.psd-add svg {
+    flex: none;
+}
+
+.psd-table {
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    background: rgba(2, 6, 23, .5);
+    overflow: hidden;
+}
+
+/* Shift name | duration | start | end | remove */
+.psd-cols,
+.psd-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, .9fr) minmax(0, 1fr) minmax(0, 1fr) 30px;
+    gap: 8px;
+    align-items: center;
+}
+
+.psd-cols {
+    padding: 9px 10px 7px;
+    border-bottom: 1px solid #1e293b;
+}
+
+.psd-cols span {
+    color: #64748b;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.psd-row {
+    padding: 8px 10px;
+}
+
+.psd-row + .psd-row {
+    border-top: 1px solid rgba(30, 41, 59, .7);
+}
+
+/* Tighter than the form's other inputs so five columns still fit. */
+.psd-row input {
+    width: 100%;
+    min-width: 0;
+    padding: 7px 9px;
+    border: 1px solid #334155;
+    border-radius: 9px;
+    outline: none;
+    background: #111111;
+    color: #f1f5f9;
+    font-size: 12px;
+    font-family: inherit;
+}
+
+.psd-row input:focus {
+    border-color: #3b82f6;
+}
+
+.psd-row input::placeholder {
+    color: #475569;
+}
+
+.psd-row input.is-bad {
+    border-color: #ef4444;
+}
+
+.psd-del {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.psd-del:hover {
+    background: rgba(239, 68, 68, .12);
+    color: #f87171;
+}
+
+.psd-empty {
+    padding: 16px 12px;
+    color: #64748b;
+    font-size: 11px;
+    line-height: 1.55;
+    text-align: center;
+}
+
+.psd-hint {
+    margin: 7px 0 0;
+    color: #64748b;
+    font-size: 11px;
+    line-height: 1.5;
+}

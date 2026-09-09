@@ -1,0 +1,36 @@
+/* Create Position / Job Type -> extra Requirements checkboxes. */
+
+.prf-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    background: #111111;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+}
+
+.prf-check:hover {
+    border-color: #475569;
+}
+
+.prf-check.is-on {
+    border-color: #2563eb;
+    background: rgba(37, 99, 235, .1);
+}
+
+.prf-check input {
+    width: 15px;
+    height: 15px;
+    flex: none;
+    accent-color: #2563eb;
+    cursor: pointer;
+}
+
+.prf-check span {
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+}

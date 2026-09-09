@@ -1,0 +1,382 @@
+/* Security Team page -> Tickets quadrant beside Team Activity. */
+
+/* Row 1: Team Activity | Tickets. Row 2: Shift Summary, full width.
+   Ordering is done with CSS so React's own nodes are never moved. */
+.stq-grid {
+    align-items: stretch;
+}
+
+#stq-panel {
+    order: 1;
+    min-height: 300px;
+}
+
+.stq-shift {
+    order: 2;
+    grid-column: 1 / -1;
+}
+
+/* ---- tabs ---- */
+
+.stq-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+    padding: 3px;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    background: rgba(2, 6, 23, .5);
+}
+
+.stq-tab {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+}
+
+.stq-tab:hover {
+    color: #e2e8f0;
+}
+
+.stq-tab.is-on {
+    background: rgba(37, 99, 235, .16);
+    color: #93c5fd;
+}
+
+.stq-tab b {
+    padding: 0 5px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, .18);
+    color: inherit;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* ---- ticket table ---- */
+
+.stq-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.stq-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stq-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 0 8px 7px;
+    border-bottom: 1px solid #1e293b;
+    background: #000000;
+    color: #64748b;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.stq-table td {
+    padding: 9px 8px;
+    border-bottom: 1px solid rgba(30, 41, 59, .7);
+    color: #cbd5e1;
+    font-size: 11px;
+    vertical-align: middle;
+}
+
+.stq-row {
+    cursor: pointer;
+}
+
+.stq-row:hover td {
+    background: rgba(30, 41, 59, .45);
+}
+
+.stq-type {
+    color: #e2e8f0;
+    font-weight: 700;
+}
+
+.stq-subject {
+    display: block;
+    max-width: 210px;
+    overflow: hidden;
+    color: #94a3b8;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stq-client {
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+.stq-sla {
+    color: #94a3b8;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.stq-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .03em;
+    white-space: nowrap;
+}
+
+.stq-p-critical {
+    border: 1px solid #7f1d1d;
+    background: rgba(239, 68, 68, .14);
+    color: #fca5a5;
+}
+
+.stq-p-high {
+    border: 1px solid #78350f;
+    background: rgba(245, 158, 11, .14);
+    color: #fbbf24;
+}
+
+.stq-p-medium {
+    border: 1px solid #1e3a5f;
+    background: rgba(37, 99, 235, .14);
+    color: #93c5fd;
+}
+
+.stq-p-low {
+    border: 1px solid #334155;
+    background: rgba(51, 65, 85, .4);
+    color: #94a3b8;
+}
+
+.stq-empty {
+    padding: 26px 12px;
+    color: #64748b;
+    font-size: 11px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* ---- detail modal ---- */
+
+.stq-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, .8);
+    backdrop-filter: blur(4px);
+}
+
+.stq-dialog {
+    width: min(460px, 100%);
+    max-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, .96);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, .7);
+}
+
+.stq-dialog-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    border-bottom: 1px solid #1e293b;
+    background: rgba(15, 23, 42, .5);
+}
+
+.stq-dialog-head h3 {
+    margin: 0;
+    color: #f1f5f9;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.stq-x {
+    padding: 4px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #94a3b8;
+    line-height: 0;
+    cursor: pointer;
+}
+
+.stq-x:hover {
+    background: #334155;
+    color: #e2e8f0;
+}
+
+.stq-dialog-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 22px;
+}
+
+.stq-k {
+    display: block;
+    margin-bottom: 4px;
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.stq-v {
+    display: block;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.stq-v-strong {
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+.stq-pairs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.stq-resolved {
+    margin-top: 20px;
+    padding: 12px 14px;
+    border: 1px solid #14532d;
+    border-radius: 10px;
+    background: rgba(34, 197, 94, .1);
+    color: #4ade80;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stq-dialog-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 14px 22px;
+    border-top: 1px solid #1e293b;
+}
+
+/* ---- assigned employee + shift ---- */
+
+.stq-emp {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #1e293b;
+}
+
+.stq-emp-row {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-top: 8px;
+    padding: 11px 12px;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    background: rgba(2, 6, 23, .5);
+}
+
+.stq-emp-avatar {
+    width: 34px;
+    height: 34px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(37, 99, 235, .18);
+    color: #93c5fd;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.stq-emp-avatar.is-system {
+    background: rgba(148, 163, 184, .14);
+    color: #94a3b8;
+    font-size: 9px;
+}
+
+.stq-emp-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.stq-emp-name {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.stq-emp-badge {
+    padding: 1px 7px;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    color: #94a3b8;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+.stq-emp-meta {
+    display: block;
+    margin-top: 3px;
+    overflow: hidden;
+    color: #64748b;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stq-emp-pairs {
+    margin-top: 14px;
+}
+
+.stq-emp-hours {
+    margin-left: 7px;
+    padding: 1px 7px;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.stq-v-muted {
+    color: #475569;
+}

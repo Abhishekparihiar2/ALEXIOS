@@ -1,0 +1,208 @@
+/* Clients & Sites view -> Checklists subsection (Clock In / Clock Out). */
+
+/* While Checklists is open, hide the app's own panel content rather than
+   replacing it, so React can re-render underneath without a fight. */
+.csc-active > *:not(#csc-panel) {
+    display: none !important;
+}
+
+/* Keep the app's nav from also looking selected. */
+.csc-nav-active > button:not(#csc-nav-btn) {
+    background: transparent !important;
+    color: #94a3b8 !important;
+}
+
+.csc-rows {
+    margin: -6px 0;
+}
+
+.csc-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 2px;
+    border-bottom: 1px solid #1e293b;
+}
+
+.csc-row:last-child {
+    border-bottom: none;
+}
+
+.csc-name {
+    flex: 1;
+    min-width: 0;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.csc-row.is-off .csc-name {
+    color: #64748b;
+}
+
+/* ---- toggle ---- */
+
+.csc-switch {
+    position: relative;
+    width: 38px;
+    height: 22px;
+    flex: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.csc-switch input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+.csc-track {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: #334155;
+    transition: background .18s ease;
+}
+
+.csc-track::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: transform .18s ease;
+}
+
+.csc-switch input:checked + .csc-track {
+    background: #2563eb;
+}
+
+.csc-switch input:checked + .csc-track::after {
+    transform: translateX(16px);
+}
+
+.csc-switch input:focus-visible + .csc-track {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .35);
+}
+
+/* ---- positions dropdown ---- */
+
+.csc-pos {
+    position: relative;
+    flex: none;
+}
+
+.csc-pos-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 168px;
+    padding: 8px 11px;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    background: #020617;
+    color: #e2e8f0;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.csc-pos-btn:hover:not(:disabled) {
+    border-color: #475569;
+}
+
+.csc-pos-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.csc-pos-btn svg {
+    margin-left: auto;
+    flex: none;
+    color: #64748b;
+}
+
+.csc-pos-btn .csc-warn {
+    color: #fbbf24;
+}
+
+.csc-pos-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 60;
+    width: 252px;
+    padding: 6px;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    background: #0f172a;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .55);
+}
+
+.csc-pos-actions {
+    display: flex;
+    gap: 12px;
+    padding: 6px 8px 8px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #1e293b;
+}
+
+.csc-link {
+    border: none;
+    background: transparent;
+    color: #60a5fa;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.csc-link:hover {
+    text-decoration: underline;
+}
+
+.csc-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.csc-opt:hover {
+    background: rgba(30, 41, 59, .6);
+}
+
+.csc-opt input {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    accent-color: #2563eb;
+    cursor: pointer;
+}
+
+.csc-opt-name {
+    flex: 1;
+    min-width: 0;
+    color: #e2e8f0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.csc-opt-uid {
+    flex: none;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.csc-hint {
+    margin: 14px 0 0;
+    color: #94a3b8;
+    font-size: 12px;
+}

@@ -1,0 +1,695 @@
+/* Clients & Sites view -> Site Assets subsection. */
+
+/* While Site Assets is open, hide the app's own panel content rather than
+   replacing it, so React can re-render underneath without a fight. */
+.sas-active > *:not(#sas-panel) {
+    display: none !important;
+}
+
+/* Keep the app's nav from also looking selected. */
+.sas-nav-active > button:not(#sas-nav-btn) {
+    background: transparent !important;
+    color: #94a3b8 !important;
+}
+
+/* ---- toolbar ---- */
+
+.sas-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sas-search {
+    flex: 1;
+    min-width: 200px;
+    padding: 9px 12px;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    outline: none;
+    background: #020617;
+    color: #e2e8f0;
+    font-size: 13px;
+}
+
+.sas-search:focus {
+    border-color: #2563eb;
+}
+
+.sas-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.sas-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, color .15s ease;
+}
+
+.sas-chip:hover {
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+.sas-chip.is-on {
+    border-color: #2563eb;
+    background: rgba(37, 99, 235, .14);
+    color: #93c5fd;
+}
+
+.sas-chip-n {
+    padding: 0 5px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, .16);
+    color: inherit;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* ---- buttons ---- */
+
+.sas-btn {
+    flex: none;
+    padding: 9px 14px;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    background: transparent;
+    color: #e2e8f0;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.sas-btn:hover {
+    border-color: #475569;
+    background: rgba(30, 41, 59, .6);
+}
+
+.sas-btn-primary {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.sas-btn-primary:hover {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+}
+
+.sas-btn-danger {
+    border-color: #dc2626;
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.sas-btn-danger:hover {
+    border-color: #b91c1c;
+    background: #b91c1c;
+}
+
+.sas-btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ---- group headings ---- */
+
+.sas-group-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.sas-group-n {
+    padding: 1px 8px;
+    border: 1px solid #1e3a5f;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, .16);
+    color: #93c5fd;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.sas-group + .sas-group {
+    margin-top: 22px;
+}
+
+/* ---- asset cards ---- */
+
+.sas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+    gap: 12px;
+}
+
+.sas-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    border-radius: 14px;
+    background: rgba(2, 6, 23, .5);
+}
+
+.sas-photo {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid #1e293b;
+    background: #020617;
+}
+
+.sas-photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    cursor: zoom-in;
+}
+
+.sas-photo-empty {
+    color: #334155;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.sas-photo-more {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .72);
+    color: #e2e8f0;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.sas-card-body {
+    flex: 1;
+    padding: 12px;
+}
+
+.sas-name {
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.sas-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    color: #64748b;
+    font-size: 10px;
+}
+
+.sas-ref {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #94a3b8;
+}
+
+.sas-desc {
+    margin: 9px 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #94a3b8;
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.sas-pill {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    white-space: nowrap;
+}
+
+.sas-pill-ok {
+    border: 1px solid #14532d;
+    background: rgba(34, 197, 94, .14);
+    color: #4ade80;
+}
+
+.sas-pill-warn {
+    border: 1px solid #78350f;
+    background: rgba(245, 158, 11, .14);
+    color: #fbbf24;
+}
+
+.sas-pill-bad {
+    border: 1px solid #7f1d1d;
+    background: rgba(239, 68, 68, .14);
+    color: #fca5a5;
+}
+
+.sas-card-foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    border-top: 1px solid #1e293b;
+}
+
+.sas-link {
+    border: none;
+    background: transparent;
+    color: #60a5fa;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sas-link:hover {
+    text-decoration: underline;
+}
+
+.sas-link-danger {
+    margin-left: auto;
+    color: #f87171;
+}
+
+.sas-qty {
+    margin-left: auto;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.sas-card-foot .sas-link-danger + .sas-qty {
+    margin-left: 0;
+}
+
+/* ---- empty state ---- */
+
+.sas-empty {
+    padding: 34px 20px;
+    border: 1px dashed #1e293b;
+    border-radius: 14px;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.sas-hint {
+    margin: 14px 0 0;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+/* ---- dialog ---- */
+
+.sas-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, .8);
+    backdrop-filter: blur(4px);
+}
+
+.sas-dialog {
+    width: min(620px, 100%);
+    max-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    background: #0b1220;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, .65);
+    color: #e2e8f0;
+}
+
+.sas-dialog-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #1e293b;
+}
+
+.sas-dialog-head h3 {
+    flex: 1;
+    margin: 0;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.sas-dialog-close {
+    flex: none;
+    padding: 6px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: #94a3b8;
+    line-height: 0;
+    cursor: pointer;
+}
+
+.sas-dialog-close:hover {
+    background: rgba(30, 41, 59, .7);
+    color: #e2e8f0;
+}
+
+.sas-dialog-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 18px 20px;
+}
+
+.sas-dialog-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    padding: 14px 20px;
+    border-top: 1px solid #1e293b;
+}
+
+.sas-dialog-note {
+    margin-right: auto;
+    color: #64748b;
+    font-size: 11px;
+}
+
+/* ---- form ---- */
+
+.sas-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.sas-row + .sas-row,
+.sas-field + .sas-row,
+.sas-row + .sas-field,
+.sas-field + .sas-field {
+    margin-top: 14px;
+}
+
+.sas-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.sas-req {
+    color: #ef4444;
+}
+
+.sas-input,
+.sas-select,
+.sas-textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    outline: none;
+    background: #020617;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-family: inherit;
+}
+
+.sas-textarea {
+    min-height: 84px;
+    resize: vertical;
+    line-height: 1.55;
+}
+
+.sas-input:focus,
+.sas-select:focus,
+.sas-textarea:focus {
+    border-color: #2563eb;
+}
+
+.sas-input.is-bad {
+    border-color: #ef4444;
+}
+
+/* ---- photo picker ---- */
+
+.sas-drop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px dashed #334155;
+    border-radius: 12px;
+    background: rgba(2, 6, 23, .5);
+}
+
+.sas-drop-text {
+    flex: 1;
+    color: #64748b;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.sas-thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.sas-thumb {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    background: #020617;
+}
+
+.sas-thumb img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.sas-thumb button {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .74);
+    color: #fca5a5;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.sas-thumb button:hover {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.sas-warn {
+    margin: 10px 0 0;
+    padding: 9px 11px;
+    border: 1px solid #78350f;
+    border-radius: 10px;
+    background: rgba(245, 158, 11, .1);
+    color: #fbbf24;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* ---- lightbox ---- */
+
+.sas-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10090;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    background: rgba(0, 0, 0, .88);
+    cursor: zoom-out;
+}
+
+.sas-lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border: 1px solid #334155;
+    border-radius: 12px;
+}
+
+/* ---- view mode ---- */
+
+.sas-name-btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sas-name-btn:hover {
+    color: #93c5fd;
+    text-decoration: underline;
+}
+
+.sas-view-cat {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 9px;
+    border: 1px solid #1e3a5f;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, .14);
+    color: #93c5fd;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.sas-view-hero {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    background: #020617;
+}
+
+.sas-view-hero img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    cursor: zoom-in;
+}
+
+.sas-view-thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.sas-view-thumb {
+    width: 62px;
+    height: 62px;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #334155;
+    border-radius: 9px;
+    background: #020617;
+    cursor: pointer;
+}
+
+.sas-view-thumb.is-on {
+    border-color: #2563eb;
+}
+
+.sas-view-thumb img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.sas-dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #1e293b;
+}
+
+.sas-dl-k {
+    display: block;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.sas-dl-v {
+    display: block;
+    margin-top: 4px;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.sas-dl-v.is-empty {
+    color: #475569;
+    font-weight: 500;
+}
+
+.sas-view-desc {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #1e293b;
+}
+
+.sas-view-desc p {
+    margin: 6px 0 0;
+    color: #cbd5e1;
+    font-size: 13px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+}
