@@ -1,0 +1,27 @@
+/* Employee detail -> Overview: lift the stats tiles directly under the name card.
+   Ordering is done with CSS so React's own nodes are never moved. */
+
+.eos-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    /* The wrapper's space-y-6 puts margin on all but the DOM-last child, so
+       reordering leaves the moved block with no gap below it. Drive the spacing
+       from the container instead, which holds whatever the visual order is. */
+    row-gap: 1.5rem !important;
+}
+
+/* Margins cleared so only row-gap spaces the blocks; everything keeps its
+   existing sequence behind the two we place explicitly. */
+.eos-wrap > * {
+    order: 3;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.eos-wrap > .eos-name {
+    order: 1;
+}
+
+.eos-wrap > .eos-stats {
+    order: 2;
+}
