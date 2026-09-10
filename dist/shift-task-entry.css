@@ -1,0 +1,180 @@
+/* Tasks & Dispatch -> Shift Task row and its shift detail view. */
+
+/* While the shift task view is open, hide the module's own content rather than
+   replacing it, so React can re-render underneath without a fight. */
+.ste-host > *:not(#ste-page) {
+    display: none !important;
+}
+
+/* ---- shift header inside the details card ---- */
+
+.ste-site {
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(30, 41, 59, .7);
+}
+
+.ste-site-name {
+    display: block;
+    color: #f1f5f9;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.ste-site-sub {
+    display: block;
+    margin-top: 3px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+/* ---- attachment ---- */
+
+.ste-file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 12px 14px;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    background: rgba(2, 6, 23, .5);
+}
+
+.ste-file-icon {
+    width: 34px;
+    height: 34px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: rgba(37, 99, 235, .14);
+    color: #93c5fd;
+}
+
+.ste-file-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.ste-file-name {
+    display: block;
+    overflow: hidden;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ste-file-meta {
+    display: block;
+    margin-top: 2px;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.ste-file-btn {
+    flex: none;
+    padding: 8px;
+    border: 1px solid #334155;
+    border-radius: 9px;
+    background: transparent;
+    color: #94a3b8;
+    line-height: 0;
+    cursor: pointer;
+}
+
+.ste-file-btn:hover {
+    border-color: #2563eb;
+    color: #93c5fd;
+}
+
+.ste-file-note {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 11px;
+}
+
+/* ---- shift task checklist ---- */
+
+.ste-tasks {
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    background: rgba(2, 6, 23, .45);
+    overflow: hidden;
+}
+
+.ste-task {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 14px;
+    cursor: pointer;
+}
+
+.ste-task + .ste-task {
+    border-top: 1px solid rgba(30, 41, 59, .7);
+}
+
+.ste-task:hover {
+    background: rgba(30, 41, 59, .35);
+}
+
+.ste-task input {
+    width: 17px;
+    height: 17px;
+    flex: none;
+    accent-color: #2563eb;
+    cursor: pointer;
+}
+
+.ste-task-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.ste-task-name {
+    display: block;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ste-task-sub {
+    display: block;
+    margin-top: 2px;
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+.ste-task.is-done .ste-task-name {
+    color: #64748b;
+    text-decoration: line-through;
+}
+
+.ste-task.is-done .ste-task-sub {
+    color: #475569;
+}
+
+.ste-task-time {
+    flex: none;
+    color: #64748b;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+}
+
+.ste-remaining {
+    margin: 14px 0 0;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.ste-site-duty {
+    display: block;
+    margin-top: 9px;
+}
