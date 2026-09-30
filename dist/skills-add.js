@@ -40,7 +40,7 @@
                 <input id="skill-add-name" type="text" placeholder="e.g., CPR Certification" style="width: 100%; padding: 10px 12px; margin-bottom: 14px; border: 1px solid #262626; border-radius: 9px; outline: none; background: #000000; color: #e2e8f0; font-size: 13px;" />
                 
                 <label style="display: block; margin-bottom: 7px; font-size: 12px; font-weight: 700;">Category <span style="color: #ef4444;">*</span></label>
-                <select id="skill-add-category" style="width: 100%; padding: 10px 12px; margin-bottom: 14px; border: 1px solid #262626; border-radius: 9px; outline: none; background: #000000; color: #e2e8f0; font-size: 13px;">
+                <select id="skill-add-category" style="width: 100%; padding: 10px 12px; margin-bottom: 4px; border: 1px solid #262626; border-radius: 9px; outline: none; background: #000000; color: #e2e8f0; font-size: 13px;">
                     <option value="" disabled selected>Select a category...</option>
                     <option value="Licenses & Permits">Licenses & Permits</option>
                     <option value="Training & Certifications">Training & Certifications</option>
@@ -48,6 +48,13 @@
                     <option value="Diplomas">Diplomas</option>
                     <option value="Other">Other</option>
                 </select>
+                <div style="margin-bottom: 14px; text-align: right;">
+                    <button id="skill-add-custom-category-btn" type="button" style="background: transparent; border: none; color: #3b82f6; font-size: 12px; cursor: pointer; padding: 0;">+ Add Custom Category</button>
+                </div>
+                <div id="skill-add-custom-category-container" style="display: none; gap: 8px; margin-bottom: 14px;">
+                    <input id="skill-add-custom-category-input" type="text" placeholder="Enter custom category..." style="flex: 1; padding: 8px 12px; border: 1px solid #262626; border-radius: 9px; outline: none; background: #000000; color: #e2e8f0; font-size: 13px;" />
+                    <button id="skill-add-custom-category-submit" type="button" style="padding: 8px 12px; border: none; border-radius: 9px; font-size: 12px; font-weight: 700; background: #3b82f6; color: white; cursor: pointer;">Add</button>
+                </div>
 
                 <label style="display: block; margin-bottom: 7px; font-size: 12px; font-weight: 700;">Description</label>
                 <textarea id="skill-add-description" rows="2" placeholder="Brief description of the qualification..." style="width: 100%; padding: 10px 12px; margin-bottom: 14px; border: 1px solid #262626; border-radius: 9px; outline: none; background: #000000; color: #e2e8f0; font-size: 13px; resize: vertical;"></textarea>
@@ -83,15 +90,6 @@
                 </div>
             </div>
 
-            <!-- 14.4.3 Document Requirements -->
-            <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #262626;">
-                <h4 style="margin: 0 0 12px; color: white; font-size: 14px; font-weight: 700;">Requirements</h4>
-                
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 14px;">
-                    <input id="skill-add-req-doc" type="checkbox" style="width: 16px; height: 16px; accent-color: #2563eb;" />
-                    <span style="font-size: 13px; font-weight: 600;">Require Supporting Document on Assignment</span>
-                </label>
-            </div>
 
             <!-- Initial Assignment (Optional) -->
             <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #262626;">
@@ -197,6 +195,33 @@
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
 
+        // Custom Category Logic
+        const customCatBtn = document.getElementById("skill-add-custom-category-btn");
+        const customCatContainer = document.getElementById("skill-add-custom-category-container");
+        const customCatInput = document.getElementById("skill-add-custom-category-input");
+        const customCatSubmit = document.getElementById("skill-add-custom-category-submit");
+        const categorySelect = document.getElementById("skill-add-category");
+
+        customCatBtn.addEventListener("click", () => {
+            customCatContainer.style.display = "flex";
+            customCatBtn.style.display = "none";
+            customCatInput.focus();
+        });
+
+        customCatSubmit.addEventListener("click", () => {
+            const val = customCatInput.value.trim();
+            if (val) {
+                const opt = document.createElement("option");
+                opt.value = val;
+                opt.textContent = val;
+                categorySelect.insertBefore(opt, categorySelect.lastElementChild);
+                categorySelect.value = val;
+                customCatInput.value = "";
+                customCatContainer.style.display = "none";
+                customCatBtn.style.display = "inline-block";
+            }
+        });
+
         // Toggle logic for expiration fields
         const expiresCheckbox = document.getElementById("skill-add-expires");
         const expirationFields = document.getElementById("skill-add-expiration-fields");
@@ -216,7 +241,6 @@
         const assignRadios = document.querySelectorAll("input[name='skill-add-assign']");
         const assignEmployeeDiv = document.getElementById("skill-add-assign-employee");
         const assignPositionDiv = document.getElementById("skill-add-assign-position");
-        const reqDocCheckbox = document.getElementById("skill-add-req-doc");
         const empDocWrapper = document.getElementById("skill-add-assign-emp-doc-wrapper");
 
         const updateAssignmentVisibility = () => {
@@ -224,12 +248,11 @@
             assignEmployeeDiv.style.display = selected === "employee" ? "block" : "none";
             assignPositionDiv.style.display = selected === "position" ? "block" : "none";
             
-            // Show upload wrapper only if employee is selected AND doc is required
-            empDocWrapper.style.display = (selected === "employee" && reqDocCheckbox.checked) ? "block" : "none";
+            // Show upload wrapper only if employee is selected
+            empDocWrapper.style.display = selected === "employee" ? "block" : "none";
         };
 
         assignRadios.forEach(radio => radio.addEventListener("change", updateAssignmentVisibility));
-        reqDocCheckbox.addEventListener("change", updateAssignmentVisibility);
         
         // Run once on load to set initial state
         updateDatesVisibility();
@@ -320,15 +343,20 @@
     };
 
     const enhance = () => {
-        // Find buttons containing "Add New" or "Add Skill"
+        // Find buttons containing "Add New" or "Add Skill" but NOT "Document"
         const addButtons = [...document.querySelectorAll("button")].filter(btn =>
-            visible(btn) && (btn.textContent.includes("Add New") || btn.textContent.includes("Add Skill") || btn.textContent.includes("Add Certification")) && !btn.dataset.skillAddWired
+            visible(btn) && 
+            (btn.textContent.includes("Add New") || btn.textContent.includes("Add Skill") || btn.textContent.includes("Add Certification")) && 
+            !btn.textContent.includes("Document") &&
+            !btn.dataset.skillAddWired
         );
 
         addButtons.forEach(btn => {
             // Only attach if we are likely on the Skills page. 
-            // We can check the DOM for "Total Skills" or "SKILL / CERTIFICATION"
-            if (!document.body.textContent.includes("Total Skills") && !document.body.textContent.includes("SKILL / CERTIFICATION") && !document.body.textContent.includes("Skills & Certifications")) {
+            const isDocsPage = document.body.textContent.includes("All Documents") && document.body.textContent.includes("DOCUMENTS & POLICIES");
+            if (isDocsPage) return; // Prevent triggering on Documents page
+            
+            if (!document.body.textContent.includes("Total Skills") && !document.body.textContent.includes("SKILL / CERTIFICATION")) {
                 return;
             }
 

@@ -10,3 +10,4 @@ $content = $content -replace 'bg-white border-slate-200 text-slate-600 hover:bg-
 
 [System.IO.File]::WriteAllText($filePath, $content)
 Write-Host "Replaced classes"
+

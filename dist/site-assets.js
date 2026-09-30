@@ -175,39 +175,37 @@
         return hay.indexOf(search.toLowerCase()) !== -1;
     };
 
-    var cardHtml = function (asset) {
+    var rowHtml = function (asset) {
         var photo = asset.photos && asset.photos.length
             ? '<img alt="' + esc(asset.name) + '" src="' + asset.photos[0] +
-              '" data-photo="' + esc(asset.id) + '" />' +
-              (asset.photos.length > 1
-                  ? '<span class="sas-photo-more">+' + (asset.photos.length - 1) + '</span>'
-                  : '')
-            : '<span class="sas-photo-empty">No photo</span>';
+              '" data-photo="' + esc(asset.id) + '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;cursor:pointer;" />'
+            : '<span class="sas-photo-empty" style="font-size:10px;padding:4px;">No photo</span>';
 
-        return '<div class="sas-card">' +
-            '<div class="sas-photo">' + photo + '</div>' +
-            '<div class="sas-card-body">' +
-            '<button type="button" class="sas-name sas-name-btn" data-view="' + esc(asset.id) +
-            '" title="View all details">' + esc(asset.name) + '</button>' +
-            '<div class="sas-meta">' +
-            (asset.ref ? '<span class="sas-ref">' + esc(asset.ref) + '</span>' : '') +
-            (asset.location ? '<span>' + esc(asset.location) + '</span>' : '') +
-            '<span class="' + conditionClass(asset.condition) + '">' + esc(asset.condition) + '</span>' +
-            '</div>' +
-            (asset.description ? '<p class="sas-desc">' + esc(asset.description) + '</p>' : '') +
-            '</div>' +
-            '<div class="sas-card-foot">' +
-            '<button type="button" class="sas-link" data-edit="' + esc(asset.id) + '">Edit</button>' +
-            '<button type="button" class="sas-link sas-link-danger" data-remove="' + esc(asset.id) + '">Remove</button>' +
-            (Number(asset.qty) > 1 ? '<span class="sas-qty">Qty ' + esc(asset.qty) + '</span>' : '') +
-            '</div>' +
-            '</div>';
+        return '<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">' +
+            '<td class="px-4 py-3 whitespace-nowrap">' + photo + '</td>' +
+            '<td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-700 dark:text-slate-300">' + esc(asset.category) + '</td>' +
+            '<td class="px-4 py-3">' +
+            '<button type="button" class="sas-name-btn font-semibold text-blue-600 hover:underline dark:text-blue-400 text-left" data-view="' + esc(asset.id) + '">' + esc(asset.name) + '</button>' +
+            (asset.description ? '<div class="text-xs text-slate-500 dark:text-slate-400 truncate max-w-xs mt-1" title="' + esc(asset.description) + '">' + esc(asset.description) + '</div>' : '') +
+            '</td>' +
+            '<td class="px-4 py-3 whitespace-nowrap text-sm text-slate-700 dark:text-slate-300">' + (asset.ref ? esc(asset.ref) : '<span class="text-slate-400">-</span>') + '</td>' +
+            '<td class="px-4 py-3 whitespace-nowrap text-sm text-slate-700 dark:text-slate-300">' + (asset.location ? esc(asset.location) : '<span class="text-slate-400">-</span>') + '</td>' +
+            '<td class="px-4 py-3 whitespace-nowrap"><span class="' + conditionClass(asset.condition) + '">' + esc(asset.condition) + '</span></td>' +
+            '<td class="px-4 py-3 whitespace-nowrap text-sm text-slate-700 dark:text-slate-300">' + esc(asset.qty) + '</td>' +
+            '<td class="px-4 py-3 whitespace-nowrap text-sm text-right flex items-center justify-end gap-1">' +
+            '<button type="button" title="Edit Asset" class="inline-flex items-center justify-center w-8 h-8 rounded-full text-blue-600 hover:bg-blue-100 hover:text-blue-800 dark:text-blue-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300 transition-colors" data-edit="' + esc(asset.id) + '">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' +
+            '</button>' +
+            '<button type="button" title="Remove Asset" class="inline-flex items-center justify-center w-8 h-8 rounded-full text-red-600 hover:bg-red-100 hover:text-red-800 dark:text-red-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 transition-colors" data-remove="' + esc(asset.id) + '">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>' +
+            '</button>' +
+            '</td>' +
+            '</tr>';
     };
 
     // Listing only, so a keystroke in the search box never replaces the input
     // itself (which would drop the caret position mid-word).
     var listHtml = function (rec) {
-        var cats = categoriesFor(rec);
         var shown = rec.assets.filter(matches);
 
         if (!shown.length) {
@@ -218,16 +216,23 @@
                 '</div>';
         }
 
-        return cats.filter(function (c) {
-            return shown.some(function (a) { return a.category === c; });
-        }).map(function (c) {
-            var inGroup = shown.filter(function (a) { return a.category === c; });
-            return '<div class="sas-group">' +
-                '<div class="sas-group-head">' + esc(c) +
-                '<span class="sas-group-n">' + inGroup.length + '</span></div>' +
-                '<div class="sas-grid">' + inGroup.map(cardHtml).join('') + '</div>' +
-                '</div>';
-        }).join('');
+        return '<div class="sas-group mb-8">' +
+            '<div class="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-[#0a0a0a] shadow-sm">' +
+            '<table class="w-full text-left border-collapse">' +
+            '<thead><tr class="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">' +
+            '<th class="px-4 py-3 font-medium">Photo</th>' +
+            '<th class="px-4 py-3 font-medium">Type</th>' +
+            '<th class="px-4 py-3 font-medium">Asset Name</th>' +
+            '<th class="px-4 py-3 font-medium">ID / Serial</th>' +
+            '<th class="px-4 py-3 font-medium">Location</th>' +
+            '<th class="px-4 py-3 font-medium">Condition</th>' +
+            '<th class="px-4 py-3 font-medium">Qty</th>' +
+            '<th class="px-4 py-3 font-medium text-right">Actions</th>' +
+            '</tr></thead>' +
+            '<tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">' +
+            shown.map(rowHtml).join('') +
+            '</tbody></table></div>' +
+            '</div>';
     };
 
     var panelHtml = function (rec) {

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     // State for recurrence
@@ -12,11 +12,17 @@
         if (!assignTaskContainer || assignTaskContainer.hasAttribute('data-recurrence-injected')) return;
         assignTaskContainer.setAttribute('data-recurrence-injected', 'true');
 
+        // Prevent duplicate instances if React rerendered the parent container
+        const existing = document.getElementById('alexios-recurrence-section');
+        if (existing) {
+            existing.remove();
+        }
+
         // Create the recurrence section wrapper
         const recurrenceSection = document.createElement('div');
         recurrenceSection.className = 'space-y-4 pt-6 border-t border-slate-200/60 dark:border-slate-800/60';
         recurrenceSection.id = 'alexios-recurrence-section';
-        
+
         // Initial render
         renderRecurrenceUI(recurrenceSection);
 
@@ -25,6 +31,7 @@
     }
 
     function renderRecurrenceUI(container) {
+        const isReportPage = document.body.textContent.toLowerCase().includes('create report');
         container.innerHTML = `
             <h3 class="text-sm font-bold text-[#1e3a6e] uppercase tracking-wider mb-2">Recurrence Configuration</h3>
             
@@ -58,25 +65,25 @@
                 ${getAdvancedOptionsHTML()}
             </div>
             
+            ${isReportPage ? `
             <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50">
-                <label class="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">
-                    Ends
-                </label>
-                <div class="flex items-center gap-4">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="recurrence_end" value="Never" ${recurrenceEnd === 'Never' ? 'checked' : ''} class="w-4 h-4 text-blue-600" />
-                        <span class="text-sm text-slate-600 dark:text-slate-400">Never</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="recurrence_end" value="On Date" ${recurrenceEnd === 'On Date' ? 'checked' : ''} class="w-4 h-4 text-blue-600" />
-                        <span class="text-sm text-slate-600 dark:text-slate-400">On Date</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="recurrence_end" value="After Occurrences" ${recurrenceEnd === 'After Occurrences' ? 'checked' : ''} class="w-4 h-4 text-blue-600" />
-                        <span class="text-sm text-slate-600 dark:text-slate-400">After occurrences</span>
-                    </label>
+                <h3 class="text-sm font-bold text-[#1e3a6e] uppercase tracking-wider mb-4">Schedule</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">
+                            Start Date & Time
+                        </label>
+                        <input type="datetime-local" class="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-sm outline-none focus:border-[#1e3a6e] transition-colors" style="color-scheme: dark;" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">
+                            End Date & Time
+                        </label>
+                        <input type="datetime-local" class="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-sm outline-none focus:border-[#1e3a6e] transition-colors" style="color-scheme: dark;" />
+                    </div>
                 </div>
             </div>
+            ` : ''}
         `;
 
         // Attach event listeners
@@ -84,7 +91,6 @@
         const intervalInput = container.querySelector('#recurrence-interval');
         const suffixSpan = container.querySelector('#recurrence-suffix');
         const advancedContainer = container.querySelector('#recurrence-advanced-options');
-        const endRadios = container.querySelectorAll('input[name="recurrence_end"]');
 
         typeSelect.addEventListener('change', (e) => {
             recurrenceType = e.target.value;
@@ -100,18 +106,13 @@
             suffixSpan.textContent = getSuffix(recurrenceType, recurrenceInterval);
         });
 
-        endRadios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                recurrenceEnd = e.target.value;
-            });
-        });
-        
+
         attachAdvancedListeners(advancedContainer);
     }
 
     function getSuffix(type, interval) {
         const isPlural = interval > 1;
-        switch(type) {
+        switch (type) {
             case 'Hourly': return isPlural ? 'Hours' : 'Hour';
             case 'Daily': return isPlural ? 'Days' : 'Day';
             case 'Weekly': return isPlural ? 'Weeks' : 'Week';
@@ -131,7 +132,7 @@
                 { id: 'fri', label: 'F' },
                 { id: 'sat', label: 'S' }
             ];
-            
+
             return `
                 <label class="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">
                     Repeat On
@@ -145,7 +146,7 @@
                 </div>
             `;
         }
-        
+
         if (recurrenceType === 'Monthly') {
             return `
                 <label class="block text-sm font-semibold mb-1.5 text-slate-700 dark:text-slate-300">
@@ -160,7 +161,7 @@
 
         return '';
     }
-    
+
     function attachAdvancedListeners(container) {
         if (recurrenceType === 'Weekly') {
             const btns = container.querySelectorAll('.recurrence-day-btn');
@@ -178,7 +179,7 @@
                 });
             });
         }
-        
+
         if (recurrenceType === 'Monthly') {
             const select = container.querySelector('#recurrence-monthly-type');
             if (select) {
@@ -190,24 +191,29 @@
     }
 
     function checkAndInject() {
-        const h1s = document.querySelectorAll('h1');
-        let isRecurringTask = false;
-        
-        for (const h1 of h1s) {
-            const text = h1.textContent.trim().toLowerCase();
-            if (text.includes('recurring task') || text.includes('edit task')) {
-                isRecurringTask = true;
-                break;
-            }
+        let isTargetPage = false;
+        const pageText = document.body.textContent.toLowerCase();
+        if (pageText.includes('create report') || pageText.includes('recurring task') || pageText.includes('edit task') || pageText.includes('new report')) {
+            isTargetPage = true;
         }
-        
-        const headings = Array.from(document.querySelectorAll('h3'));
-        const scheduleHeading = headings.find(h => h.textContent.trim().toLowerCase() === 'schedule') || headings.find(h => h.textContent.trim().toLowerCase() === 'assign task');
-        
-        if (scheduleHeading) {
-            const targetContainer = scheduleHeading.parentElement;
+
+        const headings = Array.from(document.querySelectorAll('h3, h4, span, div, strong, label'));
+        const targetHeading = headings.find(h => {
+            if (h.closest && h.closest('#alexios-recurrence-section')) return false;
+            if (h.children.length > 1) return false;
+            const t = h.textContent.trim().toLowerCase();
+            return t === 'schedule' || t === 'assign task' || t === 'workflow' || t === 'workflow step' || t === 'approval workflow';
+        });
+
+        if (targetHeading) {
+            let targetContainer = targetHeading.parentElement;
+            // If it's the Approval Workflow label, we want the container of the whole card
+            if (targetHeading.textContent.trim().toLowerCase() === 'approval workflow') {
+                const card = targetHeading.closest('.border') || targetHeading.closest('label').parentElement;
+                if (card) targetContainer = card;
+            }
             
-            if (isRecurringTask) {
+            if (isTargetPage) {
                 // Ensure it's injected
                 if (targetContainer && !targetContainer.hasAttribute('data-recurrence-injected')) {
                     injectRecurrenceUI(targetContainer);

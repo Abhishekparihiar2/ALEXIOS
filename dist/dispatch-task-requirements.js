@@ -141,11 +141,11 @@
             var picked = findAsset(as.id);
             var photoToggle = picked
                 ? '<label class="dtr-toggle"><input type="checkbox" data-req-photo="' + as.id + '"' +
-                  (picked.requirePhoto ? ' checked' : '') + ' /> Require photo</label>'
+                (picked.requirePhoto ? ' checked' : '') + ' /> Require photo</label>'
                 : '';
             var drop = as.custom
                 ? '<button type="button" class="dtr-remove" data-drop="' + as.id + '" title="Remove asset">' +
-                  ICON_TRASH + '</button>'
+                ICON_TRASH + '</button>'
                 : '';
             return '<div class="dtr-option dtr-option-row">' +
                 '<label class="dtr-option-pick">' +
@@ -301,20 +301,23 @@
     };
 
     var injectCreateSection = function () {
-        var headings = [].slice.call(document.querySelectorAll('h1'));
-        var isCreateDispatch = headings.some(function (h) {
-            return h.textContent.trim().toLowerCase() === 'create dispatch task';
+        var headings = [].slice.call(document.querySelectorAll('h1, h2'));
+        var isTargetPage = headings.some(function (h) {
+            var txt = h.textContent.trim().toLowerCase();
+            return txt === 'create dispatch task' || txt.includes('quick task') || txt.includes('recurring task') || txt.includes('edit task');
         });
-        if (!isCreateDispatch) return;
+        if (!isTargetPage) return;
 
         if (document.getElementById('dtr-create-section')) return;
 
-        // Anchor on the Subtasks block and drop our section right after it.
-        var subtasks = [].slice.call(document.querySelectorAll('h3')).find(function (h) {
-            return h.textContent.trim().toLowerCase() === 'subtasks';
+        // Anchor on Subtasks, or fallback to Assign Task, Schedule, or Workflow
+        var headingsElements = [].slice.call(document.querySelectorAll('h3, h4, span, div, strong'));
+        var anchorHeading = headingsElements.find(function (h) {
+            var t = h.textContent.trim().toLowerCase();
+            return h.children.length <= 1 && (t === 'subtasks' || t === 'assign task' || t === 'schedule' || t === 'workflow');
         });
-        if (!subtasks) return;
-        var anchor = subtasks.parentElement;
+        if (!anchorHeading) return;
+        var anchor = anchorHeading.parentElement;
         if (!anchor || !anchor.parentNode) return;
 
         var section = document.createElement('div');
@@ -370,7 +373,7 @@
                     anyPhoto = true;
                     photo = as.photo
                         ? '<span class="dtr-photo"><img alt="Guard photo of ' + escapeHtml(as.name) +
-                          '" src="' + as.photo + '" data-view-photo="' + as.id + '" /></span>'
+                        '" src="' + as.photo + '" data-view-photo="' + as.id + '" /></span>'
                         : '<span class="dtr-photo dtr-photo-empty">Awaiting guard upload</span>';
                 }
 

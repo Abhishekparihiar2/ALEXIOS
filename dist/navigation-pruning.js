@@ -7,6 +7,7 @@
     "Employee Classes",
     "Export Formats",
     "Bill Items",
+    "Create Pack",
   ]);
 
   const pruneNavigation = () => {

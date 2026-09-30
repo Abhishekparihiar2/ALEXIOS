@@ -539,7 +539,7 @@
             '</div>' +
             (state.arg === 'sent'
                 ? '<div class="cp-ok">If that address is registered, a reset link is on its way. ' +
-                  'The link expires in 30 minutes.</div>'
+                'The link expires in 30 minutes.</div>'
                 : '') +
             '<div class="cp-note">Prototype — no email is actually sent.</div>'
         );
@@ -822,16 +822,16 @@
             '</span></div>' +
             (isToday
                 ? '<table class="cp-table"><thead><tr><th>Time</th><th>Activity</th><th>Type</th><th>By</th></tr></thead><tbody>' +
-                  (list.length ? list.map(function (a) {
-                      return '<tr><td class="cp-mono" style="color:#3b82f6">' + esc(a.time) + '</td>' +
-                          '<td class="' + (a.alert ? '' : 'cp-strong') + '"' +
-                          (a.alert ? ' style="color:#fbbf24;font-weight:700"' : '') + '>' + esc(a.text) + '</td>' +
-                          '<td><span class="cp-pill cp-pill-grey">' + esc(a.kind) + '</span></td>' +
-                          '<td class="cp-muted">' + esc(a.actor) + '</td></tr>';
-                  }).join('') : '<tr><td colspan="4" class="cp-empty">No activity of this type today.</td></tr>') +
-                  '</tbody></table>'
+                (list.length ? list.map(function (a) {
+                    return '<tr><td class="cp-mono" style="color:#3b82f6">' + esc(a.time) + '</td>' +
+                        '<td class="' + (a.alert ? '' : 'cp-strong') + '"' +
+                        (a.alert ? ' style="color:#fbbf24;font-weight:700"' : '') + '>' + esc(a.text) + '</td>' +
+                        '<td><span class="cp-pill cp-pill-grey">' + esc(a.kind) + '</span></td>' +
+                        '<td class="cp-muted">' + esc(a.actor) + '</td></tr>';
+                }).join('') : '<tr><td colspan="4" class="cp-empty">No activity of this type today.</td></tr>') +
+                '</tbody></table>'
                 : '<div class="cp-empty">No activity recorded for ' + esc(date) + '.<br>' +
-                  'This preview carries a full log for today only.</div>') +
+                'This preview carries a full log for today only.</div>') +
             '</div>';
     };
 
@@ -1001,7 +1001,7 @@
                     '<td>' + esc(t.location) + '</td>' +
                     '<td>' + (t.status === 'Open' ? '<span class="cp-pill cp-pill-amber">Open</span>'
                         : t.status === 'Resolved' ? '<span class="cp-pill cp-pill-green">Resolved</span>'
-                        : '<span class="cp-pill cp-pill-grey">Closed</span>') + '</td>' +
+                            : '<span class="cp-pill cp-pill-grey">Closed</span>') + '</td>' +
                     '<td><button class="cp-link" data-ticket="' + i + '">View</button></td></tr>';
             }).join('') : '<tr><td colspan="8" class="cp-empty">No tickets with this status.</td></tr>') +
             '</tbody></table></div>';
@@ -1344,8 +1344,8 @@
                     : s.condition === 'Needs Service' ? 'cp-pill-amber' : 'cp-pill-red';
                 var photo = (s.photos && s.photos.length)
                     ? '<div class="cp-section"><span class="cp-k">Pictures</span>' +
-                      '<div class="cp-view-hero" style="margin-top:10px"><img alt="' + esc(s.name) +
-                      '" src="' + s.photos[0] + '" /></div></div>'
+                    '<div class="cp-view-hero" style="margin-top:10px"><img alt="' + esc(s.name) +
+                    '" src="' + s.photos[0] + '" /></div></div>'
                     : '';
                 return itemView({
                     back: 'Site Assets', title: s.name,
@@ -1398,9 +1398,9 @@
                         heading: 'Behaviour',
                         text: on
                             ? 'This item appears in the guard app at ' + it.phase.toLowerCase() +
-                              ' and must be completed before the action can proceed.'
+                            ' and must be completed before the action can proceed.'
                             : 'This item is not currently required at ' + it.phase.toLowerCase() +
-                              ' for this site.'
+                            ' for this site.'
                     }]
                 });
             }
@@ -1706,9 +1706,9 @@
                 render();
                 toast(assignee
                     ? 'Task created and assigned to ' + assignee.split(' · ')[0] +
-                      '. ' + SITE.manager + ' has been notified.'
+                    '. ' + SITE.manager + ' has been notified.'
                     : 'Task created as unassigned and placed in the schedule’s Unassigned section. ' +
-                      SITE.manager + ' has been notified.');
+                    SITE.manager + ' has been notified.');
             }
         });
 
@@ -1779,11 +1779,11 @@
             '</button></div></div>' +
             (state.menuOpen
                 ? '<div class="cp-menu">' +
-                  '<button data-go="profile">' + I.user + 'Client Profile</button>' +
-                  '<button data-go="dashboard">' + I.ext + 'Dashboard</button>' +
-                  '<div class="cp-menu-sep"></div>' +
-                  '<button class="is-danger" data-act="logout">' + I.out + 'Log Out</button>' +
-                  '</div>'
+                '<button data-go="profile">' + I.user + 'Client Profile</button>' +
+                '<button data-go="dashboard">' + I.ext + 'Dashboard</button>' +
+                '<div class="cp-menu-sep"></div>' +
+                '<button class="is-danger" data-act="logout">' + I.out + 'Log Out</button>' +
+                '</div>'
                 : '') +
             '<div class="cp-body"></div>';
     };
@@ -1810,7 +1810,7 @@
         if (!state.signedIn) {
             root.innerHTML = state.route === 'forgot' ? viewForgot()
                 : state.route === 'setpw' ? viewSetPassword()
-                : viewLogin();
+                    : viewLogin();
             return;
         }
 
@@ -1937,18 +1937,43 @@
     var tick = function () {
         var head = findOverviewHeader();
         if (!head) return;
-        if (head.querySelector('.cpx-open')) return;
 
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'cpx-open';
-        btn.innerHTML = I.ext + '<span>Client Portal</span>';
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            openPortal();
-        });
-        head.appendChild(btn);
+        var showBtn = false; // strictly default to false
+
+        // Find all possible sidebar links (a or button)
+        var navItems = document.querySelectorAll('.w-64 a, .w-64 button, .p-3.space-y-1 a, .p-3.space-y-1 button');
+
+        for (var i = 0; i < navItems.length; i++) {
+            if (navItems[i].textContent.trim() === 'Overview') {
+                // Determine if this Overview link is active
+                var bg = window.getComputedStyle(navItems[i]).backgroundColor;
+                var cls = navItems[i].className.replace(/hover:[^\s]+/g, '');
+
+                // If it has a non-transparent background OR explicit active classes
+                if ((bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') ||
+                    cls.indexOf('bg-blue') !== -1 ||
+                    cls.indexOf('text-blue') !== -1 ||
+                    cls.indexOf('bg-[') !== -1) {
+                    showBtn = true;
+                }
+            }
+        }
+
+        var btn = head.querySelector('.cpx-open');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'cpx-open';
+            btn.innerHTML = I.ext + '<span>Client Portal</span>';
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openPortal();
+            });
+            head.appendChild(btn);
+        }
+
+        btn.style.display = showBtn ? 'inline-flex' : 'none';
     };
 
     setInterval(tick, 400);

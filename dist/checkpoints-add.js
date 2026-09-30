@@ -1,5 +1,5 @@
 (function () {
-    const createFullPageUI = (onClose) => {
+    const createFullPageUI = (onClose, isEdit = false) => {
         const page = document.createElement("div");
         page.style.position = "fixed";
         page.style.inset = "0";
@@ -18,13 +18,13 @@
                         Back
                     </button>
                     <div>
-                        <h2 style="margin: 0; font-size: 18px; font-weight: 700; color: white;">Create Checkpoint</h2>
-                        <p style="margin: 2px 0 0; font-size: 12px; color: #94a3b8;">Configure a new patrol or monitoring checkpoint.</p>
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 700; color: white;">${isEdit ? 'Edit Checkpoint' : 'Create Checkpoint'}</h2>
+                        <p style="margin: 2px 0 0; font-size: 12px; color: #94a3b8;">${isEdit ? 'Update an existing patrol or monitoring checkpoint.' : 'Configure a new patrol or monitoring checkpoint.'}</p>
                     </div>
                 </div>
                 <div style="display: flex; gap: 12px;">
                     <button id="cp-cancel-btn" style="padding: 8px 16px; border: 1px solid #334155; border-radius: 8px; font-size: 13px; font-weight: 600; background: transparent; color: #e2e8f0; cursor: pointer;">Cancel</button>
-                    <button id="cp-save-btn" style="padding: 8px 16px; border: 1px solid #2563eb; border-radius: 8px; font-size: 13px; font-weight: 600; background: #2563eb; color: white; cursor: pointer;">Save Checkpoint</button>
+                    <button id="cp-save-btn" style="padding: 8px 16px; border: 1px solid #2563eb; border-radius: 8px; font-size: 13px; font-weight: 600; background: #2563eb; color: white; cursor: pointer;">${isEdit ? 'Save Changes' : 'Save Checkpoint'}</button>
                 </div>
             </div>
 
@@ -82,7 +82,7 @@
 
                         <label style="flex: 1; padding: 16px; border: 1px solid #262626; border-radius: 10px; background: #1a1a1a; cursor: pointer; display: flex; flex-direction: column; gap: 8px; transition: 0.2s;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600; color: white;">Barcode</span>
+                                <span style="font-weight: 600; color: white;">QR Code</span>
                                 <input type="radio" name="cp-scan-type" value="barcode" style="accent-color: #ffffff;" />
                             </div>
                             <span style="font-size: 12px; color: #94a3b8; line-height: 1.4;">Guard scans a printable QR code or barcode.</span>
@@ -102,12 +102,12 @@
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #e2e8f0; margin-bottom: 12px;"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
                         <h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600;">NFC Setup Required</h4>
                         <p style="margin: 0 0 16px; font-size: 13px; color: #94a3b8;">You must scan the physical NFC tag with your device to capture its unique identifier.</p>
-                        <button style="padding: 8px 16px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; background: #ffffff; color: #000000; cursor: pointer;">Scan NFC Tag Now</button>
+                        <button style="padding: 8px 16px; border: 1px solid #ffffff; border-radius: 8px; font-size: 13px; font-weight: 600; background: transparent; color: #ffffff; cursor: pointer;">Scan NFC Tag Now</button>
                     </div>
 
                     <!-- Dynamic Barcode Setup -->
                     <div id="cp-method-barcode" style="display: none; padding: 20px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px;">
-                        <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Barcode Value <span style="color: #ef4444;">*</span></label>
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">QR Code Value <span style="color: #ef4444;">*</span></label>
                         <div style="display: flex; gap: 12px;">
                             <input id="cp-barcode-value" type="text" placeholder="Enter alphanumeric code to generate" style="flex: 1; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;" />
                             <button style="padding: 10px 16px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; background: #334155; color: white; cursor: pointer;">Generate & Download</button>
@@ -120,12 +120,12 @@
                         </div>
 
                         <!-- Update value from an already-printed barcode -->
-                        <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Use Existing Barcode</label>
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Use Existing QR Code</label>
                         <div style="display: flex; gap: 12px;">
-                            <input id="cp-barcode-existing" type="text" placeholder="Scan or type the value on the existing barcode" style="flex: 1; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;" />
+                            <input id="cp-barcode-existing" type="text" placeholder="Scan or type the value on the existing QR code" style="flex: 1; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;" />
                             <button id="cp-barcode-update" type="button" style="padding: 10px 16px; border: 1px solid #334155; border-radius: 8px; font-size: 13px; font-weight: 600; background: transparent; color: white; cursor: pointer;">Update Value</button>
                         </div>
-                        <p style="margin: 6px 0 0; font-size: 12px; color: #94a3b8;">Use this when the checkpoint already has a printed barcode &mdash; capture its value instead of generating a new one.</p>
+                        <p style="margin: 6px 0 0; font-size: 12px; color: #94a3b8;">Use this when the checkpoint already has a printed QR code &mdash; capture its value instead of generating a new one.</p>
                     </div>
 
                     <!-- Dynamic GPS Setup -->
@@ -170,79 +170,60 @@
 
                         <div id="cp-auth-restricted" style="display: none;">
                             <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Select Allowed Positions</label>
-                            <select multiple style="width: 100%; height: 100px; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;">
-                                <option value="p1">Security Guard</option>
-                                <option value="p2">Shift Supervisor</option>
-                                <option value="p3">Site Manager</option>
-                            </select>
+                            <div style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; display: flex; flex-direction: column; gap: 8px; font-size: 14px;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" value="p1" style="accent-color: #ffffff; cursor: pointer;">
+                                    <span>Security Guard</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" value="p2" style="accent-color: #ffffff; cursor: pointer;">
+                                    <span>Shift Supervisor</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" value="p3" style="accent-color: #ffffff; cursor: pointer;">
+                                    <span>Site Manager</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Monitoring -->
+                    <!-- Advanced Actions -->
                     <div style="background: #111111; border: 1px solid #262626; border-radius: 12px; padding: 24px;">
                         <h3 style="margin: 0 0 20px; font-size: 16px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px;">
                             <div style="width: 24px; height: 24px; border-radius: 6px; background: rgba(255, 255, 255, 0.1); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px;">4</div>
-                            Monitoring
+                            Advanced Actions
                         </h3>
                         
-                        <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Monitoring Rule</label>
-                        <select id="cp-monitoring-type" style="width: 100%; padding: 10px 14px; margin-bottom: 16px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;">
-                            <option value="none">Do Not Monitor / Scan Randomly</option>
-                            <option value="tour">Checkpoint Is Part of Tour</option>
-                            <option value="interval">Request Scan on Regular Interval</option>
-                        </select>
-
-                        <div id="cp-monitoring-interval" style="display: none; gap: 12px;">
-                            <div style="flex: 1;">
-                                <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Frequency</label>
-                                <input type="number" min="1" value="1" style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;" />
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Extra Scan Option</label>
+                                <select id="cp-extra-scan" style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;">
+                                    <option value="record">Record Scan Only</option>
+                                    <option value="message">Display Custom Message</option>
+                                    <option value="report">Open Report Form</option>
+                                </select>
+                                <div id="cp-custom-message-container" style="display: none; margin-top: 12px;">
+                                    <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Custom Message Content</label>
+                                    <textarea rows="3" placeholder="Enter message to display on scan..." style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px; resize: vertical;"></textarea>
+                                </div>
+                                <div id="cp-report-form-container" style="display: none; margin-top: 12px;">
+                                    <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Choose Report Form</label>
+                                    <select style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;">
+                                        <option value="" disabled selected>Select a report...</option>
+                                        <option value="incident">Incident Report</option>
+                                        <option value="maintenance">Maintenance Request</option>
+                                        <option value="hazard">Safety Hazard Form</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div style="flex: 1;">
-                                <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Unit</label>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Manual Scanning Policy</label>
                                 <select style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;">
-                                    <option value="minutes">Minutes</option>
-                                    <option value="hours" selected>Hours</option>
-                                    <option value="days">Days</option>
-                                    <option value="weeks">Weeks</option>
+                                    <option value="allowed">Manual scanning allowed without restrictions</option>
+                                    <option value="disabled">Manual scanning disabled (configured method required)</option>
+                                    <option value="reason">Manual scanning allowed with mandatory reason</option>
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 5. Advanced Actions -->
-                <div style="background: #111111; border: 1px solid #262626; border-radius: 12px; padding: 24px; margin-bottom: 40px;">
-                    <h3 style="margin: 0 0 20px; font-size: 16px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px;">
-                        <div style="width: 24px; height: 24px; border-radius: 6px; background: rgba(255, 255, 255, 0.1); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px;">5</div>
-                        Advanced Actions
-                    </h3>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Extra Scan Option</label>
-                            <select style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;">
-                                <option value="record">Record Scan Only</option>
-                                <option value="message">Display Custom Message</option>
-                                <option value="report">Open Report Form</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Exception Verification</label>
-                            <select style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;">
-                                <option value="none">No additional verification</option>
-                                <option value="range">Range validation</option>
-                                <option value="yesno_no_exc">Yes/No response ("No" is exception)</option>
-                                <option value="yesno_yes_exc">Yes/No response ("Yes" is exception)</option>
-                                <option value="multiple">Multiple verification questions</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Manual Scanning Policy</label>
-                            <select style="width: 100%; padding: 10px 14px; border: 1px solid #262626; border-radius: 8px; background: #000000; color: white; outline: none; font-size: 14px;">
-                                <option value="allowed">Manual scanning allowed without restrictions</option>
-                                <option value="disabled">Manual scanning disabled (configured method required)</option>
-                                <option value="reason">Manual scanning allowed with mandatory reason</option>
-                            </select>
                         </div>
                     </div>
                 </div>
@@ -288,11 +269,7 @@
             });
         });
 
-        const monitorType = page.querySelector('#cp-monitoring-type');
-        const monitorInterval = page.querySelector('#cp-monitoring-interval');
-        monitorType.addEventListener('change', (e) => {
-            monitorInterval.style.display = e.target.value === 'interval' ? 'flex' : 'none';
-        });
+        // Monitoring logic removed
 
         const showToast = (message) => {
             const notice = document.createElement("div");
@@ -322,10 +299,19 @@
             }
             barcodeExisting.style.borderColor = "#262626";
             barcodeGenerate.value = value;
-            showToast("Barcode value updated to " + value + ".");
+            showToast("QR Code value updated to " + value + ".");
         });
         barcodeExisting.addEventListener("input", () => {
             barcodeExisting.style.borderColor = "#262626";
+        });
+
+        // Extra Scan Option Logic
+        const extraScanSelect = page.querySelector("#cp-extra-scan");
+        const customMessageContainer = page.querySelector("#cp-custom-message-container");
+        const reportFormContainer = page.querySelector("#cp-report-form-container");
+        extraScanSelect.addEventListener("change", (e) => {
+            customMessageContainer.style.display = e.target.value === "message" ? "block" : "none";
+            reportFormContainer.style.display = e.target.value === "report" ? "block" : "none";
         });
 
         // Close Logic
@@ -342,15 +328,15 @@
         page.querySelector('#cp-back-btn').addEventListener('click', close);
         page.querySelector('#cp-cancel-btn').addEventListener('click', close);
         page.querySelector('#cp-save-btn').addEventListener('click', () => {
-            showToast("Checkpoint Created Successfully.");
+            showToast(isEdit ? "Checkpoint Updated Successfully." : "Checkpoint Created Successfully.");
             close();
         });
     };
 
     const enhance = () => {
-        // Find "Create Checkpoint" or "Add Checkpoint" buttons on the page
+        // Find "Create Checkpoint", "Add Checkpoint" or "Edit Checkpoint" buttons on the page
         const addButtons = [...document.querySelectorAll("button")].filter(btn =>
-            (btn.textContent.includes("Add Checkpoint") || btn.textContent.includes("Create Checkpoint") || btn.textContent.includes("New Checkpoint")) &&
+            (btn.textContent.includes("Add Checkpoint") || btn.textContent.includes("Create Checkpoint") || btn.textContent.includes("New Checkpoint") || btn.textContent.includes("Edit Checkpoint")) &&
             !btn.dataset.cpAddWired &&
             btn.offsetParent !== null
         );
@@ -361,7 +347,8 @@
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
-                createFullPageUI();
+                const isEdit = btn.textContent.includes("Edit Checkpoint");
+                createFullPageUI(null, isEdit);
             }, true);
         });
     };
