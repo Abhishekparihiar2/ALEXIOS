@@ -453,7 +453,8 @@
         plus: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>',
         dl: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>',
         user: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
-        out: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>'
+        out: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>',
+        bell: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>'
     };
 
     // ------------------------------------------------------------------ state
@@ -463,6 +464,7 @@
         arg: null,
         signedIn: false,
         menuOpen: false,
+        notificationsOpen: false,
         taskFilter: 'All Tasks',
         profileSection: 'Overview',
         profileItem: null,
@@ -471,6 +473,7 @@
         activityDate: '',
         activityKind: 'All',
         reportFilter: 'All',
+        reportDateFilter: '',
         reportSearch: '',
         ticketStatus: 'All'
     };
@@ -658,13 +661,6 @@
             '<div class="cp-panel-head"><span class="cp-panel-title"><i class="cp-dot"></i>Field Reporting Hub</span>' +
             '<button class="cp-viewall" data-go="reports">View All</button></div>' +
             '<div class="cp-scroll">' +
-            '<div class="cp-report is-approve" data-go="reports">' +
-            '<span class="cp-report-icon">' + I.doc + '</span>' +
-            '<span class="cp-report-main"><span class="cp-report-name">Approved Reports</span>' +
-            '<span class="cp-report-desc">' +
-            REPORTS.filter(function (r) { return r.approval === 'Approved'; }).length +
-            ' approved by admin / supervisor</span></span>' +
-            '<span class="cp-chev">' + I.chevR + '</span></div>' +
             REPORT_TYPES.map(function (t) {
                 var n = REPORTS.filter(function (r) { return r.type === t.name; }).length;
                 return '<div class="cp-report" data-report-type="' + esc(t.name) + '">' +
@@ -689,8 +685,30 @@
                 : '<div class="cp-empty">No tasks in this category.</div>') +
             '</div></section>' +
 
+            // Chat Notifications
+            '<section class="cp-panel">' +
+            '<div class="cp-panel-head"><span class="cp-panel-title"><i class="cp-dot is-live"></i>Chat Notifications</span>' +
+            '<button class="cp-viewall" data-go="chat">View All</button></div>' +
+            '<div class="cp-scroll">' +
+            '<div class="cp-act">' +
+            '<span class="cp-act-time">Just now</span>' +
+            '<span class="cp-act-main"><span class="cp-act-text">New message from Supervisor</span></span>' +
+            '<span class="cp-act-actor">S. Jenkins</span>' +
+            '</div>' +
+            '<div class="cp-act">' +
+            '<span class="cp-act-time">1h ago</span>' +
+            '<span class="cp-act-main"><span class="cp-act-text">Guard sent an image attachment</span></span>' +
+            '<span class="cp-act-actor">M. Chen</span>' +
+            '</div>' +
+            '<div class="cp-act">' +
+            '<span class="cp-act-time">3h ago</span>' +
+            '<span class="cp-act-main"><span class="cp-act-text">Shift handover notes uploaded</span></span>' +
+            '<span class="cp-act-actor">L. Santos</span>' +
+            '</div>' +
+            '</div></section>' +
+
             // Live map
-            '<section class="cp-panel" style="grid-column:span 2">' +
+            '<section class="cp-panel">' +
             '<div class="cp-panel-head"><span class="cp-panel-title"><i class="cp-dot is-live"></i>Live Map</span>' +
             '<button class="cp-viewall" data-go="map">Expand</button></div>' +
             '<div class="cp-map">' +
@@ -836,8 +854,18 @@
     };
 
     var viewReports = function () {
+        var filterDateStr = '';
+        if (state.reportDateFilter) {
+            var parts = state.reportDateFilter.split('-');
+            var d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var dd = d.getDate();
+            filterDateStr = monthNames[d.getMonth()] + ' ' + (dd < 10 ? '0' + dd : dd) + ', ' + d.getFullYear();
+        }
+
         var list = REPORTS.filter(function (r) {
             if (state.reportFilter !== 'All' && r.type !== state.reportFilter) return false;
+            if (filterDateStr && r.date !== filterDateStr) return false;
             if (!state.reportSearch) return true;
             var hay = (r.id + ' ' + r.type + ' ' + r.by + ' ' + r.summary).toLowerCase();
             return hay.indexOf(state.reportSearch.toLowerCase()) !== -1;
@@ -856,6 +884,7 @@
             '<div class="cp-toolbar">' +
             '<input class="cp-input is-grow" data-report-search placeholder="Search by ID, type, officer or summary..." value="' +
             esc(state.reportSearch) + '" />' +
+            '<input type="date" class="cp-input" data-report-date-filter value="' + esc(state.reportDateFilter) + '" />' +
             '<select class="cp-select" data-report-filter>' +
             ['All'].concat(REPORT_TYPES.map(function (t) { return t.name; })).map(function (o) {
                 return '<option' + (state.reportFilter === o ? ' selected' : '') + '>' + o + '</option>';
@@ -1765,6 +1794,134 @@
         toast('PDF generated — ' + r.id + ' (' + Math.round(bytes / 1024) + ' KB)');
     };
 
+    var viewChat = function () {
+        return pageHead('Chat', 'Direct messages with field staff', 'dashboard') +
+            '<div class="cp-card" style="display:flex; height: 75vh; padding:0; overflow:hidden; border:1px solid #1e293b; background:#020617;">' +
+            
+            // Left sidebar: Conversations
+            '<div style="width: 320px; border-right: 1px solid #1e293b; display:flex; flex-direction:column; background: #000;">' +
+                '<div style="padding: 20px 16px 12px;">' +
+                    '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">' +
+                        '<h3 style="margin:0; color:#f8fafc; font-size:18px; font-weight:800;">Conversations</h3>' +
+                        '<div style="display:flex; gap:12px; color:#64748b; cursor:pointer;">' +
+                        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="position:relative; margin-bottom: 16px;">' +
+                        '<span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;display:flex;">' + 
+                        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>' +
+                        '<input type="text" placeholder="Search conversations..." style="width:100%; box-sizing:border-box; padding:8px 8px 8px 34px; background:transparent; border:1px solid #1e293b; border-radius:6px; color:#e2e8f0; font-size:13px; outline:none;" />' +
+                    '</div>' +
+                    '<div style="color:#f8fafc; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer;">All Conversations <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>' +
+                '</div>' +
+                
+                '<div class="cp-scroll" style="flex:1;">' +
+                    // Selected Conversation
+                    '<div style="padding: 12px 16px; display:flex; gap:14px; border-left: 2px solid #3b82f6; background: rgba(59,130,246,0.1); cursor:pointer;">' +
+                        '<div style="width:40px; height:40px; border-radius:50%; background:#334155; color:#bfdbfe; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0;">JD</div>' +
+                        '<div style="flex:1; min-width:0;">' +
+                            '<div style="display:flex; justify-content:space-between; align-items:baseline;">' +
+                                '<div style="color:#f8fafc; font-weight:700; font-size:14px;">John Doe</div>' +
+                                '<div style="color:#94a3b8; font-size:11px; font-weight:500;">03:45 PM</div>' +
+                            '</div>' +
+                            '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">' +
+                                '<div style="color:#3b82f6; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500;">John Doe: I\'ve completed t...</div>' +
+                                '<div style="background:#2563eb; color:#fff; font-size:10px; font-weight:800; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</div>' +
+                            '</div>' +
+                            '<div style="color:#64748b; font-size:9px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; margin-top:6px;">Downtown Campus</div>' +
+                        '</div>' +
+                    '</div>' +
+                    
+                    // Other Conversation
+                    '<div style="padding: 12px 16px; display:flex; gap:14px; border-left: 2px solid transparent; cursor:pointer;">' +
+                        '<div style="width:40px; height:40px; border-radius:50%; background:rgba(30,27,75,0.7); color:#a5b4fc; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0;">HQ</div>' +
+                        '<div style="flex:1; min-width:0;">' +
+                            '<div style="display:flex; justify-content:space-between; align-items:baseline;">' +
+                                '<div style="color:#f8fafc; font-weight:700; font-size:14px;">HQ Night Shift</div>' +
+                                '<div style="color:#64748b; font-size:11px; font-weight:500;">04:00 AM</div>' +
+                            '</div>' +
+                            '<div style="color:#94a3b8; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">Jane Smith: Don\'t forget to loc...</div>' +
+                            '<div style="color:#64748b; font-size:9px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; margin-top:6px;">Corporate HQ</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            // Main chat area
+            '<div style="flex:1; display:flex; flex-direction:column; background: #000;">' +
+                // Chat header
+                '<div style="padding: 16px 24px; border-bottom: 1px solid #1e293b; display:flex; justify-content:space-between; align-items:center;">' +
+                    '<div style="display:flex; align-items:center; gap:16px;">' +
+                        '<div style="width:40px; height:40px; border-radius:50%; background:#f1f5f9; color:#0f172a; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px;">JD</div>' +
+                        '<div>' +
+                            '<div style="color:#f8fafc; font-weight:700; font-size:18px; display:flex; align-items:center; gap:10px;">John Doe <span style="font-size:10px; font-weight:800; color:#64748b; letter-spacing:0.05em; margin-top:2px;">ADMIN VIEW</span></div>' +
+                            '<div style="color:#94a3b8; font-size:12px; margin-top:2px;">Security Guard • Downtown Campus</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="color:#cbd5e1; cursor:pointer; font-size:24px; letter-spacing:2px; font-weight:bold; line-height:1; transform:translateY(-4px);">...</div>' +
+                '</div>' +
+                
+                // Messages area
+                '<div class="cp-scroll" style="flex:1; padding: 24px; display:flex; flex-direction:column; gap:24px;">' +
+                    '<div style="text-align:center; margin: 12px 0;"><span style="background:#334155; color:#cbd5e1; padding:6px 16px; border-radius:16px; font-size:11px; font-weight:700;">Today</span></div>' +
+                    
+                    // Received message 1
+                    '<div style="display:flex; gap:12px;">' +
+                        '<div style="width:32px; height:32px; border-radius:50%; background:#1e293b; color:#94a3b8; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0;">J</div>' +
+                        '<div>' +
+                            '<div style="color:#cbd5e1; font-size:12px; font-weight:700; margin-bottom:6px;">John Doe</div>' +
+                            '<div style="background:#020617; border: 1px solid #1e293b; color:#f8fafc; padding:12px 16px; border-radius:0 16px 16px 16px; font-size:14px; max-width:440px; line-height:1.5;">Are there any updates on the new uniforms?</div>' +
+                            '<div style="color:#64748b; font-size:10px; margin-top:6px; font-weight:500;">02:30 PM</div>' +
+                        '</div>' +
+                    '</div>' +
+                    
+                    // Sent message
+                    '<div style="display:flex; flex-direction:column; align-items:flex-end;">' +
+                        '<div style="background:#2563eb; color:#fff; padding:12px 16px; border-radius:16px 0 16px 16px; font-size:14px; max-width:440px; line-height:1.5;">They will be arriving next Tuesday.</div>' +
+                        '<div style="color:#64748b; font-size:10px; margin-top:6px; display:flex; align-items:center; gap:6px; font-weight:500;">02:35 PM <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg></div>' +
+                    '</div>' +
+                    
+                    // Received message 2
+                    '<div style="display:flex; gap:12px;">' +
+                        '<div style="width:32px; height:32px; border-radius:50%; background:#1e293b; color:#94a3b8; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0;">J</div>' +
+                        '<div>' +
+                            '<div style="color:#cbd5e1; font-size:12px; font-weight:700; margin-bottom:6px;">John Doe</div>' +
+                            '<div style="background:#020617; border: 1px solid #1e293b; color:#f8fafc; padding:12px 16px; border-radius:0 16px 16px 16px; font-size:14px; max-width:440px; line-height:1.5;">Great, I will let the team know.</div>' +
+                            '<div style="color:#64748b; font-size:10px; margin-top:6px; font-weight:500;">02:40 PM</div>' +
+                        '</div>' +
+                    '</div>' +
+                    
+                    // Received message 3
+                    '<div style="display:flex; gap:12px;">' +
+                        '<div style="width:32px; height:32px; border-radius:50%; background:#1e293b; color:#94a3b8; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0;">J</div>' +
+                        '<div>' +
+                            '<div style="color:#cbd5e1; font-size:12px; font-weight:700; margin-bottom:6px;">John Doe</div>' +
+                            '<div style="background:#020617; border: 1px solid #1e293b; color:#f8fafc; padding:12px 16px; border-radius:0 16px 16px 16px; font-size:14px; max-width:440px; line-height:1.5;">Also, we need a replacement for the back gate lock.</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                
+                // Message input
+                '<div style="padding: 20px 24px; border-top: 1px solid #1e293b; display:flex; gap: 12px; background: #000;">' +
+                    '<input type="text" class="cp-input" placeholder="Type a message..." style="flex:1; background: #020617; border: 1px solid #1e293b; color: #f8fafc; padding: 12px 20px; border-radius: 30px; font-size:14px; outline:none;" />' +
+                    '<button class="cp-btn cp-btn-primary" style="border-radius:30px; padding: 0 24px; font-weight:700;">Send</button>' +
+                '</div>' +
+            '</div>' +
+            
+            '</div>';
+    };
+
+    var viewNotifications = function () {
+        return pageHead('Notifications', 'All your portal alerts and updates', 'dashboard') +
+            '<div class="cp-card">' +
+            '<div class="cp-scroll" style="max-height: 70vh; padding: 16px;">' +
+            '<div class="cp-act" style="padding: 16px; border-bottom: 1px solid #1e3a5f;"><span class="cp-act-time" style="width: 80px;">10 mins ago</span><span class="cp-act-main"><strong style="color: #fff;">Incident Report</strong><br><span class="cp-act-text">New incident report filed by J. Rivera at Downtown Campus.</span></span><span class="cp-act-actor"></span></div>' +
+            '<div class="cp-act" style="padding: 16px; border-bottom: 1px solid #1e3a5f;"><span class="cp-act-time" style="width: 80px;">1 hour ago</span><span class="cp-act-main"><strong style="color: #fff;">Task Completed</strong><br><span class="cp-act-text">Main gate patrol completed without issues.</span></span><span class="cp-act-actor"></span></div>' +
+            '<div class="cp-act" style="padding: 16px; border-bottom: 1px solid #1e3a5f;"><span class="cp-act-time" style="width: 80px;">3 hours ago</span><span class="cp-act-main"><strong style="color: #fff;">Shift Update</strong><br><span class="cp-act-text">L. Santos started shift at Parking Structure P1.</span></span><span class="cp-act-actor"></span></div>' +
+            '<div class="cp-act" style="padding: 16px; border-bottom: 1px solid #1e3a5f;"><span class="cp-act-time" style="width: 80px;">Yesterday</span><span class="cp-act-main"><strong style="color: #fff;">New Document</strong><br><span class="cp-act-text">Updated site instructions uploaded.</span></span><span class="cp-act-actor"></span></div>' +
+            '</div></div>';
+    };
+
     // ----------------------------------------------------------------- render
 
     var shellHtml = function () {
@@ -1772,7 +1929,15 @@
         return '<div class="cp-bar">' +
             '<div class="cp-brand"><strong>Alexios</strong><span>Client Portal</span></div>' +
             '<div class="cp-bar-site">' + esc(SITE.name) + '</div>' +
-            '<div class="cp-bar-right">' +
+            '<div style="flex:1; max-width:400px; margin: 0 24px; position:relative;">' +
+            '<span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;display:flex;">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>' +
+            '</span>' +
+            '<input type="text" class="cp-input" placeholder="Search..." style="padding-left:36px; border-radius:8px; background:#1e293b; border-color:#334155; color:#fff; width:100%; box-sizing:border-box; padding-top:6px; padding-bottom:6px; min-height:36px;" />' +
+            '</div>' +
+            '<div class="cp-bar-right" style="display:flex; align-items:center; margin-left:auto;">' +
+            '<button data-act="notifications" style="background:transparent; border:none; color:#94a3b8; cursor:pointer; margin-right: 16px; padding: 4px; display: flex; align-items: center; position: relative;">' + I.bell + 
+            '<span style="position: absolute; top: 2px; right: 4px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%;"></span></button>' +
             '<button class="cp-user" data-act="menu">' +
             '<span class="cp-avatar">' + esc(initials.toUpperCase()) + '</span>' +
             '<span class="cp-user-name">' + esc(SITE.contact) + '</span>' +
@@ -1783,6 +1948,19 @@
                 '<button data-go="dashboard">' + I.ext + 'Dashboard</button>' +
                 '<div class="cp-menu-sep"></div>' +
                 '<button class="is-danger" data-act="logout">' + I.out + 'Log Out</button>' +
+                '</div>'
+                : '') +
+            (state.notificationsOpen
+                ? '<div class="cp-menu" style="right: 70px; width: 320px; padding: 0; display:flex; flex-direction:column; z-index: 1000;">' +
+                '<div style="padding: 16px; border-bottom: 1px solid #1e3a5f; display: flex; justify-content: space-between; align-items: center;"><strong style="color: #fff;">Notifications</strong></div>' +
+                '<div style="max-height: 300px; overflow-y: auto;">' +
+                '<div style="padding: 12px 16px; border-bottom: 1px solid #1e3a5f;"><div style="font-size: 13px; color: #e2e8f0; font-weight:600;">New incident report filed</div><div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">10 mins ago</div></div>' +
+                '<div style="padding: 12px 16px; border-bottom: 1px solid #1e3a5f;"><div style="font-size: 13px; color: #e2e8f0; font-weight:600;">Task completed: Main gate</div><div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">1 hour ago</div></div>' +
+                '<div style="padding: 12px 16px; border-bottom: 1px solid #1e3a5f;"><div style="font-size: 13px; color: #e2e8f0; font-weight:600;">Shift started: L. Santos</div><div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">3 hours ago</div></div>' +
+                '</div>' +
+                '<div style="padding: 12px; text-align: center;">' +
+                '<button class="cp-btn cp-btn-primary" style="width: 100%;" data-go="notifications">View All</button>' +
+                '</div>' +
                 '</div>'
                 : '') +
             '<div class="cp-body"></div>';
@@ -1800,6 +1978,8 @@
             case 'map': return viewMap();
             case 'tickets': return viewTickets();
             case 'profile': return viewProfile();
+            case 'chat': return viewChat();
+            case 'notifications': return viewNotifications();
             default: return viewDashboard();
         }
     };
@@ -1839,7 +2019,11 @@
         root.addEventListener('click', function (e) {
             var el = e.target.closest ? e.target.closest('[data-go],[data-act],[data-psec],[data-pitem],[data-pback],[data-tour],[data-report],[data-report-type],[data-task-filter],[data-page],[data-download],[data-ticket]') : null;
             if (!el) {
-                if (state.menuOpen) { state.menuOpen = false; render(); }
+                if (state.menuOpen || state.notificationsOpen) { 
+                    state.menuOpen = false; 
+                    state.notificationsOpen = false;
+                    render(); 
+                }
                 return;
             }
 
@@ -1851,7 +2035,8 @@
             if (act === 'setpw') { go('setpw'); return; }
             if (act === 'savepw') { go('setpw', 'done'); return; }
             if (act === 'tologin') { go('login'); return; }
-            if (act === 'menu') { state.menuOpen = !state.menuOpen; render(); return; }
+            if (act === 'menu') { state.menuOpen = !state.menuOpen; state.notificationsOpen = false; render(); return; }
+            if (act === 'notifications') { state.notificationsOpen = !state.notificationsOpen; state.menuOpen = false; render(); return; }
             if (act === 'logout') { closePortal(); return; }
             if (act === 'assign-task') { openAssignTask(); return; }
 
@@ -1904,6 +2089,7 @@
             else if (t.hasAttribute('data-activity-date')) { state.activityDate = t.value; render(); }
             else if (t.hasAttribute('data-activity-kind')) { state.activityKind = t.value; render(); }
             else if (t.hasAttribute('data-report-filter')) { state.reportFilter = t.value; render(); }
+            else if (t.hasAttribute('data-report-date-filter')) { state.reportDateFilter = t.value; render(); }
             else if (t.hasAttribute('data-ticket-status')) { state.ticketStatus = t.value; render(); }
         });
 
