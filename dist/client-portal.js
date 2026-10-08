@@ -650,9 +650,9 @@
             '<button class="cp-viewall" data-go="activity">View All</button></div>' +
             '<div class="cp-scroll">' + ACTIVITY.slice(0, 7).map(activityRowHtml).join('') + '</div>' +
             '<div class="cp-quick">' +
-            '<button data-act="assign-task">' + I.plus + 'Assign Task</button>' +
-            '<button data-go="reports">' + I.doc + 'Reports</button>' +
-            '<button data-go="tasks">' + I.user + 'All Tasks</button>' +
+            '<button data-act="admin-nav" data-target="Tasks & Dispatch">' + I.plus + 'Assign Task</button>' +
+            '<button data-act="admin-nav" data-target="Checkpoints & Tours">' + I.plus + 'Assign Tour</button>' +
+            '<button data-act="admin-nav" data-target="Reports & Incidents">' + I.doc + 'Create Report</button>' +
             '</div>' +
             '</section>' +
 
@@ -2038,7 +2038,17 @@
             if (act === 'menu') { state.menuOpen = !state.menuOpen; state.notificationsOpen = false; render(); return; }
             if (act === 'notifications') { state.notificationsOpen = !state.notificationsOpen; state.menuOpen = false; render(); return; }
             if (act === 'logout') { closePortal(); return; }
-            if (act === 'assign-task') { openAssignTask(); return; }
+            if (act === 'admin-nav') {
+                var targetStr = el.getAttribute('data-target');
+                var sidebarBtn = Array.from(document.querySelectorAll("aside button")).find(function(b) {
+                    return b.textContent.replace(/\s+/g, " ").trim() === targetStr;
+                });
+                if (sidebarBtn) {
+                    sidebarBtn.click();
+                    closePortal();
+                }
+                return;
+            }
 
             if (el.hasAttribute('data-psec')) {
                 state.profileSection = el.getAttribute('data-psec');

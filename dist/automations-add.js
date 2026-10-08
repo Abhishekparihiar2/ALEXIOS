@@ -242,34 +242,38 @@
         });
         
         // Add "Send to Client" checkbox below "Applies to Sites"
-        const labels = Array.from(document.querySelectorAll("label, span, div, p"));
-        for (const el of labels) {
-            if (el.textContent.trim().startsWith("Applies To Sites") && !el.dataset.hasClientCbProcessed) {
-                el.dataset.hasClientCbProcessed = "true";
-                // Find the wrapper containing this field
-                let container = el.parentElement;
-                while (container && container.tagName !== "DIV" && container !== document.body) {
-                    container = container.parentElement;
-                }
-                if (container && container !== document.body && !container.dataset.hasClientCheckbox) {
-                    container.dataset.hasClientCheckbox = "true";
-                    
-                    const checkboxWrapper = document.createElement("div");
-                    checkboxWrapper.style.marginTop = "12px";
-                    checkboxWrapper.style.display = "flex";
-                    checkboxWrapper.style.alignItems = "center";
-                    checkboxWrapper.style.gap = "8px";
-                    
-                    checkboxWrapper.innerHTML = `
-                        <input type="checkbox" id="send-to-client-cb" style="width:16px; height:16px; accent-color:#3b82f6; cursor:pointer;" />
-                        <label for="send-to-client-cb" style="color:#e2e8f0; font-size:14px; font-weight:500; cursor:pointer; margin:0;">Send to Client</label>
-                    `;
-                    
-                    // Insert after the container
-                    if (container.nextSibling) {
-                        container.parentNode.insertBefore(checkboxWrapper, container.nextSibling);
-                    } else {
-                        container.parentNode.appendChild(checkboxWrapper);
+        if (!document.getElementById("send-to-client-cb")) {
+            const labels = Array.from(document.querySelectorAll("label, span, div, p"));
+            for (const el of labels) {
+                if (el.textContent.trim().startsWith("Applies To Sites") && !el.dataset.hasClientCbProcessed) {
+                    el.dataset.hasClientCbProcessed = "true";
+                    // Find the wrapper containing this field
+                    let container = el.parentElement;
+                    while (container && container.tagName !== "DIV" && container !== document.body) {
+                        container = container.parentElement;
+                    }
+                    if (container && container !== document.body && !container.dataset.hasClientCheckbox) {
+                        container.dataset.hasClientCheckbox = "true";
+                        
+                        const checkboxWrapper = document.createElement("div");
+                        checkboxWrapper.style.marginTop = "12px";
+                        checkboxWrapper.style.display = "flex";
+                        checkboxWrapper.style.alignItems = "center";
+                        checkboxWrapper.style.gap = "8px";
+                        
+                        checkboxWrapper.innerHTML = `
+                            <input type="checkbox" id="send-to-client-cb" style="width:16px; height:16px; accent-color:#3b82f6; cursor:pointer;" />
+                            <label for="send-to-client-cb" style="color:#e2e8f0; font-size:14px; font-weight:500; cursor:pointer; margin:0;">Send to Client</label>
+                        `;
+                        
+                        // Insert after the container
+                        if (container.nextSibling) {
+                            container.parentNode.insertBefore(checkboxWrapper, container.nextSibling);
+                        } else {
+                            container.parentNode.appendChild(checkboxWrapper);
+                        }
+                        
+                        break; // Ensure only one is added
                     }
                 }
             }

@@ -197,6 +197,11 @@
             isTargetPage = true;
         }
 
+        // Exclude Security Operations / Live Activity to prevent false positives
+        if (pageText.includes('security operations') || pageText.includes('live activity')) {
+            isTargetPage = false;
+        }
+
         const headings = Array.from(document.querySelectorAll('h3, h4, span, div, strong, label'));
         const targetHeading = headings.find(h => {
             if (h.closest && h.closest('#alexios-recurrence-section')) return false;

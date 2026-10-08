@@ -137,6 +137,29 @@
     });
   };
 
+  const hideLiveActivityEditIcon = () => {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    let node;
+    while (node = walker.nextNode()) {
+      if (node.nodeValue.trim().toLowerCase() === "live activity") {
+        const headerElement = node.parentElement;
+        const container = headerElement ? headerElement.parentElement : null;
+        
+        if (container) {
+          // Look for SVG icons or edit buttons in the same container
+          const svgs = container.querySelectorAll("svg");
+          svgs.forEach(svg => {
+            const btn = svg.closest("button, a") || svg;
+            // Ensure we aren't hiding generic other things like dot indicators, usually edit is a button or standalone svg
+            if (btn && btn.style.display !== 'none' && !btn.classList.contains("cp-dot")) {
+               btn.style.setProperty("display", "none", "important");
+            }
+          });
+        }
+      }
+    }
+  };
+
   const update = () => {
     updateSidebar();
     updateAdministrationQuadrant();
@@ -146,6 +169,7 @@
     updateCreateSiteContactModal();
     updateSiteActionsNavigation();
     removeImportExcel();
+    hideLiveActivityEditIcon();
   };
 
   document.addEventListener("click", (event) => {
